@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金門縣選舉資料庫 3.14 - 簡潔紅勾當選標記</title>
+    <title>金門縣選舉資料庫 3.16 - 動態縮放置頂標題</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -18,10 +18,45 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Noto Sans TC', sans-serif; background:var(--bg); color:var(--text-main); line-height:1.6; padding-bottom: 60px; }
         
-        header { background: #2c3e50; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+        /* 標題列：新增 sticky 和 transition */
+        header { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            transition: padding 0.3s ease; /* 平滑過渡 */
+            position: sticky; /* 置頂 */
+            top: 0; 
+            z-index: 101; 
+        }
+        /* 標題：調整 margin 並新增 transition */
+        h1 { 
+            font-size: 24px; 
+            font-weight: 700; 
+            margin: 0; /* 簡化間距控制 */
+            transition: font-size 0.3s ease;
+        }
         
-        .control-panel { background: white; padding: 15px; display: flex; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+        /* 新增：捲動後縮小的樣式 */
+        .scrolled-header {
+            padding: 10px 20px; /* 縮減垂直空間 */
+        }
+        .scrolled-header h1 {
+            font-size: 18px; /* 縮小字體 */
+        }
+
+        /* 控制選單：移除 sticky 屬性 */
+        .control-panel { 
+            background: white; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            flex-wrap: wrap; 
+            /* 移除 position: sticky; top: 0; z-index: 100; */
+        }
         select { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; min-width: 200px; background-color: #fff; cursor: pointer; }
         
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
@@ -75,7 +110,7 @@
         .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
-        /* NEW: 當選者紅色打勾標記 */
+        /* 當選者紅色帶框打勾標記 */
         .winner-icon {
             color: #d9534f; /* 鮮紅色 */
             font-size: 1.2em;
@@ -201,7 +236,8 @@
         yearSelect: document.getElementById("yearSelect"),
         content: document.getElementById("content"),
         breadcrumb: document.getElementById("breadcrumb"),
-        breadcrumbBottom: document.getElementById("breadcrumb-bottom") 
+        breadcrumbBottom: document.getElementById("breadcrumb-bottom"), 
+        header: document.querySelector('header') // 新增 header DOM 引用
     };
 
     let appState = {
@@ -213,6 +249,19 @@
         sortConfig: { key: 'number', direction: 'asc' },
         globalTotalVotes: 0 
     };
+
+    // ================= 動態標題處理 =================
+    function setupScrollHeader() {
+        const scrollThreshold = 50; // 捲動超過 50px 開始縮小
+
+        window.onscroll = function() {
+            if (window.scrollY > scrollThreshold) {
+                dom.header.classList.add('scrolled-header');
+            } else {
+                dom.header.classList.remove('scrolled-header');
+            }
+        };
+    }
 
     // ================= 初始化與選單邏輯 (維持不變) =================
     
@@ -250,6 +299,7 @@
         } else {
              dom.content.innerHTML = `<div class="loading-state" style="color:red">無可用選舉資料</div>`;
         }
+        setupScrollHeader(); // 初始化捲動偵測
     })();
 
 
@@ -474,7 +524,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (套用當選者樣式) =================
+    // ================= 通用輔助函式 (包含當選者標記) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -528,9 +578,9 @@
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
                                 
-                                // NEW: 當選者紅勾標記
+                                // 當選者紅勾標記 - 使用帶框打勾 ☑
                                 const winnerIcon = c.isWinner 
-                                    ? `<span class="winner-icon" title="當選者">✔</span>` 
+                                    ? `<span class="winner-icon" title="當選者">☑</span>` 
                                     : ''; 
                                 
                                 return `
