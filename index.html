@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金門縣選舉資料庫 3.12 - 新增總統選舉檔案</title>
+    <title>金門縣選舉資料庫 3.14 - 簡潔紅勾當選標記</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -74,6 +74,16 @@
         
         .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
+        
+        /* NEW: 當選者紅色打勾標記 */
+        .winner-icon {
+            color: #d9534f; /* 鮮紅色 */
+            font-size: 1.2em;
+            margin-left: 5px;
+            font-weight: 900; 
+            display: inline-block;
+            transform: translateY(1px);
+        }
         
         /* 桌面版大型摘要卡片的表格樣式 (大於 768px 時生效) */
         table.large-table {
@@ -158,7 +168,6 @@
     // ================= 數據與設定區 =================
     
     const availableElections = [
-        // NEW: 新增 2024 總統副總統選舉
         { 
             file: "2024_總統副總統.csv", 
             year: "2024", 
@@ -169,7 +178,7 @@
             file: "2024_立法委員.csv", 
             year: "2024", 
             type: "立法委員", 
-            uiName: "2024年 立法委員選舉" 
+            uiName: "2024年 區域立法委員選舉" 
         }
     ];
 
@@ -244,14 +253,13 @@
     })();
 
 
-    // ================= 資料處理 (維持不變) =================
+    // ================= 資料處理 (維持 parseCSV 邏輯) =================
 
     function loadData(file) {
         dom.content.innerHTML = `<div class="loading-state">資料載入中...</div>`;
         const electionMeta = availableElections.find(e => e.file === file);
         appState.electionName = electionMeta ? electionMeta.uiName : "選舉資料";
         
-        // 假設檔案與 HTML 位於同一目錄，直接使用 fetch
         fetch(file) 
             .then(r => { 
                 if(!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。"); 
@@ -269,13 +277,11 @@
     }
 
     function parseCSV(text) {
-        // ... (解析 CSV 邏輯維持不變) ...
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return;
 
         // 1. 解析候選人資訊 (從第 1, 2, 3 行)
-        // 總統/副總統選舉通常有三組，與立委一樣是 1, 2, 3 號
         const headerRowIndices = []; 
         let currentIdx = 2;
         while(rows[0][currentIdx] && rows[1][currentIdx]) {
@@ -287,14 +293,17 @@
         
         headerRowIndices.forEach(colIndex => {
             const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
-            const name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
+            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
+            
+            // 處理當選者標記 (*)
+            const isWinner = name.includes('*'); // 檢查是否包含 *
+            name = name.replace('*', '').trim(); // 移除 * 符號
+            
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
-                // 總統副總統選舉，候選人名稱為「總統名(副總統名)」
-                const officialName = name; 
-                candInfo.push({ number, name: officialName, party, colIndex });
+                candInfo.push({ number, name, party, colIndex, isWinner }); // 加入 isWinner 旗標
             }
         });
 
@@ -306,7 +315,6 @@
         let globalEligibleVoters = 0; 
         
         // 2. 迭代數據行 (從第 4 行開始，索引 3)
-        // 假設資料行結構與立委一致: [鄉鎮, 村里, 候選人票數..., 有效票(idx 5), 無效票(idx 6), 選舉人數(idx 7)]
         const VOTES_COL = 5;
         const INVALID_COL = 6;
         const ELIGIBLE_COL = 7;
@@ -319,8 +327,7 @@
             const town = row[0].trim();
             const village = row[1].trim();
             
-            // 處理可能有逗號的數字
-            const parseNum = (val) => parseInt(val.replace(/[^0-9]/g, '')) || 0;
+            const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
             const validVotes = parseNum(row[VOTES_COL]); 
             const invalidVotes = parseNum(row[INVALID_COL]); 
@@ -361,13 +368,16 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                // 縣級總計
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 candidates[c.name].votes += votes;
                 
-                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                // 鄉鎮級總計
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 towns[town].candidates[c.name].votes += votes;
                 
-                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                // 村里級總計
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 towns[town].villages[village].candidates[c.name].votes += votes;
             });
         }
@@ -464,7 +474,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (維持不變) =================
+    // ================= 通用輔助函式 (套用當選者樣式) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -488,7 +498,7 @@
                 | 投票率: <span class="rate">${turnoutRate}%</span>
             </div>
         `;
-
+        
         return `
         <div class="card ${clickClass}" ${clickAttr}>
             <div class="card-header">
@@ -517,10 +527,16 @@
                             ${candidates.map(c => {
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
+                                
+                                // NEW: 當選者紅勾標記
+                                const winnerIcon = c.isWinner 
+                                    ? `<span class="winner-icon" title="當選者">✔</span>` 
+                                    : ''; 
+                                
                                 return `
                                     <tr>
                                         <td style="text-align:center;"><span class="number-badge">${c.number}</span></td>
-                                        <td style="font-weight:700">${c.name}</td>
+                                        <td style="font-weight:700">${c.name} ${winnerIcon}</td>
                                         <td><span class="party-badge" style="background:${color}">${c.party}</span></td>
                                         <td style="text-align:right">
                                             <div class="vote-cell-content">
