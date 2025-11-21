@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金門縣選舉資料庫 3.10 - Tooltip 修正版</title>
+    <title>金門縣選舉資料庫 3.11 - 響應式表格字級修正版</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -75,7 +75,7 @@
         .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
-        /* 適用於大型摘要卡片的表格樣式 */
+        /* 桌面版大型摘要卡片的表格樣式 (大於 768px 時生效) */
         table.large-table {
             font-size: 17px; 
         }
@@ -102,12 +102,34 @@
         
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
+        /* 手機版樣式調整 (小於等於 768px) */
         @media (max-width: 768px) {
             .layout-full { grid-template-columns: 1fr; }
             .sub-area-grid { grid-template-columns: 1fr; }
             .layout-compact { flex-direction: column; align-items: center; }
             .layout-compact .chart-area { width: 100%; height: 200px; flex: none; margin-bottom: 15px; }
             .layout-compact .table-area { width: 100%; }
+
+            /* NEW: 在手機上，將大型表格還原為標準字級，避免超出螢幕寬度 */
+            table.large-table {
+                font-size: 14px; 
+            }
+            table.large-table th {
+                padding: 6px 8px; 
+                font-size: 13px; 
+            }
+            table.large-table td {
+                padding: 8px 8px; 
+            }
+            table.large-table .number-badge {
+                width: 22px; 
+                height: 22px;
+                line-height: 22px;
+                font-size: 12px;
+            }
+            table.large-table .party-badge {
+                font-size: 11px; 
+            }
         }
     </style>
 </head>
@@ -538,7 +560,7 @@
         });
     }
 
-    // ================= 核心修正：drawChart Tooltip 邏輯 =================
+    // ================= 核心修正：drawChart Tooltip 邏輯 (維持不變) =================
     function drawChart(canvasId, candidates, totalVotes, hideLegend = false) {
         const ctx = document.getElementById(canvasId);
         if(!ctx) return;
@@ -569,7 +591,6 @@
                     },
                     tooltip: {
                         callbacks: {
-                            // 修正：將得票數和得票率分為兩行顯示
                             label: function(context) {
                                 const value = context.raw;
                                 const percentage = totalVotes > 0 ? (value / totalVotes * 100).toFixed(2) : 0;
@@ -579,7 +600,7 @@
                                 ];
                             },
                             title: function(context) {
-                                return context[0].label; // 候選人名稱作為標題
+                                return context[0].label; 
                             }
                         }
                     }
