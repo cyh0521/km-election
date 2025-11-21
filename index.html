@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金門縣選舉資料庫 3.10 - Tooltip 修正版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #3887B0;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --border: #e1e4e8;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Noto Sans TC', sans-serif; background:var(--bg); color:var(--text-main); line-height:1.6; padding-bottom: 60px; }
+        
+        header { background: #2c3e50; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+        
+        .control-panel { background: white; padding: 15px; display: flex; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+        select { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; min-width: 200px; background-color: #fff; cursor: pointer; }
+        
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        
+        /* 麵包屑 */
+        .breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 0; }
+        #breadcrumb-bottom { margin-top: 40px; border-top: 1px solid #e1e4e8; padding-top: 20px; }
+        .breadcrumb span { cursor: pointer; color: var(--primary); font-weight: 500; }
+        .breadcrumb span:hover { text-decoration: underline; }
+        .breadcrumb span.active { color: var(--text-main); cursor: default; text-decoration: none; }
+        
+        /* 區塊樣式 */
+        .main-section { margin-bottom: 40px; }
+        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e1e4e8; }
+        .section-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
+        .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+
+        /* 卡片樣式 */
+        .card { background: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; overflow: hidden; border: 1px solid transparent; transition: all 0.2s; margin-bottom: 0; }
+        .card.clickable { cursor: pointer; }
+        .card.clickable:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 15px rgba(56, 135, 176, 0.15); }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .card-header-left { display: flex; flex-direction: column; }
+        
+        .card-title { font-size: 18px; font-weight: 700; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; line-height: 1.2; }
+        
+        /* 卡片副標題 (統計數據) */
+        .card-stats { font-size: 13px; color: #666; margin-top: 5px; margin-left: 14px; font-weight: 500; line-height: 1.8; }
+        .card-stats strong { color: var(--text-main); font-weight: 700; }
+        .card-stats .rate { color: #d9534f; font-weight: 700; }
+        
+        .card-action { font-size: 14px; color: var(--primary); font-weight: 500; white-space: nowrap; margin-left: 10px; }
+
+        /* Layout Systems */
+        .layout-full { display: grid; grid-template-columns: 300px 1fr; gap: 25px; align-items: start; }
+        .layout-full .chart-area { height: 250px; width: 100%; position: relative; }
+
+        .sub-area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 15px; }
+        
+        .layout-compact { display: flex; align-items: flex-start; gap: 20px; }
+        .layout-compact .chart-area { flex: 0 0 140px; width: 140px; height: 140px; position: relative; margin-top: 10px; }
+        .layout-compact .table-area { flex: 1; min-width: 0; }
+
+        /* Table Styling */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; } /* Base size */
+        th { background: #f8f9fa; color: #666; font-weight: 600; text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); white-space: nowrap; font-size: 13px; }
+        td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
+        .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
+        
+        /* 適用於大型摘要卡片的表格樣式 */
+        table.large-table {
+            font-size: 17px; 
+        }
+        table.large-table th {
+            padding: 10px 10px; 
+            font-size: 14px; 
+        }
+        table.large-table td {
+            padding: 10px 10px; 
+        }
+        table.large-table .number-badge {
+            width: 26px; 
+            height: 26px;
+            line-height: 26px;
+            font-size: 14px;
+        }
+        table.large-table .party-badge {
+            font-size: 12px;
+        }
+
+        .vote-cell-content { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+        .bar-container { height: 5px; background: #f0f0f0; border-radius: 3px; overflow: hidden; width: 100%; max-width: 80px; }
+        .bar-fill { height: 100%; border-radius: 3px; }
+        
+        .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
+
+        @media (max-width: 768px) {
+            .layout-full { grid-template-columns: 1fr; }
+            .sub-area-grid { grid-template-columns: 1fr; }
+            .layout-compact { flex-direction: column; align-items: center; }
+            .layout-compact .chart-area { width: 100%; height: 200px; flex: none; margin-bottom: 15px; }
+            .layout-compact .table-area { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏛️ 金門縣歷年選舉資料庫</h1>
+</header>
+
+<div class="control-panel">
+    <select id="typeSelect"></select>
+    <select id="yearSelect"></select>
+</div>
+
+<div class="container">
+    <div id="breadcrumb" class="breadcrumb" style="display:none;"></div>
+    
+    <div id="content">
+        <div class="loading-state">資料載入中...</div>
+    </div>
+
+    <div id="breadcrumb-bottom" class="breadcrumb" style="display:none;"></div>
+</div>
+
+<script>
+    // ================= 數據與設定區 =================
+    
+    const availableElections = [
+        { 
+            file: "2024_立法委員.csv", 
+            year: "2024", 
+            type: "立法委員", 
+            uiName: "2024年 區域立法委員選舉" 
+        }
+    ];
+
+    const partyColors = {
+        "中國國民黨": "#3887B0",
+        "民主進步黨": "#C0D65A",
+        "台灣民眾黨": "#28C8C8",
+        "親民黨": "#F27C00",
+        "新黨": "#F0C800",
+        "無黨籍": "#606060",
+        "default": "#7f8c8d"
+    };
+
+    function getPartyColor(party) {
+        return partyColors[party] || partyColors['default'];
+    }
+
+    const dom = {
+        typeSelect: document.getElementById("typeSelect"),
+        yearSelect: document.getElementById("yearSelect"),
+        content: document.getElementById("content"),
+        breadcrumb: document.getElementById("breadcrumb"),
+        breadcrumbBottom: document.getElementById("breadcrumb-bottom") 
+    };
+
+    let appState = {
+        data: {},
+        countyMetadata: {}, 
+        currentLevel: 'county',
+        currentTown: null,
+        chartInstances: [],
+        sortConfig: { key: 'number', direction: 'asc' },
+        globalTotalVotes: 0 
+    };
+
+    // ================= 初始化與選單邏輯 (維持不變) =================
+    
+    const electionTypes = [...new Set(availableElections.map(e => e.type))];
+    
+    dom.typeSelect.innerHTML = electionTypes.map(t => `<option value="${t}">${t}選舉</option>`).join('');
+
+    dom.typeSelect.onchange = function() {
+        const type = this.value;
+        dom.yearSelect.innerHTML = ''; 
+
+        const matchingElections = availableElections.filter(e => e.type === type);
+        matchingElections.sort((a, b) => b.year - a.year); 
+
+        matchingElections.forEach(e => {
+            dom.yearSelect.innerHTML += `<option value="${e.file}">${e.uiName}</option>`;
+        });
+
+        if (matchingElections.length > 0) {
+            dom.yearSelect.value = matchingElections[0].file;
+            loadData(matchingElections[0].file);
+        }
+    };
+
+    dom.yearSelect.onchange = function() {
+        if (this.value) loadData(this.value);
+    };
+
+    (function init() {
+        availableElections.sort((a, b) => b.year - a.year); 
+        if (availableElections.length > 0) {
+            const latestElection = availableElections[0];
+            dom.typeSelect.value = latestElection.type;
+            dom.typeSelect.onchange(); 
+        } else {
+             dom.content.innerHTML = `<div class="loading-state" style="color:red">無可用選舉資料</div>`;
+        }
+    })();
+
+
+    // ================= 資料處理 (維持不變) =================
+
+    function loadData(file) {
+        dom.content.innerHTML = `<div class="loading-state">資料載入中...</div>`;
+        const electionMeta = availableElections.find(e => e.file === file);
+        appState.electionName = electionMeta ? electionMeta.uiName : "選舉資料";
+        
+        fetch(file) 
+            .then(r => { 
+                if(!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。"); 
+                return r.text(); 
+            })
+            .then(csvText => {
+                parseCSV(csvText);
+                appState.sortConfig = { key: 'number', direction: 'asc' };
+                renderCounty();
+            })
+            .catch(error => {
+                console.error("載入錯誤:", error);
+                dom.content.innerHTML = `<div class="loading-state" style="color:red">讀取 ${file} 失敗: ${error.message}</div>`;
+            });
+    }
+
+    function parseCSV(text) {
+        const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
+
+        if (rows.length < 4) return;
+
+        // 1. 解析候選人資訊 (從第 1, 2, 3 行)
+        const headerRowIndices = [2, 3, 4]; 
+        const candInfo = [];
+        
+        headerRowIndices.forEach(colIndex => {
+            const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
+            const name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
+            let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
+            party = party === '無' ? '無黨籍' : party;
+
+            if (name && number) {
+                candInfo.push({ number, name, party, colIndex });
+            }
+        });
+
+        const candidates = {}; 
+        const towns = {};
+        const townOrder = [];
+        let globalValidVotes = 0; 
+        let globalInvalidVotes = 0; 
+        let globalEligibleVoters = 0; 
+
+        // 2. 迭代數據行 (從第 4 行開始，索引 3)
+        for (let i = 3; i < rows.length; i++) {
+            const row = rows[i];
+            
+            if (row.length < 8 || !row[0] || row[0].includes("鄉鎮")) continue;
+
+            const town = row[0].trim();
+            const village = row[1].trim();
+            const validVotes = parseInt(row[5]) || 0; 
+            const invalidVotes = parseInt(row[6]) || 0; 
+            const eligibleVoters = parseInt(row[7].replace(/[^0-9]/g, '')) || 0; 
+            
+            globalValidVotes += validVotes;
+            globalInvalidVotes += invalidVotes;
+            globalEligibleVoters += eligibleVoters;
+
+            if (!towns[town]) {
+                towns[town] = { 
+                    villages: {}, 
+                    validVotes: 0, 
+                    invalidVotes: 0,
+                    eligibleVoters: 0,
+                    candidates: {} 
+                };
+                townOrder.push(town);
+            }
+            
+            towns[town].validVotes += validVotes;
+            towns[town].invalidVotes += invalidVotes;
+            towns[town].eligibleVoters += eligibleVoters;
+            
+            if (!towns[town].villages[village]) {
+                 towns[town].villages[village] = { 
+                     validVotes: 0, 
+                     invalidVotes: 0,
+                     eligibleVoters: 0,
+                     candidates: {} 
+                 };
+            }
+            towns[town].villages[village].validVotes += validVotes;
+            towns[town].villages[village].invalidVotes += invalidVotes;
+            towns[town].villages[village].eligibleVoters += eligibleVoters;
+            
+            
+            candInfo.forEach(c => {
+                const votes = parseInt(row[c.colIndex]) || 0;
+                
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                candidates[c.name].votes += votes;
+                
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                towns[town].candidates[c.name].votes += votes;
+                
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                towns[town].villages[village].candidates[c.name].votes += votes;
+            });
+        }
+
+        appState.data = { county: candidates, towns: towns, townOrder: [...new Set(townOrder)] };
+        appState.countyMetadata = {
+            validVotes: globalValidVotes,
+            invalidVotes: globalInvalidVotes,
+            eligibleVoters: globalEligibleVoters
+        };
+        appState.globalTotalVotes = globalValidVotes; 
+    }
+
+    // ================= 渲染函式 (維持不變) =================
+
+    window.renderCounty = function() {
+        destroyAllCharts();
+        appState.currentLevel = 'county';
+        appState.currentTown = null;
+        window.scrollTo(0,0); 
+        updateBreadcrumb();
+
+        const candidates = getSortedCandidates(appState.data.county);
+        const metadata = appState.countyMetadata;
+
+        let html = `<div class="main-section">
+            <div class="section-header"><span class="section-title">全縣總計</span></div>
+            ${generateCardHTML('county-main', '全縣總結果', candidates, metadata, false, false)}
+        </div>`;
+
+        html += `<div class="main-section">
+            <div class="section-header"><span class="section-title">各鄉鎮結果</span><span class="section-badge">點擊卡片看細節</span></div>
+            <div class="sub-area-grid">`;
+        
+        appState.data.townOrder.forEach(town => {
+            const townData = appState.data.towns[town];
+            const townCands = getSortedCandidates(townData.candidates);
+            
+            const townMetadata = {
+                validVotes: townData.validVotes,
+                invalidVotes: townData.invalidVotes,
+                eligibleVoters: townData.eligibleVoters
+            };
+
+            html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}')`, true);
+        });
+        html += `</div></div>`;
+
+        dom.content.innerHTML = html;
+        drawCharts(candidates, metadata.validVotes, appState.data.townOrder, 'towns');
+    };
+
+    window.renderTown = function(townName) {
+        destroyAllCharts();
+        appState.currentLevel = 'town';
+        appState.currentTown = townName;
+        window.scrollTo(0,0);
+        updateBreadcrumb();
+
+        const townData = appState.data.towns[townName];
+        const candidates = getSortedCandidates(townData.candidates);
+        const villageList = Object.keys(townData.villages);
+        
+        const townMetadata = {
+            validVotes: townData.validVotes,
+            invalidVotes: townData.invalidVotes,
+            eligibleVoters: townData.eligibleVoters
+        };
+
+        let html = `<div class="main-section">
+            <div class="section-header"><span class="section-title">${townName} 總計</span></div>
+            ${generateCardHTML('town-main', `${townName}總結果`, candidates, townMetadata, false, false)}
+        </div>`;
+
+        html += `<div class="main-section">
+            <div class="section-header"><span class="section-title">各村里結果</span></div>
+            <div class="sub-area-grid">`;
+        
+        villageList.forEach(village => {
+            const vData = townData.villages[village];
+            const vCands = getSortedCandidates(vData.candidates);
+            
+            const villageMetadata = {
+                validVotes: vData.validVotes,
+                invalidVotes: vData.invalidVotes,
+                eligibleVoters: vData.eligibleVoters
+            };
+
+            html += generateCardHTML(`village-${village}`, village, vCands, villageMetadata, false, null, true);
+        });
+        html += `</div></div>`;
+
+        dom.content.innerHTML = html;
+        drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
+    };
+
+    // ================= 通用輔助函式 (維持不變) =================
+
+    function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
+        const clickClass = isClickable ? 'clickable' : '';
+        const clickAttr = isClickable ? `onclick="${onClickAction}"` : '';
+        const actionText = isClickable ? `<span class="card-action">查看詳情 ➜</span>` : '';
+        const layoutClass = isCompact ? 'layout-compact' : 'layout-full';
+        
+        const tableSizeClass = isCompact ? '' : ' large-table';
+        
+        const { validVotes, invalidVotes, eligibleVoters } = metadata;
+        
+        const totalBallots = validVotes + invalidVotes;
+        const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
+
+        const cardStatsHTML = `
+            <div class="card-stats">
+                <span style="font-size:14px;"><strong>有效票: ${validVotes.toLocaleString()}</strong> 票</span>
+                | 無效票: ${invalidVotes.toLocaleString()} 票 
+                <br>
+                選舉人數: ${eligibleVoters.toLocaleString()} 人 
+                | 投票率: <span class="rate">${turnoutRate}%</span>
+            </div>
+        `;
+
+        return `
+        <div class="card ${clickClass}" ${clickAttr}>
+            <div class="card-header">
+                <div class="card-header-left">
+                    <div class="card-title">${title}</div>
+                    ${cardStatsHTML}
+                </div>
+                ${actionText}
+            </div>
+            <div class="${layoutClass}">
+                <div class="chart-area">
+                    <canvas id="chart-${id}"></canvas>
+                </div>
+                <div class="table-area table-responsive">
+                    <table class="${tableSizeClass}">
+                        <thead>
+                            <tr>
+                                <th style="width:40px; text-align:center;">#</th>
+                                <th>候選人</th>
+                                <th>政黨</th>
+                                <th style="text-align:right">得票</th>
+                                <th style="text-align:right; width:50px">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${candidates.map(c => {
+                                const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
+                                const color = getPartyColor(c.party);
+                                return `
+                                    <tr>
+                                        <td style="text-align:center;"><span class="number-badge">${c.number}</span></td>
+                                        <td style="font-weight:700">${c.name}</td>
+                                        <td><span class="party-badge" style="background:${color}">${c.party}</span></td>
+                                        <td style="text-align:right">
+                                            <div class="vote-cell-content">
+                                                <span>${c.votes.toLocaleString()}</span>
+                                                <div class="bar-container"><div class="bar-fill" style="width:${rate}%; background:${color}"></div></div>
+                                            </div>
+                                        </td>
+                                        <td style="text-align:right; font-weight:bold; color:${color}">${rate}%</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>`;
+    }
+
+
+    function getSortedCandidates(candObj) {
+        let list = Object.keys(candObj).map(key => ({ name: key, ...candObj[key] }));
+        const { key, direction } = appState.sortConfig;
+        list.sort((a, b) => {
+            let valA = a[key], valB = b[key];
+            if (key === 'number') { valA = parseInt(valA)||0; valB = parseInt(valB)||0; }
+            if (valA < valB) return direction === 'asc' ? -1 : 1;
+            if (valA > valB) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return list;
+    }
+
+    function destroyAllCharts() {
+        appState.chartInstances.forEach(c => c.destroy());
+        appState.chartInstances = [];
+    }
+
+    function updateBreadcrumb() {
+        const { currentLevel, currentTown, electionName } = appState;
+        let html = `<span onclick="renderCounty()">🏠 ${electionName}</span>`;
+        if (currentLevel !== 'county') html += ` &gt; <span onclick="renderTown('${currentTown}')" class="active">${currentTown}</span>`;
+        
+        dom.breadcrumb.style.display = 'block';
+        dom.breadcrumb.innerHTML = html;
+        dom.breadcrumbBottom.style.display = 'block';
+        dom.breadcrumbBottom.innerHTML = html;
+    }
+
+    function drawCharts(mainCands, mainTotal, subList, subType, townData = null) {
+        const mainId = subType === 'towns' ? 'chart-county-main' : 'chart-town-main';
+        drawChart(mainId, mainCands, mainTotal, false);
+
+        subList.forEach(key => {
+            let data, id;
+            if (subType === 'towns') {
+                data = appState.data.towns[key];
+                id = `chart-town-${key}`;
+            } else {
+                data = townData.villages[key];
+                id = `chart-village-${key}`;
+            }
+            const cands = getSortedCandidates(data.candidates);
+            drawChart(id, cands, data.validVotes, true);
+        });
+    }
+
+    // ================= 核心修正：drawChart Tooltip 邏輯 =================
+    function drawChart(canvasId, candidates, totalVotes, hideLegend = false) {
+        const ctx = document.getElementById(canvasId);
+        if(!ctx) return;
+
+        const labels = candidates.map(c => c.name);
+        const data = candidates.map(c => c.votes);
+        const colors = candidates.map(c => getPartyColor(c.party));
+        const chartType = candidates.length > 5 ? 'bar' : 'doughnut';
+
+        const chart = new Chart(ctx.getContext('2d'), {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: !hideLegend, 
+                        position: 'bottom',
+                        labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            // 修正：將得票數和得票率分為兩行顯示
+                            label: function(context) {
+                                const value = context.raw;
+                                const percentage = totalVotes > 0 ? (value / totalVotes * 100).toFixed(2) : 0;
+                                return [
+                                    `得票數: ${value.toLocaleString()} 票`,
+                                    `得票率: ${percentage}%`
+                                ];
+                            },
+                            title: function(context) {
+                                return context[0].label; // 候選人名稱作為標題
+                            }
+                        }
+                    }
+                },
+                layout: { padding: 0 }
+            }
+        });
+        appState.chartInstances.push(chart);
+    }
+</script>
+</body>
+</html>
