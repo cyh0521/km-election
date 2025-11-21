@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金門縣選舉資料庫 3.11 - 響應式表格字級修正版</title>
+    <title>金門縣選舉資料庫 3.12 - 新增總統選舉檔案</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -110,7 +110,7 @@
             .layout-compact .chart-area { width: 100%; height: 200px; flex: none; margin-bottom: 15px; }
             .layout-compact .table-area { width: 100%; }
 
-            /* NEW: 在手機上，將大型表格還原為標準字級，避免超出螢幕寬度 */
+            /* 在手機上，將大型表格還原為標準字級，避免超出螢幕寬度 */
             table.large-table {
                 font-size: 14px; 
             }
@@ -158,6 +158,13 @@
     // ================= 數據與設定區 =================
     
     const availableElections = [
+        // NEW: 新增 2024 總統副總統選舉
+        { 
+            file: "2024_總統副總統.csv", 
+            year: "2024", 
+            type: "總統副總統", 
+            uiName: "2024年 總統副總統選舉" 
+        },
         { 
             file: "2024_立法委員.csv", 
             year: "2024", 
@@ -244,6 +251,7 @@
         const electionMeta = availableElections.find(e => e.file === file);
         appState.electionName = electionMeta ? electionMeta.uiName : "選舉資料";
         
+        // 假設檔案與 HTML 位於同一目錄，直接使用 fetch
         fetch(file) 
             .then(r => { 
                 if(!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。"); 
@@ -261,12 +269,20 @@
     }
 
     function parseCSV(text) {
+        // ... (解析 CSV 邏輯維持不變) ...
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return;
 
         // 1. 解析候選人資訊 (從第 1, 2, 3 行)
-        const headerRowIndices = [2, 3, 4]; 
+        // 總統/副總統選舉通常有三組，與立委一樣是 1, 2, 3 號
+        const headerRowIndices = []; 
+        let currentIdx = 2;
+        while(rows[0][currentIdx] && rows[1][currentIdx]) {
+            headerRowIndices.push(currentIdx);
+            currentIdx++;
+        }
+        
         const candInfo = [];
         
         headerRowIndices.forEach(colIndex => {
@@ -276,7 +292,9 @@
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
-                candInfo.push({ number, name, party, colIndex });
+                // 總統副總統選舉，候選人名稱為「總統名(副總統名)」
+                const officialName = name; 
+                candInfo.push({ number, name: officialName, party, colIndex });
             }
         });
 
@@ -286,8 +304,13 @@
         let globalValidVotes = 0; 
         let globalInvalidVotes = 0; 
         let globalEligibleVoters = 0; 
-
+        
         // 2. 迭代數據行 (從第 4 行開始，索引 3)
+        // 假設資料行結構與立委一致: [鄉鎮, 村里, 候選人票數..., 有效票(idx 5), 無效票(idx 6), 選舉人數(idx 7)]
+        const VOTES_COL = 5;
+        const INVALID_COL = 6;
+        const ELIGIBLE_COL = 7;
+
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
@@ -295,9 +318,13 @@
 
             const town = row[0].trim();
             const village = row[1].trim();
-            const validVotes = parseInt(row[5]) || 0; 
-            const invalidVotes = parseInt(row[6]) || 0; 
-            const eligibleVoters = parseInt(row[7].replace(/[^0-9]/g, '')) || 0; 
+            
+            // 處理可能有逗號的數字
+            const parseNum = (val) => parseInt(val.replace(/[^0-9]/g, '')) || 0;
+
+            const validVotes = parseNum(row[VOTES_COL]); 
+            const invalidVotes = parseNum(row[INVALID_COL]); 
+            const eligibleVoters = parseNum(row[ELIGIBLE_COL]); 
             
             globalValidVotes += validVotes;
             globalInvalidVotes += invalidVotes;
@@ -332,7 +359,7 @@
             
             
             candInfo.forEach(c => {
-                const votes = parseInt(row[c.colIndex]) || 0;
+                const votes = parseNum(row[c.colIndex]);
                 
                 if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
                 candidates[c.name].votes += votes;
@@ -560,7 +587,6 @@
         });
     }
 
-    // ================= 核心修正：drawChart Tooltip 邏輯 (維持不變) =================
     function drawChart(canvasId, candidates, totalVotes, hideLegend = false) {
         const ctx = document.getElementById(canvasId);
         if(!ctx) return;
