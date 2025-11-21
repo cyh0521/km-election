@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vote for Kinmen︱金門選舉儀表板 3.20</title>
+    <title>Vote for Kinmen︱金門選舉儀表板</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -24,7 +24,7 @@
             color:var(--text-main); 
             line-height:1.6; 
             padding-bottom: 60px; 
-            padding-top: 50px; 
+            padding-top: 50px; /* 配合緊湊的 header 高度 */
         }
         
         /* 置頂標題列樣式 (固定高度) */
@@ -111,18 +111,33 @@
         th { background: #f8f9fa; color: #666; font-weight: 600; text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); white-space: nowrap; font-size: 13px; }
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
-        .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
-        
-        /* 【修改】當選者紅色打勾標記 (改用字母 v) */
+        /* 【修正】當選者紅色標記 (使用✔) */
         .winner-icon {
             color: #d9534f; /* 鮮紅色 */
-            font-size: 1.2em; /* 放大 */
-            margin-left: 5px;
-            font-weight: 900; /* 加粗 */
-            display: inline-block;
-            transform: translateY(1px);
+            font-size: 1.1em; /* 縮小以利對齊 */
+            font-weight: 900; 
+            display: block;
+            text-align: center; 
+            line-height: 1.5; /* 幫助在 TD 內居中 */
         }
+        
+        /* 【還原】候選人號碼樣式 (圓形灰底) */
+        .number-badge {
+            display: inline-block;
+            width: 24px; 
+            height: 24px;
+            line-height: 24px;
+            text-align: center; 
+            background: #eee; /* 灰色底 */
+            border-radius: 50%; /* 圓形 */
+            font-weight: 700; 
+            font-size: 13px; 
+            color: #555; /* 深灰色字 */
+            margin-right: 8px; /* 與名字間隔 */
+            transform: translateY(-1px);
+        }
+
+        .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
         /* 桌面版大型摘要卡片的表格樣式 (大於 768px 時生效) */
         table.large-table {
@@ -135,11 +150,13 @@
         table.large-table td {
             padding: 10px 10px; 
         }
+        /* 更新大型表格的號次樣式 */
         table.large-table .number-badge {
             width: 26px; 
             height: 26px;
             line-height: 26px;
             font-size: 14px;
+            margin-right: 10px;
         }
         table.large-table .party-badge {
             font-size: 12px;
@@ -170,14 +187,16 @@
             table.large-table td {
                 padding: 8px 8px; 
             }
-            table.large-table .number-badge {
+            table.large-table .party-badge {
+                font-size: 11px; 
+            }
+            
+            /* 確保 number-badge 是標準大小 */
+            .number-badge {
                 width: 22px; 
                 height: 22px;
                 line-height: 22px;
                 font-size: 12px;
-            }
-            table.large-table .party-badge {
-                font-size: 11px; 
             }
         }
     </style>
@@ -185,7 +204,7 @@
 <body>
 
 <header>
-    <h1>Vote for Kinmen︱金門選舉儀表板 3.20</h1>
+    <h1>Vote for Kinmen︱金門選舉儀表板</h1>
 </header>
 
 <div class="control-panel">
@@ -514,7 +533,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (套用當選者樣式) =================
+    // ================= 通用輔助函式 (更新表格結構) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -556,9 +575,8 @@
                     <table class="${tableSizeClass}">
                         <thead>
                             <tr>
-                                <th style="width:40px; text-align:center;">#</th>
-                                <th>候選人</th>
-                                <th>政黨</th>
+                                <th style="width:40px; text-align:center;">&nbsp;</th>
+                                <th>候選人</th> <th>政黨</th>
                                 <th style="text-align:right">得票</th>
                                 <th style="text-align:right; width:50px">%</th>
                             </tr>
@@ -568,15 +586,19 @@
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
                                 
-                                // 【修改】當選者符號改為 v
-                                const winnerIcon = c.isWinner 
-                                    ? `<span class="winner-icon" title="當選者">v</span>` 
+                                // 當選者符號 (✔)
+                                const winnerIconContent = c.isWinner 
+                                    ? `<span class="winner-icon" title="當選者">✔</span>` 
                                     : ''; 
+                                
+                                // 候選人名字與號次合併 (使用還原的 number-badge 樣式)
+                                const candidateNameContent = 
+                                    `<span class="number-badge">${c.number}</span>${c.name}`;
                                 
                                 return `
                                     <tr>
-                                        <td style="text-align:center;"><span class="number-badge">${c.number}</span></td>
-                                        <td style="font-weight:700">${c.name} ${winnerIcon}</td>
+                                        <td style="text-align:center;">${winnerIconContent}</td>
+                                        <td style="font-weight:700">${candidateNameContent}</td>
                                         <td><span class="party-badge" style="background:${color}">${c.party}</span></td>
                                         <td style="text-align:right">
                                             <div class="vote-cell-content">
