@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金門縣選舉資料庫 3.16 - 動態縮放置頂標題</title>
+    <title>Vote for Kinmen︱金門選舉儀表板</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -16,37 +16,51 @@
             --border: #e1e4e8;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Noto Sans TC', sans-serif; background:var(--bg); color:var(--text-main); line-height:1.6; padding-bottom: 60px; }
         
-        /* 標題列：新增 sticky 和 transition */
+        /* 調整 body padding 騰出空間給固定的 header */
+        body { 
+            font-family:'Noto Sans TC', sans-serif; 
+            background:var(--bg); 
+            color:var(--text-main); 
+            line-height:1.6; 
+            padding-bottom: 60px; 
+            padding-top: 70px; /* 初始 header 高度空間 */
+        }
+        
+        /* 置頂標題列樣式 */
         header { 
             background: #2c3e50; 
             color: white; 
-            padding: 20px; 
+            padding: 20px; /* 初始較大 padding */
             text-align: center; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-            transition: padding 0.3s ease; /* 平滑過渡 */
-            position: sticky; /* 置頂 */
-            top: 0; 
-            z-index: 101; 
+            
+            /* 固定置頂設定 */
+            position: fixed; 
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000; /* 確保在最上層 */
+            transition: padding 0.3s ease-in-out; /* 啟用平滑過渡 */
         }
-        /* 標題：調整 margin 並新增 transition */
+        
         h1 { 
             font-size: 24px; 
             font-weight: 700; 
-            margin: 0; /* 簡化間距控制 */
-            transition: font-size 0.3s ease;
+            margin-bottom: 0; 
+            transition: font-size 0.3s ease-in-out; /* 啟用字體大小平滑過渡 */
         }
         
-        /* 新增：捲動後縮小的樣式 */
-        .scrolled-header {
-            padding: 10px 20px; /* 縮減垂直空間 */
+        /* 滾動後的 header 縮小狀態 */
+        header.scrolled {
+            padding: 10px 20px; /* 縮減 padding */
         }
-        .scrolled-header h1 {
-            font-size: 18px; /* 縮小字體 */
+        
+        header.scrolled h1 {
+            font-size: 20px; /* 縮小字體 */
         }
-
-        /* 控制選單：移除 sticky 屬性 */
+        
+        /* 下拉選單列 (維持不置頂) */
         .control-panel { 
             background: white; 
             padding: 15px; 
@@ -55,8 +69,11 @@
             gap: 15px; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
             flex-wrap: wrap; 
-            /* 移除 position: sticky; top: 0; z-index: 100; */
+            /* 移除 sticky/fixed 設定，讓它跟著內容捲動 */
+            position: relative;
+            z-index: 10;
         }
+        
         select { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; min-width: 200px; background-color: #fff; cursor: pointer; }
         
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
@@ -110,7 +127,7 @@
         .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
-        /* 當選者紅色帶框打勾標記 */
+        /* 當選者紅色打勾標記 (復原為 ✔) */
         .winner-icon {
             color: #d9534f; /* 鮮紅色 */
             font-size: 1.2em;
@@ -181,7 +198,7 @@
 <body>
 
 <header>
-    <h1>🏛️ 金門縣歷年選舉資料庫</h1>
+    <h1>Vote for Kinmen︱金門選舉儀表板</h1>
 </header>
 
 <div class="control-panel">
@@ -236,8 +253,8 @@
         yearSelect: document.getElementById("yearSelect"),
         content: document.getElementById("content"),
         breadcrumb: document.getElementById("breadcrumb"),
-        breadcrumbBottom: document.getElementById("breadcrumb-bottom"), 
-        header: document.querySelector('header') // 新增 header DOM 引用
+        breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
+        header: document.querySelector('header')
     };
 
     let appState = {
@@ -250,20 +267,7 @@
         globalTotalVotes: 0 
     };
 
-    // ================= 動態標題處理 =================
-    function setupScrollHeader() {
-        const scrollThreshold = 50; // 捲動超過 50px 開始縮小
-
-        window.onscroll = function() {
-            if (window.scrollY > scrollThreshold) {
-                dom.header.classList.add('scrolled-header');
-            } else {
-                dom.header.classList.remove('scrolled-header');
-            }
-        };
-    }
-
-    // ================= 初始化與選單邏輯 (維持不變) =================
+    // ================= 初始化與選單邏輯 (新增滾動監聽) =================
     
     const electionTypes = [...new Set(availableElections.map(e => e.type))];
     
@@ -290,6 +294,19 @@
         if (this.value) loadData(this.value);
     };
 
+    function initHeaderScroll() {
+        const scrollThreshold = 50; // 滾動超過 50px 開始縮小
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > scrollThreshold) {
+                dom.header.classList.add('scrolled');
+            } else {
+                dom.header.classList.remove('scrolled');
+            }
+        });
+    }
+
+
     (function init() {
         availableElections.sort((a, b) => b.year - a.year); 
         if (availableElections.length > 0) {
@@ -299,7 +316,8 @@
         } else {
              dom.content.innerHTML = `<div class="loading-state" style="color:red">無可用選舉資料</div>`;
         }
-        setupScrollHeader(); // 初始化捲動偵測
+        
+        initHeaderScroll(); // 呼叫滾動監聽函式
     })();
 
 
@@ -524,7 +542,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (包含當選者標記) =================
+    // ================= 通用輔助函式 (套用當選者樣式) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -578,9 +596,9 @@
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
                                 
-                                // 當選者紅勾標記 - 使用帶框打勾 ☑
+                                // 當選者紅勾標記 - 復原為 ✔
                                 const winnerIcon = c.isWinner 
-                                    ? `<span class="winner-icon" title="當選者">☑</span>` 
+                                    ? `<span class="winner-icon" title="當選者">✔</span>` 
                                     : ''; 
                                 
                                 return `
