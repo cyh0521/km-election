@@ -127,7 +127,7 @@
         .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
-        /* 當選者紅色打勾標記 (復原為 ✔) */
+        /* 【修復】當選者紅色打勾標記 (使用 &#10004; 並指定字體) */
         .winner-icon {
             color: #d9534f; /* 鮮紅色 */
             font-size: 1.2em;
@@ -135,6 +135,8 @@
             font-weight: 900; 
             display: inline-block;
             transform: translateY(1px);
+            /* NEW: 指定字體，提高跨平台顯示 ✔ 符號的成功率 */
+            font-family: 'Arial Unicode MS', 'Lucida Sans Unicode', sans-serif;
         }
         
         /* 桌面版大型摘要卡片的表格樣式 (大於 768px 時生效) */
@@ -267,7 +269,7 @@
         globalTotalVotes: 0 
     };
 
-    // ================= 初始化與選單邏輯 (新增滾動監聽) =================
+    // ================= 初始化與選單邏輯 (維持不變) =================
     
     const electionTypes = [...new Set(availableElections.map(e => e.type))];
     
@@ -596,9 +598,9 @@
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
                                 
-                                // 當選者紅勾標記 - 復原為 ✔
+                                // 【修復】當選者紅勾標記 - 使用 HTML 實體 &#10004;
                                 const winnerIcon = c.isWinner 
-                                    ? `<span class="winner-icon" title="當選者">✔</span>` 
+                                    ? `<span class="winner-icon" title="當選者">&#10004;</span>` 
                                     : ''; 
                                 
                                 return `
