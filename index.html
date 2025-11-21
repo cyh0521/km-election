@@ -111,30 +111,27 @@
         th { background: #f8f9fa; color: #666; font-weight: 600; text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); white-space: nowrap; font-size: 13px; }
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        /* 【修正】當選者紅色標記 (使用✔) */
-        .winner-icon {
-            color: #d9534f; /* 鮮紅色 */
-            font-size: 1.1em; /* 縮小以利對齊 */
-            font-weight: 900; 
-            display: block;
-            text-align: center; 
-            line-height: 1.5; /* 幫助在 TD 內居中 */
-        }
+        /* 移除 .winner-icon 樣式 */
         
-        /* 【還原】候選人號碼樣式 (圓形灰底) */
+        /* 【基礎】候選人號碼樣式 (圓形灰底) */
         .number-badge {
             display: inline-block;
             width: 24px; 
             height: 24px;
             line-height: 24px;
             text-align: center; 
-            background: #eee; /* 灰色底 */
+            background: #eee; /* 灰色底 (非當選者) */
             border-radius: 50%; /* 圓形 */
             font-weight: 700; 
             font-size: 13px; 
             color: #555; /* 深灰色字 */
-            margin-right: 8px; /* 與名字間隔 */
-            transform: translateY(-1px);
+            vertical-align: top; /* 幫助在 TD 內置中 */
+        }
+        
+        /* 【新增】當選者號碼樣式 (桃紅色底) */
+        .winner-badge {
+            background: #D9534F; /* 桃紅色 */
+            color: white; /* 白色數字 */
         }
 
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
@@ -156,7 +153,6 @@
             height: 26px;
             line-height: 26px;
             font-size: 14px;
-            margin-right: 10px;
         }
         table.large-table .party-badge {
             font-size: 12px;
@@ -223,7 +219,7 @@
 </div>
 
 <script>
-    // ================= 數據與設定區 =================
+    // ================= 數據與設定區 (維持不變) =================
     
     const availableElections = [
         { 
@@ -273,8 +269,7 @@
         globalTotalVotes: 0 
     };
 
-    // ================= 初始化與選單邏輯 (維持不變) =================
-    
+    // ... (初始化與資料載入邏輯維持不變) ...
     const electionTypes = [...new Set(availableElections.map(e => e.type))];
     
     dom.typeSelect.innerHTML = electionTypes.map(t => `<option value="${t}">${t}選舉</option>`).join('');
@@ -311,8 +306,6 @@
         }
     })();
 
-
-    // ================= 資料處理 (維持 parseCSV 邏輯) =================
 
     function loadData(file) {
         dom.content.innerHTML = `<div class="loading-state">資料載入中...</div>`;
@@ -575,8 +568,9 @@
                     <table class="${tableSizeClass}">
                         <thead>
                             <tr>
-                                <th style="width:40px; text-align:center;">&nbsp;</th>
-                                <th>候選人</th> <th>政黨</th>
+                                <th style="width:50px; text-align:center;">#</th> 
+                                <th>候選人</th> 
+                                <th>政黨</th>
                                 <th style="text-align:right">得票</th>
                                 <th style="text-align:right; width:50px">%</th>
                             </tr>
@@ -586,19 +580,15 @@
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
                                 
-                                // 當選者符號 (✔)
-                                const winnerIconContent = c.isWinner 
-                                    ? `<span class="winner-icon" title="當選者">✔</span>` 
-                                    : ''; 
-                                
-                                // 候選人名字與號次合併 (使用還原的 number-badge 樣式)
-                                const candidateNameContent = 
-                                    `<span class="number-badge">${c.number}</span>${c.name}`;
+                                // 【整合】判斷是否為當選者，決定號次圓圈的樣式
+                                const badgeClass = c.isWinner ? 'number-badge winner-badge' : 'number-badge';
                                 
                                 return `
                                     <tr>
-                                        <td style="text-align:center;">${winnerIconContent}</td>
-                                        <td style="font-weight:700">${candidateNameContent}</td>
+                                        <td style="text-align:center;">
+                                            <span class="${badgeClass}" title="${c.isWinner ? '當選者' : ''}">${c.number}</span>
+                                        </td>
+                                        <td style="font-weight:700">${c.name}</td>
                                         <td><span class="party-badge" style="background:${color}">${c.party}</span></td>
                                         <td style="text-align:right">
                                             <div class="vote-cell-content">
