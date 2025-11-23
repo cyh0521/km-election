@@ -48,15 +48,16 @@
             margin-bottom: 0; 
         }
         
-        /* 頁尾聲明樣式 (非固定) */
+        /* 【修正 1】頁尾聲明樣式調整 */
         footer {
             text-align: center;
             padding: 15px 15px; 
             margin-top: 40px; 
-            background: #2c3e50; 
-            color: #f4f7f6; 
+            /* 移除背景色和陰影 */
+            background: transparent; 
+            color: #7f8c8d; /* 淡黑色文字 */
             font-size: 13px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
+            box-shadow: none; 
         }
 
         /* 下拉選單列 */
@@ -168,7 +169,9 @@
             font-weight: 700; 
             font-size: 13px; 
             color: #555; 
-            vertical-align: top;
+            
+            /* 【修正 2】將 vertical-align 改為 middle 以修正手機顯示問題 */
+            vertical-align: middle;
         }
         
         /* 當選者號碼樣式 (桃紅色底) */
@@ -253,6 +256,7 @@
                 height: 22px;
                 line-height: 22px;
                 font-size: 12px;
+                vertical-align: middle; /* 確保手機上也是 middle */
             }
         }
     </style>
@@ -279,7 +283,7 @@
 </div>
 
 <footer>
-    Vote for Kinmen︱金門選舉儀表板．資料來源：中選會選舉及公投資料庫
+    Vote for Kinmen︱金門選舉儀表板．資料來源︱中央選舉委員會選舉及公投資料庫
 </footer>
 
 <script>
@@ -532,8 +536,6 @@
      * @param {string} key 排序的鍵 (number, name, party, votes)
      */
     window.sortTable = function(key) {
-        // 由於我們在 TH 標籤中加入了 event.stopPropagation()，
-        // 這裡不需要處理點擊事件是否來自可點擊卡片。
         
         const currentKey = appState.sortConfig.key;
         const currentDirection = appState.sortConfig.direction;
@@ -671,7 +673,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (修正 renderTableHeader) =================
+    // ================= 通用輔助函式 (維持 renderTableHeader 修正) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -704,7 +706,7 @@
             const iconClass = isCurrentKey ? currentSortDirection : '';
             const iconHtml = `<span data-key="${sortKey}" class="sort-icon ${iconClass}"></span>`;
             
-            // 【關鍵修正】增加 event.stopPropagation() 以防止點擊排序時觸發父層卡片的 onclick 事件
+            // 保持 event.stopPropagation() 以防止點擊排序時觸發父層卡片的 onclick 事件
             return `<th style="${style}" onclick="event.stopPropagation(); sortTable('${sortKey}')">${title} ${iconHtml}</th>`;
         }
         
