@@ -48,16 +48,16 @@
             margin-bottom: 0; 
         }
         
-        /* 【修正 1】頁尾聲明樣式調整 */
+        /* 頁尾聲明樣式調整 (已符合要求) */
         footer {
             text-align: center;
             padding: 15px 15px; 
             margin-top: 40px; 
-            /* 移除背景色和陰影 */
             background: transparent; 
             color: #7f8c8d; /* 淡黑色文字 */
             font-size: 13px;
             box-shadow: none; 
+            line-height: 1.8; /* 確保兩行文字間距合理 */
         }
 
         /* 下拉選單列 */
@@ -137,6 +137,11 @@
         }
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
+        /* 新增：用於包含號次標記的 TD */
+        td.number-cell {
+            text-align: center; /* 桌面版保持 text-align */
+        }
+        
         /* 排序圖示樣式 */
         .sort-icon {
             display: inline-block;
@@ -169,8 +174,6 @@
             font-weight: 700; 
             font-size: 13px; 
             color: #555; 
-            
-            /* 【修正 2】將 vertical-align 改為 middle 以修正手機顯示問題 */
             vertical-align: middle;
         }
         
@@ -250,13 +253,21 @@
                 font-size: 11px; 
             }
             
+            /* 【修正 2 強化】在手機上對號次單元格使用 Flexbox 確保垂直與水平居中 */
+            td.number-cell {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 8px 8px; 
+            }
+            
             /* 確保 number-badge 是標準大小 */
             .number-badge {
                 width: 22px; 
                 height: 22px;
                 line-height: 22px;
                 font-size: 12px;
-                vertical-align: middle; /* 確保手機上也是 middle */
+                vertical-align: middle; 
             }
         }
     </style>
@@ -283,11 +294,11 @@
 </div>
 
 <footer>
-    Vote for Kinmen︱金門選舉儀表板．資料來源︱中央選舉委員會選舉及公投資料庫
+    Vote for Kinmen︱金門選舉儀表板<br>資料來源︱中央選舉委員會選舉及公投資料庫
 </footer>
 
 <script>
-    // ================= 數據與設定區 =================
+    // ================= 數據與設定區 (維持不變) =================
     
     const availableElections = [
         { 
@@ -346,7 +357,6 @@
         currentLevel: 'county',
         currentTown: null,
         chartInstances: [],
-        // 預設排序為號次升序
         sortConfig: { key: 'number', direction: 'asc' }, 
         globalTotalVotes: 0,
         electionName: "選舉資料" 
@@ -391,7 +401,7 @@
     })();
 
 
-    // ================= 資料處理 (維持 parseCSV 邏輯) =================
+    // ================= 資料處理 (維持不變) =================
 
     function loadData(file) {
         dom.content.innerHTML = `<div class="loading-state">資料載入中...</div>`;
@@ -405,7 +415,6 @@
             })
             .then(csvText => {
                 parseCSV(csvText);
-                // 載入資料後，重設排序為號次升序
                 appState.sortConfig = { key: 'number', direction: 'asc' }; 
                 renderCounty();
             })
@@ -673,7 +682,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (維持 renderTableHeader 修正) =================
+    // ================= 通用輔助函式 (修正 td 樣式) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -743,7 +752,7 @@
                                 
                                 return `
                                     <tr>
-                                        <td style="text-align:center;">
+                                        <td class="number-cell">
                                             <span class="${badgeClass}" title="${c.isWinner ? '當選者' : ''}">${c.number}</span>
                                         </td>
                                         <td style="font-weight:700">${c.name}</td>
