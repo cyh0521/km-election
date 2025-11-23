@@ -48,16 +48,24 @@
             margin-bottom: 0; 
         }
         
-        /* 頁尾聲明樣式調整 (已符合要求) */
+        /* 【修正 1】頁尾聲明樣式調整：預設為手機/分行模式 */
         footer {
             text-align: center;
             padding: 15px 15px; 
             margin-top: 40px; 
             background: transparent; 
-            color: #7f8c8d; /* 淡黑色文字 */
+            color: #7f8c8d;
             font-size: 13px;
             box-shadow: none; 
             line-height: 1.8; /* 確保兩行文字間距合理 */
+        }
+        /* 預設在小螢幕上將主標題和資料來源分行顯示 */
+        #footer-main, #footer-source {
+            display: block;
+        }
+        /* 預設隱藏分隔符 */
+        #footer-separator {
+            display: none; 
         }
 
         /* 下拉選單列 */
@@ -137,9 +145,9 @@
         }
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        /* 新增：用於包含號次標記的 TD */
+        /* 號次單元格：桌面版（預設）*/
         td.number-cell {
-            text-align: center; /* 桌面版保持 text-align */
+            text-align: center; 
         }
         
         /* 排序圖示樣式 */
@@ -219,7 +227,7 @@
         
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
-        /* 手機版樣式調整 (小於等於 768px) */
+        /* 響應式樣式調整 (小於等於 768px) */
         @media (max-width: 768px) {
             .layout-full { grid-template-columns: 1fr; }
             .sub-area-grid { grid-template-columns: 1fr; }
@@ -253,21 +261,35 @@
                 font-size: 11px; 
             }
             
-            /* 【修正 2 強化】在手機上對號次單元格使用 Flexbox 確保垂直與水平居中 */
+            /* 【修正 2 強化】使用標準 Table Cell 置中方法 */
             td.number-cell {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 8px 8px; 
+                text-align: center;
+                /* 確保行高與徽章高度一致，有助於垂直居中 */
+                line-height: 22px; 
             }
             
-            /* 確保 number-badge 是標準大小 */
+            /* 確保 number-badge 是手機版大小 */
             .number-badge {
                 width: 22px; 
                 height: 22px;
                 line-height: 22px;
                 font-size: 12px;
                 vertical-align: middle; 
+            }
+        }
+        
+        /* 【修正 1】桌面版（> 768px）頁尾樣式調整 */
+        @media (min-width: 769px) {
+            footer {
+                line-height: 1.6; /* 單行文字更合理的行高 */
+            }
+            /* 將文字排在同一行 */
+            #footer-main, #footer-source {
+                display: inline;
+            }
+            /* 顯示分隔符 */
+            #footer-separator {
+                display: inline; 
             }
         }
     </style>
@@ -294,7 +316,9 @@
 </div>
 
 <footer>
-    Vote for Kinmen︱金門選舉儀表板<br>資料來源︱中央選舉委員會選舉及公投資料庫
+    <span id="footer-main">Vote for Kinmen︱金門選舉儀表板</span>
+    <span id="footer-separator">．</span>
+    <span id="footer-source">資料來源︱中選會選舉資料庫</span>
 </footer>
 
 <script>
