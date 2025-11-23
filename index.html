@@ -17,13 +17,13 @@
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         
-        /* 調整 body padding 騰出空間給固定的 header */
+        /* 調整 body padding 騰出空間給固定的 header 和 footer */
         body { 
             font-family:'Noto Sans TC', sans-serif; 
             background:var(--bg); 
             color:var(--text-main); 
             line-height:1.6; 
-            padding-bottom: 60px; 
+            padding-bottom: 70px; /* 預留給 footer */
             padding-top: 50px; /* 配合緊湊的 header 高度 */
         }
         
@@ -48,6 +48,21 @@
             margin-bottom: 0; 
         }
         
+        /* 頁尾聲明樣式 */
+        footer {
+            text-align: center;
+            padding: 10px 15px;
+            background: #2c3e50; 
+            color: #f4f7f6; 
+            font-size: 13px;
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
+        }
+
         /* 下拉選單列 */
         .control-panel { 
             background: white; 
@@ -111,31 +126,35 @@
         th { background: #f8f9fa; color: #666; font-weight: 600; text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); white-space: nowrap; font-size: 13px; }
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        /* 移除 .winner-icon 樣式 */
-        
-        /* 【基礎】候選人號碼樣式 (圓形灰底) */
+        /* 基礎號次樣式 */
         .number-badge {
             display: inline-block;
             width: 24px; 
             height: 24px;
             line-height: 24px;
             text-align: center; 
-            background: #eee; /* 灰色底 (非當選者) */
-            border-radius: 50%; /* 圓形 */
+            background: #eee; 
+            border-radius: 50%; 
             font-weight: 700; 
             font-size: 13px; 
-            color: #555; /* 深灰色字 */
-            vertical-align: top; /* 幫助在 TD 內置中 */
+            color: #555; 
+            vertical-align: top;
         }
         
-        /* 【新增】當選者號碼樣式 (桃紅色底) */
+        /* 當選者號碼樣式 (桃紅色底) */
         .winner-badge {
-            background: #D9534F; /* 桃紅色 */
-            color: white; /* 白色數字 */
+            background: #D9534F; 
+            color: white; 
         }
 
+        /* 政黨徽章樣式 */
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
+        /* 響應式政黨名稱控制 (預設：顯示長名稱，隱藏短名稱) */
+        .party-cell .party-short {
+            display: none; 
+        }
+
         /* 桌面版大型摘要卡片的表格樣式 (大於 768px 時生效) */
         table.large-table {
             font-size: 17px; 
@@ -171,6 +190,17 @@
             .layout-compact { flex-direction: column; align-items: center; }
             .layout-compact .chart-area { width: 100%; height: 200px; flex: none; margin-bottom: 15px; }
             .layout-compact .table-area { width: 100%; }
+
+            /* 響應式政黨名稱控制 (手機：隱藏長名稱，顯示短名稱) */
+            .party-cell .party-long {
+                display: none; 
+            }
+            .party-cell .party-short {
+                display: inline-block;
+            }
+            .party-badge {
+                 font-size: 11px; 
+            }
 
             /* 在手機上，將大型表格還原為標準字級，避免超出螢幕寬度 */
             table.large-table {
@@ -218,8 +248,12 @@
     <div id="breadcrumb-bottom" class="breadcrumb" style="display:none;"></div>
 </div>
 
+<footer>
+    Vote for Kinmen︱金門選舉儀表板．資料來源：中選會選舉及公投資料庫
+</footer>
+
 <script>
-    // ================= 數據與設定區 (維持不變) =================
+    // ================= 數據與設定區 =================
     
     const availableElections = [
         { 
@@ -250,6 +284,25 @@
         return partyColors[party] || partyColors['default'];
     }
 
+    /**
+     * 取得政黨名稱的簡稱 (用於手機版)
+     * @param {string} party 
+     * @returns {string}
+     */
+    function getShortPartyName(party) {
+        const shortNames = {
+            "中國國民黨": "國民黨",
+            "民主進步黨": "民進黨",
+            "台灣民眾黨": "民眾黨",
+            // 其他政黨維持原名
+            "親民黨": "親民黨", 
+            "新黨": "新黨", 
+            "無黨籍": "無黨籍",
+            "default": "無"
+        };
+        return shortNames[party] || party;
+    }
+
     const dom = {
         typeSelect: document.getElementById("typeSelect"),
         yearSelect: document.getElementById("yearSelect"),
@@ -269,7 +322,8 @@
         globalTotalVotes: 0 
     };
 
-    // ... (初始化與資料載入邏輯維持不變) ...
+    // ================= 初始化與選單邏輯 (維持不變) =================
+    
     const electionTypes = [...new Set(availableElections.map(e => e.type))];
     
     dom.typeSelect.innerHTML = electionTypes.map(t => `<option value="${t}">${t}選舉</option>`).join('');
@@ -306,6 +360,8 @@
         }
     })();
 
+
+    // ================= 資料處理 (維持 parseCSV 邏輯) =================
 
     function loadData(file) {
         dom.content.innerHTML = `<div class="loading-state">資料載入中...</div>`;
@@ -526,7 +582,7 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (更新表格結構) =================
+    // ================= 通用輔助函式 (已修改) =================
 
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -568,7 +624,7 @@
                     <table class="${tableSizeClass}">
                         <thead>
                             <tr>
-                                <th style="width:50px; text-align:center;">#</th> 
+                                <th style="width:40px; text-align:center;">#</th> 
                                 <th>候選人</th> 
                                 <th>政黨</th>
                                 <th style="text-align:right">得票</th>
@@ -580,7 +636,7 @@
                                 const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
                                 const color = getPartyColor(c.party);
                                 
-                                // 【整合】判斷是否為當選者，決定號次圓圈的樣式
+                                // 判斷是否為當選者，決定號次圓圈的樣式
                                 const badgeClass = c.isWinner ? 'number-badge winner-badge' : 'number-badge';
                                 
                                 return `
@@ -589,7 +645,10 @@
                                             <span class="${badgeClass}" title="${c.isWinner ? '當選者' : ''}">${c.number}</span>
                                         </td>
                                         <td style="font-weight:700">${c.name}</td>
-                                        <td><span class="party-badge" style="background:${color}">${c.party}</span></td>
+                                        <td class="party-cell">
+                                            <span class="party-badge party-long" style="background:${color}">${c.party}</span>
+                                            <span class="party-badge party-short" style="background:${color}">${getShortPartyName(c.party)}</span>
+                                        </td>
                                         <td style="text-align:right">
                                             <div class="vote-cell-content">
                                                 <span>${c.votes.toLocaleString()}</span>
