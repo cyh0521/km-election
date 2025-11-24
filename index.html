@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vote for Kinmen︱金門選舉儀表板</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #3887B0;
@@ -245,15 +246,30 @@
         .sort-icon.asc { border-bottom: 4px solid #333; opacity: 1; }
         .sort-icon.desc { border-top: 4px solid #333; opacity: 1; }
         
+        /* 號次圓圈樣式 - 邊框加粗至 2px */
         .number-badge {
-            display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; background: #eee; border-radius: 50%; font-weight: 700; font-size: 13px; color: #555; vertical-align: middle;
+            display: inline-block; 
+            width: 24px; 
+            height: 24px; 
+            line-height: 24px; 
+            text-align: center; 
+            background: #eee; 
+            border-radius: 50%; 
+            font-weight: 700; 
+            font-size: 13px; 
+            color: #555; 
+            vertical-align: middle;
+            border: 2px solid #ffffff; /* <--- 邊框加粗到 2px */
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
         }
 
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
+        /* 預設 (桌面版 > 768px)：顯示長名稱，隱藏短名稱 */
+        .party-cell .party-long { display: inline-block; }
         .party-cell .party-short { display: none; }
         
-        /* 桌面版：顯示完整政黨名稱 */
+        /* 桌面版：顯示「推薦政黨」 */
         .col-party .party-title-desktop { display: inline; }
         .col-party .party-title-mobile { display: none; }
 
@@ -290,8 +306,11 @@
              /* 其他保持一致 */
             .layout-full { grid-template-columns: 1fr; }
             .sub-area-grid { grid-template-columns: 1fr; }
+            
+            /* 手機版樣式修正：隱藏長名稱，顯示短名稱 */
             .party-cell .party-long { display: none; }
             .party-cell .party-short { display: inline-block; }
+            
             .party-badge { font-size: 11px; }
 
             table.large-table { font-size: 14px; }
@@ -301,7 +320,15 @@
             
             td.number-cell { text-align: center; line-height: 22px; }
             
-            .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
+            /* 手機版號次圓圈樣式 - 確保白色邊框依然存在 */
+            .number-badge { 
+                width: 22px; 
+                height: 22px; 
+                line-height: 22px; 
+                font-size: 12px; 
+                vertical-align: middle; 
+                border: 2px solid #ffffff; /* <--- 邊框加粗到 2px */
+            }
 
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
             .col-party .party-title-desktop { display: none; }
@@ -350,7 +377,7 @@
 
 <script>
     
-    // ================= 數據與設定區 =================
+    // ================= 數據與設定區 (保持不變) =================
     
     const availableElections = [
         { 
@@ -406,7 +433,8 @@
         currentTown: null,
         sortConfig: { key: 'number', direction: 'asc' }, 
         globalTotalVotes: 0,
-        electionName: "選舉資料"
+        electionName: "選舉資料",
+        chartInstances: [] // 增加 Chart 實例追蹤
     };
     
     // 將 Hex 顏色轉換為 RGB 物件 {r, g, b}
@@ -439,7 +467,7 @@
             "親民黨": "親民黨", 
             "新黨": "新黨", 
             "金門高粱黨": "高粱黨", 
-            "無黨籍-1": "無黨籍", // 修正：在顯示層統一顯示為 '無黨籍'
+            "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
             "無黨籍-4": "無黨籍",
@@ -447,8 +475,30 @@
             "default": "無"
         };
         // 嘗試查找精確名稱，找不到則使用基礎 '無黨籍' 或回傳原名稱
-        return shortNamesMap[party] || shortNamesMap[party.split('-')[0]] || party; 
+        const key = party.split('-')[0];
+        return shortNamesMap[party] || shortNamesMap[key] || party; 
     }
+    
+    // 取得長名稱 (用於桌面版)
+    function getLongPartyName(party) {
+        const longNamesMap = {
+            "中國國民黨": "中國國民黨",
+            "民主進步黨": "民主進步黨",
+            "台灣民眾黨": "台灣民眾黨",
+            "親民黨": "親民黨", 
+            "新黨": "新黨", 
+            "金門高粱黨": "金門高粱黨", 
+            "無黨籍-1": "無黨籍", 
+            "無黨籍-2": "無黨籍",
+            "無黨籍-3": "無黨籍",
+            "無黨籍-4": "無黨籍",
+            "無黨籍": "無黨籍",
+            "default": "無"
+        };
+        const key = party.split('-')[0];
+        return longNamesMap[party] || longNamesMap[key] || party; 
+    }
+
 
     const dom = {
         content: document.getElementById("content"),
@@ -458,7 +508,7 @@
     };
 
 
-    // ================= 資料載入與解析 (略) =================
+    // ================= 資料載入與解析 (保持不變) =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -491,9 +541,7 @@
 
             if (name && number) {
                 if (party === '無黨籍') {
-                    // 使用硬編碼鍵值區分，最多支援 4 位無黨籍候選人
                     if (!partyColors[`無黨籍-${independentCounter}`] && independentCounter <= 4) {
-                       // 將新的無黨籍編號註冊到 partyColors，但顏色與基礎無黨籍相同
                        partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍']; 
                     }
                     party = `無黨籍-${independentCounter}`;
@@ -593,6 +641,9 @@
             .then(csvText => {
                 parseCSV(csvText);
                 appState.sortConfig = { key: 'number', direction: 'asc' }; 
+                // 清理所有 Chart 實例 
+                appState.chartInstances.forEach(chart => chart.destroy()); 
+                appState.chartInstances = [];
                 renderCounty(true); 
             })
             .catch(error => {
@@ -712,7 +763,7 @@
         await Promise.all(summaryPromises);
     }
 
-    // ================= 排序與更新邏輯 =================
+    // ================= 排序與更新邏輯 (保持不變) =================
     
     window.sortTable = function(key) {
         
@@ -767,7 +818,7 @@
     }
     
     function getSortedCandidatesFromList(list, sortConfig = { key: 'votes', direction: 'desc' }) {
-        const { key, direction } = sortConfig;
+        let { key, direction } = sortConfig;
         
         list.sort((a, b) => {
             let valA = a[key], valB = b[key];
@@ -801,9 +852,9 @@
             const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
             const partyColorHex = getPartyColor(c.party); 
             
-            // 轉換為 RGB，並使用 15% 透明度 (符合要求：以較淡一點的政黨代表色表現)
+            // 轉換為 RGB，並使用 10% 透明度
             const rgb = hexToRgb(partyColorHex);
-            const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`; 
+            const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.10)`; 
             
             // 使用 CSS linear-gradient 實現全列背景長條圖
             const rowStyle = `
@@ -817,7 +868,10 @@
             `;
             
             const badgeClass = 'number-badge'; 
-            const partyDisplayName = getShortPartyName(c.party); 
+            
+            // 取得長/短名稱
+            const partyLongName = getLongPartyName(c.party); 
+            const partyShortName = getShortPartyName(c.party);
             
             return `
                 <tr style="${rowStyle}">
@@ -826,8 +880,8 @@
                     </td>
                     <td style="font-weight:700">${c.name}</td>
                     <td class="party-cell col-party">
-                        <span class="party-badge party-long" style="background:${partyColorHex}">${partyDisplayName}</span>
-                        <span class="party-badge party-short" style="background:${partyColorHex}">${partyDisplayName.substring(0, 3)}</span>
+                        <span class="party-badge party-long" style="background:${partyColorHex}">${partyLongName}</span>
+                        <span class="party-badge party-short" style="background:${partyColorHex}">${partyShortName}</span>
                     </td>
                     <td style="text-align:right">${c.votes.toLocaleString()}</td>
                     <td style="text-align:right; font-weight:bold; color:${partyColorHex}">${rate}%</td>
@@ -855,7 +909,7 @@
         });
     }
 
-    // ================= 頁面渲染函式 (略) =================
+    // ================= 頁面渲染函式 (保持不變) =================
     
     function generateSummaryCardHTML(election) {
         if (!election.summaryData) {
@@ -883,6 +937,11 @@
         appState.currentLevel = 'mainMenu';
         window.scrollTo(0, 0); 
         updateBreadcrumb(); 
+        
+        // 清理所有 Chart 實例
+        appState.chartInstances.forEach(chart => chart.destroy()); 
+        appState.chartInstances = [];
+        
 
         let html = '';
 
@@ -933,6 +992,10 @@
         appState.currentTown = type; 
         window.scrollTo(0, 0); 
         updateBreadcrumb(); 
+        
+        // 清理所有 Chart 實例
+        appState.chartInstances.forEach(chart => chart.destroy()); 
+        appState.chartInstances = [];
 
         const matchingElections = availableElections.filter(e => e.type === type);
         matchingElections.sort((a, b) => b.year - a.year); 
@@ -954,9 +1017,72 @@
         dom.content.innerHTML = html;
     };
 
+    /**
+     * 渲染圓餅圖的函式 (保留，但目前不會被呼叫)
+     */
+    function renderPieChart(canvasId, candidates, totalVotes) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        // 先銷毀舊的 Chart 實例（如果存在）
+        const existingChart = appState.chartInstances.find(chart => chart.canvas.id === canvasId);
+        if (existingChart) existingChart.destroy();
+        
+        // 過濾掉得票數為 0 的候選人，確保圖表乾淨
+        const displayCandidates = candidates.filter(c => c.votes > 0);
 
-    // ================= 儀表板核心渲染邏輯 (略) =================
+        const labels = displayCandidates.map(c => c.name);
+        const data = displayCandidates.map(c => c.votes);
+        const colors = displayCandidates.map(c => getPartyColor(c.party));
+        
+        // 計算圖例是否需要隱藏 (候選人超過 6 個時隱藏)
+        const hideLegend = labels.length > 6;
 
+        const chart = new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    hoverBackgroundColor: colors,
+                    borderColor: 'white',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: !hideLegend, 
+                        position: 'bottom',
+                        labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                const percentage = totalVotes > 0 ? (value / totalVotes * 100).toFixed(2) : 0;
+                                return [
+                                    `${context.label}: ${value.toLocaleString()} 票`,
+                                    `得票率: ${percentage}%`
+                                ];
+                            },
+                            title: function(context) {
+                                return context[0].label; 
+                            }
+                        }
+                    }
+                },
+                layout: { padding: 0 }
+            }
+        });
+        appState.chartInstances.push(chart);
+    }
+    
+    // ================= 儀表板核心渲染邏輯 (保持不變) =================
+    
     window.renderCounty = function(shouldScroll = true) {
         const candidates = getSortedCandidates(appState.data.county);
         const metadata = appState.countyMetadata;
@@ -1030,6 +1156,10 @@
         window.scrollTo(0,0); 
         updateBreadcrumb();
         
+        // 清理所有 Chart 實例
+        appState.chartInstances.forEach(chart => chart.destroy()); 
+        appState.chartInstances = [];
+        
         const villageList = Object.keys(townData.villages);
 
         let html = `<div class="main-section">
@@ -1059,7 +1189,7 @@
         updateSortIcons();
     };
 
-    // ================= 通用輔助函式 (略) =================
+    // ================= 通用輔助函式 (保持不變) =================
 
     function updateBreadcrumb() {
         const level = appState.currentLevel;
@@ -1076,7 +1206,8 @@
         if (level === 'electionList') {
             html += `<span class="active">${appState.currentTown}</span>`;
         } else if (level === 'county') {
-            html += `<span onclick="renderElectionList('${availableElections.find(e => e.uiName === appState.electionName).type}')">${availableElections.find(e => e.uiName === appState.electionName).type}</span> / `;
+            const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
+            html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
             html += `<span class="active">${appState.electionName}</span>`;
         } else if (level === 'town') {
              const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
@@ -1142,23 +1273,20 @@
 
         function renderTableHeader(title, sortKey, style = '', className = '') {
             
-            if (isSummary) {
-                 if (sortKey === 'party') {
-                     return `<th style="${style}" class="${className} col-party"><span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span></th>`;
-                 }
-                 return `<th style="${style}" class="${className}">${title}</th>`;
+            // 修正：摘要卡片在電腦版應顯示「推薦政黨」
+            if (sortKey === 'party') {
+                return `<th style="${style}" class="${className} col-party">
+                    <span class="party-title-desktop">推薦政黨</span>
+                    <span class="party-title-mobile">政黨</span>
+                </th>`;
             }
             
             const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
             const iconHtml = `<span data-key="${sortKey}" class="sort-icon ${iconClass}"></span>`;
             
-            let titleHTML = title;
-            if (sortKey === 'party') {
-                titleHTML = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
-            }
             
-            return `<th style="${style}" class="${className}" onclick="event.stopPropagation(); sortTable('${sortKey}')">${titleHTML} ${iconHtml}</th>`;
+            return `<th style="${style}" class="${className}" onclick="event.stopPropagation(); sortTable('${sortKey}')">${title} ${iconHtml}</th>`;
         }
         
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes);
