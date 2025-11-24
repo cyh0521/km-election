@@ -59,18 +59,18 @@
         .menu-button {
             background: var(--card-bg);
             border: 1px solid var(--border); 
-            border-radius: 12px; /* 稍微加大圓角 */
-            padding: 20px 10px; /* 增加內距，作為更好的點擊區域 */
+            border-radius: 12px; /* 優化圓角 */
+            padding: 20px 10px; /* 優化內距 */
             text-align: center;
             font-size: 16px; 
             font-weight: 500; 
             color: var(--secondary);
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 增加陰影立體感 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 優化陰影 */
             line-height: 1.4;
             
-            /* 新增 Flexbox 佈局來排版圖示和文字 */
+            /* 新增 Flexbox 佈局來排版圖示和文字 (手機/桌面通用美化) */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -140,7 +140,6 @@
             align-items: flex-start; 
             margin-bottom: 15px; 
             overflow: hidden; 
-            /* 移除 padding-right，讓 action 貼齊右邊 */
         }
         .card-header-left { 
             display: flex; 
@@ -161,7 +160,6 @@
             line-height: 1.8; 
         }
         
-        /* 修正 1：移除內頁卡片 (非摘要) 對「有效票」的特殊樣式 */
         .card-stats strong { 
             font-weight: 500; 
             color: var(--text-main);
@@ -177,7 +175,7 @@
             line-height: 1.5;
             color: var(--text-main);
         }
-        /* 修正 1：摘要卡片也移除對「有效票」的特別加粗 */
+
         .card.is-summary .card-stats strong {
              color: var(--text-main); 
              font-weight: 500; 
@@ -186,7 +184,7 @@
              color: #d9534f; 
         }
 
-        /* 修正 2：讓 action text 保持在最右邊，並防止被擠壓 */
+        /* 讓 action text 保持在最右邊，並防止被擠壓 */
         .card-action { 
             font-size: 14px; 
             color: var(--primary); 
@@ -245,7 +243,6 @@
         .layout-compact table th:nth-child(5),
         .layout-compact table td:nth-child(5) { width: 50px; text-align: right; } /* 得票率固定小寬度 */
 
-        /* 儀表板內頁表格樣式維持 */
         td.number-cell { text-align: center; }
         
         .sort-icon {
@@ -262,7 +259,7 @@
         
         .party-cell .party-short { display: none; }
         
-        /* 桌面版：顯示「推薦政黨」 */
+        /* 桌面版：顯示完整政黨名稱 */
         .col-party .party-title-desktop { display: inline; }
         .col-party .party-title-mobile { display: none; }
 
@@ -280,12 +277,12 @@
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
         @media (max-width: 768px) {
-             /* 修正 3：手機版：強制主選單按鈕雙欄顯示 */
+             /* 手機版：強制主選單按鈕雙欄顯示 (先前要求) */
              .main-menu-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            /* 修正 3：手機版按鈕樣式調整 */
+            /* 手機版按鈕樣式調整 */
             .menu-button {
                 padding: 15px 5px; 
             }
@@ -320,7 +317,7 @@
             td.number-cell { text-align: center; line-height: 22px; }
             
             .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
-            
+
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
             .col-party .party-title-desktop { display: none; }
             .col-party .party-title-mobile { display: inline; }
@@ -363,13 +360,11 @@
 </div>
 
 <footer>
-    <span id="footer-version"></span>︱資料來源：中選會選舉資料庫
+    <span id="footer-source">資料來源︱中選會選舉資料庫</span>
 </footer>
 
 <script>
     // ================= 數據與設定區 =================
-    
-    const APP_VERSION = "v1.0.0"; 
     
     const availableElections = [
         { 
@@ -385,10 +380,16 @@
             type: "立法委員", 
             uiName: "2024年 立法委員選舉",
             summaryData: null
+        },
+        { 
+            file: "2019_立法委員（補選）.csv", 
+            year: "2019", 
+            type: "立法委員", 
+            uiName: "2019年 立法委員（補選）",
+            summaryData: null
         }
     ];
     
-    // 修正 1：為選舉類別新增圖示 (icon)
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
         { type: "立法委員", icon: "⚖️" },
@@ -400,12 +401,14 @@
         { type: "村里長", icon: "🏡" }
     ];
 
+    // **調整點 1: 金門高粱黨 顏色設定**
     const partyColors = {
         "中國國民黨": "#3887B0",
         "民主進步黨": "#67C167", 
         "台灣民眾黨": "#28C8C8",
         "親民黨": "#F27C00",
         "新黨": "#F0C800",
+        "金門高粱黨": "#990033", // 金門高粱黨的顏色
         "無黨籍": "#777777", 
         "default": "#7f8c8d"
     };
@@ -414,6 +417,7 @@
         return partyColors[party] || partyColors['default'];
     }
 
+    // **調整點 2: 金門高粱黨 縮寫設定**
     function getShortPartyName(party) {
         const shortNames = {
             "中國國民黨": "國民黨",
@@ -421,6 +425,7 @@
             "台灣民眾黨": "民眾黨",
             "親民黨": "親民黨", 
             "新黨": "新黨", 
+            "金門高粱黨": "高粱黨", // 金門高粱黨的縮寫
             "無黨籍": "無黨籍",
             "default": "無"
         };
@@ -431,8 +436,7 @@
         content: document.getElementById("content"),
         breadcrumb: document.getElementById("breadcrumb"),
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
-        header: document.querySelector('header'),
-        footerVersion: document.getElementById("footer-version")
+        header: document.querySelector('header')
     };
 
     let appState = {
@@ -446,7 +450,7 @@
         electionName: "選舉資料" 
     };
 
-    // ================= 資料載入與解析 (略) =================
+    // ================= 資料載入與解析 =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -455,11 +459,19 @@
 
         const headerRowIndices = []; 
         let currentIdx = 2;
+        // 找出所有候選人欄位的索引
         while(rows[0][currentIdx] && rows[1][currentIdx]) {
             headerRowIndices.push(currentIdx);
             currentIdx++;
         }
         
+        // **修正點: 動態確定票數欄位索引**
+        // 有效票欄位在最後一個候選人欄位之後
+        const VOTES_COL = currentIdx; 
+        const INVALID_COL = currentIdx + 1;
+        const ELIGIBLE_COL = currentIdx + 2;
+        // **修正點 結束**
+
         const candInfo = [];
         
         headerRowIndices.forEach(colIndex => {
@@ -484,14 +496,11 @@
         let globalInvalidVotes = 0; 
         let globalEligibleVoters = 0; 
         
-        const VOTES_COL = 5;
-        const INVALID_COL = 6;
-        const ELIGIBLE_COL = 7;
-
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
-            if (row.length < 8 || !row[0] || row[0].includes("鄉鎮")) continue;
+            // 檢查行長度是否足夠包含所有必要的欄位
+            if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue; 
 
             const town = row[0].trim();
             const village = row[1].trim();
@@ -578,7 +587,7 @@
             });
     }
     
-    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) (略) =================
+    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) =================
     
     function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -592,6 +601,12 @@
             currentIdx++;
         }
         
+        // **修正點: 動態確定票數欄位索引 (與 parseCSV 同步)**
+        const VOTES_COL = currentIdx; 
+        const INVALID_COL = currentIdx + 1;
+        const ELIGIBLE_COL = currentIdx + 2;
+        // **修正點 結束**
+
         const candInfo = [];
         headerRowIndices.forEach(colIndex => {
             const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
@@ -611,14 +626,10 @@
         let globalInvalidVotes = 0; 
         let globalEligibleVoters = 0; 
         
-        const VOTES_COL = 5;
-        const INVALID_COL = 6;
-        const ELIGIBLE_COL = 7;
-
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
-            if (row.length < 8 || !row[0] || row[0].includes("鄉鎮")) continue;
+            if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
 
             const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
@@ -683,7 +694,7 @@
         await Promise.all(summaryPromises);
     }
 
-    // ================= 排序與更新邏輯 (略) =================
+    // ================= 排序與更新邏輯 (略，邏輯未變更) =================
     
     window.sortTable = function(key) {
         
@@ -821,7 +832,7 @@
         });
     }
 
-    // ================= 頁面渲染函式 (優化) =================
+    // ================= 頁面渲染函式 (略，邏輯未變更) =================
     
     /**
      * 新增：生成摘要卡片的 HTML 
@@ -866,7 +877,7 @@
             <div class="menu-section-title">依選舉類別瀏覽</div>
             <div class="main-menu-grid">`;
         
-        // 修正 2：將圖示和文字一起渲染
+        // 渲染按鈕時，使用新的圖示和文字結構 (支援美化後的 CSS)
         electionCategories.forEach(cat => {
             html += `<div class="menu-button" onclick="renderElectionList('${cat.type}')">
                 <span class="menu-icon">${cat.icon}</span>
@@ -1077,7 +1088,7 @@
         // 根據是否為 Summary 決定顯示的統計資訊
         let cardStatsHTML;
         if (isSummary) {
-             // 摘要卡片：顯示有效票 (不再粗體) 和投票率
+             // 摘要卡片：顯示有效票和投票率
              cardStatsHTML = `
                 <div class="card-stats">
                     <span style="white-space: nowrap;">
@@ -1088,7 +1099,7 @@
                 </div>
             `;
         } else {
-            // 儀表板內頁的詳細統計數據：
+            // 儀表板內頁的詳細統計數據
              cardStatsHTML = `
                 <div class="card-stats">
                     <span style="font-size:14px;">有效票: ${validVotes.toLocaleString()} 票</span> 
@@ -1147,7 +1158,7 @@
                             <tr>
                                 ${renderTableHeader('#', 'number', 'width:40px; text-align:center;', 'col-number')} 
                                 ${renderTableHeader('候選人', 'name', '', '')}
-                                ${renderTableHeader('', 'party', '', 'col-party')}
+                                ${renderTableHeader('推薦政黨', 'party', '', 'col-party')}
                                 ${renderTableHeader('得票', 'votes', 'text-align:right')}
                                 ${renderTableHeader('%', 'votes', 'text-align:right; width:50px')}
                             </tr>
@@ -1292,12 +1303,9 @@
         appState.chartInstances.push(chart);
     }
 
-    // ================= 初始化 (修正 1: 增加版本號顯示) =================
+    // ================= 初始化 =================
 
     (function init() {
-        // 設置版本號
-        dom.footerVersion.textContent = `版號 ${APP_VERSION}`; 
-        
         dom.content.innerHTML = `<div class="loading-state">正在載入所有選舉摘要數據...請稍候。</div>`;
         loadAllElectionSummaries(availableElections).then(() => {
             renderMainMenu(); 
