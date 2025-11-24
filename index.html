@@ -1020,13 +1020,16 @@
         } else {
             // 儀表板內頁的詳細統計數據：
             // 修正 Issue 1: 移除「有效票」周圍的 strong 標籤，使其不特別粗體
+            // 修正 Issue 3: 將第二行資訊（選舉人數、投票率）包裹在 white-space: nowrap; 的 span 中，防止手機換行
              cardStatsHTML = `
                 <div class="card-stats">
                     <span style="font-size:14px;">有效票: ${validVotes.toLocaleString()} 票</span> 
                     | 無效票: ${invalidVotes.toLocaleString()} 票 
                     <br>
-                    選舉人數: ${eligibleVoters.toLocaleString()} 人 
-                    | 投票率: <span class="rate">${turnoutRate}%</span>
+                    <span style="white-space: nowrap;">
+                        選舉人數: ${eligibleVoters.toLocaleString()} 人 
+                        | 投票率: <span class="rate">${turnoutRate}%</span>
+                    </span>
                 </div>
             `;
         }
