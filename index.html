@@ -246,20 +246,22 @@
         .sort-icon.asc { border-bottom: 4px solid #333; opacity: 1; }
         .sort-icon.desc { border-top: 4px solid #333; opacity: 1; }
         
-        /* 號次圓圈樣式 - 邊框加粗至 2px */
+        /* 號次圓圈樣式 - 邊框加粗至 2px，並使用 Flexbox 確保完美置中 */
         .number-badge {
-            display: inline-block; 
+            display: flex; /* <--- 關鍵：使用 Flexbox */
+            align-items: center; /* <--- 垂直置中 */
+            justify-content: center; /* <--- 水平置中 */
             width: 24px; 
             height: 24px; 
-            line-height: 24px; 
-            text-align: center; 
+            /* line-height 移除或設為正常，讓 Flexbox 接管垂直置中 */
+            line-height: normal; 
             background: #eee; 
             border-radius: 50%; 
             font-weight: 700; 
             font-size: 13px; 
             color: #555; 
             vertical-align: middle;
-            border: 2px solid #ffffff; /* <--- 邊框加粗到 2px */
+            border: 2px solid #ffffff; 
             box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
         }
 
@@ -277,7 +279,7 @@
         table.large-table { font-size: 17px; table-layout: auto; }
         table.large-table th { padding: 10px 10px; font-size: 14px; }
         table.large-table td { padding: 10px 10px; }
-        table.large-table .number-badge { width: 26px; height: 26px; line-height: 26px; font-size: 14px; }
+        table.large-table .number-badge { width: 26px; height: 26px; font-size: 14px; }
         table.large-table .party-badge { font-size: 12px; }
 
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
@@ -320,14 +322,15 @@
             
             td.number-cell { text-align: center; line-height: 22px; }
             
-            /* 手機版號次圓圈樣式 - 確保白色邊框依然存在 */
+            /* 手機版號次圓圈樣式 - 使用 Flexbox 確保完美置中 */
             .number-badge { 
                 width: 22px; 
                 height: 22px; 
-                line-height: 22px; 
+                /* line-height 移除或設為正常，讓 Flexbox 接管垂直置中 */
+                line-height: normal; 
                 font-size: 12px; 
                 vertical-align: middle; 
-                border: 2px solid #ffffff; /* <--- 邊框加粗到 2px */
+                border: 2px solid #ffffff; 
             }
 
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
