@@ -48,24 +48,27 @@
             margin-bottom: 0; 
         }
         
-        /* 【頁尾】預設為手機/分行模式 */
+        /* 【頁尾】樣式修改：更淡的顏色、更小的字級 */
         footer {
             text-align: center;
             padding: 15px 15px; 
             margin-top: 40px; 
             background: transparent; 
-            color: #7f8c8d;
-            font-size: 13px;
+            color: #AAB8C2; /* 使用更淡的顏色 */
+            font-size: 12px; /* 字級縮小 */
             box-shadow: none; 
-            line-height: 1.8;
+            line-height: 1.6; /* 調整行高 */
         }
-        /* 預設在小螢幕上將主標題和資料來源分行顯示 */
+        /* 預設在小螢幕上將主標題和資料來源分行顯示 - 這些不再需要，但保留以防萬一 */
         #footer-main, #footer-source {
-            display: block;
+            display: none; /* 隱藏舊的 */
         }
         /* 預設隱藏分隔符 */
         #footer-separator {
             display: none; 
+        }
+        #footer-content {
+            display: block; /* 確保新內容顯示 */
         }
 
         /* 下拉選單列 */
@@ -278,12 +281,12 @@
                 line-height: 1.6; /* 單行文字更合理的行高 */
             }
             /* 將文字排在同一行 */
-            #footer-main, #footer-source {
+            #footer-content {
                 display: inline;
             }
-            /* 顯示分隔符 */
-            #footer-separator {
-                display: inline; 
+            /* 隱藏舊的分隔符和內容 */
+            #footer-main, #footer-source, #footer-separator {
+                display: none;
             }
         }
     </style>
@@ -310,9 +313,7 @@
 </div>
 
 <footer>
-    <span id="footer-main">Vote for Kinmen︱金門選舉儀表板</span>
-    <span id="footer-separator">．</span>
-    <span id="footer-source">資料來源︱中選會選舉資料庫</span>
+    <span id="footer-content">版本 v1.0 ︱ 資料來源：中選會</span>
 </footer>
 
 <script>
@@ -892,8 +893,7 @@
                             <tr>
                                 ${renderTableHeader('#', 'number', 'width:40px; text-align:center;')} 
                                 ${renderTableHeader('候選人', 'name', '')}
-                                ${renderTableHeader('政黨', 'party', '')}
-                                ${renderTableHeader('得票', 'votes', 'text-align:right')}
+                                ${renderTableHeader('推薦政黨', 'party', '')} ${renderTableHeader('得票', 'votes', 'text-align:right')}
                                 ${renderTableHeader('%', 'votes', 'text-align:right; width:50px')}
                             </tr>
                         </thead>
