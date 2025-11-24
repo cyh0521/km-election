@@ -283,6 +283,62 @@
         table.large-table .party-badge { font-size: 12px; }
 
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
+        
+        /* 新增：頂部兩欄佈局容器 */
+        .top-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 桌面版：兩欄平均分佈 */
+            gap: 25px;
+            margin-bottom: 40px;
+            align-items: start; /* 確保內容頂部對齊 */
+        }
+
+        /* 新增：右側摘要資訊面板樣式 */
+        .summary-panel {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+        .summary-panel h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+            border-left: 4px solid var(--primary); 
+            padding-left: 10px;
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+        .summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 15px;
+        }
+        .summary-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+        .summary-list li:last-child {
+            border-bottom: none;
+        }
+        /* 當選者單行資訊的樣式覆蓋 */
+        .summary-list li.winner-row {
+            display: block !important; 
+            border-bottom: none !important;
+            line-height: 1.5;
+        }
+        .summary-list .stat-value {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .summary-list .winner-name {
+            color: var(--primary);
+            font-size: 16px;
+        }
 
         @media (max-width: 768px) {
              /* 手機版：強制主選單按鈕雙欄顯示 (先前要求) */
@@ -336,6 +392,11 @@
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
             .col-party .party-title-desktop { display: none; }
             .col-party .party-title-mobile { display: inline; }
+            
+            /* 手機版：頂部兩欄改為單欄堆疊 */
+            .top-summary-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         /* --- 頁尾總體樣式 (Footer) --- */
@@ -451,7 +512,7 @@
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
             b: parseInt(result[3], 16)
-        } : { r: 0, g: 0, b: 0 };
+        } : { r: 0, b: 0, g: 0 };
     }
 
     function getPartyColor(party) {
@@ -1084,10 +1145,11 @@
         appState.chartInstances.push(chart);
     }
     
-    // ================= 儀表板核心渲染邏輯 (保持不變) =================
+    // ================= 儀表板核心渲染邏輯 (加入緊湊型和雙欄佈局) =================
     
     window.renderCounty = function(shouldScroll = true) {
-        const candidates = getSortedCandidates(appState.data.county);
+        // 注意：這裡取得的 candidates 已經是排序過的
+        const candidates = getSortedCandidates(appState.data.county); 
         const metadata = appState.countyMetadata;
         
         if (!shouldScroll) {
@@ -1108,7 +1170,10 @@
 
         let html = `<div class="main-section">
             <div class="section-header"><span class="section-title">${appState.electionName}</span></div>
-            ${generateCardHTML('county-main', '全縣開票結果', candidates, metadata, false, false, false, false)}
+            <div class="top-summary-grid">
+                ${generateCardHTML('county-main', '全縣開票結果', candidates, metadata, false, false, true, false)}
+                ${generateSummaryPanelHTML(candidates, metadata, "全縣")}
+            </div>
         </div>`;
 
         html += `<div class="main-section">
@@ -1167,7 +1232,10 @@
 
         let html = `<div class="main-section">
             <div class="section-header"><span class="section-title">${townName} 總計</span></div>
-            ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, false, false)}
+            <div class="top-summary-grid">
+                ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false)}
+                ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
+            </div>
         </div>`;
 
         html += `<div class="main-section">
@@ -1192,7 +1260,7 @@
         updateSortIcons();
     };
 
-    // ================= 通用輔助函式 (保持不變) =================
+    // ================= 通用輔助函式 (已更新 generateSummaryPanelHTML) =================
 
     function updateBreadcrumb() {
         const level = appState.currentLevel;
@@ -1224,6 +1292,67 @@
         dom.breadcrumbBottom.innerHTML = html;
         dom.breadcrumbBottom.style.display = 'block';
     }
+    
+    /**
+     * 生成右側摘要面板的 HTML (已根據要求精簡為單行當選者資訊)
+     */
+    function generateSummaryPanelHTML(candidates, metadata, title) {
+        const { validVotes, invalidVotes, eligibleVoters } = metadata;
+        const totalBallots = validVotes + invalidVotes;
+        const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
+        
+        // 確保我們拿到的是依票數排序的列表，找出 Top 1
+        const sortedCandidatesByVotes = getSortedCandidatesFromList(candidates, { key: 'votes', direction: 'desc' });
+        
+        const topCandidate = sortedCandidatesByVotes.length > 0 ? sortedCandidatesByVotes[0] : null;
+        
+        let winnerDetailHTML = '';
+        if (topCandidate && topCandidate.votes > 0) {
+            // const isWinner = topCandidate.isWinner; // 雖然保留了 isWinner 屬性，但在單行顯示中不影響
+            const winnerRate = validVotes > 0 ? (topCandidate.votes / validVotes * 100).toFixed(2) : "0.00";
+            const partyColor = getPartyColor(topCandidate.party);
+            const partyShortName = getShortPartyName(topCandidate.party);
+
+            // 根據使用者要求，組合成單行文字：候選人 (政黨) XXXX票 XX.XX%
+            const combinedText = `
+                <span class="winner-name" style="color:${partyColor}; font-size:16px; font-weight:700; margin-right: 5px;">
+                    ${topCandidate.name}
+                </span>
+                <span style="color:${partyColor}; font-weight:500; margin-right: 10px;">
+                    (${partyShortName})
+                </span>
+                <span style="font-weight:700; margin-right: 10px;">
+                    ${topCandidate.votes.toLocaleString()} 票
+                </span>
+                <span style="color:#d9534f; font-weight:700;">
+                    ${winnerRate}%
+                </span>
+            `;
+
+            // 將所有內容放在一個列表項中，並加上 winner-row class 來覆蓋 flex 佈局
+            winnerDetailHTML = `
+                <li class="winner-row">
+                    ${combinedText}
+                </li>
+            `;
+        }
+        
+        return `
+        <div class="summary-panel">
+            <h3>🗳️ 選舉概況 (${title})</h3>
+            <ul class="summary-list">
+                <li><span>投票率</span><span class="stat-value" style="color:#d9534f;">${turnoutRate}%</span></li>
+                <li><span>有效票數</span><span class="stat-value">${validVotes.toLocaleString()} 票</span></li>
+                <li><span>無效票數</span><span class="stat-value">${invalidVotes.toLocaleString()} 票</span></li>
+                <li><span>選舉人數</span><span class="stat-value">${eligibleVoters.toLocaleString()} 人</span></li>
+            </ul>
+            
+            <h3 style="margin-top:20px;">🏅 當選者</h3>
+            <ul class="summary-list" style="border-top: 1px dashed var(--border); padding-top: 10px;">
+                ${winnerDetailHTML}
+            </ul>
+        </div>`;
+    }
 
 
     /**
@@ -1238,6 +1367,7 @@
         
         const summaryClass = isSummary ? 'is-summary' : '';
         
+        // 只有非緊湊模式且非摘要模式才使用 large-table (現已停用，改用緊湊模式)
         const tableSizeClass = isCompact ? '' : ' large-table';
         
         const { validVotes, invalidVotes, eligibleVoters } = metadata;
@@ -1247,9 +1377,9 @@
 
         // 統計數據 HTML 
         let cardStatsHTML;
-        if (isSummary) {
+        if (isSummary || isCompact) {
              cardStatsHTML = `
-                <div class="card-stats">
+                <div class="card-stats" style="margin-left: 0;">
                     <span style="white-space: nowrap;">
                         有效票: ${validVotes.toLocaleString()} 票 
                         <span style="color:var(--text-sub); margin: 0 5px;">|</span>
