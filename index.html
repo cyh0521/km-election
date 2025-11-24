@@ -261,7 +261,7 @@
         
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
-        /* --- 手機版 RWD 針對性調整 (修復切邊問題) --- */
+        /* --- 手機版 RWD 針對性調整 (修復切邊與欄寬問題) --- */
         @media (max-width: 768px) {
              /* 1. 手機版選單改為「雙欄」 */
              .main-menu-grid {
@@ -279,54 +279,82 @@
 
              .election-list-grid { grid-template-columns: 1fr; }
              
+             /* 卡片內容垂直堆疊 */
              .layout-compact { flex-direction: column; align-items: center; }
              .layout-compact .chart-area { width: 140px; height: 140px; flex: none; margin-bottom: 10px; }
              .layout-compact .table-area { width: 100%; }
 
-             /* 3. 表格瘦身：字體與內距大幅縮小 */
+             /* 3. 表格瘦身：字體縮小 */
              table, table.large-table { font-size: 13px; }
              
              /* 強制縮小所有欄位的內距 */
              th, td, 
              table.large-table th, table.large-table td { 
-                 padding: 6px 2px !important; /* 極限縮小內距 */
+                 padding: 6px 2px !important; 
              }
              
-             /* 政黨欄位特殊處理 */
-             .party-cell .party-long { display: none; }
-             .party-cell .party-short { display: inline-block; }
-             .party-badge { font-size: 10px; padding: 2px 4px; }
-
-             /* 針對「推薦政黨」四個字進行字體微調，避免撐太開 */
-             .layout-compact table th:nth-child(3) {
-                 font-size: 12px;
-                 letter-spacing: -1px; /* 稍微擠壓字距 */
+             /* --- 關鍵修復：強制表格使用固定寬度佈局 --- */
+             /* 這樣欄位寬度將嚴格依照下方設定的百分比，不會被「推薦政黨」四個字撐壞 */
+             .layout-compact table {
+                 table-layout: fixed;
+                 width: 100%;
              }
 
-             /* 號碼欄 */
+             /* 欄位 1: 號次 (8%) */
              .layout-compact table th:nth-child(1),
-             .layout-compact table td:nth-child(1) { width: 25px; padding-left: 0; }
+             .layout-compact table td:nth-child(1) { 
+                 width: 8%; 
+                 text-align: center;
+                 padding-left: 0 !important;
+             }
              
-             /* 得票數欄 */
+             /* 欄位 2: 候選人 (25%) - 超出隱藏 */
+             .layout-compact table th:nth-child(2),
+             .layout-compact table td:nth-child(2) { 
+                 width: 25%;
+                 white-space: nowrap;
+                 overflow: hidden;
+                 text-overflow: ellipsis; 
+             }
+
+             /* 欄位 3: 推薦政黨 (22%) - 因為表頭文字長，給予足夠空間 */
+             .layout-compact table th:nth-child(3),
+             .layout-compact table td:nth-child(3) { 
+                 width: 22%; 
+                 text-align: center; /* 讓徽章置中 */
+             }
+             
+             /* 欄位 3 表頭特化：縮小字體以放入四個字 */
+             .layout-compact table th:nth-child(3) {
+                 font-size: 11px; /* 縮小字體 */
+                 letter-spacing: -0.5px; /* 擠壓字距 */
+             }
+
+             /* 欄位 4: 得票 (30%) - 確保長條圖有空間 */
              .layout-compact table th:nth-child(4),
              .layout-compact table td:nth-child(4) { 
-                 min-width: 55px; /* 稍微縮小 */
+                 width: 30%; 
+                 min-width: 0; /* 覆蓋 desktop 設定 */
              }
              .bar-container { max-width: 40px; }
              
-             /* 修正：得票率欄位強制不切邊 */
+             /* 欄位 5: 得票率 (15%) - 靠右對齊 */
              .layout-compact table th:nth-child(5),
              .layout-compact table td:nth-child(5) { 
-                 width: 45px; 
-                 min-width: 45px; 
-                 padding-right: 0 !important; /* 貼齊最右邊 */
+                 width: 15%; 
+                 min-width: 0;
+                 padding-right: 0 !important; 
              }
+             
+             /* 隱藏/顯示邏輯 */
+             .party-cell .party-long { display: none; }
+             .party-cell .party-short { display: inline-block; }
+             .party-badge { font-size: 10px; padding: 2px 4px; }
              
              .section-title { font-size: 20px; }
              
-             /* 調整大表格內數字球的大小 */
-             table.large-table .number-badge { width: 20px; height: 20px; line-height: 20px; font-size: 12px; }
              .number-badge { width: 20px; height: 20px; line-height: 20px; font-size: 12px; }
+             table.large-table .number-badge { width: 20px; height: 20px; line-height: 20px; font-size: 12px; }
         }
         
         /* --- 頁尾總體樣式 --- */
@@ -1094,7 +1122,6 @@
         
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, isSummary);
         
-        // 這裡保留「推薦政黨」，CSS 會在手機版調整字體大小
         const partyTitle = "推薦政黨";
         
         return `
