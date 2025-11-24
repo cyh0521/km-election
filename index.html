@@ -229,8 +229,6 @@
         .layout-compact table th:nth-child(5),
         .layout-compact table td:nth-child(5) { width: 50px; text-align: right; } /* 得票率固定小寬度 */
 
-
-        
         /* 儀表板內頁表格樣式維持 */
         td.number-cell { text-align: center; }
         
@@ -247,6 +245,11 @@
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
         .party-cell .party-short { display: none; }
+        
+        /* 桌面版：顯示「推薦政黨」 */
+        .col-party .party-title-desktop { display: inline; }
+        .col-party .party-title-mobile { display: none; }
+
 
         table.large-table { font-size: 17px; table-layout: auto; }
         table.large-table th { padding: 10px 10px; font-size: 14px; }
@@ -284,6 +287,10 @@
             td.number-cell { text-align: center; line-height: 22px; }
             
             .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
+            
+            /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
+            .col-party .party-title-desktop { display: none; }
+            .col-party .party-title-mobile { display: inline; }
         }
         
         /* --- 頁尾總體樣式 (Footer) --- */
@@ -323,11 +330,13 @@
 </div>
 
 <footer>
-    <span id="footer-source">資料來源︱中選會選舉資料庫</span>
+    <span id="footer-version"></span>︱資料來源：中選會選舉資料庫
 </footer>
 
 <script>
-    // ================= 數據與設定區 (略) =================
+    // ================= 數據與設定區 (修正 1: 新增版本號) =================
+    
+    const APP_VERSION = "v1.0.0"; // 自動代入的版本號
     
     const availableElections = [
         { 
@@ -388,7 +397,8 @@
         content: document.getElementById("content"),
         breadcrumb: document.getElementById("breadcrumb"),
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
-        header: document.querySelector('header')
+        header: document.querySelector('header'),
+        footerVersion: document.getElementById("footer-version") // 新增 DOM 引用
     };
 
     let appState = {
@@ -1070,6 +1080,10 @@
         function renderTableHeader(title, sortKey, style = '', className = '') {
             // 摘要卡片不允許排序
             if (isSummary) {
+                 // 修正 2: 在摘要卡片中也使用新的標題顯示邏輯
+                 if (sortKey === 'party') {
+                     return `<th style="${style}" class="${className} col-party"><span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span></th>`;
+                 }
                  return `<th style="${style}" class="${className}">${title}</th>`;
             }
             
@@ -1077,13 +1091,20 @@
             const iconClass = isCurrentKey ? currentSortDirection : '';
             const iconHtml = `<span data-key="${sortKey}" class="sort-icon ${iconClass}"></span>`;
             
-            return `<th style="${style}" class="${className}" onclick="event.stopPropagation(); sortTable('${sortKey}')">${title} ${iconHtml}</th>`;
+            // 修正 2: 處理「推薦政黨/政黨」標題的顯示
+            let titleHTML = title;
+            if (sortKey === 'party') {
+                titleHTML = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
+            }
+            
+            return `<th style="${style}" class="${className}" onclick="event.stopPropagation(); sortTable('${sortKey}')">${titleHTML} ${iconHtml}</th>`;
         }
         
         // 傳入 isSummary 參數給 generateTableBodyHTML 以便調整 TD 內容
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, isSummary);
         
-        const partyTitle = "推薦政黨";
+        // 修正 2: 移除這個變數，直接在 renderTableHeader 中處理標題
+        // const partyTitle = "推薦政黨"; 
         
         return `
         <div class="card ${clickClass} ${summaryClass}" ${clickAttr} id="card-${id}">
@@ -1104,8 +1125,7 @@
                             <tr>
                                 ${renderTableHeader('#', 'number', 'width:40px; text-align:center;', 'col-number')} 
                                 ${renderTableHeader('候選人', 'name', '', '')}
-                                ${renderTableHeader(partyTitle, 'party', '', 'col-party')}
-                                ${renderTableHeader('得票', 'votes', 'text-align:right')}
+                                ${renderTableHeader('', 'party', '', 'col-party')} ${renderTableHeader('得票', 'votes', 'text-align:right')}
                                 ${renderTableHeader('%', 'votes', 'text-align:right; width:50px')}
                             </tr>
                         </thead>
@@ -1249,9 +1269,12 @@
         appState.chartInstances.push(chart);
     }
 
-    // ================= 初始化 =================
+    // ================= 初始化 (修正 1: 增加版本號顯示) =================
 
     (function init() {
+        // 修正 1: 設置版本號
+        dom.footerVersion.textContent = `版號 ${APP_VERSION}`; 
+        
         dom.content.innerHTML = `<div class="loading-state">正在載入所有選舉摘要數據...請稍候。</div>`;
         loadAllElectionSummaries(availableElections).then(() => {
             renderMainMenu(); 
