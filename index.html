@@ -478,6 +478,14 @@
             type: "立法委員", 
             uiName: "2019年 立法委員補選",
             summaryData: null
+        },
+        // *** [修改 1] 新增 1995 立法委員選舉 ***
+        { 
+            file: "1995_立法委員.csv", 
+            year: "1995", 
+            type: "立法委員", 
+            uiName: "1995年 立法委員選舉",
+            summaryData: null
         }
     ];
     
@@ -498,7 +506,7 @@
         "民主進步黨": "#67C167", 
         "台灣民眾黨": "#28C8C8",
         "親民黨": "#F27C00",
-        "新黨": "#F0C800",
+        "新黨": "#FFDB00", // *** [修改 2] 新黨顏色更新為 #FFDB00 ***
         "金門高粱黨": "#990033", 
         "無黨籍": "#AAAAAA",      
         "default": "#7f8c8d"
@@ -543,7 +551,7 @@
             "民主進步黨": "民進黨",
             "台灣民眾黨": "民眾黨",
             "親民黨": "親民黨", 
-            "新黨": "新黨", 
+            "新黨": "新黨", // 已存在
             "金門高粱黨": "高粱黨", 
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
@@ -564,7 +572,7 @@
             "民主進步黨": "民主進步黨",
             "台灣民眾黨": "台灣民眾黨",
             "親民黨": "親民黨", 
-            "新黨": "新黨", 
+            "新黨": "新黨", // 已存在
             "金門高粱黨": "金門高粱黨", 
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
@@ -820,14 +828,16 @@
                 const summary = extractCountySummary(csvText);
                 
                 if (summary) {
-                    const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, { key: 'votes', direction: 'desc' });
+                    // --- 修改 2：摘要卡片預設排序改為號次升序 (number, asc) ---
+                    const initialSortConfig = { key: 'number', direction: 'asc' };
+                    const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, initialSortConfig);
                     
                     e.summaryData = {
                         allCandidates: sortedAllCands,
                         metadata: summary.metadata,
                         topCandidates: sortedAllCands.slice(0, 3),
-                        // *** 新增：為摘要卡片初始化本地排序配置 ***
-                        sortConfig: { key: 'votes', direction: 'desc' } 
+                        // 設置初始排序配置為號次升序
+                        sortConfig: initialSortConfig 
                     };
                     
                 } else {
@@ -974,9 +984,9 @@
             const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
             const partyColorHex = getPartyColor(c.party); 
             
-            // 轉換為 RGB，並使用 10% 透明度
+            // 轉換為 RGB，並使用 30% 透明度 (上次已修改)
             const rgb = hexToRgb(partyColorHex);
-            const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.10)`; 
+            const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
             // 使用 CSS linear-gradient 實現全列背景長條圖
             const rowStyle = `
