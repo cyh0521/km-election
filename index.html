@@ -46,7 +46,7 @@
         
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         
-        /* --- 主選單樣式 (v3.43 優化維持) --- */
+        /* --- 主選單樣式 --- */
         
         .main-menu-grid {
             display: grid;
@@ -92,7 +92,6 @@
         /* --- 選舉列表 / 摘要卡片樣式 (v3.47 鎖定為雙欄，v3.48 維持) --- */
         .election-list-grid {
              display: grid;
-             /* 鎖定為兩欄，確保卡片有足夠空間 */
              grid-template-columns: repeat(2, 1fr); 
              gap: 20px;
              margin-top: 20px;
@@ -168,7 +167,7 @@
         .layout-compact .table-area { flex: 1; min-width: 0; }
 
         .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; } 
+        table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: auto; } 
         th { 
             background: #f8f9fa; 
             color: #666; 
@@ -184,23 +183,15 @@
         th:hover { background: #e9ecef; }
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        /* 針對簡潔卡片 (包含摘要卡片和鄉鎮村里卡片) 重新分配欄位寬度 (v3.56 最終修正: 調整百分比比例) */
-        .layout-compact table { table-layout: fixed; }
-        
+        /* 僅保留必要的最小寬度或對齊設定 */
         .layout-compact table th:nth-child(1),
-        .layout-compact table td:nth-child(1) { width: 40px; text-align: center; } /* 號碼 - 40px */
-        
-        .layout-compact table th:nth-child(2),
-        .layout-compact table td:nth-child(2) { width: 30%; } /* 姓名 - 30% (增加) */
-        
-        .layout-compact table th:nth-child(3),
-        .layout-compact table td:nth-child(3) { width: 60px; } /* 推薦政黨 - 60px */
+        .layout-compact table td:nth-child(1) { width: 40px; text-align: center; } /* 號碼 */
         
         .layout-compact table th:nth-child(4),
-        .layout-compact table td:nth-child(4) { width: 30%; text-align: right; } /* 得票數 - 30% (縮減) */
+        .layout-compact table td:nth-child(4) { text-align: right; } /* 得票數靠右 */
         
         .layout-compact table th:nth-child(5),
-        .layout-compact table td:nth-child(5) { width: 80px; text-align: right; } /* 得票率 - 80px 固定寬度 */
+        .layout-compact table td:nth-child(5) { width: 50px; text-align: right; } /* 得票率固定小寬度 */
 
 
         
@@ -221,7 +212,7 @@
         
         .party-cell .party-short { display: none; }
 
-        table.large-table { font-size: 17px; }
+        table.large-table { font-size: 17px; table-layout: auto; }
         table.large-table th { padding: 10px 10px; font-size: 14px; }
         table.large-table td { padding: 10px 10px; }
         table.large-table .number-badge { width: 26px; height: 26px; line-height: 26px; font-size: 14px; }
@@ -242,15 +233,7 @@
              .layout-compact .chart-area { width: 150px; height: 150px; flex: none; margin-bottom: 15px; }
              .layout-compact .table-area { width: 100%; }
 
-             /* 手機版簡潔卡片欄寬調整 - 維持舊有比例 */
-             .layout-compact table th:nth-child(2),
-             .layout-compact table td:nth-child(2) { width: 40%; } /* 姓名 */
-             .layout-compact table th:nth-child(3),
-             .layout-compact table td:nth-child(3) { width: 80px; } /* 政黨 */
-             .layout-compact table th:nth-child(4),
-             .layout-compact table td:nth-child(4) { width: 30%; } /* 得票數 */
-             .layout-compact table th:nth-child(5),
-             .layout-compact table td:nth-child(5) { width: 15%; } /* 得票率 */
+             /* 手機版也移除強制寬度 */
             
             /* 其他保持一致 */
             .layout-full { grid-template-columns: 1fr; }
@@ -267,6 +250,21 @@
             td.number-cell { text-align: center; line-height: 22px; }
             
             .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
+        }
+        
+        /* 桌面版（> 768px）頁尾樣式調整 */
+        @media (min-width: 769px) {
+            footer {
+                line-height: 1.6; /* 單行文字更合理的行高 */
+            }
+            /* 將文字排在同一行 */
+            #footer-main, #footer-source {
+                display: inline;
+            }
+            /* 顯示分隔符 */
+            #footer-separator {
+                display: inline; 
+            }
         }
     </style>
 </head>
@@ -690,10 +688,7 @@
     }
     
     /**
-     * 根據候選人列表和有效票數生成表格 HTML
-     * @param {Array} candidates - 候選人資料列表
-     * @param {number} validVotes - 總有效票數
-     * @param {boolean} isSummaryCard - 是否為首頁摘要卡片 (用於隱藏不必要欄位)
+     * @param {boolean} isSummaryCard - 是否為首頁摘要卡片 (影響得票率顏色)
      */
     function generateTableBodyHTML(candidates, validVotes, isSummaryCard = false) {
         return candidates.map(c => {
@@ -718,7 +713,7 @@
                             <div class="bar-container col-bar-fill"><div class="bar-fill" style="width:${rate}%; background:${color}"></div></div>
                         </div>
                     </td>
-                    <td style="text-align:right; font-weight:bold; color:${isSummaryCard ? color : '#333'}">${rate}%</td>
+                    <td style="text-align:right; font-weight:bold; color:${color}">${rate}%</td>
                 </tr>
             `;
         }).join('');
@@ -1014,7 +1009,7 @@
         // 根據是否為 Summary 決定顯示的統計資訊
         let cardStatsHTML;
         if (isSummary) {
-             // 摘要卡片：顯示**有效票** (粗體) 和投票率
+             // 摘要卡片：顯示有效票 (粗體) 和投票率
              cardStatsHTML = `
                 <div class="card-stats">
                     有效票: <strong>${validVotes.toLocaleString()}</strong> 票 
@@ -1023,10 +1018,11 @@
                 </div>
             `;
         } else {
-            // 儀表板內頁的詳細統計數據：有效票 (非粗體)
+            // 儀表板內頁的詳細統計數據：
+            // 修正 Issue 1: 移除「有效票」周圍的 strong 標籤，使其不特別粗體
              cardStatsHTML = `
                 <div class="card-stats">
-                    <span style="font-size:14px;"><strong>有效票: ${validVotes.toLocaleString()}</strong> 票</span> 
+                    <span style="font-size:14px;">有效票: ${validVotes.toLocaleString()} 票</span> 
                     | 無效票: ${invalidVotes.toLocaleString()} 票 
                     <br>
                     選舉人數: ${eligibleVoters.toLocaleString()} 人 
