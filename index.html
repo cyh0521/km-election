@@ -50,6 +50,7 @@
         
         .main-menu-grid {
             display: grid;
+            /* 桌面版：自適應佈局，最小 180px */
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
             gap: 15px; 
             margin-bottom: 50px;
@@ -58,16 +59,22 @@
         .menu-button {
             background: var(--card-bg);
             border: 1px solid var(--border); 
-            border-radius: 8px; 
-            padding: 15px 20px; 
+            border-radius: 12px; /* 稍微加大圓角 */
+            padding: 20px 10px; /* 增加內距，作為更好的點擊區域 */
             text-align: center;
             font-size: 16px; 
             font-weight: 500; 
             color: var(--secondary);
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 增加陰影立體感 */
             line-height: 1.4;
+            
+            /* 新增 Flexbox 佈局來排版圖示和文字 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .menu-button:hover {
@@ -75,10 +82,21 @@
             background: var(--primary);
             color: white;
             transform: translateY(-2px); 
-            box-shadow: 0 4px 10px rgba(56, 135, 176, 0.2);
+            box-shadow: 0 8px 15px rgba(56, 135, 176, 0.2);
         }
         
-        .menu-icon { display: none; } 
+        /* 圖示樣式 */
+        .menu-icon { 
+            display: block; 
+            font-size: 32px; /* 圖示大小 */
+            margin-bottom: 8px; /* 圖示與文字間距 */
+            line-height: 1;
+        }
+
+        .menu-text {
+            font-size: 16px;
+            font-weight: 700; /* 文字加粗 */
+        }
         
         .menu-section-title {
             font-size: 24px;
@@ -89,7 +107,7 @@
             border-bottom: 2px solid var(--border);
         }
 
-        /* --- 選舉列表 / 摘要卡片樣式 --- */
+        /* --- 選舉列表 / 摘要卡片樣式 (略，未變更) --- */
         .election-list-grid {
              display: grid;
              grid-template-columns: repeat(2, 1fr); 
@@ -97,7 +115,7 @@
              margin-top: 20px;
         }
         
-        /* --- 儀表板舊有樣式維持 --- */
+        /* --- 儀表板舊有樣式維持 (略，未變更) --- */
         
         .breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 0; }
         #breadcrumb-bottom { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
@@ -136,7 +154,7 @@
         /* 儀表板內頁卡片統計數據樣式 (非摘要) */
         .card-stats { 
             font-size: 13px; 
-            color: var(--text-main); /* 調整為 main color 保持一致 */
+            color: var(--text-main); 
             margin-top: 5px; 
             margin-left: 14px; 
             font-weight: 500; 
@@ -145,7 +163,7 @@
         
         /* 修正 1：移除內頁卡片 (非摘要) 對「有效票」的特殊樣式 */
         .card-stats strong { 
-            font-weight: 500; /* 與 .card-stats 保持一致 */
+            font-weight: 500; 
             color: var(--text-main);
         }
         
@@ -175,11 +193,9 @@
             font-weight: 500; 
             white-space: nowrap; 
             margin-left: 10px; 
-            flex-shrink: 0; /* 不允許縮小 */
-            align-self: flex-start; /* 讓它固定在頂部 */
-            padding-top: 2px; /* 輕微對齊 */
-            /* 調整：移除右邊距/內距，使其貼齊卡片邊界 */
-            /* 因為 .card 已經有 20px padding，所以這裡不需要額外的 margin/padding */
+            flex-shrink: 0; 
+            align-self: flex-start; 
+            padding-top: 2px; 
         }
 
         .layout-full { display: grid; grid-template-columns: 300px 1fr; gap: 25px; align-items: start; }
@@ -264,6 +280,23 @@
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
         @media (max-width: 768px) {
+             /* 修正 3：手機版：強制主選單按鈕雙欄顯示 */
+             .main-menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* 修正 3：手機版按鈕樣式調整 */
+            .menu-button {
+                padding: 15px 5px; 
+            }
+            .menu-icon {
+                font-size: 28px;
+                margin-bottom: 5px;
+            }
+             .menu-text {
+                font-size: 14px;
+            }
+
              /* 手機版：摘要卡片列表鎖定為單欄 */
              .election-list-grid { grid-template-columns: 1fr; }
              
@@ -334,9 +367,9 @@
 </footer>
 
 <script>
-    // ================= 數據與設定區 (修正 1: 新增版本號) =================
+    // ================= 數據與設定區 =================
     
-    const APP_VERSION = "v1.0.0"; // 自動代入的版本號
+    const APP_VERSION = "v1.0.0"; 
     
     const availableElections = [
         { 
@@ -355,15 +388,16 @@
         }
     ];
     
+    // 修正 1：為選舉類別新增圖示 (icon)
     const electionCategories = [
-        { type: "總統副總統", icon: "" },
-        { type: "立法委員", icon: "" },
-        { type: "國大代表", icon: "" },
-        { type: "縣長", icon: "" },
-        { type: "縣議員", icon: "" },
-        { type: "鄉鎮長", icon: "" },
-        { type: "鄉鎮民代表", icon: "" },
-        { type: "村里長", icon: "" }
+        { type: "總統副總統", icon: "🏛️" },
+        { type: "立法委員", icon: "⚖️" },
+        { type: "國大代表", icon: "📜" },
+        { type: "縣長", icon: "👨‍💼" },
+        { type: "縣議員", icon: "🏘️" },
+        { type: "鄉鎮長", icon: "🏢" },
+        { type: "鄉鎮民代表", icon: "👥" },
+        { type: "村里長", icon: "🏡" }
     ];
 
     const partyColors = {
@@ -398,7 +432,7 @@
         breadcrumb: document.getElementById("breadcrumb"),
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header'),
-        footerVersion: document.getElementById("footer-version") // 新增 DOM 引用
+        footerVersion: document.getElementById("footer-version")
     };
 
     let appState = {
@@ -787,7 +821,7 @@
         });
     }
 
-    // ================= 頁面渲染函式 (優化) (略) =================
+    // ================= 頁面渲染函式 (優化) =================
     
     /**
      * 新增：生成摘要卡片的 HTML 
@@ -832,9 +866,11 @@
             <div class="menu-section-title">依選舉類別瀏覽</div>
             <div class="main-menu-grid">`;
         
+        // 修正 2：將圖示和文字一起渲染
         electionCategories.forEach(cat => {
             html += `<div class="menu-button" onclick="renderElectionList('${cat.type}')">
-                ${cat.type}
+                <span class="menu-icon">${cat.icon}</span>
+                <span class="menu-text">${cat.type}</span>
             </div>`;
         });
         html += `</div></div>`;
@@ -1017,18 +1053,10 @@
         drawCharts(candidates, townMetadata.validVotes, villageList, 'villages', townData);
     };
 
-    // ================= 通用輔助函式 (修正與維持一致) =================
+    // ================= 通用輔助函式 (維持一致) =================
 
     /**
      * 生成卡片 HTML (通用模板)
-     * @param {string} id - 卡片 ID
-     * @param {string} title - 卡片標題
-     * @param {Array} candidates - 候選人列表
-     * @param {object} metadata - 投票元數據
-     * @param {boolean} isClickable - 卡片是否可點擊
-     * @param {string} onClickAction - 點擊時執行的動作
-     * @param {boolean} isCompact - 是否使用簡潔佈局 (圖表和表格並排)
-     * @param {boolean} isSummary - 是否為首頁摘要卡片 (影響顯示的資訊量和樣式)
      */
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false, isSummary = false) {
         const clickClass = isClickable ? 'clickable' : '';
@@ -1080,7 +1108,6 @@
         function renderTableHeader(title, sortKey, style = '', className = '') {
             // 摘要卡片不允許排序
             if (isSummary) {
-                 // 修正 2: 在摘要卡片中也使用新的標題顯示邏輯
                  if (sortKey === 'party') {
                      return `<th style="${style}" class="${className} col-party"><span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span></th>`;
                  }
@@ -1091,7 +1118,6 @@
             const iconClass = isCurrentKey ? currentSortDirection : '';
             const iconHtml = `<span data-key="${sortKey}" class="sort-icon ${iconClass}"></span>`;
             
-            // 修正 2: 處理「推薦政黨/政黨」標題的顯示
             let titleHTML = title;
             if (sortKey === 'party') {
                 titleHTML = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
@@ -1100,11 +1126,7 @@
             return `<th style="${style}" class="${className}" onclick="event.stopPropagation(); sortTable('${sortKey}')">${titleHTML} ${iconHtml}</th>`;
         }
         
-        // 傳入 isSummary 參數給 generateTableBodyHTML 以便調整 TD 內容
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, isSummary);
-        
-        // 修正 2: 移除這個變數，直接在 renderTableHeader 中處理標題
-        // const partyTitle = "推薦政黨"; 
         
         return `
         <div class="card ${clickClass} ${summaryClass}" ${clickAttr} id="card-${id}">
@@ -1125,7 +1147,8 @@
                             <tr>
                                 ${renderTableHeader('#', 'number', 'width:40px; text-align:center;', 'col-number')} 
                                 ${renderTableHeader('候選人', 'name', '', '')}
-                                ${renderTableHeader('', 'party', '', 'col-party')} ${renderTableHeader('得票', 'votes', 'text-align:right')}
+                                ${renderTableHeader('', 'party', '', 'col-party')}
+                                ${renderTableHeader('得票', 'votes', 'text-align:right')}
                                 ${renderTableHeader('%', 'votes', 'text-align:right; width:50px')}
                             </tr>
                         </thead>
@@ -1272,7 +1295,7 @@
     // ================= 初始化 (修正 1: 增加版本號顯示) =================
 
     (function init() {
-        // 修正 1: 設置版本號
+        // 設置版本號
         dom.footerVersion.textContent = `版號 ${APP_VERSION}`; 
         
         dom.content.innerHTML = `<div class="loading-state">正在載入所有選舉摘要數據...請稍候。</div>`;
