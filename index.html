@@ -368,7 +368,7 @@
 </footer>
 
 <script>
-    // ================= 數據與設定區 (略) =================
+    // ================= 數據與設定區 =================
     
     const availableElections = [
         { 
@@ -443,7 +443,7 @@
         electionName: "選舉資料" 
     };
 
-    // ================= 資料載入與解析 (略) =================
+    // ================= 資料載入與解析 =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -575,7 +575,7 @@
             });
     }
     
-    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) (略) =================
+    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) =================
     
     function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -680,7 +680,7 @@
         await Promise.all(summaryPromises);
     }
 
-    // ================= 排序與更新邏輯 (略) =================
+    // ================= 排序與更新邏輯 =================
     
     window.sortTable = function(key) {
         
@@ -774,36 +774,25 @@
             
             const badgeClass = 'number-badge'; 
             
-            // 根據 isSummaryCard 決定是否顯示得票數和長條圖
-            let voteCellHTML = '';
+            // 如果是摘要卡片 (isSummaryCard=true)，只顯示 #, 候選人, 推薦政黨
             if (isSummaryCard) {
-                // 摘要卡片只顯示政黨和候選人名字
-                voteCellHTML = ``; 
-            } else {
-                // 詳細頁面顯示得票數、長條圖和得票率
-                voteCellHTML = `
-                    <div class="vote-cell-content">
-                        <span>${c.votes.toLocaleString()}</span>
-                        <div class="bar-container col-bar-fill"><div class="bar-fill" style="width:${rate}%; background:${color}"></div></div>
-                    </div>
+                return `
+                    <tr>
+                        <td class="number-cell col-number">
+                            <span class="${badgeClass}">${c.number}</span>
+                        </td>
+                        <td style="font-weight:700">${c.name}</td>
+                        <td class="party-cell col-party">
+                            <span class="party-badge party-long" style="background:${color}">${c.party}</span>
+                            <span class="party-badge party-short" style="background:${color}">${getShortPartyName(c.party)}</span>
+                        </td>
+                        <td style="text-align:right"></td>
+                        <td style="text-align:right"></td>
+                    </tr>
                 `;
             }
-            
-            // 修正：摘要卡片上，得票率欄位顯示的是 政黨（長版），得票欄位顯示的是 政黨（短版）
-            // 在您的截圖中，摘要卡片只顯示 #、候選人、推薦政黨，沒有得票和得票率
-            // 但在 generateCardHTML 中，我們總是生成 5 個欄位。
-            
-            // 保持表格結構一致，但讓得票和得票率欄位在摘要卡片上可以隱藏/保持一致
-            // 由於您的表格 header 只有 3 個欄位 (在摘要頁面)，我們需要調整 tableBody 
-            // 讓它在摘要卡片上只顯示 3 個欄位，或讓後兩個欄位顯示政黨資訊
 
-            // 讓我們假設：在 isSummary=true 的情況下，我們**不**顯示得票和得票率這兩欄
-            // 但由於 tableBodyHTML 是生成 row 內容，且 Table Header (<thead>) 是在 generateCardHTML 中生成的
-            // 最穩妥的修復是確保 generateCardHTML 能夠根據 isSummary 產生正確的 table 結構
-            
-            // 由於您要修復的是 **鄉鎮/村里** 的卡片變形（isSummary=false, isCompact=true）
-            // 我們專注於修正寬度問題。
-
+            // 詳細頁面 (鄉鎮/村里級別，isSummaryCard=false)
             return `
                 <tr>
                     <td class="number-cell col-number">
@@ -848,7 +837,7 @@
         });
     }
 
-    // ================= 頁面渲染函式 (優化) (略) =================
+    // ================= 頁面渲染函式 =================
     
     /**
      * 新增：生成摘要卡片的 HTML 
@@ -863,23 +852,13 @@
 
         const { topCandidates, metadata } = election.summaryData;
         
-        // 這裡只需要傳入 topCandidates 即可，因為表格只需要顯示前三名
-        
-        // **修正：摘要卡片只顯示 #、候選人、推薦政黨 (3欄)**
-        // 為了讓摘要卡片只顯示三欄，我們需要傳遞一個特殊的 candidates 列表
-        const summaryCandidates = topCandidates.map(c => ({
-             number: c.number,
-             name: c.name,
-             party: c.party,
-             // 確保 votes 和 rate 是空的，讓 generateTableBodyHTML 知道不渲染數據
-             votes: 0, 
-             rate: 0 
-        }));
+        // 摘要卡片只顯示 #、候選人、推薦政黨 (3欄)
+        const summaryCandidates = topCandidates;
 
         return generateCardHTML(
             `summary-${election.file.replace(/[^a-zA-Z0-9]/g, '-')}`, 
             election.uiName, 
-            summaryCandidates, // 使用特殊處理過的列表
+            summaryCandidates, // 使用前三名列表
             metadata, 
             true, 
             `loadData('${election.file}', '${election.uiName}')`, 
@@ -963,7 +942,7 @@
     };
 
 
-    // ================= 儀表板核心渲染邏輯 (維持一致) =================
+    // ================= 儀表板核心渲染邏輯 =================
 
     window.renderCounty = function(shouldScroll = true) {
         const candidates = getSortedCandidates(appState.data.county);
@@ -1155,10 +1134,12 @@
 
         function renderTableHeader(title, sortKey, style = '', className = '') {
             // 摘要卡片不允許排序
-            if (isSummary) {
-                // **修正：摘要卡片只顯示 #、候選人、推薦政黨 (3欄)**
-                if (sortKey === 'votes') return ''; // 隱藏得票和得票率
+            if (isSummary && (sortKey === 'votes' || sortKey === 'party')) {
+                 // **修正：摘要卡片只顯示 #、候選人、推薦政黨 (3欄)**
+                 if (sortKey === 'votes') return ''; // 隱藏得票和得票率
                  return `<th style="${style}" class="${className}">${title}</th>`;
+            } else if (isSummary && sortKey === 'party') {
+                return `<th style="${style}" class="${className}">${title}</th>`;
             }
             
             const isCurrentKey = currentSortKey === sortKey;
