@@ -24,12 +24,11 @@
             color:var(--text-main); 
             line-height:1.6; 
             padding-bottom: 20px; 
-            padding-top: 60px; /* 因 Header 加大稍作調整 */
+            padding-top: 60px; 
         }
         
         /* --- 優化後的 Header --- */
         header { 
-            /* 改為漸層背景，增加質感 */
             background: linear-gradient(135deg, var(--secondary) 0%, #1a252f 100%);
             color: white; 
             padding: 12px 20px; 
@@ -47,11 +46,9 @@
         
         .container { max-width: 1200px; margin: 25px auto; padding: 0 15px; }
         
-        /* --- 優化後的主選單樣式 --- */
-        
+        /* --- 主選單樣式 --- */
         .main-menu-grid {
             display: grid;
-            /* 電腦版維持自動適應，但設定最小寬度稍大一點讓排列更整齊 */
             grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); 
             gap: 16px; 
             margin-bottom: 50px;
@@ -59,22 +56,21 @@
 
         .menu-button {
             background: var(--card-bg);
-            border: 1px solid transparent; /* 預留邊框空間 */
-            border-radius: 12px; /* 更圓潤的導角 */
+            border: 1px solid transparent; 
+            border-radius: 12px; 
             padding: 18px 15px; 
             text-align: center;
             font-size: 16px; 
             font-weight: 600; 
             color: var(--secondary);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* 更滑順的動畫 */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.04); /* 預設輕微陰影 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04); 
             position: relative;
             overflow: hidden;
             line-height: 1.4;
         }
         
-        /* 裝飾：按鈕左側加上一個隱藏的色條，Hover 時顯示 */
         .menu-button::before {
             content: '';
             position: absolute;
@@ -92,7 +88,6 @@
             background: #fff;
             color: var(--primary);
             transform: translateY(-4px); 
-            /* 加深陰影，營造浮起感 */
             box-shadow: 0 12px 20px rgba(56, 135, 176, 0.15); 
         }
         
@@ -107,7 +102,7 @@
             border-bottom: 2px solid var(--border);
         }
 
-        /* --- 選舉列表 / 摘要卡片樣式 --- */
+        /* --- 選舉列表 --- */
         .election-list-grid {
              display: grid;
              grid-template-columns: repeat(2, 1fr); 
@@ -116,7 +111,6 @@
         }
         
         /* --- 導覽列 --- */
-        
         .breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 0; }
         #breadcrumb-bottom { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
         .breadcrumb span { cursor: pointer; color: var(--primary); font-weight: 500; }
@@ -131,8 +125,7 @@
         /* --- 卡片美化 --- */
         .card { 
             background: var(--card-bg); 
-            border-radius: 12px; /* 統一圓角 */
-            /* 更柔和、擴散的陰影 */
+            border-radius: 12px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
             padding: 20px; 
             overflow: hidden; 
@@ -143,7 +136,6 @@
         .card.clickable { cursor: pointer; }
         .card.clickable:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 15px rgba(56, 135, 176, 0.15); }
         
-        /* 卡片標頭：左右對齊 */
         .card-header { 
             display: flex; 
             justify-content: space-between; 
@@ -172,7 +164,6 @@
         .card-stats strong { font-weight: 500; color: var(--text-main); }
         .card-stats .rate { color: #d9534f; font-weight: 700; }
         
-        /* 摘要卡片統計數據樣式 */
         .card.is-summary .card-stats {
             margin-top: 5px;
             margin-left: 14px;
@@ -199,7 +190,6 @@
 
         .sub-area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 15px; }
         
-        /* 簡潔卡片佈局 */
         .layout-compact { display: flex; align-items: flex-start; gap: 20px; }
         .layout-compact .chart-area { 
             flex: 0 0 130px; 
@@ -228,7 +218,7 @@
         td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
         .layout-compact table th:nth-child(1),
-        .layout-compact table td:nth-child(1) { width: 40px; text-align: center; } /* 號碼 */
+        .layout-compact table td:nth-child(1) { width: 40px; text-align: center; } 
         
         .layout-compact table th:nth-child(4),
         .layout-compact table td:nth-child(4) { 
@@ -271,11 +261,11 @@
         
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
-        /* --- 手機版 RWD 針對性調整 --- */
+        /* --- 手機版 RWD 針對性調整 (修復切邊問題) --- */
         @media (max-width: 768px) {
              /* 1. 手機版選單改為「雙欄」 */
              .main-menu-grid {
-                 grid-template-columns: repeat(2, 1fr); /* 強制兩欄 */
+                 grid-template-columns: repeat(2, 1fr); 
                  gap: 12px;
              }
              
@@ -284,46 +274,62 @@
                  font-size: 15px;
              }
              
-             /* 摘要卡片列表鎖定為單欄 */
+             /* 2. 卡片左右內距減少，爭取空間 */
+             .card { padding: 15px 10px; }
+
              .election-list-grid { grid-template-columns: 1fr; }
              
-             /* 簡潔卡片在手機上調整 */
              .layout-compact { flex-direction: column; align-items: center; }
-             .layout-compact .chart-area { width: 150px; height: 150px; flex: none; margin-bottom: 15px; }
+             .layout-compact .chart-area { width: 140px; height: 140px; flex: none; margin-bottom: 10px; }
              .layout-compact .table-area { width: 100%; }
 
-             /* 表格調整 */
-            .layout-full { grid-template-columns: 1fr; }
-            .sub-area-grid { grid-template-columns: 1fr; }
-            .party-cell .party-long { display: none; }
-            .party-cell .party-short { display: inline-block; }
-            .party-badge { font-size: 11px; }
+             /* 3. 表格瘦身：字體與內距大幅縮小 */
+             table, table.large-table { font-size: 13px; }
+             
+             /* 強制縮小所有欄位的內距 */
+             th, td, 
+             table.large-table th, table.large-table td { 
+                 padding: 6px 2px !important; /* 極限縮小內距 */
+             }
+             
+             /* 政黨欄位特殊處理 */
+             .party-cell .party-long { display: none; }
+             .party-cell .party-short { display: inline-block; }
+             .party-badge { font-size: 10px; padding: 2px 4px; }
 
-            table.large-table { font-size: 14px; }
-            table.large-table th { padding: 6px 8px; font-size: 13px; }
-            table.large-table td { padding: 8px 8px; }
-            table.large-table .party-badge { font-size: 11px; }
-            
-            td.number-cell { text-align: center; line-height: 22px; }
-            
-            .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
-            
-            /* 手機版字體微調 */
-            .section-title { font-size: 20px; }
+             /* 針對「推薦政黨」四個字進行字體微調，避免撐太開 */
+             .layout-compact table th:nth-child(3) {
+                 font-size: 12px;
+                 letter-spacing: -1px; /* 稍微擠壓字距 */
+             }
 
-            /* 手機版得票率欄寬度調整 */
-            .layout-compact table th:nth-child(4),
-            .layout-compact table td:nth-child(4) { 
-                min-width: 75px; 
-            }
-            .layout-compact table th:nth-child(5),
-            .layout-compact table td:nth-child(5) { 
-                width: 55px; 
-                min-width: 55px; 
-            }
+             /* 號碼欄 */
+             .layout-compact table th:nth-child(1),
+             .layout-compact table td:nth-child(1) { width: 25px; padding-left: 0; }
+             
+             /* 得票數欄 */
+             .layout-compact table th:nth-child(4),
+             .layout-compact table td:nth-child(4) { 
+                 min-width: 55px; /* 稍微縮小 */
+             }
+             .bar-container { max-width: 40px; }
+             
+             /* 修正：得票率欄位強制不切邊 */
+             .layout-compact table th:nth-child(5),
+             .layout-compact table td:nth-child(5) { 
+                 width: 45px; 
+                 min-width: 45px; 
+                 padding-right: 0 !important; /* 貼齊最右邊 */
+             }
+             
+             .section-title { font-size: 20px; }
+             
+             /* 調整大表格內數字球的大小 */
+             table.large-table .number-badge { width: 20px; height: 20px; line-height: 20px; font-size: 12px; }
+             .number-badge { width: 20px; height: 20px; line-height: 20px; font-size: 12px; }
         }
         
-        /* --- 頁尾總體樣式 (Footer) --- */
+        /* --- 頁尾總體樣式 --- */
         footer {
             padding: 20px 15px;
             margin-top: 40px; 
@@ -363,7 +369,6 @@
 <script>
     // ================= 數據與設定區 =================
     
-    // 請確保您的 CSV 檔名與路徑與此處一致
     const availableElections = [
         { 
             file: "2024_總統副總統.csv", 
@@ -569,7 +574,7 @@
             });
     }
     
-    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) =================
+    // ================= 資料載入與解析 (摘要卡片專用) =================
     
     function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -651,13 +656,11 @@
                 const summary = extractCountySummary(csvText);
                 
                 if (summary) {
-                    // 將所有候選人按得票數降序排列
                     const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, { key: 'votes', direction: 'desc' });
                     
                     e.summaryData = {
                         allCandidates: sortedAllCands,
                         metadata: summary.metadata,
-                        // 僅顯示前三高票的候選人
                         topCandidates: sortedAllCands.slice(0, 3) 
                     };
                     
@@ -666,7 +669,7 @@
                 }
             } catch (error) {
                 console.error(`載入 ${e.file} 摘要失敗:`, error.message);
-                e.summaryData = null; // 標記為失敗
+                e.summaryData = null; 
             }
             return e;
         });
@@ -853,7 +856,7 @@
         });
         html += `</div></div>`;
 
-        // 2. 近期選舉 (使用摘要卡片)
+        // 2. 近期選舉
         const recentElections = [...availableElections].sort((a, b) => {
             return parseInt(b.year) - parseInt(a.year); 
         }).slice(0, 8); 
@@ -870,7 +873,7 @@
         }
 
         dom.content.innerHTML = html;
-        drawSummaryCharts(); // 繪製圖表
+        drawSummaryCharts(); 
     };
     
     /**
@@ -1091,6 +1094,7 @@
         
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, isSummary);
         
+        // 這裡保留「推薦政黨」，CSS 會在手機版調整字體大小
         const partyTitle = "推薦政黨";
         
         return `
@@ -1248,8 +1252,6 @@
         });
         appState.chartInstances.push(chart);
     }
-
-    // ================= 初始化 =================
 
     (function init() {
         dom.content.innerHTML = `<div class="loading-state">正在載入所有選舉摘要數據...請稍候。</div>`;
