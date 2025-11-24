@@ -1010,11 +1010,14 @@
         let cardStatsHTML;
         if (isSummary) {
              // 摘要卡片：顯示有效票 (粗體) 和投票率
+             // 修正：將所有統計數據包裹在 white-space: nowrap; 的 span 中，防止手機換行
              cardStatsHTML = `
                 <div class="card-stats">
-                    有效票: <strong>${validVotes.toLocaleString()}</strong> 票 
-                    <span style="color:var(--text-sub); margin: 0 5px;">|</span>
-                    投票率: <span class="rate">${turnoutRate}%</span>
+                    <span style="white-space: nowrap;">
+                        有效票: <strong>${validVotes.toLocaleString()}</strong> 票 
+                        <span style="color:var(--text-sub); margin: 0 5px;">|</span>
+                        投票率: <span class="rate">${turnoutRate}%</span>
+                    </span>
                 </div>
             `;
         } else {
