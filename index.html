@@ -252,11 +252,20 @@
             .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
         }
         
+        /* --- 頁尾總體樣式 (Footer) --- */
+        footer {
+            padding: 15px 15px;
+            margin-top: 40px; 
+            border-top: 1px solid var(--border); /* 渲染效果 1: 頂部細線 */
+            background: #fafafa; /* 渲染效果 2: 極淺背景 */
+            text-align: center; /* 置中 */
+            font-size: 12px; /* 字級更小 */
+            color: #999; /* 顏色不要那麼深 (淺灰色) */
+            line-height: 1.6;
+        }
+
         /* 桌面版（> 768px）頁尾樣式調整 */
         @media (min-width: 769px) {
-            footer {
-                line-height: 1.6; /* 單行文字更合理的行高 */
-            }
             /* 將文字排在同一行 */
             #footer-main, #footer-source {
                 display: inline;
