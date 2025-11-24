@@ -89,7 +89,7 @@
             border-bottom: 2px solid var(--border);
         }
 
-        /* --- 選舉列表 / 摘要卡片樣式 (v3.47 鎖定為雙欄，v3.48 維持) --- */
+        /* --- 選舉列表 / 摘要卡片樣式 --- */
         .election-list-grid {
              display: grid;
              grid-template-columns: repeat(2, 1fr); 
@@ -110,24 +110,23 @@
         .section-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
         .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
 
+        /* 卡片主體，padding 為 20px，讓內容貼齊邊緣 */
         .card { background: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; overflow: hidden; border: 1px solid transparent; transition: all 0.2s; margin-bottom: 0; }
         .card.clickable { cursor: pointer; }
         .card.clickable:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 15px rgba(56, 135, 176, 0.15); }
         
-        /* 修正：摘要卡片在簡潔佈局下，確保標題/統計資訊和查看詳情不會互相擠壓切邊 */
+        /* 卡片標頭：左右對齊，並讓左邊可收縮 */
         .card-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start; 
             margin-bottom: 15px; 
-            /* 讓 card-header-left 可以收縮，避免溢出 */
             overflow: hidden; 
-            padding-right: 5px; /* 增加右側內間距，防止 action text 貼邊 */
+            /* 移除 padding-right，讓 action 貼齊右邊 */
         }
         .card-header-left { 
             display: flex; 
             flex-direction: column; 
-            /* 允許 header left 縮小 */
             flex-shrink: 1; 
             min-width: 0;
         }
@@ -135,14 +134,24 @@
         .card-title { font-size: 18px; font-weight: 700; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; line-height: 1.2; }
         
         /* 儀表板內頁卡片統計數據樣式 (非摘要) */
-        .card-stats { font-size: 13px; color: #666; margin-top: 5px; margin-left: 14px; font-weight: 500; line-height: 1.8; }
-        .card-stats strong { 
-            color: var(--text-main); 
-            font-weight: 500; /* 非摘要卡片 (內頁) 移除有效票粗體 */
+        .card-stats { 
+            font-size: 13px; 
+            color: var(--text-main); /* 調整為 main color 保持一致 */
+            margin-top: 5px; 
+            margin-left: 14px; 
+            font-weight: 500; 
+            line-height: 1.8; 
         }
+        
+        /* 修正 1：移除內頁卡片 (非摘要) 對「有效票」的特殊樣式 */
+        .card-stats strong { 
+            font-weight: 500; /* 與 .card-stats 保持一致 */
+            color: var(--text-main);
+        }
+        
         .card-stats .rate { color: #d9534f; font-weight: 700; }
         
-        /* 摘要卡片統計數據樣式 (首頁) */
+        /* 摘要卡片統計數據樣式 (首頁/列表頁) */
         .card.is-summary .card-stats {
             margin-top: 5px;
             margin-left: 14px;
@@ -150,15 +159,16 @@
             line-height: 1.5;
             color: var(--text-main);
         }
+        /* 修正 1：摘要卡片也移除對「有效票」的特別加粗 */
         .card.is-summary .card-stats strong {
-             color: var(--primary); 
-             font-weight: 700; /* 摘要卡片 (首頁) 保留有效票粗體 */
+             color: var(--text-main); 
+             font-weight: 500; 
         }
         .card.is-summary .card-stats .rate {
              color: #d9534f; 
         }
 
-        /* 修正：讓 action text 保持在最右邊，並防止被擠壓 */
+        /* 修正 2：讓 action text 保持在最右邊，並防止被擠壓 */
         .card-action { 
             font-size: 14px; 
             color: var(--primary); 
@@ -168,6 +178,8 @@
             flex-shrink: 0; /* 不允許縮小 */
             align-self: flex-start; /* 讓它固定在頂部 */
             padding-top: 2px; /* 輕微對齊 */
+            /* 調整：移除右邊距/內距，使其貼齊卡片邊界 */
+            /* 因為 .card 已經有 20px padding，所以這裡不需要額外的 margin/padding */
         }
 
         .layout-full { display: grid; grid-template-columns: 300px 1fr; gap: 25px; align-items: start; }
@@ -257,9 +269,7 @@
              .layout-compact .chart-area { width: 150px; height: 150px; flex: none; margin-bottom: 15px; }
              .layout-compact .table-area { width: 100%; }
 
-             /* 手機版也移除強制寬度 */
-            
-            /* 其他保持一致 */
+             /* 其他保持一致 */
             .layout-full { grid-template-columns: 1fr; }
             .sub-area-grid { grid-template-columns: 1fr; }
             .party-cell .party-long { display: none; }
@@ -280,23 +290,18 @@
         footer {
             padding: 15px 15px;
             margin-top: 40px; 
-            border-top: 1px solid var(--border); /* 渲染效果 1: 頂部細線 */
-            background: #fafafa; /* 渲染效果 2: 極淺背景 */
-            text-align: center; /* 置中 */
-            font-size: 12px; /* 字級更小 */
-            color: #999; /* 顏色不要那麼深 (淺灰色) */
+            border-top: 1px solid var(--border); 
+            background: #fafafa; 
+            text-align: center; 
+            font-size: 12px; 
+            color: #999; 
             line-height: 1.6;
         }
 
         /* 桌面版（> 768px）頁尾樣式調整 */
         @media (min-width: 769px) {
-            /* 將文字排在同一行 (此時 footer 內容僅剩一項，此處保留，但實際只影響 footer 內的元素) */
-            #footer-main, #footer-source {
+            #footer-source {
                 display: inline;
-            }
-            /* 顯示分隔符 */
-            #footer-separator {
-                display: inline; 
             }
         }
     </style>
@@ -319,10 +324,10 @@
 
 <footer>
     <span id="footer-source">資料來源︱中選會選舉資料庫</span>
-    </footer>
+</footer>
 
 <script>
-    // ================= 數據與設定區 =================
+    // ================= 數據與設定區 (略) =================
     
     const availableElections = [
         { 
@@ -397,7 +402,7 @@
         electionName: "選舉資料" 
     };
 
-    // ================= 資料載入與解析 (儀表板專用：完整數據) =================
+    // ================= 資料載入與解析 (略) =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -529,7 +534,7 @@
             });
     }
     
-    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) =================
+    // ================= 資料載入與解析 (摘要卡片專用：縣級數據) (略) =================
     
     function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -634,7 +639,7 @@
         await Promise.all(summaryPromises);
     }
 
-    // ================= 排序與更新邏輯 (儀表板專用) =================
+    // ================= 排序與更新邏輯 (略) =================
     
     window.sortTable = function(key) {
         
@@ -772,10 +777,10 @@
         });
     }
 
-    // ================= 頁面渲染函式 (優化) =================
+    // ================= 頁面渲染函式 (優化) (略) =================
     
     /**
-     * 新增：生成摘要卡片的 HTML (改用簡潔卡片模板)
+     * 新增：生成摘要卡片的 HTML 
      */
     function generateSummaryCardHTML(election) {
         if (!election.summaryData) {
@@ -787,11 +792,7 @@
 
         const { topCandidates, metadata } = election.summaryData;
         
-        // 為了確保我們只用前三名生成表格，我們需要傳入一個只包含前三名的結構
-        const candidatesObj = topCandidates.reduce((acc, c) => {
-            acc[c.name] = c;
-            return acc;
-        }, {});
+        // 這裡只需要傳入 topCandidates 即可，因為表格只需要顯示前三名
         
         return generateCardHTML(
             `summary-${election.file.replace(/[^a-zA-Z0-9]/g, '-')}`, 
@@ -799,7 +800,6 @@
             topCandidates, 
             metadata, 
             true, 
-            // Q3 修正：點擊摘要卡片時，載入該選舉的完整數據
             `loadData('${election.file}', '${election.uiName}')`, 
             true, // isCompact
             true  // isSummary
@@ -1024,7 +1024,6 @@
         const clickClass = isClickable ? 'clickable' : '';
         const clickAttr = isClickable ? `onclick="${onClickAction}"` : '';
         
-        // Q2 修正：如果卡片可點擊（無論是否為摘要卡片），都顯示「查看詳情」
         const actionText = isClickable ? `<span class="card-action">查看詳情 ➜</span>` : '';
         
         const layoutClass = isCompact ? 'layout-compact' : 'layout-full';
@@ -1040,12 +1039,11 @@
         // 根據是否為 Summary 決定顯示的統計資訊
         let cardStatsHTML;
         if (isSummary) {
-             // 摘要卡片：顯示有效票 (粗體) 和投票率
-             // 修正：將所有統計數據包裹在 white-space: nowrap; 的 span 中，防止手機換行
+             // 摘要卡片：顯示有效票 (不再粗體) 和投票率
              cardStatsHTML = `
                 <div class="card-stats">
                     <span style="white-space: nowrap;">
-                        有效票: <strong>${validVotes.toLocaleString()}</strong> 票 
+                        有效票: ${validVotes.toLocaleString()} 票 
                         <span style="color:var(--text-sub); margin: 0 5px;">|</span>
                         投票率: <span class="rate">${turnoutRate}%</span>
                     </span>
@@ -1053,8 +1051,6 @@
             `;
         } else {
             // 儀表板內頁的詳細統計數據：
-            // 修正 Issue 1: 移除「有效票」周圍的 strong 標籤，使其不特別粗體
-            // 修正 Issue 3: 將第二行資訊（選舉人數、投票率）包裹在 white-space: nowrap; 的 span 中，防止手機換行
              cardStatsHTML = `
                 <div class="card-stats">
                     <span style="font-size:14px;">有效票: ${validVotes.toLocaleString()} 票</span> 
@@ -1087,7 +1083,6 @@
         // 傳入 isSummary 參數給 generateTableBodyHTML 以便調整 TD 內容
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, isSummary);
         
-        // Q3 修正：政黨標題改為「推薦政黨」
         const partyTitle = "推薦政黨";
         
         return `
