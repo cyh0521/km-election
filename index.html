@@ -223,11 +223,20 @@
         .layout-compact table th:nth-child(1),
         .layout-compact table td:nth-child(1) { width: 40px; text-align: center; } /* 號碼 */
         
+        /* 修正 1：得票數列 (第 4 欄) 預設最小寬度 */
         .layout-compact table th:nth-child(4),
-        .layout-compact table td:nth-child(4) { text-align: right; } /* 得票數靠右 */
+        .layout-compact table td:nth-child(4) { 
+            text-align: right; 
+            min-width: 80px; /* 確保得票數有足夠空間顯示 */
+        } 
         
+        /* 修正 1：得票率列 (第 5 欄) 預設最小寬度，以防被切掉 */
         .layout-compact table th:nth-child(5),
-        .layout-compact table td:nth-child(5) { width: 50px; text-align: right; } /* 得票率固定小寬度 */
+        .layout-compact table td:nth-child(5) { 
+            width: 60px; /* 增加到 60px */
+            min-width: 60px; /* 最小寬度也設定為 60px */
+            text-align: right; 
+        }
 
 
         
@@ -284,6 +293,17 @@
             td.number-cell { text-align: center; line-height: 22px; }
             
             .number-badge { width: 22px; height: 22px; line-height: 22px; font-size: 12px; vertical-align: middle; }
+            
+            /* 修正 1：手機版得票率欄寬度調整 */
+            .layout-compact table th:nth-child(4),
+            .layout-compact table td:nth-child(4) { 
+                min-width: 75px; 
+            }
+            .layout-compact table th:nth-child(5),
+            .layout-compact table td:nth-child(5) { 
+                width: 55px; 
+                min-width: 55px; 
+            }
         }
         
         /* --- 頁尾總體樣式 (Footer) --- */
@@ -1106,7 +1126,7 @@
                                 ${renderTableHeader('候選人', 'name', '', '')}
                                 ${renderTableHeader(partyTitle, 'party', '', 'col-party')}
                                 ${renderTableHeader('得票', 'votes', 'text-align:right')}
-                                ${renderTableHeader('%', 'votes', 'text-align:right; width:50px')}
+                                ${renderTableHeader('%', 'votes', 'text-align:right; width:60px')}
                             </tr>
                         </thead>
                         <tbody>
