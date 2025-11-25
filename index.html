@@ -511,8 +511,9 @@
             uiName: "2024年 立法委員選舉",
             summaryData: null
         },
+        // *** 修正檔案名稱以匹配使用者上傳的 2019 補選 CSV 檔名 (包含中文括號) ***
         { 
-            file: "2019_立法委員補選.csv", 
+            file: "2019_立法委員（補選）.csv", 
             year: "2019", 
             type: "立法委員", 
             uiName: "2019年 立法委員補選",
@@ -525,7 +526,6 @@
             uiName: "1995年 立法委員選舉",
             summaryData: null
         },
-        // ADDED BY USER REQUEST
         { 
             file: "1996_總統副總統.csv", 
             year: "1996", 
@@ -533,7 +533,6 @@
             uiName: "1996年 總統副總統選舉",
             summaryData: null 
         },
-        // *** START: 新增 1996 國大代表 (依照使用者要求) ***
         { 
             file: "1996_國大代表.csv", 
             year: "1996", 
@@ -543,7 +542,6 @@
             hasFullMetadata: false, 
             summaryData: null 
         }
-        // *** END: 新增 1996 國大代表 ***
     ];
     
     const electionCategories = [
@@ -578,7 +576,7 @@
         globalTotalVotes: 0,
         electionName: "選舉資料",
         chartInstances: [],
-        hasFullMetadata: true // *** 新增旗標: 預設為有完整資訊 ***
+        hasFullMetadata: true 
     };
     
     // 將 Hex 顏色轉換為 RGB 物件 {r, g, b}
@@ -650,7 +648,7 @@
     };
 
 
-    // ================= 資料載入與解析 (保持不變) =================
+    // ================= 資料載入與解析 (已修正 validVotes 計算邏輯) =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -704,20 +702,39 @@
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
-            if (row.length < (VOTES_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue; // 至少要有有效票數欄位
+            // *** 修正: 確保鄉鎮村里變數有被定義 ***
+            const town = row[0];
+            const village = row[1];
+
+            if (!town || row.length < (VOTES_COL + 1) || row[0].includes("鄉鎮")) continue; // 至少要有有效票數欄位
 
             const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
-            const validVotes = parseNum(row[VOTES_COL]); 
-            // 由於 row[INVALID_COL] 或 row[ELIGIBLE_COL] 可能不存在 (即為 undefined)
-            // parseNum 會將 undefined 轉為 0，因此不需要額外的判斷邏輯
+            let totalCandidateVotes = 0;
+            const rowCandVotes = []; // 儲存本行候選人票數
+
+            // 1. 累計候選人票數總和
+            candInfo.forEach(c => {
+                const votes = parseNum(row[c.colIndex]);
+                totalCandidateVotes += votes;
+                rowCandVotes.push({ name: c.name, votes: votes }); 
+            });
+
+            // 2. 決定最終有效票數 (validVotes)
+            const csvValidVotes = parseNum(row[VOTES_COL]); 
+            // 如果 CSV 有效票欄位有值，就用它；否則使用候選人票數的總和
+            const finalValidVotes = csvValidVotes > 0 ? csvValidVotes : totalCandidateVotes; 
+            
+            // 3. 取得無效票數和選舉人數 (缺少時為 0)
             const invalidVotes = parseNum(row[INVALID_COL]); 
             const eligibleVoters = parseNum(row[ELIGIBLE_COL]); 
             
-            globalValidVotes += validVotes;
+            // 4. 累計全縣總數
+            globalValidVotes += finalValidVotes;
             globalInvalidVotes += invalidVotes;
             globalEligibleVoters += eligibleVoters;
 
+            // 5. 更新鄉鎮/村里元數據
             if (!towns[town]) {
                 towns[town] = { 
                     villages: {}, 
@@ -729,7 +746,7 @@
                 townOrder.push(town);
             }
             
-            towns[town].validVotes += validVotes;
+            towns[town].validVotes += finalValidVotes;
             towns[town].invalidVotes += invalidVotes;
             towns[town].eligibleVoters += eligibleVoters;
             
@@ -741,22 +758,23 @@
                      candidates: {} 
                  };
             }
-            towns[town].villages[village].validVotes += validVotes;
+            towns[town].villages[village].validVotes += finalValidVotes;
             towns[town].villages[village].invalidVotes += invalidVotes;
             towns[town].villages[village].eligibleVoters += eligibleVoters;
             
             
-            candInfo.forEach(c => {
-                const votes = parseNum(row[c.colIndex]);
+            // 6. 更新候選人總票數
+            rowCandVotes.forEach(c => {
+                const cand = candInfo.find(i => i.name === c.name);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
-                candidates[c.name].votes += votes;
+                if (!candidates[c.name]) candidates[c.name] = { number: cand.number, party: cand.party, votes: 0, isWinner: cand.isWinner };
+                candidates[c.name].votes += c.votes;
                 
-                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
-                towns[town].candidates[c.name].votes += votes;
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: cand.number, party: cand.party, votes: 0, isWinner: cand.isWinner };
+                towns[town].candidates[c.name].votes += c.votes;
                 
-                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
-                towns[town].villages[village].candidates[c.name].votes += votes;
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: cand.number, party: cand.party, votes: 0, isWinner: cand.isWinner };
+                towns[town].villages[village].candidates[c.name].votes += c.votes;
             });
         }
 
@@ -772,10 +790,11 @@
     function loadData(file, uiName) {
         dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據...</div>`;
         
-        appState.electionName = uiName;
-        // *** 修改: 根據檔案名稱設定 hasFullMetadata 旗標 ***
+        // *** 修正: 根據檔案名稱設定 hasFullMetadata 旗標 ***
         const electionConfig = availableElections.find(e => e.file === file);
         appState.hasFullMetadata = electionConfig ? (electionConfig.hasFullMetadata !== false) : true;
+        
+        appState.electionName = uiName; // 移動到這裡，確保錯誤訊息能顯示正確的 uiName
         
         fetch(file) 
             .then(r => { 
@@ -792,10 +811,12 @@
             })
             .catch(error => {
                 console.error("載入錯誤:", error);
-                dom.content.innerHTML = `<div class="loading-state" style="color:red">讀取 ${file} 失敗: ${error.message}<br>請檢查檔案是否上傳成功。</div>`;
+                // *** 修正: 確保錯誤訊息能正確顯示 error.message (例如: Failed to fetch) ***
+                dom.content.innerHTML = `<div class="loading-state" style="color:red">讀取 ${file} 失敗: ${error.message}<br>請檢查檔案是否上傳成功，**特別是檔名是否完全一致** (包括大小寫、括號等)。</div>`;
             });
     }
     
+    // *** extractCountySummary 也要應用相同的 validVotes 計算邏輯，以確保首頁摘要正確 ***
     function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
@@ -844,24 +865,32 @@
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
-            if (row.length < (VOTES_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
+            if (!row[0] || row[0].includes("鄉鎮")) continue;
 
             const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
-            const validVotes = parseNum(row[VOTES_COL]); 
-            const invalidVotes = parseNum(row[INVALID_COL]); 
-            const eligibleVoters = parseNum(row[ELIGIBLE_COL]); 
-            
-            globalValidVotes += validVotes;
-            globalInvalidVotes += invalidVotes;
-            globalEligibleVoters += eligibleVoters;
-            
+            // 1. 累計候選人票數總和
+            let totalCandidateVotes = 0;
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
+                totalCandidateVotes += votes;
                 
                 if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
                 candidates[c.name].votes += votes;
             });
+            
+            // 2. 決定最終有效票數 (validVotes)
+            const csvValidVotes = parseNum(row[VOTES_COL]); 
+            const finalValidVotes = csvValidVotes > 0 ? csvValidVotes : totalCandidateVotes; 
+            
+            // 3. 取得無效票數和選舉人數
+            const invalidVotes = parseNum(row[INVALID_COL]); 
+            const eligibleVoters = parseNum(row[ELIGIBLE_COL]); 
+            
+            // 4. 累計全縣總數
+            globalValidVotes += finalValidVotes;
+            globalInvalidVotes += invalidVotes;
+            globalEligibleVoters += eligibleVoters;
         }
         
         let allCandidatesList = Object.keys(candidates).map(key => ({ name: key, ...candidates[key] }));
@@ -1029,8 +1058,9 @@
      * @param {boolean} animate - 是否啟用增長動畫
      */
     function generateTableBodyHTML(candidates, validVotes, animate) {
+        // *** 修正: 如果 validVotes 為 0 且候選人票數總和也為 0，則顯示 0.00。
         return candidates.map(c => {
-            const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
+            const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : "0.00"; // 確保顯示 "0.00" 而非 "0"
             const partyColorHex = getPartyColor(c.party); 
             
             // 轉換為 RGB，並使用 30% 透明度
