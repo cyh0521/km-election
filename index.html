@@ -502,6 +502,14 @@
     // ================= 數據與設定區 =================
     
     const availableElections = [
+        // *** 1. 新增 2022_縣長.csv ***
+        { 
+            file: "2022_縣長.csv", 
+            year: "2022", 
+            type: "縣長", 
+            uiName: "2022年 縣長選舉",
+            summaryData: null 
+        },
         { 
             file: "2024_總統副總統.csv", 
             year: "2024", 
@@ -543,8 +551,8 @@
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
         { type: "立法委員", icon: "⚖️" },
+        { type: "縣長", icon: "👨‍💼" }, // 調整縣長位置
         { type: "國大代表", icon: "📜" },
-        { type: "縣長", icon: "👨‍💼" },
         { type: "縣議員", icon: "🏘️" },
         { type: "鄉鎮長", icon: "🏢" },
         { type: "鄉鎮民代表", icon: "👥" },
@@ -554,11 +562,14 @@
     // 政黨基礎顏色
     const partyColors = {
         "中國國民黨": "#3887B0",
-        "民主進步黨": "#67C167", 
+        // *** 3. 民主進步黨代表色改 #008800 ***
+        "民主進步黨": "#008800", 
         "台灣民眾黨": "#28C8C8",
         "親民黨": "#F27C00",
         "新黨": "#ECBE00", 
         "金門高粱黨": "#990033", 
+        // *** 2. 新增 龍長 代表色 ***
+        "龍長": "#FF004C",
         "無黨籍": "#AAAAAA",      
         "default": "#7f8c8d"
     };
@@ -604,6 +615,7 @@
             "親民黨": "親民黨", 
             "新黨": "新黨", 
             "金門高粱黨": "高粱黨", 
+            "龍長": "龍長", // 新增
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -623,6 +635,7 @@
             "親民黨": "親民黨", 
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱黨", 
+            "龍長": "龍長", // 新增
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -1400,12 +1413,16 @@
         if (level === 'electionList') {
             html += `<span class="active">${appState.currentTown}</span>`;
         } else if (level === 'county') {
-            const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
-            html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
+            const electionType = availableElections.find(e => e.uiName === appState.electionName)?.type; // 使用可選鏈
+            if (electionType) {
+                 html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
+            }
             html += `<span class="active">${appState.electionName}</span>`;
         } else if (level === 'town') {
-             const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
-             html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
+             const electionType = availableElections.find(e => e.uiName === appState.electionName)?.type; // 使用可選鏈
+             if (electionType) {
+                 html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
+             }
              html += `<span onclick="renderCounty(true)">${appState.electionName}</span> / `;
              html += `<span class="active">${appState.currentTown}</span>`;
         }
