@@ -103,15 +103,10 @@
 
         /* --- 選舉列表 / 摘要卡片樣式 --- */
         .election-list-grid {
-             /* *** 修改：使用多欄佈局實現瀑布流效果 *** */
+             /* *** 修改：使用多欄佈局實現瀑布流效果 (為了解決您上次提出的空隙問題) *** */
              column-count: 2; /* 設定為兩欄 */
              column-gap: 20px; /* 設定欄間距 */
              
-             /* 移除原有的 Grid 佈局設定 */
-             /* display: grid; */
-             /* grid-template-columns: repeat(2, 1fr);  */
-             /* align-items: start; */
-
              margin-top: 20px;
         }
         
@@ -441,7 +436,7 @@
                 width: 22px; 
                 height: 22px; 
                 /* line-height 移除或設為正常，讓 Flexbox 接管垂直置中 */
-                line-height: normal; 
+                line-size: normal; 
                 font-size: 12px; 
                 vertical-align: middle; 
                 border: 2px solid #ffffff; 
@@ -537,7 +532,18 @@
             type: "總統副總統", 
             uiName: "1996年 總統副總統選舉",
             summaryData: null 
+        },
+        // *** START: 新增 1996 國大代表 (依照使用者要求) ***
+        { 
+            file: "1996_國大代表.csv", 
+            year: "1996", 
+            type: "國大代表", 
+            uiName: "1996年 國大代表選舉",
+            // 標記該檔案缺乏「無效票數」及「選舉人數」資訊
+            hasFullMetadata: false, 
+            summaryData: null 
         }
+        // *** END: 新增 1996 國大代表 ***
     ];
     
     const electionCategories = [
@@ -571,7 +577,8 @@
         sortConfig: { key: 'number', direction: 'asc' }, 
         globalTotalVotes: 0,
         electionName: "選舉資料",
-        chartInstances: [] 
+        chartInstances: [],
+        hasFullMetadata: true // *** 新增旗標: 預設為有完整資訊 ***
     };
     
     // 將 Hex 顏色轉換為 RGB 物件 {r, g, b}
@@ -697,14 +704,13 @@
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
-            if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue; 
+            if (row.length < (VOTES_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue; // 至少要有有效票數欄位
 
-            const town = row[0].trim();
-            const village = row[1].trim();
-            
             const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
             const validVotes = parseNum(row[VOTES_COL]); 
+            // 由於 row[INVALID_COL] 或 row[ELIGIBLE_COL] 可能不存在 (即為 undefined)
+            // parseNum 會將 undefined 轉為 0，因此不需要額外的判斷邏輯
             const invalidVotes = parseNum(row[INVALID_COL]); 
             const eligibleVoters = parseNum(row[ELIGIBLE_COL]); 
             
@@ -767,6 +773,9 @@
         dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據...</div>`;
         
         appState.electionName = uiName;
+        // *** 修改: 根據檔案名稱設定 hasFullMetadata 旗標 ***
+        const electionConfig = availableElections.find(e => e.file === file);
+        appState.hasFullMetadata = electionConfig ? (electionConfig.hasFullMetadata !== false) : true;
         
         fetch(file) 
             .then(r => { 
@@ -835,7 +844,7 @@
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
             
-            if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
+            if (row.length < (VOTES_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
 
             const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
@@ -1124,6 +1133,7 @@
         const cardId = `summary-${election.file.replace(/[^a-zA-Z0-9]/g, '-')}`;
 
         // *** 摘要卡片在載入時也帶入動畫 (animate = true) ***
+        // 摘要卡片不顯示 hasFullMetadata 判斷，因為它只需要 validVotes 和 turnoutRate
         return generateCardHTML(
             cardId, 
             election.uiName, 
@@ -1418,7 +1428,12 @@
     
     function generateSummaryPanelHTML(candidates, metadata, title) {
         const { validVotes, invalidVotes, eligibleVoters } = metadata;
+        
+        // *** 修改: 根據 appState.hasFullMetadata 決定是否顯示無效票數/選舉人數 ***
+        const hasFullMetadata = appState.hasFullMetadata; 
+        
         const totalBallots = validVotes + invalidVotes;
+        // 如果沒有選舉人數資料 (0)，投票率會顯示 0.00%
         const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
         
         let html = `
@@ -1427,8 +1442,17 @@
             <ul class="summary-list">
                 <li><span>投票率</span><span class="stat-value" style="color:#d9534f;">${turnoutRate}%</span></li>
                 <li><span>有效票數</span><span class="stat-value">${validVotes.toLocaleString()} 票</span></li>
+        `;
+        
+        // 條件式加入無效票數和選舉人數
+        if (hasFullMetadata) {
+            html += `
                 <li><span>無效票數</span><span class="stat-value">${invalidVotes.toLocaleString()} 票</span></li>
                 <li><span>選舉人數</span><span class="stat-value">${eligibleVoters.toLocaleString()} 人</span></li>
+            `;
+        }
+        
+        html += `
             </ul>
         </div>`; 
         return html;
@@ -1461,11 +1485,15 @@
         
         const { validVotes, invalidVotes, eligibleVoters } = metadata;
         
+        // *** 修改: 取得 hasFullMetadata 旗標 ***
+        const hasFullMetadata = appState.hasFullMetadata; 
+        
         const totalBallots = validVotes + invalidVotes;
         const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
 
         let cardStatsHTML;
         if (isSummary || isCompact) {
+             // 摘要/簡潔模式，只顯示有效票和投票率
              cardStatsHTML = `
                 <div class="card-stats" style="margin-left: 0;">
                     <span style="white-space: nowrap;">
@@ -1476,15 +1504,22 @@
                 </div>
             `;
         } else {
+             // 完整儀表板模式，根據 hasFullMetadata 顯示
              cardStatsHTML = `
                 <div class="card-stats">
                     <span style="font-size:14px;">有效票: ${validVotes.toLocaleString()} 票</span> 
-                    | 無效票: ${invalidVotes.toLocaleString()} 票 
+                    
+                    ${hasFullMetadata ? 
+                         `| 無效票: ${invalidVotes.toLocaleString()} 票` : 
+                         ''
+                    }
                     <br>
-                    <span style="white-space: nowrap;">
-                        選舉人數: ${eligibleVoters.toLocaleString()} 人 
-                        | 投票率: <span class="rate">${turnoutRate}%</span>
-                    </span>
+                    
+                    ${hasFullMetadata ? 
+                        `選舉人數: ${eligibleVoters.toLocaleString()} 人 | ` : 
+                        ''
+                    }
+                    投票率: <span class="rate">${turnoutRate}%</span>
                 </div>
             `;
         }
