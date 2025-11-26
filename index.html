@@ -502,33 +502,25 @@
     // ================= 數據與設定區 =================
     
     const availableElections = [
-        // *** 4. 新增 2018_縣長.csv ***
         { 
-            file: "2018_縣長.csv", 
-            year: "2018", 
-            type: "縣長", 
-            uiName: "2018年 縣長選舉",
-            summaryData: null 
-        },
-        { 
-            file: "2022_縣長.csv", 
-            year: "2022", 
-            type: "縣長", 
-            uiName: "2022年 縣長選舉",
-            summaryData: null 
-        },
-        { 
-            file: "2024_總統副總統.csv", 
+            file: "2024_總統副總統選舉.csv", 
             year: "2024", 
             type: "總統副總統", 
             uiName: "2024年 總統副總統選舉",
             summaryData: null 
         },
         { 
-            file: "2024_立法委員.csv", 
+            file: "2024_立法委員選舉.csv", 
             year: "2024", 
             type: "立法委員", 
             uiName: "2024年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "2022_縣長選舉.csv", 
+            year: "2022", 
+            type: "縣長", 
+            uiName: "2022年 縣長選舉",
             summaryData: null
         },
         { 
@@ -539,30 +531,52 @@
             summaryData: null
         },
         { 
-            file: "1995_立法委員.csv", 
-            year: "1995", 
-            type: "立法委員", 
-            uiName: "1995年 立法委員選舉",
+            file: "2018_縣長選舉.csv", 
+            year: "2018", 
+            type: "縣長", 
+            uiName: "2018年 縣長選舉",
             summaryData: null
         },
         { 
-            file: "1996_總統副總統.csv", 
+            file: "2014_縣長選舉.csv", 
+            year: "2014", 
+            type: "縣長", 
+            uiName: "2014年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "1996_總統副總統選舉.csv", 
             year: "1996", 
             type: "總統副總統", 
             uiName: "1996年 總統副總統選舉",
             summaryData: null 
+        },
+        { 
+            file: "1996_國大代表選舉.csv", 
+            year: "1996", 
+            type: "國大代表", 
+            uiName: "1996年 國大代表選舉",
+            summaryData: null 
+        },
+        { 
+            file: "1995_立法委員選舉.csv", 
+            year: "1995", 
+            type: "立法委員", 
+            uiName: "1995年 立法委員選舉",
+            summaryData: null
         }
     ];
     
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
         { type: "立法委員", icon: "⚖️" },
-        { type: "縣長", icon: "👨‍💼" }, 
         { type: "國大代表", icon: "📜" },
+        { type: "縣長", icon: "👨‍💼" },
         { type: "縣議員", icon: "🏘️" },
         { type: "鄉鎮長", icon: "🏢" },
         { type: "鄉鎮民代表", icon: "👥" },
-        { type: "村里長", icon: "🏡" }
+        { type: "村里長", icon: "🏡" },
+        { type: "公民投票", icon: "🗳️" } // 新增：公民投票並放在最後
     ];
 
     // 政黨基礎顏色
@@ -573,12 +587,9 @@
         "親民黨": "#F27C00",
         "新黨": "#ECBE00", 
         "金門高粱黨": "#990033", 
-        // *** 1. 龍長 -> 龍黨 (名稱更新) ***
         "龍黨": "#FF004C",
-        // *** 3. 新增教科文聯盟黨 ***
         "教科文聯盟黨": "#7D4A96",
-        // *** 2. 無黨籍代表色改 #606060 ***
-        "無黨籍": "#606060",      
+        "無黨籍": "#7F8C8D",      
         "default": "#7f8c8d"
     };
 
@@ -610,7 +621,6 @@
     function getPartyColor(party) {
         const isIndependent = party.startsWith('無黨籍');
         if (isIndependent) {
-            // 使用無黨籍基礎色，確保每個獨立候選人仍能得到一個唯一的顏色
             return partyColors[party] || partyColors['無黨籍']; 
         }
         return partyColors[party] || partyColors['default'];
@@ -624,9 +634,7 @@
             "親民黨": "親民黨", 
             "新黨": "新黨", 
             "金門高粱黨": "高粱黨", 
-            // *** 1. 龍長 -> 龍黨 (名稱更新) ***
             "龍黨": "龍黨", 
-            // *** 3. 新增教科文聯盟黨 ***
             "教科文聯盟黨": "教科文",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
@@ -647,10 +655,6 @@
             "親民黨": "親民黨", 
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱黨", 
-            // *** 1. 龍長 -> 龍黨 (名稱更新) ***
-            "龍黨": "龍黨", 
-            // *** 3. 新增教科文聯盟黨 ***
-            "教科文聯盟黨": "教科文聯盟黨",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -700,16 +704,11 @@
             const isWinner = name.includes('*'); 
             name = name.replace('*', '').trim(); 
             
-            // *** 處理政黨名稱：確保 CSV 中的「龍長」能被正確對應到「龍黨」的顏色 ***
-            if (party === '龍長') {
-                party = '龍黨';
-            }
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
                 if (party === '無黨籍') {
                     if (!partyColors[`無黨籍-${independentCounter}`] && independentCounter <= 4) {
-                       // 這裡仍然使用 `無黨籍` 的基礎色 #606060
                        partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍']; 
                     }
                     party = `無黨籍-${independentCounter}`;
@@ -845,11 +844,6 @@
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
             name = name.replace('*', '').trim(); 
-            
-            // *** 處理政黨名稱：確保 CSV 中的「龍長」能被正確對應到「龍黨」的顏色 ***
-            if (party === '龍長') {
-                party = '龍黨';
-            }
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -1151,64 +1145,6 @@
 
     // ================= 頁面渲染函式 =================
     
-    function renderPieChart(canvasId, candidates, totalVotes) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
-        
-        const existingChart = appState.chartInstances.find(chart => chart.canvas.id === canvasId);
-        if (existingChart) existingChart.destroy();
-        
-        const displayCandidates = candidates.filter(c => c.votes > 0);
-
-        const labels = displayCandidates.map(c => c.name);
-        const data = displayCandidates.map(c => c.votes);
-        const colors = displayCandidates.map(c => getPartyColor(c.party));
-        
-        const hideLegend = labels.length > 6;
-
-        const chart = new Chart(canvas, {
-            type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    backgroundColor: colors,
-                    hoverBackgroundColor: colors,
-                    borderColor: 'white',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { 
-                        display: !hideLegend, 
-                        position: 'bottom',
-                        labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.raw;
-                                const percentage = totalVotes > 0 ? (value / totalVotes * 100).toFixed(2) : 0;
-                                return [
-                                    `${context.label}: ${value.toLocaleString()} 票`,
-                                    `得票率: ${percentage}%`
-                                ];
-                            },
-                            title: function(context) {
-                                return context[0].label; 
-                            }
-                        }
-                    }
-                },
-                layout: { padding: 0 }
-            }
-        });
-        appState.chartInstances.push(chart);
-    }
-    
     function generateSummaryCardHTML(election) {
         if (!election.summaryData) {
             return `<div class="card failed">
@@ -1303,6 +1239,64 @@
         dom.content.innerHTML = html;
     };
 
+    // (renderPieChart 函式保持不變)
+    function renderPieChart(canvasId, candidates, totalVotes) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        const existingChart = appState.chartInstances.find(chart => chart.canvas.id === canvasId);
+        if (existingChart) existingChart.destroy();
+        
+        const displayCandidates = candidates.filter(c => c.votes > 0);
+
+        const labels = displayCandidates.map(c => c.name);
+        const data = displayCandidates.map(c => c.votes);
+        const colors = displayCandidates.map(c => getPartyColor(c.party));
+        
+        const hideLegend = labels.length > 6;
+
+        const chart = new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    hoverBackgroundColor: colors,
+                    borderColor: 'white',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: !hideLegend, 
+                        position: 'bottom',
+                        labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                const percentage = totalVotes > 0 ? (value / totalVotes * 100).toFixed(2) : 0;
+                                return [
+                                    `${context.label}: ${value.toLocaleString()} 票`,
+                                    `得票率: ${percentage}%`
+                                ];
+                            },
+                            title: function(context) {
+                                return context[0].label; 
+                            }
+                        }
+                    }
+                },
+                layout: { padding: 0 }
+            }
+        });
+        appState.chartInstances.push(chart);
+    }
     
     // ================= 儀表板核心渲染邏輯 =================
     
@@ -1421,7 +1415,7 @@
         updateSortIcons();
     };
 
-    // ================= 通用輔助函式 (其餘保持不變) =================
+    // ================= 通用輔助函式 =================
 
     function updateBreadcrumb() {
         const level = appState.currentLevel;
@@ -1438,16 +1432,12 @@
         if (level === 'electionList') {
             html += `<span class="active">${appState.currentTown}</span>`;
         } else if (level === 'county') {
-            const electionType = availableElections.find(e => e.uiName === appState.electionName)?.type; // 使用可選鏈
-            if (electionType) {
-                 html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
-            }
+            const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
+            html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
             html += `<span class="active">${appState.electionName}</span>`;
         } else if (level === 'town') {
-             const electionType = availableElections.find(e => e.uiName === appState.electionName)?.type; // 使用可選鏈
-             if (electionType) {
-                 html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
-             }
+             const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
+             html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
              html += `<span onclick="renderCounty(true)">${appState.electionName}</span> / `;
              html += `<span class="active">${appState.currentTown}</span>`;
         }
