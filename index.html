@@ -476,12 +476,14 @@
             }
         }
       
+/* ... (保留所有現有樣式) ... */
+        
         /* --- 當選者 (Winner) 樣式 --- */
         
         /* 當選者號次圓圈樣式 - 紅色雙圈 */
         .number-badge.is-winner {
             /* 顏色變為紅色 */
-            background: #d9534f; /* 投票率的紅色 */
+            background: #d9534f; /* 選用警示紅 */
             color: white; 
             font-weight: 700;
             
@@ -494,28 +496,8 @@
             transform: translateY(-1px); 
         }
 
-        /* 當選者整列背景強調 */
-        tr.is-winner {
-            /* 輕微加深背景色，但只在沒有 bar-grow 動畫時生效，避免衝突 */
-            background-color: rgba(217, 83, 79, 0.1) !important; 
-        }
-
-        /* 確保當選者那一行在 hover 時的背景色仍能區分 */
-        tr.is-winner:hover {
-            background-color: rgba(217, 83, 79, 0.15) !important;
-        }
-
-        /* 處理長條圖動畫的當選者列：
-           讓長條圖的顏色變成當選者專屬的紅色 */
-        tr.is-winner.animate-bar-grow,
-        tr.is-winner:not(.animate-bar-grow) {
-             /* 覆蓋 generateTableBodyHTML 設定的背景漸變顏色 */
-             background-image: linear-gradient(
-                to right, 
-                rgba(217, 83, 79, 0.25) 0%, /* 輕微透明紅色 */
-                rgba(217, 83, 79, 0.25) 100%
-            ) !important;
-        }
+        /* 移除先前設定的所有 tr.is-winner 相關樣式，
+           讓表格列的背景和長條圖顏色保持政黨預設設定。 */
 
         /* ... (保留所有現有樣式) ... */
 
@@ -1237,8 +1219,8 @@
             const rgb = hexToRgb(partyColorHex);
             const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
-            // *** 修改：根據 isWinner 決定背景顏色 ***
-            const barGrowColorRGBA = c.isWinner ? 'rgba(217, 83, 79, 0.25)' : lightColorRGBA;
+            // 維持原有的政黨長條圖顏色
+            const barGrowColorRGBA = lightColorRGBA;
             
             // 1. 設定背景顏色 (線性漸變)
             // 2. 設定 CSS 變數 --bar-width
@@ -1252,18 +1234,19 @@
                 --bar-width: ${rate}%;
             `;
             
-            // *** 修改：根據 isWinner 增加 class ***
+            // 保持原本的動畫 class 判斷
             const animateClass = animate ? 'animate-bar-grow' : '';
-            const winnerClass = c.isWinner ? 'is-winner' : '';
             
+            // *** 修改：僅將 is-winner class 應用於號次徽章 ***
             const badgeClass = `number-badge ${c.isWinner ? 'is-winner' : ''}`; 
             // *** 結束修改 ***
             
             const partyLongName = getLongPartyName(c.party); 
             const partyShortName = getShortPartyName(c.party);
             
+            // *** 注意：<tr> 上沒有 is-winner class ***
             return `
-                <tr style="${rowStyle}" class="${animateClass} ${winnerClass}">
+                <tr style="${rowStyle}" class="${animateClass}"> 
                     <td class="number-cell col-number">
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
