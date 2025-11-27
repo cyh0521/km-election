@@ -475,6 +475,50 @@
                 display: inline;
             }
         }
+      
+        /* --- 當選者 (Winner) 樣式 --- */
+        
+        /* 當選者號次圓圈樣式 - 紅色雙圈 */
+        .number-badge.is-winner {
+            /* 顏色變為紅色 */
+            background: #d9534f; /* 投票率的紅色 */
+            color: white; 
+            font-weight: 700;
+            
+            /* 內層白色邊框 (使用 box-shadow 模擬內邊框效果) */
+            box-shadow: 
+                0 0 0 2px #ffffff, /* 內圈白色邊框 */
+                0 0 0 4px #d9534f; /* 外圈紅色邊框 (與背景色相同) */
+            
+            /* 讓號次圓圈往上移動一點，突出顯示 */
+            transform: translateY(-1px); 
+        }
+
+        /* 當選者整列背景強調 */
+        tr.is-winner {
+            /* 輕微加深背景色，但只在沒有 bar-grow 動畫時生效，避免衝突 */
+            background-color: rgba(217, 83, 79, 0.1) !important; 
+        }
+
+        /* 確保當選者那一行在 hover 時的背景色仍能區分 */
+        tr.is-winner:hover {
+            background-color: rgba(217, 83, 79, 0.15) !important;
+        }
+
+        /* 處理長條圖動畫的當選者列：
+           讓長條圖的顏色變成當選者專屬的紅色 */
+        tr.is-winner.animate-bar-grow,
+        tr.is-winner:not(.animate-bar-grow) {
+             /* 覆蓋 generateTableBodyHTML 設定的背景漸變顏色 */
+             background-image: linear-gradient(
+                to right, 
+                rgba(217, 83, 79, 0.25) 0%, /* 輕微透明紅色 */
+                rgba(217, 83, 79, 0.25) 100%
+            ) !important;
+        }
+
+        /* ... (保留所有現有樣式) ... */
+
     </style>
 </head>
 <body>
@@ -672,7 +716,7 @@
         { type: "國大代表", icon: "📜" },
         { type: "縣長", icon: "👨‍💼" },
         { type: "縣議員", icon: "🗣️" },
-        { type: "鄉鎮長", icon: "🗺️" },
+        { type: "鄉鎮長", icon: "🏢" },
         { type: "鄉鎮民代表", icon: "👥" },
         { type: "村里長", icon: "🏡" },
         { type: "公民投票", icon: "🗳️" } // 新增：公民投票並放在最後
@@ -796,7 +840,7 @@
 
     // ================= 資料載入與解析 (保持不變) =================
     
-    function parseCSV(text) {
+	function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return;
@@ -817,11 +861,13 @@
         
         headerRowIndices.forEach(colIndex => {
             const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
-            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
+            let nameCell = rows[1][colIndex] ? rows[1][colIndex].trim() : ''; // 原始單元格內容
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            const isWinner = name.includes('*'); 
-            name = name.replace('*', '').trim(); 
+            // *** 修改：判斷當選者並清理名稱 ***
+            const isWinner = nameCell.includes('*'); 
+            let name = nameCell.replace('*', '').trim(); // 清理後的名稱
+            // *** 結束修改 ***
             
             party = party === '無' ? '無黨籍' : party;
 
@@ -834,7 +880,9 @@
                     independentCounter++;
                 }
 
+                // *** 修改：確保 isWinner 寫入 candInfo ***
                 candInfo.push({ number: String(number), name, party, colIndex, isWinner }); 
+                // *** 結束修改 ***
             }
         });
 
@@ -894,6 +942,7 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
+                // *** 修改：確保 isWinner 寫入 candidates 和 town/village 數據結構 ***
                 if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 candidates[c.name].votes += votes;
                 
@@ -902,6 +951,7 @@
                 
                 if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 towns[town].villages[village].candidates[c.name].votes += votes;
+                 // *** 結束修改 ***
             });
         }
 
@@ -938,7 +988,7 @@
             });
     }
     
-    function extractCountySummary(text) {
+	function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return null;
@@ -959,10 +1009,14 @@
         
         headerRowIndices.forEach(colIndex => {
             const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
-            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
+            let nameCell = rows[1][colIndex] ? rows[1][colIndex].trim() : ''; // 原始單元格內容
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            name = name.replace('*', '').trim(); 
+            // *** 修改：判斷當選者並清理名稱 ***
+            const isWinner = nameCell.includes('*');
+            let name = nameCell.replace('*', '').trim(); 
+            // *** 結束修改 ***
+            
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -974,7 +1028,9 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ number: String(number), name, party, colIndex }); 
+                // *** 修改：確保 isWinner 寫入 candInfo ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner }); 
+                // *** 結束修改 ***
             }
         });
         
@@ -1001,8 +1057,10 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                // *** 修改：確保 isWinner 寫入 candidates 數據結構 ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 candidates[c.name].votes += votes;
+                 // *** 結束修改 ***
             });
         }
         
@@ -1164,7 +1222,7 @@
         return list;
     }
     
-    /**
+/**
      * 生成表格內容 HTML (帶有動畫屬性)
      * @param {Array} candidates - 候選人列表
      * @param {number} validVotes - 有效票數
@@ -1179,32 +1237,37 @@
             const rgb = hexToRgb(partyColorHex);
             const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
-            // *** 修改：使用 CSS 變數和 class 控制動畫 ***
+            // *** 修改：根據 isWinner 決定背景顏色 ***
+            const barGrowColorRGBA = c.isWinner ? 'rgba(217, 83, 79, 0.25)' : lightColorRGBA;
+            
             // 1. 設定背景顏色 (線性漸變)
             // 2. 設定 CSS 變數 --bar-width
             // 3. 根據 `animate` 參數決定是否加上 `animate-bar-grow` class
             const rowStyle = `
                 background-image: linear-gradient(
                     to right, 
-                    ${lightColorRGBA} 0%, 
-                    ${lightColorRGBA} 100%
+                    ${barGrowColorRGBA} 0%, 
+                    ${barGrowColorRGBA} 100%
                 );
                 --bar-width: ${rate}%;
             `;
             
+            // *** 修改：根據 isWinner 增加 class ***
             const animateClass = animate ? 'animate-bar-grow' : '';
+            const winnerClass = c.isWinner ? 'is-winner' : '';
             
-            const badgeClass = 'number-badge'; 
+            const badgeClass = `number-badge ${c.isWinner ? 'is-winner' : ''}`; 
+            // *** 結束修改 ***
             
             const partyLongName = getLongPartyName(c.party); 
             const partyShortName = getShortPartyName(c.party);
             
             return `
-                <tr style="${rowStyle}" class="${animateClass}">
+                <tr style="${rowStyle}" class="${animateClass} ${winnerClass}">
                     <td class="number-cell col-number">
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
-                    <td style="font-weight:700">${c.name}</td>
+                    <td style="font-weight:700">${c.name}${c.isWinner ? ' <span style="font-size:12px;color:#d9534f;"> (當選)</span>' : ''}</td>
                     <td class="party-cell col-party">
                         <span class="party-badge party-long" style="background:${partyColorHex}">${partyLongName}</span>
                         <span class="party-badge party-short" style="background:${partyColorHex}">${partyShortName}</span>
