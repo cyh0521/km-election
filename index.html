@@ -319,7 +319,7 @@
             box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
         }
         
-        /* *** 新增：當選者號次圓圈樣式 - 紅色邊框，白色背景，更醒目 *** */
+        /* *** 當選者號次圓圈樣式 - 紅色邊框，白色背景，更醒目 *** */
         .number-badge.is-winner {
             border: 2px solid #d9534f; /* 醒目紅色邊框 (使用 rate color) */
             background: #ffffff; /* 白色背景 */
@@ -329,6 +329,15 @@
 
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
+        /* *** 新增：婦女保障名額標示樣式 *** */
+        .quota-indicator {
+            color: #d9534f; /* 醒目紅色 (與當選率/當選者邊框色一致) */
+            font-size: 11px; /* 小字體 */
+            font-weight: 500;
+            margin-left: 5px;
+            white-space: nowrap;
+        }
+
         /* 預設 (桌面版 > 768px)：顯示長名稱，隱藏短名稱 */
         .party-cell .party-long { display: inline-block; }
         .party-cell .party-short { display: none; }
@@ -468,6 +477,12 @@
             /* 手機版：頂部兩欄改為單欄堆疊 */
             .top-summary-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            /* 讓婦女保障標示在手機上能適當顯示 */
+            .quota-indicator {
+                 font-size: 10px;
+                 margin-left: 3px;
             }
         }
         
@@ -808,7 +823,7 @@
     };
 
 
-    // ================= 資料載入與解析 (保持不變) =================
+    // ================= 資料載入與解析 =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -834,8 +849,11 @@
             let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            const isWinner = name.includes('*'); // *** 這裡已經正確解析當選者標記 ***
-            name = name.replace('*', '').trim(); 
+            const isWinner = name.includes('*'); // 偵測當選者標記
+            const isWomenQuota = name.includes('!'); // *** 新增：偵測婦女保障標記 ***
+            
+            // *** 修改：同時移除 '*' 和 '!' ***
+            name = name.replace('*', '').replace('!', '').trim(); 
             
             party = party === '無' ? '無黨籍' : party;
 
@@ -848,7 +866,8 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner }); 
+                // *** 修改：在候選人資訊中加入 isWomenQuota ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota }); 
             }
         });
 
@@ -908,13 +927,14 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                // *** 修改：在候選人物件中加入 isWomenQuota ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
                 candidates[c.name].votes += votes;
                 
-                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
                 towns[town].candidates[c.name].votes += votes;
                 
-                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
                 towns[town].villages[village].candidates[c.name].votes += votes;
             });
         }
@@ -976,8 +996,11 @@
             let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            const isWinner = name.includes('*'); // *** 這裡解析當選者標記 (for summary card) ***
-            name = name.replace('*', '').trim(); 
+            const isWinner = name.includes('*'); // 偵測當選者標記 (for summary card)
+            const isWomenQuota = name.includes('!'); // *** 新增：偵測婦女保障標記 ***
+            
+            // *** 修改：同時移除 '*' 和 '!' ***
+            name = name.replace('*', '').replace('!', '').trim(); 
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -989,7 +1012,8 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner }); // *** 儲存 isWinner 屬性 ***
+                // *** 修改：在候選人資訊中加入 isWomenQuota ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota }); 
             }
         });
         
@@ -1016,7 +1040,8 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner }; // *** 儲存 isWinner 屬性 ***
+                // *** 修改：在候選人物件中加入 isWomenQuota ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota }; 
                 candidates[c.name].votes += votes;
             });
         }
@@ -1194,10 +1219,7 @@
             const rgb = hexToRgb(partyColorHex);
             const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
-            // *** 修改：使用 CSS 變數和 class 控制動畫 ***
-            // 1. 設定背景顏色 (線性漸變)
-            // 2. 設定 CSS 變數 --bar-width
-            // 3. 根據 `animate` 參數決定是否加上 `animate-bar-grow` class
+            // 使用 CSS 變數和 class 控制動畫
             const rowStyle = `
                 background-image: linear-gradient(
                     to right, 
@@ -1209,18 +1231,26 @@
             
             const animateClass = animate ? 'animate-bar-grow' : '';
             
-            // *** 修改這行：根據 c.isWinner 決定號次圓圈的 class ***
+            // 根據 c.isWinner 決定號次圓圈的 class
             const badgeClass = c.isWinner ? 'number-badge is-winner' : 'number-badge'; 
             
             const partyLongName = getLongPartyName(c.party); 
             const partyShortName = getShortPartyName(c.party);
+            
+            // *** 新增：婦女保障標示 HTML ***
+            const quotaIndicatorHTML = c.isWomenQuota 
+                ? '<span class="quota-indicator">婦女保障</span>' 
+                : '';
             
             return `
                 <tr style="${rowStyle}" class="${animateClass}">
                     <td class="number-cell col-number">
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
-                    <td style="font-weight:700">${c.name}</td>
+                    <td style="font-weight:700">
+                        ${c.name}
+                        ${quotaIndicatorHTML}
+                    </td>
                     <td class="party-cell col-party">
                         <span class="party-badge party-long" style="background:${partyColorHex}">${partyLongName}</span>
                         <span class="party-badge party-short" style="background:${partyColorHex}">${partyShortName}</span>
@@ -1681,7 +1711,7 @@
             return `<th style="${style}" class="${finalClassName}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
         }
         
-        // *** 修改：傳遞 triggerAnimation 參數給 generateTableBodyHTML ***
+        // 傳遞 triggerAnimation 參數給 generateTableBodyHTML
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation);
         
         return `
