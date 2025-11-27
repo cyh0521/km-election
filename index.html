@@ -318,6 +318,14 @@
             border: 2px solid #ffffff; 
             box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
         }
+        
+        /* *** 新增：當選者號次圓圈樣式 - 紅色邊框，白色背景，更醒目 *** */
+        .number-badge.is-winner {
+            border: 2px solid #d9534f; /* 醒目紅色邊框 (使用 rate color) */
+            background: #ffffff; /* 白色背景 */
+            color: #d9534f; /* 讓數字也變紅，更一致 */
+            box-shadow: 0 0 0 1px rgba(217, 83, 79, 0.2);
+        }
 
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
@@ -446,6 +454,12 @@
                 vertical-align: middle; 
                 border: 2px solid #ffffff; 
             }
+            
+            /* 讓手機上的當選者標籤保持紅色外框 */
+            .number-badge.is-winner {
+                border: 2px solid #d9534f;
+                color: #d9534f;
+            }
 
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
             .col-party .party-title-desktop { display: none; }
@@ -475,32 +489,6 @@
                 display: inline;
             }
         }
-      
-/* ... (保留所有現有樣式) ... */
-        
-        /* --- 當選者 (Winner) 樣式 --- */
-        
-        /* 當選者號次圓圈樣式 - 紅色雙圈 */
-        .number-badge.is-winner {
-            /* 顏色變為紅色 */
-            background: #d9534f; /* 選用警示紅 */
-            color: white; 
-            font-weight: 700;
-            
-            /* 內層白色邊框 (使用 box-shadow 模擬內邊框效果) */
-            box-shadow: 
-                0 0 0 2px #ffffff, /* 內圈白色邊框 */
-                0 0 0 4px #d9534f; /* 外圈紅色邊框 (與背景色相同) */
-            
-            /* 讓號次圓圈往上移動一點，突出顯示 */
-            transform: translateY(-1px); 
-        }
-
-        /* 移除先前設定的所有 tr.is-winner 相關樣式，
-           讓表格列的背景和長條圖顏色保持政黨預設設定。 */
-
-        /* ... (保留所有現有樣式) ... */
-
     </style>
 </head>
 <body>
@@ -822,7 +810,7 @@
 
     // ================= 資料載入與解析 (保持不變) =================
     
-	function parseCSV(text) {
+    function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return;
@@ -843,13 +831,11 @@
         
         headerRowIndices.forEach(colIndex => {
             const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
-            let nameCell = rows[1][colIndex] ? rows[1][colIndex].trim() : ''; // 原始單元格內容
+            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            // *** 修改：判斷當選者並清理名稱 ***
-            const isWinner = nameCell.includes('*'); 
-            let name = nameCell.replace('*', '').trim(); // 清理後的名稱
-            // *** 結束修改 ***
+            const isWinner = name.includes('*'); // *** 這裡已經正確解析當選者標記 ***
+            name = name.replace('*', '').trim(); 
             
             party = party === '無' ? '無黨籍' : party;
 
@@ -862,9 +848,7 @@
                     independentCounter++;
                 }
 
-                // *** 修改：確保 isWinner 寫入 candInfo ***
                 candInfo.push({ number: String(number), name, party, colIndex, isWinner }); 
-                // *** 結束修改 ***
             }
         });
 
@@ -924,7 +908,6 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                // *** 修改：確保 isWinner 寫入 candidates 和 town/village 數據結構 ***
                 if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 candidates[c.name].votes += votes;
                 
@@ -933,7 +916,6 @@
                 
                 if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
                 towns[town].villages[village].candidates[c.name].votes += votes;
-                 // *** 結束修改 ***
             });
         }
 
@@ -970,7 +952,7 @@
             });
     }
     
-	function extractCountySummary(text) {
+    function extractCountySummary(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return null;
@@ -991,14 +973,11 @@
         
         headerRowIndices.forEach(colIndex => {
             const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
-            let nameCell = rows[1][colIndex] ? rows[1][colIndex].trim() : ''; // 原始單元格內容
+            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            // *** 修改：判斷當選者並清理名稱 ***
-            const isWinner = nameCell.includes('*');
-            let name = nameCell.replace('*', '').trim(); 
-            // *** 結束修改 ***
-            
+            const isWinner = name.includes('*'); // *** 這裡解析當選者標記 (for summary card) ***
+            name = name.replace('*', '').trim(); 
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -1010,9 +989,7 @@
                     independentCounter++;
                 }
 
-                // *** 修改：確保 isWinner 寫入 candInfo ***
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner }); 
-                // *** 結束修改 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner }); // *** 儲存 isWinner 屬性 ***
             }
         });
         
@@ -1039,10 +1016,8 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                // *** 修改：確保 isWinner 寫入 candidates 數據結構 ***
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner }; // *** 儲存 isWinner 屬性 ***
                 candidates[c.name].votes += votes;
-                 // *** 結束修改 ***
             });
         }
         
@@ -1204,7 +1179,7 @@
         return list;
     }
     
-/**
+    /**
      * 生成表格內容 HTML (帶有動畫屬性)
      * @param {Array} candidates - 候選人列表
      * @param {number} validVotes - 有效票數
@@ -1219,38 +1194,33 @@
             const rgb = hexToRgb(partyColorHex);
             const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
-            // 維持原有的政黨長條圖顏色
-            const barGrowColorRGBA = lightColorRGBA;
-            
+            // *** 修改：使用 CSS 變數和 class 控制動畫 ***
             // 1. 設定背景顏色 (線性漸變)
             // 2. 設定 CSS 變數 --bar-width
             // 3. 根據 `animate` 參數決定是否加上 `animate-bar-grow` class
             const rowStyle = `
                 background-image: linear-gradient(
                     to right, 
-                    ${barGrowColorRGBA} 0%, 
-                    ${barGrowColorRGBA} 100%
+                    ${lightColorRGBA} 0%, 
+                    ${lightColorRGBA} 100%
                 );
                 --bar-width: ${rate}%;
             `;
             
-            // 保持原本的動畫 class 判斷
             const animateClass = animate ? 'animate-bar-grow' : '';
             
-            // *** 修改：僅將 is-winner class 應用於號次徽章 ***
-            const badgeClass = `number-badge ${c.isWinner ? 'is-winner' : ''}`; 
-            // *** 結束修改 ***
+            // *** 修改這行：根據 c.isWinner 決定號次圓圈的 class ***
+            const badgeClass = c.isWinner ? 'number-badge is-winner' : 'number-badge'; 
             
             const partyLongName = getLongPartyName(c.party); 
             const partyShortName = getShortPartyName(c.party);
             
-            // *** 注意：<tr> 上沒有 is-winner class ***
             return `
-                <tr style="${rowStyle}" class="${animateClass}"> 
+                <tr style="${rowStyle}" class="${animateClass}">
                     <td class="number-cell col-number">
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
-                    <td style="font-weight:700">${c.name}${c.isWinner ? ' <span style="font-size:12px;color:#d9534f;"> (當選)</span>' : ''}</td>
+                    <td style="font-weight:700">${c.name}</td>
                     <td class="party-cell col-party">
                         <span class="party-badge party-long" style="background:${partyColorHex}">${partyLongName}</span>
                         <span class="party-badge party-short" style="background:${partyColorHex}">${partyShortName}</span>
