@@ -191,7 +191,7 @@
         }
         .card.is-summary .card-stats .rate {
              color: #d9534f; 
-             font-weight: 500; /* <--- MODIFIED: Removed bold font weight for rate in summary cards */
+             font-weight: 500; 
         }
 
         /* 讓 action text 保持在最右邊，並防止被擠壓 */
@@ -284,6 +284,13 @@
         table th:nth-child(1),
         table td:nth-child(1) { width: 40px; text-align: center; } 
         
+        /* 候選人名字欄位的 td 樣式：微調 padding 讓名字與標籤更緊湊 */
+        table td:nth-child(2) {
+             padding-top: 6px; 
+             padding-bottom: 6px; 
+             line-height: 1.2;
+        }
+
         /* 得票數欄位 */
         table th:nth-last-child(2),
         table td:nth-last-child(2) { text-align: right; white-space: nowrap; } 
@@ -319,32 +326,36 @@
             box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
         }
         
-        /* *** 修改：當選者號次圓圈樣式 - 紅色邊框，白色背景，更醒目 *** */
+        /* 當選者號次圓圈樣式 - 紅色邊框，白色背景，更醒目 */
         .number-badge.is-winner {
             border: 2px solid #d9534f; /* 醒目紅色邊框 (使用 rate color) */
             background: #ffffff; /* 白色背景 */
             color: #d9534f; /* 讓數字也變紅，更一致 */
             box-shadow: 0 0 0 1px rgba(217, 83, 79, 0.2);
         }
-        
-        /* *** 新增：婦女保障名額徽章樣式 (紫色) *** */
-        .quota-badge {
-            display: inline-block;
-            background: #B065B0; /* 柔和紫色 */
-            color: white;
-            padding: 2px 5px;
-            margin-left: 6px;
-            border-radius: 4px;
-            font-size: 11px; /* 保持小巧 */
-            font-weight: 500;
-            line-height: 1;
-            white-space: nowrap;
-            vertical-align: middle;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
 
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
+        /* *** 新增：婦女保障名額標籤樣式 (緊湊顯示) *** */
+        .women-quota-badge {
+            display: inline-block; 
+            font-size: 10px; 
+            font-weight: 500; 
+            color: #FFFFFF; 
+            background-color: #E90080; 
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-top: 2px; /* 緊貼名字 */
+            line-height: 1; 
+            white-space: nowrap; 
+        }
+        
+        /* 確保候選人名字能獨立成行 */
+        .candidate-name {
+            display: block;
+            font-weight: 700;
+        }
+
         /* 預設 (桌面版 > 768px)：顯示長名稱，隱藏短名稱 */
         .party-cell .party-long { display: inline-block; }
         .party-cell .party-short { display: none; }
@@ -359,6 +370,8 @@
         table.large-table td { padding: 10px 10px; }
         table.large-table .number-badge { width: 26px; height: 26px; font-size: 14px; }
         table.large-table .party-badge { font-size: 12px; }
+        table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; } /* 稍微增加大表格的 padding */
+
 
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
         
@@ -476,13 +489,6 @@
                 border: 2px solid #d9534f;
                 color: #d9534f;
             }
-            
-            /* *** 新增：手機版保障名額徽章樣式調整 *** */
-            .quota-badge {
-                font-size: 10px; 
-                padding: 1px 4px; 
-                margin-left: 4px;
-            }
 
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
             .col-party .party-title-desktop { display: none; }
@@ -491,6 +497,12 @@
             /* 手機版：頂部兩欄改為單欄堆疊 */
             .top-summary-grid {
                 grid-template-columns: 1fr;
+            }
+            
+             /* 手機版：候選人名字欄位調整 */
+            table td:nth-child(2) {
+                 padding-top: 5px; 
+                 padding-bottom: 5px; 
             }
         }
         
@@ -857,10 +869,13 @@
             let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            // *** 修改：新增解析婦女保障名額標記 (*!) ***
-            const isReservedQuota = name.includes('*!');
-            const isWinner = name.includes('*'); 
-            name = name.replace('*!', '').replace('*', '').trim(); // 移除所有標記
+            // *** 修改：檢查是否為婦女保障名額當選 (*!) ***
+            const isWomenQuota = name.includes('*!');
+            // 檢查是否為一般當選 (包含婦女保障名額)
+            const isWinner = name.includes('*') || isWomenQuota; 
+            
+            // 清理名字中的標記
+            name = name.replace('*!', '').replace('*', '').trim(); 
             
             party = party === '無' ? '無黨籍' : party;
 
@@ -873,14 +888,8 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ 
-                    number: String(number), 
-                    name, 
-                    party, 
-                    colIndex, 
-                    isWinner,
-                    isReservedQuota // 儲存保障名額狀態 
-                }); 
+                // *** 新增 isWomenQuota 屬性 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota }); 
             }
         });
 
@@ -940,14 +949,14 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                // *** 修改：在建立候選人物件時，保留 isReservedQuota 屬性 ***
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isReservedQuota: c.isReservedQuota };
+                // *** 更新候選人物件屬性 ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
                 candidates[c.name].votes += votes;
                 
-                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isReservedQuota: c.isReservedQuota };
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
                 towns[town].candidates[c.name].votes += votes;
                 
-                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isReservedQuota: c.isReservedQuota };
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
                 towns[town].villages[village].candidates[c.name].votes += votes;
             });
         }
@@ -1009,10 +1018,12 @@
             let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            // *** 修改：新增解析婦女保障名額標記 (*!) ***
-            const isReservedQuota = name.includes('*!'); 
-            const isWinner = name.includes('*'); 
-            name = name.replace('*!', '').replace('*', '').trim(); // 移除所有標記
+            // *** 修改：檢查是否為婦女保障名額當選 (*!) ***
+            const isWomenQuota = name.includes('*!');
+            // 檢查是否為一般當選 (包含婦女保障名額)
+            const isWinner = name.includes('*') || isWomenQuota; 
+            
+            name = name.replace('*!', '').replace('*', '').trim(); 
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -1024,14 +1035,8 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ 
-                    number: String(number), 
-                    name, 
-                    party, 
-                    colIndex, 
-                    isWinner,
-                    isReservedQuota // 儲存保障名額狀態
-                }); 
+                // *** 新增 isWomenQuota 屬性 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota }); 
             }
         });
         
@@ -1058,8 +1063,8 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                // *** 修改：在建立候選人物件時，保留 isReservedQuota 屬性 ***
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isReservedQuota: c.isReservedQuota };
+                // *** 更新候選人物件屬性 ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota }; 
                 candidates[c.name].votes += votes;
             });
         }
@@ -1109,7 +1114,7 @@
         await Promise.all(summaryPromises);
     }
 
-    // ================= 排序與更新邏輯 (保持不變) =================
+    // ================= 排序與更新邏輯 (不變動) =================
     
     window.sortTable = function(key) {
         
@@ -1237,7 +1242,7 @@
             const rgb = hexToRgb(partyColorHex);
             const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
-            // *** 使用 CSS 變數和 class 控制動畫 ***
+            // 使用 CSS 變數和 class 控制動畫
             const rowStyle = `
                 background-image: linear-gradient(
                     to right, 
@@ -1249,15 +1254,15 @@
             
             const animateClass = animate ? 'animate-bar-grow' : '';
             
-            // *** 修改：根據 c.isWinner 決定號次圓圈的 class ***
+            // 根據 c.isWinner 決定號次圓圈的 class
             const badgeClass = c.isWinner ? 'number-badge is-winner' : 'number-badge'; 
             
             const partyLongName = getLongPartyName(c.party); 
             const partyShortName = getShortPartyName(c.party);
             
-            // *** 新增：婦女保障名額徽章 HTML ***
-            const quotaBadgeHTML = c.isReservedQuota 
-                ? '<span class="quota-badge" title="婦女保障名額當選">女保</span>' 
+            // *** 新增：婦女保障名額標籤 HTML ***
+            const womenQuotaBadge = c.isWomenQuota 
+                ? '<div class="women-quota-badge">婦女保障名額</div>' 
                 : '';
             
             return `
@@ -1265,7 +1270,10 @@
                     <td class="number-cell col-number">
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
-                    <td style="font-weight:700">${c.name}${quotaBadgeHTML}</td>
+                    <td>
+                        <span class="candidate-name">${c.name}</span>
+                        ${womenQuotaBadge}
+                    </td>
                     <td class="party-cell col-party">
                         <span class="party-badge party-long" style="background:${partyColorHex}">${partyLongName}</span>
                         <span class="party-badge party-short" style="background:${partyColorHex}">${partyShortName}</span>
@@ -1513,7 +1521,7 @@
             const townMetadata = {
                 validVotes: townData.validVotes,
                 invalidVotes: townData.invalidVotes,
-                eligibleVoters: townData.eligibleVagers
+                eligibleVoters: townData.eligibleVoters
             };
 
             // *** 載入時觸發動畫 ***
@@ -1719,7 +1727,7 @@
             return `<th style="${style}" class="${finalClassName}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
         }
         
-        // *** 修改：傳遞 triggerAnimation 參數給 generateTableBodyHTML ***
+        // 傳遞 triggerAnimation 參數給 generateTableBodyHTML
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation);
         
         return `
