@@ -205,6 +205,16 @@
             align-self: flex-start; 
             padding-top: 2px; 
         }
+        
+        /* *** 新增：卡片底部小字 (應選席次) 樣式 *** */
+        .card-footer-info {
+            margin-top: 5px;
+            padding-top: 0px;
+            font-size: 12px;
+            color: var(--text-sub);
+            text-align: left;
+            font-weight: 500;
+        }
 
         /* 內容區域佈局調整 */
         .layout-full, .layout-compact { 
@@ -857,7 +867,6 @@
             "健保免費連線": "健保免費",
             "無黨團結聯盟": "無黨聯盟",
             "公民黨": "公民黨",
-            "中華民族致公黨": "致公黨",
             "連署參選": "連署參選",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
@@ -889,7 +898,6 @@
             "健保免費連線": "健保免費",
             "無黨團結聯盟": "無黨聯盟",
             "公民黨": "公民黨",
-            "中華民族致公黨": "中華民族致公黨",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -923,6 +931,10 @@
             headerRowIndices.push(currentIdx);
             currentIdx++;
         }
+        
+        // *** 修改：從 rows[1][0] 獲取應選名額 (seatsCount) ***
+        // rows[1] 是第二列，rows[1][0] 是第一格
+        const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
         
         const VOTES_COL = currentIdx; 
         const INVALID_COL = currentIdx + 1;
@@ -1032,7 +1044,8 @@
         appState.countyMetadata = {
             validVotes: globalValidVotes,
             invalidVotes: globalInvalidVotes,
-            eligibleVoters: globalEligibleVoters
+            eligibleVoters: globalEligibleVoters,
+            seatsCount: seatsCount // *** 將應選名額存入 metadata ***
         };
         appState.globalTotalVotes = globalValidVotes; 
     }
@@ -1072,6 +1085,9 @@
             headerRowIndices.push(currentIdx);
             currentIdx++;
         }
+        
+        // *** 修改：從 rows[1][0] 獲取應選名額 (seatsCount) ***
+        const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
         
         const VOTES_COL = currentIdx; 
         const INVALID_COL = currentIdx + 1;
@@ -1143,7 +1159,8 @@
             metadata: {
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
-                eligibleVoters: globalEligibleVoters
+                eligibleVoters: globalEligibleVoters,
+                seatsCount: seatsCount // *** 將應選名額存入 metadata ***
             }
         };
     }
@@ -1739,7 +1756,7 @@
         
         const tableSizeClass = isCompact ? '' : ' large-table';
         
-        const { validVotes, invalidVotes, eligibleVoters } = metadata;
+        const { validVotes, invalidVotes, eligibleVoters, seatsCount } = metadata;
         
         const totalBallots = validVotes + invalidVotes;
         const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
@@ -1769,7 +1786,6 @@
             `;
         }
 
-
         const currentConfig = isSummary ? localSortConfig : appState.sortConfig;
         const { key: currentSortKey, direction: currentSortDirection } = currentConfig;
 
@@ -1797,6 +1813,13 @@
         // 傳遞 triggerAnimation 參數給 generateTableBodyHTML
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation);
         
+        // *** 新增：檢查是否有應選名額資料，若有則生成 HTML ***
+        let footerHTML = '';
+        if (seatsCount) {
+             const displayStat = isNaN(Number(seatsCount)) ? seatsCount : `應選 ${seatsCount} 席`;
+             footerHTML = `<div class="card-footer-info">${displayStat}</div>`;
+        }
+        
         return `
         <div class="card ${clickClass} ${summaryClass}" ${clickAttr} id="card-${id}">
             <div class="card-header">
@@ -1822,6 +1845,7 @@
                     </tbody>
                 </table>
             </div>
+            ${footerHTML}
         </div>`;
     }
 
