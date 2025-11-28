@@ -369,7 +369,7 @@
             background-color: #d9534f; /* 紅色背景 */
             padding: 2px 2px;
             border-radius: 3px;
-            margin-left: 3px; /* 與名字保持距離 */
+            margin-left: 2px; /* 與名字保持距離 */
             line-height: 1; 
             white-space: nowrap; 
             vertical-align: middle;
@@ -800,8 +800,35 @@
             type: "立法委員", 
             uiName: "1995年 立法委員選舉",
             summaryData: null
+        },
+        // *** 修改開始：新增兩個立委選舉並假設不需要鄉鎮資料 (在 isElectionWithoutTowns 中處理) ***
+        { 
+            file: "1992_立法委員選舉.csv", 
+            year: "1992", 
+            type: "立法委員", 
+            uiName: "1992年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "1989_增額立委選舉.csv", 
+            year: "1989", 
+            type: "立法委員", 
+            uiName: "1989年 增額立法委員選舉",
+            summaryData: null
         }
+        // *** 修改結束 ***
+
     ];
+    
+    // *** 新增：判斷是否為不需要顯示鄉鎮資料的選舉 ***
+    function isElectionWithoutTowns(electionName) {
+        const noTownsElections = [
+            "1992年 立法委員選舉", 
+            "1989年 增額立法委員選舉"
+        ];
+        return noTownsElections.includes(electionName);
+    }
+    // *** 新增結束 ***
     
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
@@ -872,7 +899,7 @@
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱", 
             "龍黨": "龍黨", 
-            "教科文預算保障e聯盟": "教科文",
+            "教科文聯盟黨": "教科文",
             "台灣基進": "台灣基進",
             "中華新住民黨": "新住民黨",
             "中國生產黨": "中國生產",
@@ -904,7 +931,7 @@
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱黨", 
             "龍黨": "龍黨", 
-            "教科文預算保障e聯盟": "教科文預算保障e聯盟",
+            "教科文聯盟黨": "教科文",
             "台灣基進": "台灣基進",
             "中華新住民黨": "新住民黨",
             "中國生產黨": "中國生產",
@@ -1487,7 +1514,14 @@
         html += `</div></div>`;
 
         const recentElections = [...availableElections].sort((a, b) => {
-            return parseInt(b.year) - parseInt(a.year); 
+            // 複雜排序：先按年份降序，再按名稱升序 (確保同一年份的縣長、議員、立委有穩定順序)
+            const yearA = parseInt(a.year);
+            const yearB = parseInt(b.year);
+            if (yearA !== yearB) {
+                return yearB - yearA; 
+            }
+            return a.uiName.localeCompare(b.uiName, 'zh-TW');
+
         }).slice(0, 8); 
 
         if (recentElections.length > 0) {
@@ -1514,7 +1548,14 @@
         appState.chartInstances = [];
 
         const matchingElections = availableElections.filter(e => e.type === type);
-        matchingElections.sort((a, b) => b.year - a.year); 
+        matchingElections.sort((a, b) => {
+             const yearA = parseInt(a.year);
+             const yearB = parseInt(b.year);
+             if (yearA !== yearB) {
+                 return yearB - yearA; 
+             }
+             return a.uiName.localeCompare(b.uiName, 'zh-TW'); // 確保同一年份的穩定排序
+        });
 
         let html = `<div class="main-section">
             <div class="menu-section-title">${type} 選舉列表</div>
@@ -1592,21 +1633,26 @@
         appState.chartInstances.push(chart);
     }
     
-    // ================= 儀表板核心渲染邏輯 (保持不變) =================
+    // ================= 儀表板核心渲染邏輯 (核心修改部分) =================
     
     window.renderCounty = function(shouldScroll = true) {
         const candidates = getSortedCandidates(appState.data.county); 
         const metadata = appState.countyMetadata;
         
-        // *** 修改：排序時觸發動畫 (triggerAnimation = true) ***
+        // *** 新增判斷：如果不需要顯示鄉鎮資料，則直接返回，只更新主表格 ***
+        const shouldRenderTowns = !isElectionWithoutTowns(appState.electionName);
+        
         if (!shouldScroll) {
             updateTableContent('county-main', candidates, metadata.validVotes, true);
             
-            appState.data.townOrder.forEach(town => {
-                const townData = appState.data.towns[town];
-                const townCands = getSortedCandidates(townData.candidates);
-                updateTableContent(`town-${town}`, townCands, townData.validVotes, true);
-            });
+            // 只有在需要渲染鄉鎮列表時，才更新鄉鎮表格
+            if (shouldRenderTowns) {
+                appState.data.townOrder.forEach(town => {
+                    const townData = appState.data.towns[town];
+                    const townCands = getSortedCandidates(townData.candidates);
+                    updateTableContent(`town-${town}`, townCands, townData.validVotes, true);
+                });
+            }
             updateSortIcons(); 
             return; 
         }
@@ -1623,24 +1669,28 @@
                 ${generateCardHTML('county-main', '全縣開票結果', candidates, metadata, false, false, true, false, null, true)} </div>
         </div>`;
 
-        html += `<div class="main-section">
-            <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
-            <div class="sub-area-grid">`;
-        
-        appState.data.townOrder.forEach(town => {
-            const townData = appState.data.towns[town];
-            const townCands = getSortedCandidates(townData.candidates);
+        // *** 條件渲染：如果需要顯示鄉鎮資料，則渲染各鄉鎮開票結果區塊 ***
+        if (shouldRenderTowns) {
+            html += `<div class="main-section">
+                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
+                <div class="sub-area-grid">`;
             
-            const townMetadata = {
-                validVotes: townData.validVotes,
-                invalidVotes: townData.invalidVotes,
-                eligibleVoters: townData.eligibleVoters
-            };
+            appState.data.townOrder.forEach(town => {
+                const townData = appState.data.towns[town];
+                const townCands = getSortedCandidates(townData.candidates);
+                
+                const townMetadata = {
+                    validVotes: townData.validVotes,
+                    invalidVotes: townData.invalidVotes,
+                    eligibleVoters: townData.eligibleVoters
+                };
 
-            // *** 載入時觸發動畫 ***
-            html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}')`, true, false, null, true);
-        });
-        html += `</div></div>`;
+                // *** 載入時觸發動畫 ***
+                html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}')`, true, false, null, true);
+            });
+            html += `</div></div>`;
+        }
+        // *** 條件渲染結束 ***
 
         dom.content.innerHTML = html;
         updateSortIcons();
@@ -1796,7 +1846,7 @@
                 <div class="card-stats" style="margin-left: 0;">
                     <span style="white-space: nowrap;">
                         有效票: ${validVotes.toLocaleString()} 票 
-                        <span style="color:var(--text-sub); margin: 0 5px;">|</span>
+                        <span style="color:var(--text-sub); margin: 0 5px;">︱</span>
                         投票率: <span class="rate">${turnoutRate}%</span>
                     </span>
                 </div>
