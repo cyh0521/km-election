@@ -206,7 +206,7 @@
             padding-top: 2px; 
         }
         
-        /* *** 新增：卡片底部小字 (應選席次) 樣式 *** */
+        /* *** 修改：卡片底部小字 (應選席次) 樣式 *** */
         .card-footer-info {
             margin-top: 5px;
             padding-top: 0px;
@@ -358,6 +358,21 @@
             margin-top: 2px; /* 緊貼名字 */
             line-height: 1; 
             white-space: nowrap; 
+        }
+        
+        /* *** 新增：現任標籤樣式 (紅色，緊湊顯示) *** */
+        .incumbent-badge {
+            display: inline-block; 
+            font-size: 10px; 
+            font-weight: 500; 
+            color: #FFFFFF; 
+            background-color: #d9534f; /* 紅色背景 */
+            padding: 2px 2px;
+            border-radius: 3px;
+            margin-left: 5px; /* 與名字保持距離 */
+            line-height: 1; 
+            white-space: nowrap; 
+            vertical-align: middle;
         }
         
         /* 確保候選人名字能獨立成行 */
@@ -952,11 +967,14 @@
             
             // *** 修改：檢查是否為婦女保障名額當選 (*!) ***
             const isWomenQuota = name.includes('*!');
+            // *** 新增：檢查是否為現任 (#) ***
+            const isIncumbent = name.includes('#');
+
             // 檢查是否為一般當選 (包含婦女保障名額)
             const isWinner = name.includes('*') || isWomenQuota; 
             
-            // 清理名字中的標記
-            name = name.replace('*!', '').replace('*', '').trim(); 
+            // 清理名字中的標記 (*, *!, #)
+            name = name.replace('*!', '').replace('*', '').replace('#', '').trim(); 
             
             party = party === '無' ? '無黨籍' : party;
 
@@ -969,8 +987,8 @@
                     independentCounter++;
                 }
 
-                // *** 新增 isWomenQuota 屬性 ***
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota }); 
+                // *** 新增 isWomenQuota 和 isIncumbent 屬性 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent }); 
             }
         });
 
@@ -1030,14 +1048,14 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                // *** 更新候選人物件屬性 ***
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
+                // *** 更新候選人物件屬性，包含 isIncumbent ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent };
                 candidates[c.name].votes += votes;
                 
-                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent };
                 towns[town].candidates[c.name].votes += votes;
                 
-                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota };
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent };
                 towns[town].villages[village].candidates[c.name].votes += votes;
             });
         }
@@ -1105,10 +1123,14 @@
             
             // *** 修改：檢查是否為婦女保障名額當選 (*!) ***
             const isWomenQuota = name.includes('*!');
+            // *** 新增：檢查是否為現任 (#) ***
+            const isIncumbent = name.includes('#');
+
             // 檢查是否為一般當選 (包含婦女保障名額)
             const isWinner = name.includes('*') || isWomenQuota; 
             
-            name = name.replace('*!', '').replace('*', '').trim(); 
+            // 清理名字中的標記
+            name = name.replace('*!', '').replace('*', '').replace('#', '').trim(); 
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -1120,8 +1142,8 @@
                     independentCounter++;
                 }
 
-                // *** 新增 isWomenQuota 屬性 ***
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota }); 
+                // *** 新增 isWomenQuota 和 isIncumbent 屬性 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent }); 
             }
         });
         
@@ -1148,8 +1170,8 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                // *** 更新候選人物件屬性 ***
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota }; 
+                // *** 更新候選人物件屬性，包含 isIncumbent ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent }; 
                 candidates[c.name].votes += votes;
             });
         }
@@ -1350,6 +1372,11 @@
             const womenQuotaBadge = c.isWomenQuota 
                 ? '<div class="women-quota-badge">婦女保障名額</div>' 
                 : '';
+                
+            // *** 新增：現任標籤 HTML (如果 isIncumbent 為真) ***
+            const incumbentBadge = c.isIncumbent 
+                ? '<span class="incumbent-badge">現</span>' 
+                : '';
             
             return `
                 <tr style="${rowStyle}" class="${animateClass}">
@@ -1357,7 +1384,7 @@
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
                     <td>
-                        <span class="candidate-name">${c.name}</span>
+                        <span class="candidate-name">${c.name}${incumbentBadge}</span>
                         ${womenQuotaBadge}
                     </td>
                     <td class="party-cell col-party">
