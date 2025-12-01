@@ -850,13 +850,20 @@
             uiName: "1993年 縣長選舉",
             summaryData: null
         },
-        // *** 修改開始：新增兩個立委選舉並假設不需要鄉鎮資料 (在 isElectionWithoutTowns 中處理) ***
+        // *** 修改開始：新增不需要鄉鎮資料之選舉 (在 isElectionWithoutTowns 中處理) ***
         { 
             file: "1992_立法委員選舉.csv", 
             year: "1992", 
             type: "立法委員", 
             uiName: "1992年 立法委員選舉",
             summaryData: null
+        },
+        { 
+            file: "1991_國大代表選舉.csv", 
+            year: "1991", 
+            type: "國大代表", 
+            uiName: "1991年 國大代表選舉",
+            summaryData: null 
         },
         { 
             file: "1989_增額立委選舉.csv", 
@@ -873,6 +880,7 @@
     function isElectionWithoutTowns(electionName) {
         const noTownsElections = [
             "1992年 立法委員選舉", 
+            "1991年 國大代表選舉", 
             "1989年 增額立法委員選舉"
         ];
         return noTownsElections.includes(electionName);
