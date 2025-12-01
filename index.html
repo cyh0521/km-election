@@ -42,12 +42,11 @@
         }
         
         h1 { font-size: 20px; font-weight: 700; margin: 0; }
-        /* *** 修改: 點擊標題回主選單時，使用 pushState (default: true) *** */
         h1 span { cursor: pointer; } 
         
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         
-        /* --- 主選單樣式 (專業設計) --- */
+        /* --- 主選單樣式 --- */
         
         .main-menu-grid {
             display: grid;
@@ -58,57 +57,40 @@
         }
 
         .menu-button {
-            /* *** 修改開始：專業按鈕設計 *** */
-            display: flex; /* 使用 Flexbox */
-            flex-direction: column; /* 垂直排列 */
-            align-items: center; /* 內容置中 */
-            
             background: var(--card-bg);
-            /* 移除外框，改用 Subtle Shadow + Primary Color Bar */
-            border: 1px solid transparent; 
+            border: 1px solid var(--border); 
             border-radius: 8px; 
-            padding: 20px 15px; /* 增加垂直 padding */
+            padding: 15px 20px; 
             text-align: center;
             font-size: 16px; 
             font-weight: 500; 
             color: var(--secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
-            /* 初始狀態： subtle shadow and primary color bar on left */
-            box-shadow: 0 1px 5px rgba(0,0,0,0.08), inset 4px 0 0 0 var(--border); 
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
             line-height: 1.4;
         }
         
         .menu-button:hover {
-            /* hover 效果：更明顯的陰影，變換左側 Primary Color Bar */
-            border-color: var(--primary); /* 為了 Transition 保持 */
-            background: var(--card-bg); /* 背景不變 */
-            color: var(--primary); /* 文字變色 */
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
             transform: translateY(-2px); 
-            /* 左側條變成 Primary Color */
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15), inset 4px 0 0 0 var(--primary); 
+            box-shadow: 0 4px 10px rgba(56, 135, 176, 0.2);
         }
         
         /* 修正: 讓選單圖示可見並垂直堆疊 */
         .menu-icon { 
             display: block; 
-            font-size: 36px; /* 略微放大 */
-            margin-bottom: 10px; /* 增加間距 */
+            font-size: 32px; 
+            margin-bottom: 8px; 
             line-height: 1;
-            color: var(--primary); /* 預設 primary color */
-            transition: color 0.3s ease;
         } 
-        
-        .menu-button:hover .menu-icon {
-            color: var(--secondary); /* hover 時，icon 變成 secondary color */
-        }
         
         /* 新增：確保按鈕文字有區分 */
         .menu-text {
             display: block; 
-            font-weight: 700; /* 文字加粗 */
         }
-        /* *** 修改結束 *** */
 
         .menu-section-title {
             font-size: 24px;
@@ -146,7 +128,6 @@
         
         .breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 0; }
         #breadcrumb-bottom { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
-        /* *** 修改: 麵包屑點擊時，也使用 pushState (default: true) *** */
         .breadcrumb span { cursor: pointer; color: var(--primary); font-weight: 500; }
         .breadcrumb span:hover { text-decoration: underline; }
         .breadcrumb span.active { color: var(--text-main); cursor: default; text-decoration: none; }
@@ -159,7 +140,6 @@
         /* 卡片主體，padding 為 20px，讓內容貼齊邊緣 */
         .card { background: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; overflow: hidden; border: 1px solid transparent; transition: all 0.2s; margin-bottom: 0; }
         .card.clickable { cursor: pointer; }
-        /* *** 修改: 卡片點擊時，使用 loadData 或 renderTown 觸發 pushState (default: true) *** */
         .card.clickable:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 15px rgba(56, 135, 176, 0.15); }
         
         /* 卡片標頭：左右對齊，並讓左邊可收縮 */
@@ -710,6 +690,27 @@
             summaryData: null
         },
         { 
+            file: "2014_縣議員選舉第3選區.csv", 
+            year: "2014", 
+            type: "縣議員", 
+            uiName: "2014年 縣議員選舉第3選區",
+            summaryData: null
+        },
+        { 
+            file: "2014_縣議員選舉第2選區.csv", 
+            year: "2014", 
+            type: "縣議員", 
+            uiName: "2014年 縣議員選舉第2選區",
+            summaryData: null
+        },
+        { 
+            file: "2014_縣議員選舉第1選區.csv", 
+            year: "2014", 
+            type: "縣議員", 
+            uiName: "2014年 縣議員選舉第1選區",
+            summaryData: null
+        },
+        { 
             file: "2012_總統副總統選舉.csv", 
             year: "2012", 
             type: "總統副總統", 
@@ -731,6 +732,20 @@
             summaryData: null
         },
         { 
+            file: "2009_縣議員選舉第2選區.csv", 
+            year: "2009", 
+            type: "縣議員", 
+            uiName: "2009年 縣議員選舉第2選區",
+            summaryData: null
+        },
+        { 
+            file: "2009_縣議員選舉第1選區.csv", 
+            year: "2009", 
+            type: "縣議員", 
+            uiName: "2009年 縣議員選舉第1選區",
+            summaryData: null
+        },
+        { 
             file: "2008_總統副總統選舉.csv", 
             year: "2008", 
             type: "總統副總統", 
@@ -749,6 +764,13 @@
             year: "2005", 
             type: "縣長", 
             uiName: "2005年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "2005_縣議員選舉.csv", 
+            year: "2005", 
+            type: "縣議員", 
+            uiName: "2005年 縣議員選舉",
             summaryData: null
         },
         { 
@@ -821,7 +843,6 @@
             uiName: "1995年 立法委員選舉",
             summaryData: null
         },
-        // *** 新增：1993 縣長選舉資料 (只有鄉鎮層級) ***
         { 
             file: "1993_縣長選舉.csv", 
             year: "1993", 
@@ -829,7 +850,7 @@
             uiName: "1993年 縣長選舉",
             summaryData: null
         },
-        // *** 修改：新增兩個立委選舉並假設不需要鄉鎮資料 ***
+        // *** 修改開始：新增不需要鄉鎮資料之選舉 (在 isElectionWithoutTowns 中處理) ***
         { 
             file: "1992_立法委員選舉.csv", 
             year: "1992", 
@@ -838,32 +859,42 @@
             summaryData: null
         },
         { 
+            file: "1991_國大代表選舉.csv", 
+            year: "1991", 
+            type: "國大代表", 
+            uiName: "1991年 國大代表選舉",
+            summaryData: null 
+        },
+        { 
             file: "1989_增額立委選舉.csv", 
             year: "1989", 
             type: "立法委員", 
             uiName: "1989年 增額立法委員選舉",
             summaryData: null
         }
+        // *** 修改結束 ***
+
     ];
     
-    // *** 函式：判斷是否為不需要顯示鄉鎮資料的選舉 ***
+    // *** 新增：判斷是否為不需要顯示鄉鎮資料的選舉 ***
     function isElectionWithoutTowns(electionName) {
         const noTownsElections = [
             "1992年 立法委員選舉", 
+            "1991年 國大代表選舉", 
             "1989年 增額立法委員選舉"
         ];
         return noTownsElections.includes(electionName);
     }
-    
-    // *** 函式：判斷是否為只需要顯示鄉鎮層級結果 (不需要村里) 的選舉 ***
+
+// *** 步驟二新增：判斷是否為不需要顯示村里資料的選舉 ***
     function isElectionWithoutVillages(electionName) {
         const noVillageElections = [
-            "1993年 縣長選舉" // 新增要隱藏村里的選舉名稱
+            "1993年 縣長選舉" // 新增要隱藏的選舉名稱
         ];
         return noVillageElections.includes(electionName);
     }
-    // *** 判斷函式結束 ***
-    
+    // *** 新增結束 ***
+       
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
         { type: "立法委員", icon: "⚖️" },
@@ -933,7 +964,7 @@
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱", 
             "龍黨": "龍黨", 
-            "教科文聯盟黨": "教科文",
+            "教科文預算保障e聯盟": "教科文",
             "台灣基進": "台灣基進",
             "中華新住民黨": "新住民黨",
             "中國生產黨": "中國生產",
@@ -965,17 +996,18 @@
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱黨", 
             "龍黨": "龍黨", 
-            "教科文聯盟黨": "教科文",
+            "教科文預算保障e聯盟": "教科文預算保障e聯盟",
             "台灣基進": "台灣基進",
-            "中華新住民黨": "新住民黨",
-            "中國生產黨": "中國生產",
-            "中華統一促進黨": "統促黨",
-            "軍公教聯盟黨": "軍公教",
+            "中華新住民黨": "中華新住民黨",
+            "中國生產黨": "中國生產黨",
+            "中華統一促進黨": "中華統一促進黨",
+            "軍公教聯盟黨": "軍公教聯盟黨",
             "台灣工黨": "台灣工黨",
-            "健保免費連線": "健保免費",
-            "無黨團結聯盟": "無黨聯盟",
+            "健保免費連線": "健保免費連線",
+            "無黨團結聯盟": "無黨團結聯盟",
             "公民黨": "公民黨",
             "中華民族致公黨": "中華民族致公黨",
+            "連署參選": "連署參選",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -994,34 +1026,7 @@
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
-    
-    // ================= 歷史記錄 API 輔助函式 (新增) =================
-    
-    function getCurrentUrlParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-            view: params.get('view') || 'main',
-            type: params.get('type'),
-            election: params.get('election'),
-            town: params.get('town')
-        };
-    }
-    
-    /**
-     * 更新瀏覽器 URL 和歷史記錄
-     * @param {Object} state - 狀態物件
-     * @param {string} title - 頁面標題
-     * @param {string} url - 完整的 URL 查詢字串
-     * @param {boolean} push - 是否推送到歷史記錄 (true: pushState, false: replaceState)
-     */
-    function updateUrl(state, title, url, push = true) {
-        if (push) {
-            history.pushState(state, title, url);
-        } else {
-            // popstate 事件發生時，我們使用 replaceState 確保 URL 乾淨，或者在首次載入時使用
-            history.replaceState(state, title, url); 
-        }
-    }
+
 
     // ================= 資料載入與解析 =================
     
@@ -1158,13 +1163,7 @@
         appState.globalTotalVotes = globalValidVotes; 
     }
 
-    /**
-     * 載入選舉資料並渲染縣級頁面
-     * @param {string} file - 檔案名稱
-     * @param {string} uiName - 顯示名稱
-     * @param {boolean} pushState - 是否推送到歷史記錄 (popstate 事件觸發時為 false)
-     */
-    function loadData(file, uiName, pushState = true) {
+    function loadData(file, uiName) {
         dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據...</div>`;
         
         appState.electionName = uiName;
@@ -1180,8 +1179,7 @@
                 // 清理所有 Chart 實例 
                 appState.chartInstances.forEach(chart => chart.destroy()); 
                 appState.chartInstances = [];
-                // *** 傳遞 pushState 參數到 renderCounty ***
-                renderCounty(true, pushState); 
+                renderCounty(true); 
             })
             .catch(error => {
                 console.error("載入錯誤:", error);
@@ -1190,7 +1188,6 @@
     }
     
     function extractCountySummary(text) {
-        // ... (不變) ...
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return null;
@@ -1338,9 +1335,9 @@
         appState.sortConfig = { key: key, direction: newDirection };
 
         if (appState.currentLevel === 'county') {
-            renderCounty(false, false); // 排序時不滾動，不推歷史記錄
+            renderCounty(false); 
         } else if (appState.currentLevel === 'town') {
-            renderTown(appState.currentTown, false, false); // 排序時不滾動，不推歷史記錄
+            renderTown(appState.currentTown, false); 
         }
     };
     
@@ -1533,7 +1530,7 @@
         });
     }
 
-    // ================= 頁面渲染函式 (核心修改 pushState 參數) =================
+    // ================= 頁面渲染函式 (保持不變) =================
     
     function generateSummaryCardHTML(election) {
         if (!election.summaryData) {
@@ -1545,14 +1542,14 @@
         const { allCandidates, metadata, sortConfig } = election.summaryData;
         const cardId = `summary-${election.file.replace(/[^a-zA-Z0-9]/g, '-')}`;
 
-        // *** 摘要卡片點擊時，預設 pushState = true ***
+        // *** 摘要卡片在載入時也帶入動畫 (animate = true) ***
         return generateCardHTML(
             cardId, 
             election.uiName, 
             allCandidates, 
             metadata, 
             true, 
-            `loadData('${election.file}', '${election.uiName}', true)`, // 點擊時 pushState = true
+            `loadData('${election.file}', '${election.uiName}')`, 
             true, 
             true,  
             sortConfig,
@@ -1560,18 +1557,7 @@
         );
     }
 
-    /**
-     * 渲染主選單
-     * @param {boolean} pushState - 是否推送到歷史記錄
-     */
-    window.renderMainMenu = function(pushState = true) { 
-        
-        // --- ADD URL UPDATE LOGIC ---
-        const url = `?view=main`;
-        const state = { view: 'main' };
-        updateUrl(state, "金門選舉資料庫 - 首頁", url, pushState); 
-        // --- END URL UPDATE LOGIC ---
-
+    window.renderMainMenu = function() {
         appState.currentLevel = 'mainMenu';
         window.scrollTo(0, 0); 
         updateBreadcrumb(); 
@@ -1586,8 +1572,7 @@
             <div class="main-menu-grid">`;
         
         electionCategories.forEach(cat => {
-            // *** 點擊類別列表，預設 pushState = true ***
-            html += `<div class="menu-button" onclick="renderElectionList('${cat.type}', true)">
+            html += `<div class="menu-button" onclick="renderElectionList('${cat.type}')">
                 <span class="menu-icon">${cat.icon}</span>
                 <span class="menu-text">${cat.type}</span>
             </div>`;
@@ -1619,19 +1604,7 @@
         dom.content.innerHTML = html;
     };
     
-    /**
-     * 渲染選舉列表
-     * @param {string} type - 選舉類別
-     * @param {boolean} pushState - 是否推送到歷史記錄
-     */
-    window.renderElectionList = function(type, pushState = true) { 
-        
-        // --- ADD URL UPDATE LOGIC ---
-        const url = `?view=list&type=${encodeURIComponent(type)}`;
-        const state = { view: 'list', type: type };
-        updateUrl(state, `金門選舉資料庫 - ${type} 列表`, url, pushState); 
-        // --- END URL UPDATE LOGIC ---
-
+    window.renderElectionList = function(type) {
         appState.currentLevel = 'electionList';
         appState.currentTown = type; 
         window.scrollTo(0, 0); 
@@ -1726,12 +1699,9 @@
         appState.chartInstances.push(chart);
     }
     
-    /**
-     * 渲染縣級視圖
-     * @param {boolean} shouldScroll - 是否滾動到頂部
-     * @param {boolean} pushState - 是否推送到歷史記錄
-     */
-    window.renderCounty = function(shouldScroll = true, pushState = true) {
+    // ================= 儀表板核心渲染邏輯 (核心修改部分) =================
+    
+    window.renderCounty = function(shouldScroll = true) {
         const candidates = getSortedCandidates(appState.data.county); 
         const metadata = appState.countyMetadata;
         
@@ -1753,14 +1723,6 @@
             return; 
         }
 
-        // --- ADD URL UPDATE LOGIC ---
-        if (pushState) {
-            const url = `?view=county&election=${encodeURIComponent(appState.electionName)}`;
-            const state = { view: 'county', election: appState.electionName };
-            updateUrl(state, `金門選舉資料庫 - ${appState.electionName}`, url, pushState);
-        }
-        // --- END URL UPDATE LOGIC ---
-        
         appState.currentLevel = 'county';
         appState.currentTown = null;
         window.scrollTo(0,0); 
@@ -1789,8 +1751,8 @@
                     eligibleVoters: townData.eligibleVoters
                 };
 
-                // *** 卡片點擊時，預設 pushState = true ***
-                html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}', true, true)`, true, false, null, true);
+                // *** 載入時觸發動畫 ***
+                html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}')`, true, false, null, true);
             });
             html += `</div></div>`;
         }
@@ -1800,13 +1762,7 @@
         updateSortIcons();
     };
 
-    /**
-     * 渲染鄉鎮視圖
-     * @param {string} townName - 鄉鎮名稱
-     * @param {boolean} shouldScroll - 是否滾動到頂部
-     * @param {boolean} pushState - 是否推送到歷史記錄
-     */
-    window.renderTown = function(townName, shouldScroll = true, pushState = true) {
+    window.renderTown = function(townName, shouldScroll = true) {
         const townData = appState.data.towns[townName];
         const candidates = getSortedCandidates(townData.candidates);
         const townMetadata = {
@@ -1815,31 +1771,19 @@
             eligibleVoters: townData.eligibleVoters
         };
         
-        // *** 修正：排序時觸發動畫 (triggerAnimation = true) ***
-        // popstate 恢復時 shouldScroll = false
+        // *** 修改：排序時觸發動畫 (triggerAnimation = true) ***
         if (!shouldScroll) {
             updateTableContent('town-main', candidates, townMetadata.validVotes, true);
             
-            const shouldRenderVillages = !isElectionWithoutVillages(appState.electionName); 
-            if (shouldRenderVillages) {
-                const villageList = Object.keys(townData.villages);
-                villageList.forEach(village => {
-                    const vData = townData.villages[village];
-                    const vCands = getSortedCandidates(vData.candidates);
-                    updateTableContent(`village-${village}`, vCands, vData.validVotes, true);
-                });
-            }
+            const villageList = Object.keys(townData.villages);
+            villageList.forEach(village => {
+                const vData = townData.villages[village];
+                const vCands = getSortedCandidates(vData.candidates);
+                updateTableContent(`village-${village}`, vCands, vData.validVotes, true);
+            });
             updateSortIcons(); 
             return; 
         }
-        
-        // --- ADD URL UPDATE LOGIC ---
-        if (pushState) {
-            const url = `?view=town&election=${encodeURIComponent(appState.electionName)}&town=${encodeURIComponent(townName)}`;
-            const state = { view: 'town', election: appState.electionName, town: townName };
-            updateUrl(state, `金門選舉資料庫 - ${appState.electionName} (${townName})`, url, pushState);
-        }
-        // --- END URL UPDATE LOGIC ---
         
         appState.currentLevel = 'town';
         appState.currentTown = townName;
@@ -1851,42 +1795,43 @@
         
         const villageList = Object.keys(townData.villages);
 
-        let html = `<div class="main-section">
-            <div class="section-header"><span class="section-title">${townName} 總計</span></div>
-            <div class="top-summary-grid">
-                ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
-                ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false, null, true)} </div>
-        </div>`;
+// *** 步驟三修改開始：新增判斷是否渲染村里區塊 ***
+    const shouldRenderVillages = !isElectionWithoutVillages(appState.electionName); 
+    
+    let html = `<div class="main-section">
+        <div class="section-header"><span class="section-title">${townName} 總計</span></div>
+        <div class="top-summary-grid">
+            ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
+            ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false, null, true)} </div>
+    </div>`;
+
+    if (shouldRenderVillages) { // <--- 條件判斷開始
+        html += `<div class="main-section">
+            <div class="section-header"><span class="section-title">各村里開票結果</span></div>
+            <div class="sub-area-grid">`;
         
-        // *** 條件渲染：如果不需要隱藏村里結果，則渲染村里區塊 ***
-        const shouldRenderVillages = !isElectionWithoutVillages(appState.electionName); 
-
-        if (shouldRenderVillages) { 
-            html += `<div class="main-section">
-                <div class="section-header"><span class="section-title">各村里開票結果</span></div>
-                <div class="sub-area-grid">`;
+        villageList.forEach(village => {
+            const vData = townData.villages[village];
+            const vCands = getSortedCandidates(vData.candidates);
             
-            villageList.forEach(village => {
-                const vData = townData.villages[village];
-                const vCands = getSortedCandidates(vData.candidates);
-                
-                const villageMetadata = {
-                    validVotes: vData.validVotes,
-                    invalidVotes: vData.invalidVotes,
-                    eligibleVoters: vData.eligibleVoters
-                };
+            const villageMetadata = {
+                validVotes: vData.validVotes,
+                invalidVotes: vData.invalidVotes,
+                eligibleVoters: vData.eligibleVoters
+            };
 
-                // *** 載入時觸發動畫 ***
-                html += generateCardHTML(`village-${village}`, village, vCands, villageMetadata, false, null, true, false, null, true);
-            });
-            html += `</div></div>`; 
-        }
+            // *** 載入時觸發動畫 ***
+            html += generateCardHTML(`village-${village}`, village, vCands, villageMetadata, false, null, true, false, null, true);
+        });
+        html += `</div></div>`; // <--- 條件判斷結束
+    }
+    // *** 步驟三修改結束 ***
 
         dom.content.innerHTML = html;
         updateSortIcons();
     };
 
-    // ================= 通用輔助函式 (修改麵包屑點擊邏輯) =================
+    // ================= 通用輔助函式 (保持不變) =================
 
     function updateBreadcrumb() {
         const level = appState.currentLevel;
@@ -1898,19 +1843,18 @@
             return;
         }
 
-        // *** 修改：麵包屑點擊時，使用 pushState = true ***
-        html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
+        html += `<span onclick="renderMainMenu()">首頁</span> / `;
 
         if (level === 'electionList') {
             html += `<span class="active">${appState.currentTown}</span>`;
         } else if (level === 'county') {
             const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
-            html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+            html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
             html += `<span class="active">${appState.electionName}</span>`;
         } else if (level === 'town') {
              const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
-             html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
-             html += `<span onclick="renderCounty(true, true)">${appState.electionName}</span> / `;
+             html += `<span onclick="renderElectionList('${electionType}')">${electionType}</span> / `;
+             html += `<span onclick="renderCounty(true)">${appState.electionName}</span> / `;
              html += `<span class="active">${appState.currentTown}</span>`;
         }
 
@@ -1942,12 +1886,20 @@
     /**
      * 生成卡片 HTML (通用模板)
      * @param {string} id - 卡片 ID
-     * ... (其他參數不變)
+     * @param {string} title - 卡片標題
+     * @param {Array} candidates - 候選人列表
+     * @param {Object} metadata - 元數據
+     * @param {boolean} isClickable - 是否可點擊
+     * @param {string|null} onClickAction - 點擊時的動作
+     * @param {boolean} isCompact - 是否為簡潔模式
+     * @param {boolean} isSummary - 是否為摘要卡片
+     * @param {Object|null} localSortConfig - 摘要卡片專用的排序配置
+     * @param {boolean} triggerAnimation - 是否在載入時觸發動畫 (新增參數)
      */
     function generateCardHTML(id, title, candidates, metadata, isClickable, onClickAction, isCompact = false, isSummary = false, localSortConfig = null, triggerAnimation = false) {
         
         const clickClass = isClickable ? 'clickable' : '';
-        const clickAttr = isClickable ? `onclick="event.stopPropagation(); ${onClickAction}"` : '';
+        const clickAttr = isClickable ? `onclick="${onClickAction}"` : '';
         
         const actionText = isClickable ? `<span class="card-action">查看詳情 ➜</span>` : '';
         
@@ -1966,7 +1918,7 @@
                 <div class="card-stats" style="margin-left: 0;">
                     <span style="white-space: nowrap;">
                         有效票: ${validVotes.toLocaleString()} 票 
-                        <span style="color:var(--text-sub); margin: 0 5px;">|</span>
+                        <span style="color:var(--text-sub); margin: 0 5px;">︱</span>
                         投票率: <span class="rate">${turnoutRate}%</span>
                     </span>
                 </div>
@@ -2048,104 +2000,13 @@
         </div>`;
     }
 
-    
-    // ================= 歷史記錄處理 (新增) =================
-    
-    /**
-     * 檢查 URL 參數或 History State，並渲染對應的視圖
-     * @param {Object} params - 從 URL 或 history.state 取得的參數
-     * @param {boolean} pushState - 是否推送到歷史記錄 (popstate 事件觸發時為 false)
-     */
-    function checkUrlAndRender(params, pushState = false) {
-        
-        // 優先使用 history.state，因為 popstate 總是帶有 state
-        let state = window.history.state;
-        if (state && state.view) {
-             params = state;
-        }
 
-        if (params.view === 'main') {
-            renderMainMenu(pushState); 
-        } else if (params.view === 'list' && params.type) {
-            renderElectionList(params.type, pushState);
-        } else if (params.view === 'county' && params.election) {
-            const election = availableElections.find(e => e.uiName === params.election);
-            if (election) {
-                // 需要重新載入完整 CSV 資料
-                loadData(election.file, election.uiName, pushState); 
-            } else {
-                renderMainMenu(pushState); 
-            }
-        } else if (params.view === 'town' && params.election && params.town) {
-            const election = availableElections.find(e => e.uiName === params.election);
-            if (election) {
-                const file = election.file;
-                const uiName = election.uiName;
-                const townName = params.town;
-                
-                dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName})...</div>`;
-                
-                appState.electionName = uiName;
-                
-                // 處理異步載入：重新載入 CSV，成功後渲染指定的鄉鎮視圖，不推動新的歷史記錄
-                fetch(file) 
-                    .then(r => { 
-                        if(!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。"); 
-                        return r.text(); 
-                    })
-                    .then(csvText => {
-                        parseCSV(csvText);
-                        appState.sortConfig = { key: 'number', direction: 'asc' }; 
-                        appState.chartInstances.forEach(chart => chart.destroy()); 
-                        appState.chartInstances = [];
-                        
-                        // 成功載入縣級資料後，渲染指定的鄉鎮視圖，不推動新的歷史記錄
-                        renderTown(townName, true, false); 
-                    })
-                    .catch(error => {
-                        console.error("載入錯誤:", error);
-                        dom.content.innerHTML = `<div class="loading-state" style="color:red">讀取 ${file} 失敗: ${error.message}<br>請檢查檔案是否上傳成功。</div>`;
-                    });
-
-            } else {
-                renderMainMenu(pushState); 
-            }
-        } else {
-            renderMainMenu(pushState); 
-        }
-    }
-    
-    // 監聽瀏覽器前後頁事件
-    window.onpopstate = function(event) {
-        // popstate 發生時，我們從 event.state 或 URL 恢復狀態，且不推動新的歷史記錄 (pushState = false)
-        if (event.state) {
-             checkUrlAndRender(event.state, false); 
-        } else {
-             checkUrlAndRender(getCurrentUrlParams(), false);
-        }
-    };
-
-
-    // ================= 初始化 (修改) =================
+    // ================= 初始化 =================
 
     (function init() {
         dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
-        
-        // 載入所有選舉摘要
         loadAllElectionSummaries(availableElections).then(() => {
-            
-            const params = getCurrentUrlParams();
-            
-            // 首次載入時，如果 URL 帶有參數，則嘗試恢復視圖
-            if (params.view && params.view !== 'main') {
-                 // 不推動新的歷史記錄
-                 checkUrlAndRender(params, false); 
-            } else {
-                 // 首次載入主選單時，使用 replaceState，確保 URL 乾淨
-                 const state = { view: 'main' };
-                 updateUrl(state, "金門選舉資料庫 - 首頁", "?view=main", false); // false: replaceState
-                 renderMainMenu(false); 
-            }
+            renderMainMenu(); 
         });
     })();
 </script>
