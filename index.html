@@ -885,8 +885,16 @@
         ];
         return noTownsElections.includes(electionName);
     }
+
+// *** 步驟二新增：判斷是否為不需要顯示村里資料的選舉 ***
+    function isElectionWithoutVillages(electionName) {
+        const noVillageElections = [
+            "1993年 縣長選舉" // 新增要隱藏的選舉名稱
+        ];
+        return noVillageElections.includes(electionName);
+    }
     // *** 新增結束 ***
-    
+       
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
         { type: "立法委員", icon: "⚖️" },
@@ -1787,13 +1795,17 @@
         
         const villageList = Object.keys(townData.villages);
 
-        let html = `<div class="main-section">
-            <div class="section-header"><span class="section-title">${townName} 總計</span></div>
-            <div class="top-summary-grid">
-                ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
-                ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false, null, true)} </div>
-        </div>`;
+// *** 步驟三修改開始：新增判斷是否渲染村里區塊 ***
+    const shouldRenderVillages = !isElectionWithoutVillages(appState.electionName); 
+    
+    let html = `<div class="main-section">
+        <div class="section-header"><span class="section-title">${townName} 總計</span></div>
+        <div class="top-summary-grid">
+            ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
+            ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false, null, true)} </div>
+    </div>`;
 
+    if (shouldRenderVillages) { // <--- 條件判斷開始
         html += `<div class="main-section">
             <div class="section-header"><span class="section-title">各村里開票結果</span></div>
             <div class="sub-area-grid">`;
@@ -1811,7 +1823,9 @@
             // *** 載入時觸發動畫 ***
             html += generateCardHTML(`village-${village}`, village, vCands, villageMetadata, false, null, true, false, null, true);
         });
-        html += `</div></div>`;
+        html += `</div></div>`; // <--- 條件判斷結束
+    }
+    // *** 步驟三修改結束 ***
 
         dom.content.innerHTML = html;
         updateSortIcons();
