@@ -56,42 +56,57 @@
             margin-bottom: 50px;
         }
 
-        .menu-button {
+.menu-button {
+            /* *** 修改開始：專業按鈕設計 (更換原 48-69 行內容) *** */
+            display: flex; /* 使用 Flexbox */
+            flex-direction: column; /* 垂直排列 */
+            align-items: center; /* 內容置中 */
+            
             background: var(--card-bg);
-            border: 1px solid var(--border); 
+            /* 移除外框，改用 Subtle Shadow + Primary Color Bar */
+            border: 1px solid transparent; 
             border-radius: 8px; 
-            padding: 15px 20px; 
+            padding: 20px 15px; /* 增加垂直 padding */
             text-align: center;
             font-size: 16px; 
             font-weight: 500; 
             color: var(--secondary);
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            transition: all 0.3s ease;
+            /* 初始狀態： subtle shadow and primary color bar on left */
+            box-shadow: 0 1px 5px rgba(0,0,0,0.08), inset 4px 0 0 0 var(--border); 
             line-height: 1.4;
         }
         
         .menu-button:hover {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
+            /* hover 效果：更明顯的陰影，變換左側 Primary Color Bar */
+            border-color: var(--primary); /* 為了 Transition 保持 */
+            background: var(--card-bg); /* 背景不變 */
+            color: var(--primary); /* 文字變色 */
             transform: translateY(-2px); 
-            box-shadow: 0 4px 10px rgba(56, 135, 176, 0.2);
+            /* 左側條變成 Primary Color */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15), inset 4px 0 0 0 var(--primary); 
         }
         
         /* 修正: 讓選單圖示可見並垂直堆疊 */
         .menu-icon { 
             display: block; 
-            font-size: 32px; 
-            margin-bottom: 8px; 
+            font-size: 36px; /* 略微放大 */
+            margin-bottom: 10px; /* 增加間距 */
             line-height: 1;
+            color: var(--primary); /* 預設 primary color */
+            transition: color 0.3s ease;
         } 
+        
+        .menu-button:hover .menu-icon {
+            color: var(--secondary); /* hover 時，icon 變成 secondary color */
+        }
         
         /* 新增：確保按鈕文字有區分 */
         .menu-text {
             display: block; 
+            font-weight: 700; /* 文字加粗 */
         }
-
         .menu-section-title {
             font-size: 24px;
             font-weight: 700;
