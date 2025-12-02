@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vote for Kinmen︱金門選舉儀表板</title>
+    <title>金門選舉資料庫</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -191,7 +191,7 @@
         }
         .card.is-summary .card-stats .rate {
              color: #d9534f; 
-             font-weight: 500; /* <--- MODIFIED: Removed bold font weight for rate in summary cards */
+             font-weight: 500; 
         }
 
         /* 讓 action text 保持在最右邊，並防止被擠壓 */
@@ -204,6 +204,16 @@
             flex-shrink: 0; 
             align-self: flex-start; 
             padding-top: 2px; 
+        }
+        
+        /* *** 修改：卡片底部小字 (應選席次) 樣式 *** */
+        .card-footer-info {
+            margin-top: 5px;
+            padding-top: 0px;
+            font-size: 12px;
+            color: var(--text-sub);
+            text-align: left;
+            font-weight: 500;
         }
 
         /* 內容區域佈局調整 */
@@ -284,6 +294,13 @@
         table th:nth-child(1),
         table td:nth-child(1) { width: 40px; text-align: center; } 
         
+        /* 候選人名字欄位的 td 樣式：微調 padding 讓名字與標籤更緊湊 */
+        table td:nth-child(2) {
+             padding-top: 6px; 
+             padding-bottom: 6px; 
+             line-height: 1.2;
+        }
+
         /* 得票數欄位 */
         table th:nth-last-child(2),
         table td:nth-last-child(2) { text-align: right; white-space: nowrap; } 
@@ -318,9 +335,52 @@
             border: 2px solid #ffffff; 
             box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
         }
+        
+        /* 當選者號次圓圈樣式 - 紅色邊框，白色背景，更醒目 */
+        .number-badge.is-winner {
+            border: 2px solid #d9534f; /* 醒目紅色邊框 (使用 rate color) */
+            background: #ffffff; /* 白色背景 */
+            color: #d9534f; /* 讓數字也變紅，更一致 */
+            box-shadow: 0 0 0 1px rgba(217, 83, 79, 0.2);
+        }
 
         .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
         
+        /* *** 新增：婦女保障名額標籤樣式 (緊湊顯示) *** */
+        .women-quota-badge {
+            display: inline-block; 
+            font-size: 9px; 
+            font-weight: 500; 
+            color: #FFFFFF; 
+            background-color: #E90080; 
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-top: 2px; /* 緊貼名字 */
+            line-height: 1; 
+            white-space: nowrap; 
+        }
+        
+        /* *** 新增：現任標籤樣式 (紅色，緊湊顯示) *** */
+        .incumbent-badge {
+            display: inline-block; 
+            font-size: 9px; 
+            font-weight: 500; 
+            color: #FFFFFF; 
+            background-color: #d9534f; /* 紅色背景 */
+            padding: 2px 2px;
+            border-radius: 3px;
+            margin-left: 2px; /* 與名字保持距離 */
+            line-height: 1; 
+            white-space: nowrap; 
+            vertical-align: middle;
+        }
+        
+        /* 確保候選人名字能獨立成行 */
+        .candidate-name {
+            display: block;
+            font-weight: 700;
+        }
+
         /* 預設 (桌面版 > 768px)：顯示長名稱，隱藏短名稱 */
         .party-cell .party-long { display: inline-block; }
         .party-cell .party-short { display: none; }
@@ -335,6 +395,8 @@
         table.large-table td { padding: 10px 10px; }
         table.large-table .number-badge { width: 26px; height: 26px; font-size: 14px; }
         table.large-table .party-badge { font-size: 12px; }
+        table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; } /* 稍微增加大表格的 padding */
+
 
         .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
         
@@ -446,6 +508,12 @@
                 vertical-align: middle; 
                 border: 2px solid #ffffff; 
             }
+            
+            /* 讓手機上的當選者標籤保持紅色外框 */
+            .number-badge.is-winner {
+                border: 2px solid #d9534f;
+                color: #d9534f;
+            }
 
             /* 手機版：隱藏「推薦政黨」，顯示「政黨」 */
             .col-party .party-title-desktop { display: none; }
@@ -454,6 +522,12 @@
             /* 手機版：頂部兩欄改為單欄堆疊 */
             .top-summary-grid {
                 grid-template-columns: 1fr;
+            }
+            
+             /* 手機版：候選人名字欄位調整 */
+            table td:nth-child(2) {
+                 padding-top: 5px; 
+                 padding-bottom: 5px; 
             }
         }
         
@@ -480,7 +554,7 @@
 <body>
 
 <header>
-    <h1><span onclick="renderMainMenu()">Vote for Kinmen︱金門選舉儀表板</span></h1>
+    <h1><span onclick="renderMainMenu()">金門選舉資料庫</span></h1>
 </header>
 
 <div class="container">
@@ -494,7 +568,8 @@
 </div>
 
 <footer>
-    <span id="footer-source">資料來源︱中選會選舉資料庫</span>
+    <span id="footer-source">資料來源︱中選會選舉及公投資料庫．政大選研中心資料庫</span><br>
+    <span id="footer-source">v1128.1.1</span>
 </footer>
 
 <script>
@@ -517,10 +592,45 @@
             summaryData: null
         },
         { 
+            file: "2022_縣議員選舉第3選區.csv", 
+            year: "2022", 
+            type: "縣議員", 
+            uiName: "2022年 縣議員選舉第3選區",
+            summaryData: null
+        },
+        { 
+            file: "2022_縣議員選舉第2選區.csv", 
+            year: "2022", 
+            type: "縣議員", 
+            uiName: "2022年 縣議員選舉第2選區",
+            summaryData: null
+        },
+        { 
+            file: "2022_縣議員選舉第1選區.csv", 
+            year: "2022", 
+            type: "縣議員", 
+            uiName: "2022年 縣議員選舉第1選區",
+            summaryData: null
+        },
+        { 
             file: "2022_縣長選舉.csv", 
             year: "2022", 
             type: "縣長", 
             uiName: "2022年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "2020_總統副總統選舉.csv", 
+            year: "2020", 
+            type: "總統副總統", 
+            uiName: "2020年 總統副總統選舉",
+            summaryData: null 
+        },
+        { 
+            file: "2020_立法委員選舉.csv", 
+            year: "2020", 
+            type: "立法委員", 
+            uiName: "2020年 立法委員選舉",
             summaryData: null
         },
         { 
@@ -538,10 +648,186 @@
             summaryData: null
         },
         { 
+            file: "2018_縣議員選舉第3選區.csv", 
+            year: "2018", 
+            type: "縣議員", 
+            uiName: "2018年 縣議員選舉第3選區",
+            summaryData: null
+        },
+        { 
+            file: "2018_縣議員選舉第2選區.csv", 
+            year: "2018", 
+            type: "縣議員", 
+            uiName: "2018年 縣議員選舉第2選區",
+            summaryData: null
+        },
+        { 
+            file: "2018_縣議員選舉第1選區.csv", 
+            year: "2018", 
+            type: "縣議員", 
+            uiName: "2018年 縣議員選舉第1選區",
+            summaryData: null
+        },
+        { 
+            file: "2016_總統副總統選舉.csv", 
+            year: "2016", 
+            type: "總統副總統", 
+            uiName: "2016年 總統副總統選舉",
+            summaryData: null 
+        },
+        { 
+            file: "2016_立法委員選舉.csv", 
+            year: "2016", 
+            type: "立法委員", 
+            uiName: "2016年 立法委員選舉",
+            summaryData: null
+        },
+        { 
             file: "2014_縣長選舉.csv", 
             year: "2014", 
             type: "縣長", 
             uiName: "2014年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "2014_縣議員選舉第3選區.csv", 
+            year: "2014", 
+            type: "縣議員", 
+            uiName: "2014年 縣議員選舉第3選區",
+            summaryData: null
+        },
+        { 
+            file: "2014_縣議員選舉第2選區.csv", 
+            year: "2014", 
+            type: "縣議員", 
+            uiName: "2014年 縣議員選舉第2選區",
+            summaryData: null
+        },
+        { 
+            file: "2014_縣議員選舉第1選區.csv", 
+            year: "2014", 
+            type: "縣議員", 
+            uiName: "2014年 縣議員選舉第1選區",
+            summaryData: null
+        },
+        { 
+            file: "2012_總統副總統選舉.csv", 
+            year: "2012", 
+            type: "總統副總統", 
+            uiName: "2012年 總統副總統選舉",
+            summaryData: null 
+        },
+        { 
+            file: "2012_立法委員選舉.csv", 
+            year: "2012", 
+            type: "立法委員", 
+            uiName: "2012年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "2009_縣長選舉.csv", 
+            year: "2009", 
+            type: "縣長", 
+            uiName: "2009年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "2009_縣議員選舉第2選區.csv", 
+            year: "2009", 
+            type: "縣議員", 
+            uiName: "2009年 縣議員選舉第2選區",
+            summaryData: null
+        },
+        { 
+            file: "2009_縣議員選舉第1選區.csv", 
+            year: "2009", 
+            type: "縣議員", 
+            uiName: "2009年 縣議員選舉第1選區",
+            summaryData: null
+        },
+        { 
+            file: "2008_總統副總統選舉.csv", 
+            year: "2008", 
+            type: "總統副總統", 
+            uiName: "2008年 總統副總統選舉",
+            summaryData: null 
+        },
+        { 
+            file: "2008_立法委員選舉.csv", 
+            year: "2008", 
+            type: "立法委員", 
+            uiName: "2008年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "2005_縣長選舉.csv", 
+            year: "2005", 
+            type: "縣長", 
+            uiName: "2005年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "2005_縣議員選舉.csv", 
+            year: "2005", 
+            type: "縣議員", 
+            uiName: "2005年 縣議員選舉",
+            summaryData: null
+        },
+        { 
+            file: "2004_總統副總統選舉.csv", 
+            year: "2004", 
+            type: "總統副總統", 
+            uiName: "2004年 總統副總統選舉",
+            summaryData: null 
+        },
+        { 
+            file: "2004_立法委員選舉.csv", 
+            year: "2004", 
+            type: "立法委員", 
+            uiName: "2004年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "2002_縣議員選舉.csv", 
+            year: "2002", 
+            type: "縣議員", 
+            uiName: "2002年 縣議員選舉",
+            summaryData: null
+        },
+
+        { 
+            file: "2001_立法委員選舉.csv", 
+            year: "2001", 
+            type: "立法委員", 
+            uiName: "2001年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "2001_縣長選舉.csv", 
+            year: "2001", 
+            type: "縣長", 
+            uiName: "2001年 縣長選舉",
+            summaryData: null
+        },
+        { 
+            file: "2000_總統副總統選舉.csv", 
+            year: "2000", 
+            type: "總統副總統", 
+            uiName: "2000年 總統副總統選舉",
+            summaryData: null 
+        },
+        { 
+            file: "1998_立法委員選舉.csv", 
+            year: "1998", 
+            type: "立法委員", 
+            uiName: "1998年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "1997_縣長選舉.csv", 
+            year: "1997", 
+            type: "縣長", 
+            uiName: "1997年 縣長選舉",
             summaryData: null
         },
         { 
@@ -564,15 +850,65 @@
             type: "立法委員", 
             uiName: "1995年 立法委員選舉",
             summaryData: null
+        },
+        { 
+            file: "1993_縣長選舉.csv", 
+            year: "1993", 
+            type: "縣長", 
+            uiName: "1993年 縣長選舉",
+            summaryData: null
+        },
+        // *** 修改開始：新增不需要鄉鎮資料之選舉 (在 isElectionWithoutTowns 中處理) ***
+        { 
+            file: "1992_立法委員選舉.csv", 
+            year: "1992", 
+            type: "立法委員", 
+            uiName: "1992年 立法委員選舉",
+            summaryData: null
+        },
+        { 
+            file: "1991_國大代表選舉.csv", 
+            year: "1991", 
+            type: "國大代表", 
+            uiName: "1991年 國大代表選舉",
+            summaryData: null 
+        },
+        { 
+            file: "1989_增額立委選舉.csv", 
+            year: "1989", 
+            type: "立法委員", 
+            uiName: "1989年 增額立法委員選舉",
+            summaryData: null
         }
+        // *** 修改結束 ***
+
     ];
     
+    // *** 新增：判斷是否為不需要顯示鄉鎮資料的選舉 ***
+    function isElectionWithoutTowns(electionName) {
+        const noTownsElections = [
+            "1992年 立法委員選舉", 
+            "1991年 國大代表選舉", 
+            "1989年 增額立法委員選舉"
+        ];
+        return noTownsElections.includes(electionName);
+    }
+
+// *** 步驟二新增：判斷是否為不需要顯示村里資料的選舉 ***
+    function isElectionWithoutVillages(electionName) {
+        const noVillageElections = [
+            "1993年 縣長選舉" // 新增要隱藏的選舉名稱
+        ];
+        return noVillageElections.includes(electionName);
+    }
+    // *** 新增結束 ***
+       
     const electionCategories = [
         { type: "總統副總統", icon: "🏛️" },
         { type: "立法委員", icon: "⚖️" },
         { type: "國大代表", icon: "📜" },
         { type: "縣長", icon: "👨‍💼" },
-        { type: "縣議員", icon: "🏘️" },
+        { type: "縣議員", icon: "🗣️" },
         { type: "鄉鎮長", icon: "🏢" },
         { type: "鄉鎮民代表", icon: "👥" },
         { type: "村里長", icon: "🏡" },
@@ -585,12 +921,13 @@
         "民主進步黨": "#008800", 
         "台灣民眾黨": "#28C8C8",
         "親民黨": "#F27C00",
-        "新黨": "#ECBE00", 
-        "金門高粱黨": "#990033", 
-        "龍黨": "#FF004C",
-        "教科文聯盟黨": "#7D4A96",
-        "無黨籍": "#7F8C8D",      
-        "default": "#7f8c8d"
+        "新黨": "#ECBE00",
+        "金門高粱黨": "#990033",
+        "台灣基進": "#A23D23",
+        "無黨團結聯盟": "#C30750",
+        "連署參選": "#8D7A96",
+        "無黨籍": "#7F8C8D",  
+        "default": "#537073"
     };
 
     let appState = {
@@ -633,9 +970,20 @@
             "台灣民眾黨": "民眾黨",
             "親民黨": "親民黨", 
             "新黨": "新黨", 
-            "金門高粱黨": "高粱黨", 
+            "金門高粱黨": "金門高粱", 
             "龍黨": "龍黨", 
-            "教科文聯盟黨": "教科文",
+            "教科文預算保障e聯盟": "教科文",
+            "台灣基進": "台灣基進",
+            "中華新住民黨": "新住民黨",
+            "中國生產黨": "中國生產",
+            "中華統一促進黨": "統促黨",
+            "軍公教聯盟黨": "軍公教",
+            "台灣工黨": "台灣工黨",
+            "健保免費連線": "健保免費",
+            "無黨團結聯盟": "無黨聯盟",
+            "公民黨": "公民黨",
+            "中華民族致公黨": "致公黨",
+            "連署參選": "連署參選",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -655,6 +1003,19 @@
             "親民黨": "親民黨", 
             "新黨": "新黨", 
             "金門高粱黨": "金門高粱黨", 
+            "龍黨": "龍黨", 
+            "教科文預算保障e聯盟": "教科文預算保障e聯盟",
+            "台灣基進": "台灣基進",
+            "中華新住民黨": "中華新住民黨",
+            "中國生產黨": "中國生產黨",
+            "中華統一促進黨": "中華統一促進黨",
+            "軍公教聯盟黨": "軍公教聯盟黨",
+            "台灣工黨": "台灣工黨",
+            "健保免費連線": "健保免費連線",
+            "無黨團結聯盟": "無黨團結聯盟",
+            "公民黨": "公民黨",
+            "中華民族致公黨": "中華民族致公黨",
+            "連署參選": "連署參選",
             "無黨籍-1": "無黨籍", 
             "無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
@@ -675,7 +1036,7 @@
     };
 
 
-    // ================= 資料載入與解析 (保持不變) =================
+    // ================= 資料載入與解析 =================
     
     function parseCSV(text) {
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
@@ -689,6 +1050,10 @@
             currentIdx++;
         }
         
+        // *** 修改：從 rows[1][0] 獲取應選名額 (seatsCount) ***
+        // rows[1] 是第二列，rows[1][0] 是第一格
+        const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
+        
         const VOTES_COL = currentIdx; 
         const INVALID_COL = currentIdx + 1;
         const ELIGIBLE_COL = currentIdx + 2;
@@ -701,8 +1066,16 @@
             let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            const isWinner = name.includes('*'); 
-            name = name.replace('*', '').trim(); 
+            // *** 修改：檢查是否為婦女保障名額當選 (*!) ***
+            const isWomenQuota = name.includes('*!');
+            // *** 新增：檢查是否為現任 (#) ***
+            const isIncumbent = name.includes('#');
+
+            // 檢查是否為一般當選 (包含婦女保障名額)
+            const isWinner = name.includes('*') || isWomenQuota; 
+            
+            // 清理名字中的標記 (*, *!, #)
+            name = name.replace('*!', '').replace('*', '').replace('#', '').trim(); 
             
             party = party === '無' ? '無黨籍' : party;
 
@@ -715,7 +1088,8 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner }); 
+                // *** 新增 isWomenQuota 和 isIncumbent 屬性 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent }); 
             }
         });
 
@@ -775,13 +1149,14 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                // *** 更新候選人物件屬性，包含 isIncumbent ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent };
                 candidates[c.name].votes += votes;
                 
-                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                if (!towns[town].candidates[c.name]) towns[town].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent };
                 towns[town].candidates[c.name].votes += votes;
                 
-                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner };
+                if (!towns[town].villages[village].candidates[c.name]) towns[town].villages[village].candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent };
                 towns[town].villages[village].candidates[c.name].votes += votes;
             });
         }
@@ -790,7 +1165,8 @@
         appState.countyMetadata = {
             validVotes: globalValidVotes,
             invalidVotes: globalInvalidVotes,
-            eligibleVoters: globalEligibleVoters
+            eligibleVoters: globalEligibleVoters,
+            seatsCount: seatsCount // *** 將應選名額存入 metadata ***
         };
         appState.globalTotalVotes = globalValidVotes; 
     }
@@ -831,6 +1207,9 @@
             currentIdx++;
         }
         
+        // *** 修改：從 rows[1][0] 獲取應選名額 (seatsCount) ***
+        const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
+        
         const VOTES_COL = currentIdx; 
         const INVALID_COL = currentIdx + 1;
         const ELIGIBLE_COL = currentIdx + 2;
@@ -843,7 +1222,16 @@
             let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
             let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
             
-            name = name.replace('*', '').trim(); 
+            // *** 修改：檢查是否為婦女保障名額當選 (*!) ***
+            const isWomenQuota = name.includes('*!');
+            // *** 新增：檢查是否為現任 (#) ***
+            const isIncumbent = name.includes('#');
+
+            // 檢查是否為一般當選 (包含婦女保障名額)
+            const isWinner = name.includes('*') || isWomenQuota; 
+            
+            // 清理名字中的標記
+            name = name.replace('*!', '').replace('*', '').replace('#', '').trim(); 
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -855,7 +1243,8 @@
                     independentCounter++;
                 }
 
-                candInfo.push({ number: String(number), name, party, colIndex }); 
+                // *** 新增 isWomenQuota 和 isIncumbent 屬性 ***
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent }); 
             }
         });
         
@@ -882,7 +1271,8 @@
             candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
                 
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0 };
+                // *** 更新候選人物件屬性，包含 isIncumbent ***
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent }; 
                 candidates[c.name].votes += votes;
             });
         }
@@ -894,7 +1284,8 @@
             metadata: {
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
-                eligibleVoters: globalEligibleVoters
+                eligibleVoters: globalEligibleVoters,
+                seatsCount: seatsCount // *** 將應選名額存入 metadata ***
             }
         };
     }
@@ -932,7 +1323,7 @@
         await Promise.all(summaryPromises);
     }
 
-    // ================= 排序與更新邏輯 =================
+    // ================= 排序與更新邏輯 (不變動) =================
     
     window.sortTable = function(key) {
         
@@ -1060,10 +1451,7 @@
             const rgb = hexToRgb(partyColorHex);
             const lightColorRGBA = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.30)`; 
             
-            // *** 修改：使用 CSS 變數和 class 控制動畫 ***
-            // 1. 設定背景顏色 (線性漸變)
-            // 2. 設定 CSS 變數 --bar-width
-            // 3. 根據 `animate` 參數決定是否加上 `animate-bar-grow` class
+            // 使用 CSS 變數和 class 控制動畫
             const rowStyle = `
                 background-image: linear-gradient(
                     to right, 
@@ -1075,17 +1463,31 @@
             
             const animateClass = animate ? 'animate-bar-grow' : '';
             
-            const badgeClass = 'number-badge'; 
+            // 根據 c.isWinner 決定號次圓圈的 class
+            const badgeClass = c.isWinner ? 'number-badge is-winner' : 'number-badge'; 
             
             const partyLongName = getLongPartyName(c.party); 
             const partyShortName = getShortPartyName(c.party);
+            
+            // *** 新增：婦女保障名額標籤 HTML ***
+            const womenQuotaBadge = c.isWomenQuota 
+                ? '<div class="women-quota-badge">婦女保障名額</div>' 
+                : '';
+                
+            // *** 新增：現任標籤 HTML (如果 isIncumbent 為真) ***
+            const incumbentBadge = c.isIncumbent 
+                ? '<span class="incumbent-badge">現</span>' 
+                : '';
             
             return `
                 <tr style="${rowStyle}" class="${animateClass}">
                     <td class="number-cell col-number">
                         <span class="${badgeClass}">${c.number}</span>
                     </td>
-                    <td style="font-weight:700">${c.name}</td>
+                    <td>
+                        <span class="candidate-name">${c.name}${incumbentBadge}</span>
+                        ${womenQuotaBadge}
+                    </td>
                     <td class="party-cell col-party">
                         <span class="party-badge party-long" style="background:${partyColorHex}">${partyLongName}</span>
                         <span class="party-badge party-short" style="background:${partyColorHex}">${partyShortName}</span>
@@ -1108,13 +1510,6 @@
         if (mainTableBody) {
             // *** 修改：無論是否觸發動畫，都重新生成 HTML ***
             mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation);
-            
-            if (triggerAnimation) {
-                 // 由於我們使用 CSS `animation-fill-mode: forwards`，動畫結束後會保持狀態。
-                 // 但若要確保在後續排序時，能再次從頭開始動畫，需要一些延遲來移除 class。
-                 // 這裡暫時依賴 `animation-fill-mode: forwards` 來維持最終狀態。
-                 // 排序時，瀏覽器會重新渲染，從而重新觸發 CSS 過渡。
-            }
         }
     }
     
@@ -1143,7 +1538,7 @@
         });
     }
 
-    // ================= 頁面渲染函式 =================
+    // ================= 頁面渲染函式 (保持不變) =================
     
     function generateSummaryCardHTML(election) {
         if (!election.summaryData) {
@@ -1193,7 +1588,14 @@
         html += `</div></div>`;
 
         const recentElections = [...availableElections].sort((a, b) => {
-            return parseInt(b.year) - parseInt(a.year); 
+            // 複雜排序：先按年份降序，再按名稱升序 (確保同一年份的縣長、議員、立委有穩定順序)
+            const yearA = parseInt(a.year);
+            const yearB = parseInt(b.year);
+            if (yearA !== yearB) {
+                return yearB - yearA; 
+            }
+            return a.uiName.localeCompare(b.uiName, 'zh-TW');
+
         }).slice(0, 8); 
 
         if (recentElections.length > 0) {
@@ -1220,7 +1622,14 @@
         appState.chartInstances = [];
 
         const matchingElections = availableElections.filter(e => e.type === type);
-        matchingElections.sort((a, b) => b.year - a.year); 
+        matchingElections.sort((a, b) => {
+             const yearA = parseInt(a.year);
+             const yearB = parseInt(b.year);
+             if (yearA !== yearB) {
+                 return yearB - yearA; 
+             }
+             return a.uiName.localeCompare(b.uiName, 'zh-TW'); // 確保同一年份的穩定排序
+        });
 
         let html = `<div class="main-section">
             <div class="menu-section-title">${type} 選舉列表</div>
@@ -1298,21 +1707,26 @@
         appState.chartInstances.push(chart);
     }
     
-    // ================= 儀表板核心渲染邏輯 =================
+    // ================= 儀表板核心渲染邏輯 (核心修改部分) =================
     
     window.renderCounty = function(shouldScroll = true) {
         const candidates = getSortedCandidates(appState.data.county); 
         const metadata = appState.countyMetadata;
         
-        // *** 修改：排序時觸發動畫 (triggerAnimation = true) ***
+        // *** 新增判斷：如果不需要顯示鄉鎮資料，則直接返回，只更新主表格 ***
+        const shouldRenderTowns = !isElectionWithoutTowns(appState.electionName);
+        
         if (!shouldScroll) {
             updateTableContent('county-main', candidates, metadata.validVotes, true);
             
-            appState.data.townOrder.forEach(town => {
-                const townData = appState.data.towns[town];
-                const townCands = getSortedCandidates(townData.candidates);
-                updateTableContent(`town-${town}`, townCands, townData.validVotes, true);
-            });
+            // 只有在需要渲染鄉鎮列表時，才更新鄉鎮表格
+            if (shouldRenderTowns) {
+                appState.data.townOrder.forEach(town => {
+                    const townData = appState.data.towns[town];
+                    const townCands = getSortedCandidates(townData.candidates);
+                    updateTableContent(`town-${town}`, townCands, townData.validVotes, true);
+                });
+            }
             updateSortIcons(); 
             return; 
         }
@@ -1329,24 +1743,28 @@
                 ${generateCardHTML('county-main', '全縣開票結果', candidates, metadata, false, false, true, false, null, true)} </div>
         </div>`;
 
-        html += `<div class="main-section">
-            <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
-            <div class="sub-area-grid">`;
-        
-        appState.data.townOrder.forEach(town => {
-            const townData = appState.data.towns[town];
-            const townCands = getSortedCandidates(townData.candidates);
+        // *** 條件渲染：如果需要顯示鄉鎮資料，則渲染各鄉鎮開票結果區塊 ***
+        if (shouldRenderTowns) {
+            html += `<div class="main-section">
+                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
+                <div class="sub-area-grid">`;
             
-            const townMetadata = {
-                validVotes: townData.validVotes,
-                invalidVotes: townData.invalidVotes,
-                eligibleVoters: townData.eligibleVoters
-            };
+            appState.data.townOrder.forEach(town => {
+                const townData = appState.data.towns[town];
+                const townCands = getSortedCandidates(townData.candidates);
+                
+                const townMetadata = {
+                    validVotes: townData.validVotes,
+                    invalidVotes: townData.invalidVotes,
+                    eligibleVoters: townData.eligibleVoters
+                };
 
-            // *** 載入時觸發動畫 ***
-            html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}')`, true, false, null, true);
-        });
-        html += `</div></div>`;
+                // *** 載入時觸發動畫 ***
+                html += generateCardHTML(`town-${town}`, town, townCands, townMetadata, true, `renderTown('${town}')`, true, false, null, true);
+            });
+            html += `</div></div>`;
+        }
+        // *** 條件渲染結束 ***
 
         dom.content.innerHTML = html;
         updateSortIcons();
@@ -1385,13 +1803,17 @@
         
         const villageList = Object.keys(townData.villages);
 
-        let html = `<div class="main-section">
-            <div class="section-header"><span class="section-title">${townName} 總計</span></div>
-            <div class="top-summary-grid">
-                ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
-                ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false, null, true)} </div>
-        </div>`;
+// *** 步驟三修改開始：新增判斷是否渲染村里區塊 ***
+    const shouldRenderVillages = !isElectionWithoutVillages(appState.electionName); 
+    
+    let html = `<div class="main-section">
+        <div class="section-header"><span class="section-title">${townName} 總計</span></div>
+        <div class="top-summary-grid">
+            ${generateSummaryPanelHTML(candidates, townMetadata, townName)}
+            ${generateCardHTML('town-main', `${townName}開票結果`, candidates, townMetadata, false, false, true, false, null, true)} </div>
+    </div>`;
 
+    if (shouldRenderVillages) { // <--- 條件判斷開始
         html += `<div class="main-section">
             <div class="section-header"><span class="section-title">各村里開票結果</span></div>
             <div class="sub-area-grid">`;
@@ -1409,13 +1831,15 @@
             // *** 載入時觸發動畫 ***
             html += generateCardHTML(`village-${village}`, village, vCands, villageMetadata, false, null, true, false, null, true);
         });
-        html += `</div></div>`;
+        html += `</div></div>`; // <--- 條件判斷結束
+    }
+    // *** 步驟三修改結束 ***
 
         dom.content.innerHTML = html;
         updateSortIcons();
     };
 
-    // ================= 通用輔助函式 =================
+    // ================= 通用輔助函式 (保持不變) =================
 
     function updateBreadcrumb() {
         const level = appState.currentLevel;
@@ -1491,7 +1915,7 @@
         
         const tableSizeClass = isCompact ? '' : ' large-table';
         
-        const { validVotes, invalidVotes, eligibleVoters } = metadata;
+        const { validVotes, invalidVotes, eligibleVoters, seatsCount } = metadata;
         
         const totalBallots = validVotes + invalidVotes;
         const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
@@ -1502,7 +1926,7 @@
                 <div class="card-stats" style="margin-left: 0;">
                     <span style="white-space: nowrap;">
                         有效票: ${validVotes.toLocaleString()} 票 
-                        <span style="color:var(--text-sub); margin: 0 5px;">|</span>
+                        <span style="color:var(--text-sub); margin: 0 5px;">︱</span>
                         投票率: <span class="rate">${turnoutRate}%</span>
                     </span>
                 </div>
@@ -1520,7 +1944,6 @@
                 </div>
             `;
         }
-
 
         const currentConfig = isSummary ? localSortConfig : appState.sortConfig;
         const { key: currentSortKey, direction: currentSortDirection } = currentConfig;
@@ -1546,8 +1969,15 @@
             return `<th style="${style}" class="${finalClassName}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
         }
         
-        // *** 修改：傳遞 triggerAnimation 參數給 generateTableBodyHTML ***
+        // 傳遞 triggerAnimation 參數給 generateTableBodyHTML
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation);
+        
+        // *** 新增：檢查是否有應選名額資料，若有則生成 HTML ***
+        let footerHTML = '';
+        if (seatsCount) {
+             const displayStat = isNaN(Number(seatsCount)) ? seatsCount : `應選 ${seatsCount} 席`;
+             footerHTML = `<div class="card-footer-info">${displayStat}</div>`;
+        }
         
         return `
         <div class="card ${clickClass} ${summaryClass}" ${clickAttr} id="card-${id}">
@@ -1574,6 +2004,7 @@
                     </tbody>
                 </table>
             </div>
+            ${footerHTML}
         </div>`;
     }
 
