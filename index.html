@@ -987,15 +987,17 @@
         // 1. 取得基本資料
         const info = globalCandidateData[name] || { sex: '未知', birthYear: '', photo: '' };
         
-        // 2. 計算年紀 (若有出生年且有當前選舉年份)
-        let ageInfo = "";
-        if (info.birthYear && currentElectionYear) {
-            const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
-            ageInfo = ` (${currentElectionYear}年參選年紀 ${age} 歲)`;
-        } else if (info.birthYear) {
-            ageInfo = ` (出生年: ${info.birthYear})`;
-        }
-        
+	// 2. 處理出生年和計算年紀
+	let ageInfo = "";
+	let birthYearDisplay = ""; // 新增變數用於顯示「XXXX年生」
+	if (info.birthYear) {
+	    birthYearDisplay = `${info.birthYear}年生`; // 修正為「XXXX年生」
+	    if (currentElectionYear) {
+	        const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
+	        ageInfo = ` (參選年紀 ${age} 歲)`; // 參選年紀前面不加年份
+	    }
+	}
+
         const photoSrc = info.photo ? `Candidates/${info.photo}` : '';
         
         // 3. 搜尋參選經歷
@@ -1023,6 +1025,10 @@
         if (historyList.length > 0) {
             historyHtml += `<div class="history-title">參選經歷</div><ul class="history-list">`;
             historyList.forEach(h => {
+
+// 3. 處理選舉名稱：移除開頭的年份（例如「2022年 」）
+                const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, ''); 
+                
                 const resultClass = h.isWinner ? 'result-won' : 'result-lost';
                 const resultText = h.isWinner ? '當選' : '未當選';
                 const partyName = getLongPartyName(h.party);
@@ -1031,8 +1037,7 @@
                     <li class="history-item">
                         <div>
                             <span class="history-year-tag">${h.year}</span>
-                            <span class="history-name">${h.electionName}</span>
-                            <span class="history-party">${partyName}</span>
+                            <span class="history-name">${electionNameWithoutYear}</span> <span class="history-party">${partyName}</span>
                         </div>
                         <div class="history-result ${resultClass}">
                             ${resultText}
@@ -1054,10 +1059,10 @@
                 ${imgDisplay}
                 <div class="profile-info">
                     <h2>${name}</h2>
-                    <div class="profile-detail">
-                        ${info.birthYear ? info.birthYear : '出生年未知'}${ageInfo}
-                        ${info.sex ? ` • ${info.sex}` : ''}
-                    </div>
+		    <div class="profile-detail">
+		        ${birthYearDisplay || '出生年未知'}${ageInfo} 
+		        ${info.sex ? ` • ${info.sex}` : ''}
+		    </div>
                 </div>
             </div>
             ${historyHtml}
