@@ -996,7 +996,7 @@
             ageInfo = ` (出生年: ${info.birthYear})`;
         }
         
-        const photoSrc = info.photo ? info.photo : ''; // 若無照片可放預設圖，這裡先留空或用 CSS 處理
+        const photoSrc = info.photo ? `Candidates/${info.photo}` : '';
         
         // 3. 搜尋參選經歷
         let historyHtml = '';
