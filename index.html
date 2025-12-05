@@ -960,13 +960,13 @@
 
     // ================= 候選人詳細資料載入與處理 (新增) =================
     
-    async function loadCandidateData() {
+	async function loadCandidateData() {
         try {
             const response = await fetch('candidates.csv');
             if (!response.ok) throw new Error('無法讀取 candidates.csv');
             const text = await response.text();
             
-            // 解析 CSV: 姓名,性別,出生年,照片檔名
+            // 解析 CSV: 姓名,性別,出生年,出生地,照片檔名
             const rows = text.split('\n').map(r => r.trim()).filter(r => r);
             // 跳過標題列 (index 0)
             for(let i=1; i<rows.length; i++) {
@@ -975,9 +975,13 @@
                     const name = cols[0].trim();
                     const sex = cols[1] ? cols[1].trim() : '';
                     const birthYear = cols[2] ? cols[2].trim() : '';
-                    const photo = cols[3] ? cols[3].trim() : '';
+                    // [修改] 新增讀取出生地 (第4欄，index 3)
+                    const birthPlace = cols[3] ? cols[3].trim() : ''; 
+                    // [修改] 照片檔名往後移一欄 (第5欄，index 4)
+                    const photo = cols[4] ? cols[4].trim() : '';
                     
-                    globalCandidateData[name] = { sex, birthYear, photo };
+                    // [修改] 將 birthPlace 存入全域變數
+                    globalCandidateData[name] = { sex, birthYear, birthPlace, photo };
                 }
             }
         } catch (e) {
@@ -990,26 +994,47 @@
         const modal = document.getElementById('candidate-modal');
         const modalBody = document.getElementById('modal-body');
         
-        // 1. 取得基本資料
-        const info = globalCandidateData[name] || { sex: '未知', birthYear: '', photo: '' };
+        // 1. 取得基本資料 (預設值包含 birthPlace)
+        const info = globalCandidateData[name] || { sex: '未知', birthYear: '', birthPlace: '', photo: '' };
         
-	// 2. 處理出生年和計算年紀
-	let ageInfo = "";
-	let birthYearDisplay = ""; // 新增變數用於顯示「XXXX年生」
-	if (info.birthYear) {
-	    birthYearDisplay = `${info.birthYear}年生`; // 修正為「XXXX年生」
-	    if (currentElectionYear) {
-	        const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
-	        ageInfo = ` (參選年紀 ${age} 歲)`; // 參選年紀前面不加年份
-	    }
-	}
+        // 2. 準備顯示文字：第一行 (性別．年紀)
+        let line1Parts = [];
+        
+        // 加入性別
+        if (info.sex) line1Parts.push(info.sex);
+        
+        // 計算並加入年紀
+        if (info.birthYear && currentElectionYear) {
+            const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
+            line1Parts.push(`${age}歲`);
+        }
+        
+        const line1Html = line1Parts.join('．'); // 用全形點連接
+
+        // 3. 準備顯示文字：第二行 (年份．出生地 出生)
+        let line2Parts = [];
+        
+        if (info.birthYear) line2Parts.push(`${info.birthYear}年`);
+        if (info.birthPlace) line2Parts.push(info.birthPlace);
+        
+        let line2Html = "";
+        if (line2Parts.length > 0) {
+            line2Html = `${line2Parts.join('．')} 出生`;
+        }
 
         const photoSrc = info.photo ? `Candidates/${info.photo}` : '';
         
-        // 3. 搜尋參選經歷
-        let historyHtml = '';
-        const historyList = [];
+        // 4. 搜尋參選經歷 (這部分邏輯保持不變，略過不貼以節省空間，請保留您原本的程式碼...)
+        // ... (中間搜尋 historyList 的程式碼不用動) ...
         
+        // [為了方便您複製，這裡模擬中間的 historyHtml 變數已經產生]
+        // 請確保這裡保留原本產生 historyHtml 的邏輯
+        let historyHtml = ''; 
+        // ... (原本的 historyList 迴圈) ...
+        // 若您沒有更動 historyList 的邏輯，請直接接續下面的 HTML 組合
+        
+        // --- 這裡開始是為了接上您原本的 history 邏輯 ---
+        const historyList = [];
         availableElections.forEach(e => {
             if (e.summaryData && e.summaryData.allCandidates) {
                 const match = e.summaryData.allCandidates.find(c => c.name === name);
@@ -1024,21 +1049,15 @@
                 }
             }
         });
-        
-        // 依年份降序排列
         historyList.sort((a, b) => parseInt(b.year) - parseInt(a.year));
         
         if (historyList.length > 0) {
             historyHtml += `<div class="history-title">參選經歷</div><ul class="history-list">`;
             historyList.forEach(h => {
-
-// 3. 處理選舉名稱：移除開頭的年份（例如「2022年 」）
                 const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, ''); 
-                
                 const resultClass = h.isWinner ? 'result-won' : 'result-lost';
                 const resultText = h.isWinner ? '當選' : '未當選';
                 const partyName = getLongPartyName(h.party);
-                
                 historyHtml += `
                     <li class="history-item">
                         <div>
@@ -1055,8 +1074,10 @@
         } else {
             historyHtml = `<div style="color:#999; margin-top:20px;">無其他參選紀錄</div>`;
         }
+        // --- 經歷邏輯結束 ---
 
-        // 4. 組合 HTML
+
+        // 5. 組合 HTML (這裡修改了排版樣式)
         // 若無照片，使用預設圖示
         const imgDisplay = photoSrc ? `<img src="${photoSrc}" class="profile-photo" alt="${name}">` : `<div class="profile-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:#ccc;">👤</div>`;
         
@@ -1065,17 +1086,21 @@
                 ${imgDisplay}
                 <div class="profile-info">
                     <h2>${name}</h2>
-		    <div class="profile-detail">
-		        ${birthYearDisplay || '出生年未知'}${ageInfo} 
-		        ${info.sex ? ` • ${info.sex}` : ''}
-		    </div>
+                    <div class="profile-detail">
+                        <div style="font-size: 16px; font-weight: 500; margin-bottom: 4px; color: var(--text-main);">
+                            ${line1Html}
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-sub);">
+                            ${line2Html}
+                        </div>
+                    </div>
                 </div>
             </div>
             ${historyHtml}
         `;
         
         modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // 防止背景捲動
+        document.body.style.overflow = 'hidden'; 
     };
     
     window.closeModal = function() {
