@@ -946,7 +946,7 @@
     
 	function updateUrl(state, title, url, push = true) {
         if (push) {
-            // [新增] 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
+            // 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
             const currentState = history.state || {};
             currentState.scrollY = window.scrollY;
             history.replaceState(currentState, document.title, window.location.href);
@@ -1587,17 +1587,20 @@
 
 	window.renderMainMenu = function(pushState = true) { 
         
+        // [修正] 在呼叫 updateUrl 前，先擷取上一頁的捲動位置，避免被 updateUrl 中的 replaceState 覆蓋
+        const savedY = (!pushState && history.state && history.state.scrollY) ? history.state.scrollY : 0;
+        
         const url = `?view=main`;
         const state = { view: 'main' };
         updateUrl(state, "金門選舉資料庫 - 首頁", url, pushState); 
 
         appState.currentLevel = 'mainMenu';
         
-        // [修改] 捲動邏輯：如果是上一頁(pushState=false)，則恢復記憶的位置
+        // [修改] 捲動邏輯：使用預先擷取的 savedY
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
-            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            // 使用 setTimeout 確保 DOM 渲染完畢後才捲動
             setTimeout(() => window.scrollTo(0, savedY), 0);
         }
 
@@ -1646,6 +1649,9 @@
     
 	window.renderElectionList = function(type, pushState = true) { 
         
+        // [修正] 在呼叫 updateUrl 前，先擷取上一頁的捲動位置，避免被 updateUrl 中的 replaceState 覆蓋
+        const savedY = (!pushState && history.state && history.state.scrollY) ? history.state.scrollY : 0;
+
         const url = `?view=list&type=${encodeURIComponent(type)}`;
         const state = { view: 'list', type: type };
         updateUrl(state, `金門選舉資料庫 - ${type} 列表`, url, pushState); 
@@ -1653,11 +1659,10 @@
         appState.currentLevel = 'electionList';
         appState.currentTown = type; 
 
-        // [修改] 捲動邏輯
+        // [修改] 捲動邏輯：使用預先擷取的 savedY
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
-            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
             setTimeout(() => window.scrollTo(0, savedY), 0);
         }
 
