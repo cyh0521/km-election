@@ -946,10 +946,10 @@
     
 	function updateUrl(state, title, url, push = true) {
         if (push) {
-            // 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
+            // [新增] 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
             const currentState = history.state || {};
             currentState.scrollY = window.scrollY;
-            history.replaceState(currentState, document.title, window.location.href); // <-- 關鍵: 儲存當前位置
+            history.replaceState(currentState, document.title, window.location.href);
 
             // 推入新的歷史紀錄
             history.pushState(state, title, url);
@@ -1587,21 +1587,18 @@
 
 	window.renderMainMenu = function(pushState = true) { 
         
-        // [修正] 在呼叫 updateUrl 前，先擷取上一頁的捲動位置，避免被 updateUrl 中的 replaceState 覆蓋
-        const savedY = (!pushState && history.state && history.state.scrollY) ? history.state.scrollY : 0;
-        
         const url = `?view=main`;
         const state = { view: 'main' };
         updateUrl(state, "金門選舉資料庫 - 首頁", url, pushState); 
 
         appState.currentLevel = 'mainMenu';
         
-        // [修改] 捲動邏輯：使用預先擷取的 savedY，並將延遲增加到 50ms
+        // [修改] 捲動邏輯：如果是上一頁(pushState=false)，則恢復記憶的位置
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
-            // 使用 50ms 延遲，確保 DOM 渲染完畢後才捲動，解決手機空白問題
-            setTimeout(() => window.scrollTo(0, savedY), 50); 
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
         }
 
         updateBreadcrumb(); 
@@ -1649,9 +1646,6 @@
     
 	window.renderElectionList = function(type, pushState = true) { 
         
-        // [修正] 在呼叫 updateUrl 前，先擷取上一頁的捲動位置，避免被 updateUrl 中的 replaceState 覆蓋
-        const savedY = (!pushState && history.state && history.state.scrollY) ? history.state.scrollY : 0;
-
         const url = `?view=list&type=${encodeURIComponent(type)}`;
         const state = { view: 'list', type: type };
         updateUrl(state, `金門選舉資料庫 - ${type} 列表`, url, pushState); 
@@ -1659,11 +1653,12 @@
         appState.currentLevel = 'electionList';
         appState.currentTown = type; 
 
-        // [修改] 捲動邏輯：使用預先擷取的 savedY，並將延遲增加到 50ms
+        // [修改] 捲動邏輯
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
-            setTimeout(() => window.scrollTo(0, savedY), 50);
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
         }
 
         updateBreadcrumb(); 
@@ -1706,6 +1701,7 @@
         
         const shouldRenderTowns = !isElectionWithoutTowns(appState.electionName);
         
+        // 如果只是切換排序(shouldScroll=false)，不執行捲動邏輯
         if (!shouldScroll) {
             updateTableContent('county-main', candidates, metadata.validVotes, true, currentYear);
             
@@ -1729,12 +1725,12 @@
         appState.currentLevel = 'county';
         appState.currentTown = null;
         
-        // [修改] 捲動邏輯：延遲增加到 50ms
+        // [修改] 捲動邏輯
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 50);
+            setTimeout(() => window.scrollTo(0, savedY), 0);
         }
 
         updateBreadcrumb();
@@ -1781,6 +1777,7 @@
         const currentElectionObj = availableElections.find(e => e.uiName === appState.electionName);
         const currentYear = currentElectionObj ? currentElectionObj.year : "";
         
+        // 如果只是切換排序(shouldScroll=false)，不執行捲動邏輯
         if (!shouldScroll) {
             updateTableContent('town-main', candidates, townMetadata.validVotes, true, currentYear);
             
@@ -1806,12 +1803,12 @@
         appState.currentLevel = 'town';
         appState.currentTown = townName;
         
-        // [修改] 捲動邏輯：延遲增加到 50ms
+        // [修改] 捲動邏輯
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 50);
+            setTimeout(() => window.scrollTo(0, savedY), 0);
         }
         
         updateBreadcrumb();
