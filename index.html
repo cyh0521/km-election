@@ -949,7 +949,7 @@
             // 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
             const currentState = history.state || {};
             currentState.scrollY = window.scrollY;
-            history.replaceState(currentState, document.title, window.location.href);
+            history.replaceState(currentState, document.title, window.location.href); // <-- 關鍵: 儲存當前位置
 
             // 推入新的歷史紀錄
             history.pushState(state, title, url);
@@ -1596,12 +1596,12 @@
 
         appState.currentLevel = 'mainMenu';
         
-        // [修改] 捲動邏輯：使用預先擷取的 savedY
+        // [修改] 捲動邏輯：使用預先擷取的 savedY，並將延遲增加到 50ms
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
-            // 使用 setTimeout 確保 DOM 渲染完畢後才捲動
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            // 使用 50ms 延遲，確保 DOM 渲染完畢後才捲動，解決手機空白問題
+            setTimeout(() => window.scrollTo(0, savedY), 50); 
         }
 
         updateBreadcrumb(); 
@@ -1659,11 +1659,11 @@
         appState.currentLevel = 'electionList';
         appState.currentTown = type; 
 
-        // [修改] 捲動邏輯：使用預先擷取的 savedY
+        // [修改] 捲動邏輯：使用預先擷取的 savedY，並將延遲增加到 50ms
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => window.scrollTo(0, savedY), 50);
         }
 
         updateBreadcrumb(); 
@@ -1706,7 +1706,6 @@
         
         const shouldRenderTowns = !isElectionWithoutTowns(appState.electionName);
         
-        // 如果只是切換排序(shouldScroll=false)，不執行捲動邏輯
         if (!shouldScroll) {
             updateTableContent('county-main', candidates, metadata.validVotes, true, currentYear);
             
@@ -1730,12 +1729,12 @@
         appState.currentLevel = 'county';
         appState.currentTown = null;
         
-        // [修改] 捲動邏輯
+        // [修改] 捲動邏輯：延遲增加到 50ms
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => window.scrollTo(0, savedY), 50);
         }
 
         updateBreadcrumb();
@@ -1782,7 +1781,6 @@
         const currentElectionObj = availableElections.find(e => e.uiName === appState.electionName);
         const currentYear = currentElectionObj ? currentElectionObj.year : "";
         
-        // 如果只是切換排序(shouldScroll=false)，不執行捲動邏輯
         if (!shouldScroll) {
             updateTableContent('town-main', candidates, townMetadata.validVotes, true, currentYear);
             
@@ -1808,12 +1806,12 @@
         appState.currentLevel = 'town';
         appState.currentTown = townName;
         
-        // [修改] 捲動邏輯
+        // [修改] 捲動邏輯：延遲增加到 50ms
         if (pushState) {
             window.scrollTo(0, 0); 
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => window.scrollTo(0, savedY), 50);
         }
         
         updateBreadcrumb();
