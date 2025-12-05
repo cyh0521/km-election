@@ -506,7 +506,7 @@
             file: "2022_縣議員選舉第1選區.csv", 
             year: "2022", 
             type: "縣議員", 
-            uiName: "2022年 縣議員選舉第1選區（金城、金寧、烏坵）",
+            uiName: "2022年 縣議員選舉第1選區",
             summaryData: null
         },
         { 
@@ -944,14 +944,20 @@
         };
     }
     
-    function updateUrl(state, title, url, push = true) {
+	function updateUrl(state, title, url, push = true) {
         if (push) {
+            // [新增] 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
+            const currentState = history.state || {};
+            currentState.scrollY = window.scrollY;
+            history.replaceState(currentState, document.title, window.location.href);
+
+            // 推入新的歷史紀錄
             history.pushState(state, title, url);
         } else {
             history.replaceState(state, title, url); 
         }
     }
-    
+
     // ================= 候選人詳細資料載入與處理 (新增) =================
     
     async function loadCandidateData() {
@@ -1579,14 +1585,22 @@
         );
     }
 
-    window.renderMainMenu = function(pushState = true) { 
+	window.renderMainMenu = function(pushState = true) { 
         
         const url = `?view=main`;
         const state = { view: 'main' };
         updateUrl(state, "金門選舉資料庫 - 首頁", url, pushState); 
 
         appState.currentLevel = 'mainMenu';
-        window.scrollTo(0, 0); 
+        
+        // [修改] 捲動邏輯：如果是上一頁(pushState=false)，則恢復記憶的位置
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
         updateBreadcrumb(); 
         
         appState.chartInstances.forEach(chart => chart.destroy()); 
@@ -1630,7 +1644,7 @@
         dom.content.innerHTML = html;
     };
     
-    window.renderElectionList = function(type, pushState = true) { 
+	window.renderElectionList = function(type, pushState = true) { 
         
         const url = `?view=list&type=${encodeURIComponent(type)}`;
         const state = { view: 'list', type: type };
@@ -1638,7 +1652,15 @@
 
         appState.currentLevel = 'electionList';
         appState.currentTown = type; 
-        window.scrollTo(0, 0); 
+
+        // [修改] 捲動邏輯
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
         updateBreadcrumb(); 
         
         appState.chartInstances.forEach(chart => chart.destroy()); 
@@ -1671,7 +1693,7 @@
         dom.content.innerHTML = html;
     };
 
-    window.renderCounty = function(shouldScroll = true, pushState = true) {
+	window.renderCounty = function(shouldScroll = true, pushState = true) {
         const candidates = getSortedCandidates(appState.data.county); 
         const metadata = appState.countyMetadata;
         const currentElectionObj = availableElections.find(e => e.uiName === appState.electionName);
@@ -1679,6 +1701,7 @@
         
         const shouldRenderTowns = !isElectionWithoutTowns(appState.electionName);
         
+        // 如果只是切換排序(shouldScroll=false)，不執行捲動邏輯
         if (!shouldScroll) {
             updateTableContent('county-main', candidates, metadata.validVotes, true, currentYear);
             
@@ -1701,7 +1724,15 @@
         
         appState.currentLevel = 'county';
         appState.currentTown = null;
-        window.scrollTo(0,0); 
+        
+        // [修改] 捲動邏輯
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
         updateBreadcrumb();
 
         let html = `<div class="main-section">
@@ -1735,7 +1766,7 @@
         updateSortIcons();
     };
 
-    window.renderTown = function(townName, shouldScroll = true, pushState = true) {
+	window.renderTown = function(townName, shouldScroll = true, pushState = true) {
         const townData = appState.data.towns[townName];
         const candidates = getSortedCandidates(townData.candidates);
         const townMetadata = {
@@ -1746,6 +1777,7 @@
         const currentElectionObj = availableElections.find(e => e.uiName === appState.electionName);
         const currentYear = currentElectionObj ? currentElectionObj.year : "";
         
+        // 如果只是切換排序(shouldScroll=false)，不執行捲動邏輯
         if (!shouldScroll) {
             updateTableContent('town-main', candidates, townMetadata.validVotes, true, currentYear);
             
@@ -1770,7 +1802,15 @@
         
         appState.currentLevel = 'town';
         appState.currentTown = townName;
-        window.scrollTo(0,0); 
+        
+        // [修改] 捲動邏輯
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+        
         updateBreadcrumb();
         
         appState.chartInstances.forEach(chart => chart.destroy()); 
