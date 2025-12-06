@@ -997,29 +997,34 @@
         // 1. 取得基本資料 (預設值包含 birthPlace)
         const info = globalCandidateData[name] || { sex: '未知', birthYear: '', birthPlace: '', photo: '' };
         
-        // 2. 準備顯示文字：第一行 (性別．年紀)
+    // 2. 準備顯示文字：第一行 (性別．參選年紀 XX 歲)
         let line1Parts = [];
         
         // 加入性別
         if (info.sex) line1Parts.push(info.sex);
         
-        // 計算並加入年紀
+        // 計算並加入年紀 (新格式：參選年紀 XX 歲)
+        let ageHtml = '';
         if (info.birthYear && currentElectionYear) {
             const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
-            line1Parts.push(`${age}歲`);
+            ageHtml = `參選年紀 ${age} 歲`;
+            line1Parts.push(ageHtml);
         }
         
         const line1Html = line1Parts.join('．'); // 用全形點連接
 
-        // 3. 準備顯示文字：第二行 (年份．出生地 出生)
-        let line2Parts = [];
-        
-        if (info.birthYear) line2Parts.push(`${info.birthYear}年`);
-        if (info.birthPlace) line2Parts.push(info.birthPlace);
-        
+        // 3. 準備顯示文字：第二行 (年份／出生地 出生)
         let line2Html = "";
-        if (line2Parts.length > 0) {
-            line2Html = `${line2Parts.join('．')} 出生`;
+        if (info.birthYear || info.birthPlace) {
+            const yearPart = info.birthYear ? `${info.birthYear}年` : '';
+            const placePart = info.birthPlace || '';
+            
+            // 使用「／」來分隔年份與出生地，最後加上「出生」
+            let combinedPart = [yearPart, placePart].filter(p => p).join('／');
+            
+            if (combinedPart) {
+                 line2Html = `${combinedPart} 出生`;
+            }
         }
 
         const photoSrc = info.photo ? `Candidates/${info.photo}` : '';
@@ -1077,7 +1082,7 @@
         // --- 經歷邏輯結束 ---
 
 
-        // 5. 組合 HTML (這裡修改了排版樣式)
+	// 5. 組合 HTML (這裡修改了排版樣式)
         // 若無照片，使用預設圖示
         const imgDisplay = photoSrc ? `<img src="${photoSrc}" class="profile-photo" alt="${name}">` : `<div class="profile-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:#ccc;">👤</div>`;
         
@@ -1087,10 +1092,10 @@
                 <div class="profile-info">
                     <h2>${name}</h2>
                     <div class="profile-detail">
-                        <div style="font-size: 16px; font-weight: 500; margin-bottom: 4px; color: var(--text-main);">
+                        <div style="margin-bottom: 2px;">
                             ${line1Html}
                         </div>
-                        <div style="font-size: 14px; color: var(--text-sub);">
+                        <div style="color: var(--text-sub);">
                             ${line2Html}
                         </div>
                     </div>
