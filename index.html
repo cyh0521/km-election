@@ -990,36 +990,44 @@
     }
     
     // 開啟候選人 Modal
-    window.showCandidateModal = function(name, currentElectionYear) {
+        window.showCandidateModal = function(clickedName, currentElectionYear) {
         const modal = document.getElementById('candidate-modal');
         const modalBody = document.getElementById('modal-body');
         
-        // 1. 取得基本資料 (預設值包含 birthPlace)
-        const info = globalCandidateData[name] || { sex: '未知', birthYear: '', birthPlace: '', photo: '' };
+        // 1. 確認本尊 (Main Name)
+        // 透過全域對照表 globalNameMapping (若 loadCandidateData 已建立) 查找
+        // 若找不到對應(或沒建立)，預設使用點擊的名字
+        const mainName = (typeof globalNameMapping !== 'undefined' && globalNameMapping[clickedName]) 
+                         ? globalNameMapping[clickedName] 
+                         : clickedName;
         
-    // 2. 準備顯示文字：第一行 (性別．參選年紀 XX 歲)
+        // 2. 取得基本資料 (使用本尊名字)
+        const info = globalCandidateData[mainName] || { sex: '未知', birthYear: '', birthPlace: '', photo: '', aliases: [] };
+        
+        // 建立搜尋名單：包含 [本尊名, ...所有曾用名]
+        const searchNames = [mainName, ...(info.aliases || [])];
+        
+        // 3. 準備顯示文字：第一行 (性別．參選年紀 XX 歲)
         let line1Parts = [];
         
         // 加入性別
         if (info.sex) line1Parts.push(info.sex);
         
-        // 計算並加入年紀 (新格式：參選年紀 XX 歲)
-        let ageHtml = '';
+        // 計算並加入年紀
         if (info.birthYear && currentElectionYear) {
             const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
-            ageHtml = `參選年紀 ${age} 歲`;
-            line1Parts.push(ageHtml);
+            line1Parts.push(`參選年紀 ${age} 歲`);
         }
         
         const line1Html = line1Parts.join('．'); // 用全形點連接
 
-        // 3. 準備顯示文字：第二行 (年份／出生地 出生)
+        // 4. 準備顯示文字：第二行 (年份／出生地 出生)
         let line2Html = "";
         if (info.birthYear || info.birthPlace) {
             const yearPart = info.birthYear ? `${info.birthYear}年` : '';
             const placePart = info.birthPlace || '';
             
-            // 使用「／」來分隔年份與出生地，最後加上「出生」
+            // 使用「／」來分隔年份與出生地
             let combinedPart = [yearPart, placePart].filter(p => p).join('／');
             
             if (combinedPart) {
@@ -1029,45 +1037,51 @@
 
         const photoSrc = info.photo ? `Candidates/${info.photo}` : '';
         
-        // 4. 搜尋參選經歷 (這部分邏輯保持不變，略過不貼以節省空間，請保留您原本的程式碼...)
-        // ... (中間搜尋 historyList 的程式碼不用動) ...
-        
-        // [為了方便您複製，這裡模擬中間的 historyHtml 變數已經產生]
-        // 請確保這裡保留原本產生 historyHtml 的邏輯
-        let historyHtml = ''; 
-        // ... (原本的 historyList 迴圈) ...
-        // 若您沒有更動 historyList 的邏輯，請直接接續下面的 HTML 組合
-        
-        // --- 這裡開始是為了接上您原本的 history 邏輯 ---
+        // 5. 搜尋參選經歷 (使用 searchNames 進行廣泛搜尋)
+        let historyHtml = '';
         const historyList = [];
+        
         availableElections.forEach(e => {
             if (e.summaryData && e.summaryData.allCandidates) {
-                const match = e.summaryData.allCandidates.find(c => c.name === name);
+                // [關鍵修改] 檢查該次選舉的候選人名單中，是否有名字出現在我們的搜尋清單裡
+                const match = e.summaryData.allCandidates.find(c => searchNames.includes(c.name));
+                
                 if (match) {
+                    // 判斷是否用舊名參選 (如果紀錄的名字 != 本尊名字)
+                    const usedNameNote = (match.name !== mainName) ? ` (以 ${match.name} 參選)` : '';
+
                     historyList.push({
                         year: e.year,
                         electionName: e.uiName,
                         party: match.party,
                         isWinner: match.isWinner,
-                        isIncumbent: match.isIncumbent
+                        isIncumbent: match.isIncumbent,
+                        note: usedNameNote // 儲存改名註記
                     });
                 }
             }
         });
+        
+        // 依年份降序排列
         historyList.sort((a, b) => parseInt(b.year) - parseInt(a.year));
         
         if (historyList.length > 0) {
             historyHtml += `<div class="history-title">參選經歷</div><ul class="history-list">`;
             historyList.forEach(h => {
+                // 處理選舉名稱：移除開頭的年份
                 const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, ''); 
+                
                 const resultClass = h.isWinner ? 'result-won' : 'result-lost';
                 const resultText = h.isWinner ? '當選' : '未當選';
                 const partyName = getLongPartyName(h.party);
+                
                 historyHtml += `
                     <li class="history-item">
                         <div>
                             <span class="history-year-tag">${h.year}</span>
-                            <span class="history-name">${electionNameWithoutYear}</span> <span class="history-party">${partyName}</span>
+                            <span class="history-name">${electionNameWithoutYear}</span> 
+                            <span class="history-party">${partyName}</span>
+                            <span style="font-size:12px; color:#999;">${h.note}</span>
                         </div>
                         <div class="history-result ${resultClass}">
                             ${resultText}
@@ -1079,18 +1093,16 @@
         } else {
             historyHtml = `<div style="color:#999; margin-top:20px;">無其他參選紀錄</div>`;
         }
-        // --- 經歷邏輯結束 ---
 
-
-	// 5. 組合 HTML (這裡修改了排版樣式)
+        // 6. 組合 HTML (標題顯示本尊 Main Name)
         // 若無照片，使用預設圖示
-        const imgDisplay = photoSrc ? `<img src="${photoSrc}" class="profile-photo" alt="${name}">` : `<div class="profile-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:#ccc;">👤</div>`;
+        const imgDisplay = photoSrc ? `<img src="${photoSrc}" class="profile-photo" alt="${mainName}">` : `<div class="profile-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:#ccc;">👤</div>`;
         
         modalBody.innerHTML = `
             <div class="profile-header">
                 ${imgDisplay}
                 <div class="profile-info">
-                    <h2>${name}</h2>
+                    <h2>${mainName}</h2>
                     <div class="profile-detail">
                         <div style="margin-bottom: 2px;">
                             ${line1Html}
@@ -1105,13 +1117,61 @@
         `;
         
         modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; 
+        document.body.style.overflow = 'hidden'; // 防止背景捲動
     };
     
     window.closeModal = function() {
         document.getElementById('candidate-modal').classList.remove('active');
         document.body.style.overflow = '';
     };
+
+    // 新增一個全域變數，用來對應 舊名 -> 新名
+    let globalNameMapping = {}; 
+
+    async function loadCandidateData() {
+        try {
+            const response = await fetch('candidates.csv');
+            if (!response.ok) throw new Error('無法讀取 candidates.csv');
+            const text = await response.text();
+            
+            // 解析 CSV: 姓名,性別,出生年,出生地,照片檔名,曾用名(新欄位)
+            const rows = text.split('\n').map(r => r.trim()).filter(r => r);
+            
+            // 重置
+            globalCandidateData = {};
+            globalNameMapping = {};
+
+            for(let i=1; i<rows.length; i++) {
+                const cols = rows[i].split(',');
+                if(cols.length >= 1) {
+                    const name = cols[0].trim(); // 現用名 (Main Key)
+                    const sex = cols[1] ? cols[1].trim() : '';
+                    const birthYear = cols[2] ? cols[2].trim() : '';
+                    const birthPlace = cols[3] ? cols[3].trim() : '';
+                    const photo = cols[4] ? cols[4].trim() : '';
+                    // [新增] 讀取曾用名 (假設在第6欄，index 5)
+                    const aliasRaw = cols[5] ? cols[5].trim() : '';
+                    
+                    const aliases = aliasRaw ? aliasRaw.split(';') : []; // 假設用分號分隔
+
+                    // 儲存資料
+                    globalCandidateData[name] = { 
+                        sex, birthYear, birthPlace, photo, aliases 
+                    };
+
+                    // 建立對照表：自己對應自己
+                    globalNameMapping[name] = name;
+                    
+                    // 建立對照表：舊名對應到新名
+                    aliases.forEach(alias => {
+                        if(alias) globalNameMapping[alias] = name;
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn("載入候選人資料失敗", e);
+        }
+    }
 
     // ================= 資料載入與解析 =================
     
