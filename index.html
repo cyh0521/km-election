@@ -1999,15 +1999,22 @@
         dom.breadcrumbBottom.style.display = 'block';
     }
     
-    function generateSummaryPanelHTML(candidates, metadata, title) {
+	function generateSummaryPanelHTML(candidates, metadata, title) {
         const { validVotes, invalidVotes, eligibleVoters, electionNameFromCSV, electionDateFromCSV } = metadata;
         const totalBallots = validVotes + invalidVotes;
         const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
         
-        let extraRows = '';
+        // --- 修改開始 ---
+        
+        // 1. 處理副標題 (選舉名稱)：移出列表，獨立製作成有顏色的副標
+        let subtitleHtml = '';
         if (electionNameFromCSV) {
-            extraRows += `<li><span>選舉名稱</span><span class="stat-value">${electionNameFromCSV}</span></li>`;
+            // style 設定：使用主色調(var(--primary))、加粗、靠左、下方留白
+            subtitleHtml = `<div style="color: var(--primary); font-weight: 700; font-size: 16px; margin-bottom: 15px; text-align: left; line-height: 1.4;">${electionNameFromCSV}</div>`;
         }
+
+        // 2. 處理列表中的額外欄位 (只保留投票日期在列表內，如果有的話)
+        let extraRows = '';
         if (electionDateFromCSV) {
             extraRows += `<li><span>投票日期</span><span class="stat-value">${electionDateFromCSV}</span></li>`;
         }
@@ -2015,7 +2022,7 @@
         let html = `
         <div class="summary-panel">
             <h3>投票概況 (${title})</h3>
-            <ul class="summary-list">
+            ${subtitleHtml} <ul class="summary-list">
                 ${extraRows}
                 <li><span>投票率</span><span class="stat-value" style="color:#d9534f;">${turnoutRate}%</span></li>
                 <li><span>有效票數</span><span class="stat-value">${validVotes.toLocaleString()} 票</span></li>
@@ -2023,9 +2030,11 @@
                 <li><span>選舉人數</span><span class="stat-value">${eligibleVoters.toLocaleString()} 人</span></li>
             </ul>
         </div>`; 
+        
+        // --- 修改結束 ---
+
         return html;
     }
-
 
     /**
      * 生成卡片 HTML (通用模板)
