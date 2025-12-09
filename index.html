@@ -190,7 +190,7 @@
         }
         
         tr:not(.animate-bar-grow) {
-             transition: background-size 0.5s ease-in-out, background-color 0.3s ease;
+             transition: background-size: 0.5s ease-in-out, background-color 0.3s ease;
              background-repeat: no-repeat;
              background-size: var(--bar-width) 100%; 
         }
@@ -1181,6 +1181,10 @@
         const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
         if (rows.length < 4) return;
+        
+        // 讀取 A1 (選舉名稱) 和 B1 (投票日期)
+        const electionNameFromCSV = rows[0][0] ? rows[0][0].trim() : '';
+        const electionDateFromCSV = rows[0][1] ? rows[0][1].trim() : '';
 
         const headerRowIndices = []; 
         let currentIdx = 2;
@@ -1297,7 +1301,9 @@
             validVotes: globalValidVotes,
             invalidVotes: globalInvalidVotes,
             eligibleVoters: globalEligibleVoters,
-            seatsCount: seatsCount 
+            seatsCount: seatsCount,
+            electionNameFromCSV: electionNameFromCSV, // 存入 metadata
+            electionDateFromCSV: electionDateFromCSV  // 存入 metadata
         };
         appState.globalTotalVotes = globalValidVotes; 
     }
@@ -1877,7 +1883,10 @@
         const townMetadata = {
             validVotes: townData.validVotes,
             invalidVotes: townData.invalidVotes,
-            eligibleVoters: townData.eligibleVoters
+            eligibleVoters: townData.eligibleVoters,
+            // *** 新增：將選舉名稱與日期傳遞給鄉鎮 Metadata ***
+            electionNameFromCSV: appState.countyMetadata.electionNameFromCSV,
+            electionDateFromCSV: appState.countyMetadata.electionDateFromCSV
         };
         const currentElectionObj = availableElections.find(e => e.uiName === appState.electionName);
         const currentYear = currentElectionObj ? currentElectionObj.year : "";
@@ -1991,14 +2000,23 @@
     }
     
     function generateSummaryPanelHTML(candidates, metadata, title) {
-        const { validVotes, invalidVotes, eligibleVoters } = metadata;
+        const { validVotes, invalidVotes, eligibleVoters, electionNameFromCSV, electionDateFromCSV } = metadata;
         const totalBallots = validVotes + invalidVotes;
         const turnoutRate = eligibleVoters > 0 ? (totalBallots / eligibleVoters * 100).toFixed(2) : "0.00";
+        
+        let extraRows = '';
+        if (electionNameFromCSV) {
+            extraRows += `<li><span>選舉名稱</span><span class="stat-value">${electionNameFromCSV}</span></li>`;
+        }
+        if (electionDateFromCSV) {
+            extraRows += `<li><span>投票日期</span><span class="stat-value">${electionDateFromCSV}</span></li>`;
+        }
         
         let html = `
         <div class="summary-panel">
             <h3>投票概況 (${title})</h3>
             <ul class="summary-list">
+                ${extraRows}
                 <li><span>投票率</span><span class="stat-value" style="color:#d9534f;">${turnoutRate}%</span></li>
                 <li><span>有效票數</span><span class="stat-value">${validVotes.toLocaleString()} 票</span></li>
                 <li><span>無效票數</span><span class="stat-value">${invalidVotes.toLocaleString()} 票</span></li>
