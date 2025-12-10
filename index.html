@@ -483,6 +483,13 @@
     const availableElections = [
 
         { 
+            file: "2025_全國性公投第21案.csv", 
+            year: "2025", 
+            type: "全國性公民投票", 
+            uiName: "2025年 全國性公投第21案（核三延役）",
+            summaryData: null
+        },
+        { 
             file: "2024_不分區立委選舉.csv", 
             year: "2024", 
             type: "立法委員", 
@@ -700,6 +707,13 @@
             summaryData: null
         },
         { 
+            file: "2006_地方性公投第01案.csv", 
+            year: "2006", 
+            type: "地方性公民投票", 
+            uiName: "2006年 地方性公投第1案（博弈公投）",
+            summaryData: null
+        },
+        { 
             file: "2005_任務型國代選舉.csv", 
             year: "2005", 
             type: "國大代表", 
@@ -861,7 +875,7 @@
             "2005年 任務型國代選舉",
         ];
             // 簡易判斷：若名稱包含「不分區」、「任務型」或「政黨票」，也視為政黨票
-            if (electionName && (electionName.includes("不分區") || electionName.includes("任務型") || electionName.includes("政黨票"))) {
+            if (electionName && (electionName.includes("不分區") || electionName.includes("任務型") || electionName.includes("公投") || electionName.includes("政黨票"))) {
             return true;
             }
         return partyListElections.includes(electionName);
@@ -890,7 +904,9 @@
         "無黨團結聯盟": "#C30750",
 	"台灣團結聯盟": "#A66000",
         "連署參選": "#8D7A96",
-        "無黨籍": "#7F8C8D",  
+        "無黨籍": "#7F8C8D",
+        "同意": "#5F4BB6",
+        "不同意": "#ECBE00",
         "default": "#537073"
     };
 
@@ -1721,12 +1737,18 @@
             <div class="menu-section-title">依選舉類別瀏覽</div>
             <div class="main-menu-grid">`;
         
-        electionCategories.forEach(cat => {
-            html += `<div class="menu-button" onclick="renderElectionList('${cat.type}', true)">
-                <span class="menu-icon">${cat.icon}</span>
-                <span class="menu-text">${cat.type}</span>
-            </div>`;
-        });
+    electionCategories.forEach(cat => {
+        // 判斷：如果是公民投票，點擊時執行 renderReferendumSubMenu，否則維持原樣
+        const clickAction = cat.type === '公民投票' 
+            ? `renderReferendumSubMenu(true)` 
+             : `renderElectionList('${cat.type}', true)`;
+
+        html += `<div class="menu-button" onclick="${clickAction}">
+            <span class="menu-icon">${cat.icon}</span>
+            <span class="menu-text">${cat.type}</span>
+        </div>`;
+    });
+
         html += `</div></div>`;
 
         const recentElections = [...availableElections].sort((a, b) => {
@@ -1749,6 +1771,51 @@
             });
             html += `</div></div>`;
         }
+
+        dom.content.innerHTML = html;
+    };
+
+    // ================= 新增：公投子選單渲染 =================
+
+    window.renderReferendumSubMenu = function(pushState = true) {
+        
+        const url = `?view=referendumMenu`;
+        const state = { view: 'referendumMenu' };
+        updateUrl(state, "金門選舉資料庫 - 公民投票類別", url, pushState); 
+
+        appState.currentLevel = 'referendumMenu'; // 設定一個新的層級狀態
+        
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
+        updateBreadcrumb(); 
+        
+        // 清空舊圖表
+        appState.chartInstances.forEach(chart => chart.destroy()); 
+        appState.chartInstances = [];
+        
+        let html = '';
+
+        html += `<div class="main-section">
+            <div class="menu-section-title">請選擇公投類別</div>
+            <div class="main-menu-grid">
+                
+                <div class="menu-button" onclick="renderElectionList('全國性公民投票', true)">
+                    <span class="menu-icon">🇹🇼</span>
+                    <span class="menu-text">全國性公民投票</span>
+                </div>
+
+                <div class="menu-button" onclick="renderElectionList('地方性公民投票', true)">
+                    <span class="menu-icon">🏝️</span>
+                    <span class="menu-text">地方性公民投票</span>
+                </div>
+
+            </div>
+        </div>`;
 
         dom.content.innerHTML = html;
     };
@@ -1980,15 +2047,44 @@
 
         html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
 
-        if (level === 'electionList') {
-            html += `<span class="active">${appState.currentTown}</span>`;
-        } else if (level === 'county') {
-            const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
-            html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+    // === 新增：公投選單層級 ===
+        if (level === 'referendumMenu') {
+             html += `<span class="active">公民投票</span>`;
+        } 
+        // === 修改：原本的 electionList 邏輯 ===
+        else if (level === 'electionList') {
+            // 判斷是否為公投相關的類型
+            if (appState.currentTown === '全國性公民投票' || appState.currentTown === '地方性公民投票') {
+                html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
+                html += `<span class="active">${appState.currentTown}</span>`;
+            } else {
+                html += `<span class="active">${appState.currentTown}</span>`;
+            }
+        } 
+        // === 修改：原本的 county 邏輯 (判斷公投回上一頁的路徑) ===
+        else if (level === 'county') {
+            const currentEle = availableElections.find(e => e.uiName === appState.electionName);
+            const electionType = currentEle ? currentEle.type : '';
+            
+            if (electionType === '全國性公民投票' || electionType === '地方性公民投票') {
+                 html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
+                 html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+            } else {
+                 html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+            }
             html += `<span class="active">${appState.electionName}</span>`;
-        } else if (level === 'town') {
-             const electionType = availableElections.find(e => e.uiName === appState.electionName).type;
-             html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+        } 
+        // === 修改：原本的 town 邏輯 ===
+        else if (level === 'town') {
+             const currentEle = availableElections.find(e => e.uiName === appState.electionName);
+             const electionType = currentEle ? currentEle.type : '';
+
+             if (electionType === '全國性公民投票' || electionType === '地方性公民投票') {
+                 html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
+                 html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+             } else {
+                 html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+             }
              html += `<span onclick="renderCounty(true, true)">${appState.electionName}</span> / `;
              html += `<span class="active">${appState.currentTown}</span>`;
         }
@@ -2172,7 +2268,13 @@
 
         if (params.view === 'main') {
             renderMainMenu(pushState); 
-        } else if (params.view === 'list' && params.type) {
+        } 
+        // === 新增：處理公投選單的路由 ===
+        else if (params.view === 'referendumMenu') {
+            renderReferendumSubMenu(pushState);
+        }
+        // ==============================
+        else if (params.view === 'list' && params.type) {
             renderElectionList(params.type, pushState);
         } else if (params.view === 'county' && params.election) {
             const election = availableElections.find(e => e.uiName === params.election);
