@@ -250,9 +250,6 @@
         .party-cell .party-long { display: inline-block; }
         .party-cell .party-short { display: none; }
         
-        .col-party .party-title-desktop { display: inline; }
-        .col-party .party-title-mobile { display: none; }
-        
         /* *** 新增：隱藏政黨欄位 CSS *** */
         .col-party.hidden-party, 
         table th.col-party.hidden-party, 
@@ -906,7 +903,7 @@
         "連署參選": "#8D7A96",
         "無黨籍": "#7F8C8D",
         "同意": "#5F4BB6",
-        "不同意": "#ECBE00",
+        "不同意": "#537073",
         "default": "#537073"
     };
 
@@ -1738,10 +1735,14 @@
             <div class="main-menu-grid">`;
         
     electionCategories.forEach(cat => {
-        // 判斷：如果是公民投票，點擊時執行 renderReferendumSubMenu，否則維持原樣
-        const clickAction = cat.type === '公民投票' 
-            ? `renderReferendumSubMenu(true)` 
-             : `renderElectionList('${cat.type}', true)`;
+        // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu，否則維持原樣
+        let clickAction = `renderElectionList('${cat.type}', true)`;
+
+        if (cat.type === '公民投票') {
+             clickAction = `renderReferendumSubMenu(true)`;
+        } else if (cat.type === '立法委員') {
+             clickAction = `renderLegislatorSubMenu(true)`;
+        }
 
         html += `<div class="menu-button" onclick="${clickAction}">
             <span class="menu-icon">${cat.icon}</span>
@@ -1819,6 +1820,51 @@
 
         dom.content.innerHTML = html;
     };
+
+    // ================= 新增：立法委員子選單渲染 =================
+
+    window.renderLegislatorSubMenu = function(pushState = true) {
+        
+        const url = `?view=legislatorMenu`;
+        const state = { view: 'legislatorMenu' };
+        updateUrl(state, "金門選舉資料庫 - 立法委員類別", url, pushState); 
+
+        appState.currentLevel = 'legislatorMenu'; // 設定一個新的層級狀態
+        
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
+        updateBreadcrumb(); 
+        
+        // 清空舊圖表
+        appState.chartInstances.forEach(chart => chart.destroy()); 
+        appState.chartInstances = [];
+        
+        let html = '';
+
+        html += `<div class="main-section">
+            <div class="menu-section-title">請選擇立委類別</div>
+            <div class="main-menu-grid">
+                
+                <div class="menu-button" onclick="renderElectionList('區域立委', true)">
+                    <span class="menu-icon">🗺️</span>
+                    <span class="menu-text">區域立委</span>
+                </div>
+
+                <div class="menu-button" onclick="renderElectionList('不分區立委', true)">
+                    <span class="menu-icon">🏢</span>
+                    <span class="menu-text">不分區立委</span>
+                </div>
+
+            </div>
+        </div>`;
+
+        dom.content.innerHTML = html;
+    };
     
 	window.renderElectionList = function(type, pushState = true) { 
         
@@ -1842,7 +1888,17 @@
         appState.chartInstances.forEach(chart => chart.destroy()); 
         appState.chartInstances = [];
 
-        const matchingElections = availableElections.filter(e => e.type === type);
+        let matchingElections = [];
+
+        // *** 修改：針對「區域立委」與「不分區立委」進行特殊篩選 ***
+        if (type === '區域立委') {
+            matchingElections = availableElections.filter(e => e.type === '立法委員' && !isPartyListElection(e.uiName));
+        } else if (type === '不分區立委') {
+            matchingElections = availableElections.filter(e => e.type === '立法委員' && isPartyListElection(e.uiName));
+        } else {
+            matchingElections = availableElections.filter(e => e.type === type);
+        }
+
         matchingElections.sort((a, b) => {
              const yearA = parseInt(a.year);
              const yearB = parseInt(b.year);
@@ -2047,21 +2103,31 @@
 
         html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
 
-    // === 新增：公投選單層級 ===
+        // === 新增：公投選單層級 ===
         if (level === 'referendumMenu') {
              html += `<span class="active">公民投票</span>`;
         } 
+        // === 新增：立法委員選單層級 ===
+        else if (level === 'legislatorMenu') {
+             html += `<span class="active">立法委員</span>`;
+        }
         // === 修改：原本的 electionList 邏輯 ===
         else if (level === 'electionList') {
             // 判斷是否為公投相關的類型
             if (appState.currentTown === '全國性公民投票' || appState.currentTown === '地方性公民投票') {
                 html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
                 html += `<span class="active">${appState.currentTown}</span>`;
-            } else {
+            } 
+            // 判斷是否為立委相關的類型
+            else if (appState.currentTown === '區域立委' || appState.currentTown === '不分區立委') {
+                html += `<span onclick="renderLegislatorSubMenu(true)">立法委員</span> / `;
+                html += `<span class="active">${appState.currentTown}</span>`;
+            }
+            else {
                 html += `<span class="active">${appState.currentTown}</span>`;
             }
         } 
-        // === 修改：原本的 county 邏輯 (判斷公投回上一頁的路徑) ===
+        // === 修改：原本的 county 邏輯 (判斷回上一頁的路徑) ===
         else if (level === 'county') {
             const currentEle = availableElections.find(e => e.uiName === appState.electionName);
             const electionType = currentEle ? currentEle.type : '';
@@ -2069,7 +2135,14 @@
             if (electionType === '全國性公民投票' || electionType === '地方性公民投票') {
                  html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
-            } else {
+            } 
+            else if (electionType === '立法委員') {
+                const isParty = isPartyListElection(appState.electionName);
+                const subType = isParty ? '不分區立委' : '區域立委';
+                html += `<span onclick="renderLegislatorSubMenu(true)">立法委員</span> / `;
+                html += `<span onclick="renderElectionList('${subType}', true)">${subType}</span> / `;
+            }
+            else {
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
             }
             html += `<span class="active">${appState.electionName}</span>`;
@@ -2082,7 +2155,14 @@
              if (electionType === '全國性公民投票' || electionType === '地方性公民投票') {
                  html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
-             } else {
+             } 
+             else if (electionType === '立法委員') {
+                const isParty = isPartyListElection(appState.electionName);
+                const subType = isParty ? '不分區立委' : '區域立委';
+                html += `<span onclick="renderLegislatorSubMenu(true)">立法委員</span> / `;
+                html += `<span onclick="renderElectionList('${subType}', true)">${subType}</span> / `;
+             }
+             else {
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
              }
              html += `<span onclick="renderCounty(true, true)">${appState.electionName}</span> / `;
@@ -2189,7 +2269,7 @@
              isPartyList = isPartyListElection(appState.electionName);
         }
 
-        function renderTableHeader(title, sortKey, style = '', className = '') {
+	function renderTableHeader(title, sortKey, style = '', className = '') {
             
             const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2199,13 +2279,16 @@
             let finalClassName = className;
 
             if (sortKey === 'party') {
+                // 修正：當 sortKey 為 'party' 時，確保標題是「推薦政黨」/「政黨」
                 headerTextHtml = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
                 finalClassName = `${className} col-party`;
             } else if (sortKey === 'name' && isPartyList) {
-                 headerTextHtml = `政黨`; // 如果是政黨票，將「候選人」改為「政黨」
+                 // 如果是政黨票，將「候選人」的標題改為「政黨」
+                 headerTextHtml = `政黨`; 
             }
 
-            // 如果是政黨票，且要渲染「推薦政黨」欄位，則隱藏該欄位
+            // 如果是政黨票，且要渲染「推薦政黨」欄位 (sortKey=='party')，則隱藏該欄位
+            // 注意：isPartyList 的「政黨票」選單，我們只顯示政黨（在 'name' 欄位）
             const headerClass = isPartyList && sortKey === 'party' ? 'col-party hidden-party' : finalClassName;
 
 
@@ -2272,6 +2355,10 @@
         // === 新增：處理公投選單的路由 ===
         else if (params.view === 'referendumMenu') {
             renderReferendumSubMenu(pushState);
+        }
+        // === 新增：處理立法委員選單的路由 ===
+        else if (params.view === 'legislatorMenu') {
+            renderLegislatorSubMenu(pushState);
         }
         // ==============================
         else if (params.view === 'list' && params.type) {
