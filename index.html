@@ -250,9 +250,6 @@
         .party-cell .party-long { display: inline-block; }
         .party-cell .party-short { display: none; }
         
-        .col-party .party-title-desktop { display: inline; }
-        .col-party .party-title-mobile { display: none; }
-        
         /* *** 新增：隱藏政黨欄位 CSS *** */
         .col-party.hidden-party, 
         table th.col-party.hidden-party, 
@@ -492,14 +489,14 @@
         { 
             file: "2024_不分區立委選舉.csv", 
             year: "2024", 
-            type: "立法委員", 
+            type: "不分區立委", 
             uiName: "2024年 不分區立委選舉",
             summaryData: null
         },
         { 
             file: "2024_金門縣立委選舉.csv", 
             year: "2024", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2024年 金門縣立委選舉",
             summaryData: null
         },
@@ -548,21 +545,21 @@
         { 
             file: "2020_不分區立委選舉.csv", 
             year: "2020", 
-            type: "立法委員", 
+            type: "不分區立委", 
             uiName: "2020年 不分區立委選舉",
             summaryData: null
         },
         { 
             file: "2020_金門縣立委選舉.csv", 
             year: "2020", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2020年 金門縣立委選舉",
             summaryData: null
         },
         { 
             file: "2019_金門縣立委補選.csv", 
             year: "2019", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2019年 金門縣立委補選",
             summaryData: null
         },
@@ -604,14 +601,14 @@
         { 
             file: "2016_不分區立委選舉.csv", 
             year: "2016", 
-            type: "立法委員", 
+            type: "不分區立委", 
             uiName: "2016年 不分區立委選舉",
             summaryData: null
         },
         { 
             file: "2016_金門縣立委選舉.csv", 
             year: "2016", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2016年 金門縣立委選舉",
             summaryData: null
         },
@@ -653,14 +650,14 @@
         { 
             file: "2012_不分區立委選舉.csv", 
             year: "2012", 
-            type: "立法委員", 
+            type: "不分區立委", 
             uiName: "2012年 不分區立委選舉",
             summaryData: null
         },
         { 
             file: "2012_金門縣立委選舉.csv", 
             year: "2012", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2012年 金門縣立委選舉",
             summaryData: null
         },
@@ -695,14 +692,14 @@
         { 
             file: "2008_不分區立委選舉.csv", 
             year: "2008", 
-            type: "立法委員", 
+            type: "不分區立委", 
             uiName: "2008年 不分區立委選舉",
             summaryData: null
         },
         { 
             file: "2008_金門縣立委選舉.csv", 
             year: "2008", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2008年 金門縣立委選舉",
             summaryData: null
         },
@@ -744,7 +741,7 @@
         { 
             file: "2004_金門縣立委選舉.csv", 
             year: "2004", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2004年 金門縣立委選舉",
             summaryData: null
         },
@@ -758,7 +755,7 @@
         { 
             file: "2001_金門縣立委選舉.csv", 
             year: "2001", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "2001年 金門縣立委選舉",
             summaryData: null
         },
@@ -779,7 +776,7 @@
         { 
             file: "1998_金門縣立委選舉.csv", 
             year: "1998", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "1998年 金門縣立委選舉",
             summaryData: null
         },
@@ -814,7 +811,7 @@
         { 
             file: "1995_金門縣立委選舉.csv", 
             year: "1995", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "1995年 金門縣立委選舉",
             summaryData: null
         },
@@ -828,7 +825,7 @@
         { 
             file: "1992_金門縣立委選舉.csv", 
             year: "1992", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "1992年 金門縣立委選舉",
             summaryData: null
         },
@@ -842,7 +839,7 @@
         { 
             file: "1989_金門縣增額立委選舉.csv", 
             year: "1989", 
-            type: "立法委員", 
+            type: "區域立委", 
             uiName: "1989年 金門縣增額立委選舉",
             summaryData: null
         }
@@ -911,8 +908,8 @@
 	"台灣團結聯盟": "#A66000",
         "連署參選": "#8D7A96",
         "無黨籍": "#7F8C8D",
-        "同意": "#5F4BB6",
-        "不同意": "#ECBE00",
+        "同意": "#0B5880",
+        "不同意": "#537073",
         "default": "#537073"
     };
 
@@ -1749,10 +1746,15 @@
             <div class="main-menu-grid">`;
         
     electionCategories.forEach(cat => {
-        // 判斷：如果是公民投票，點擊時執行 renderReferendumSubMenu，否則維持原樣
-        const clickAction = cat.type === '公民投票' 
-            ? `renderReferendumSubMenu(true)` 
-             : `renderElectionList('${cat.type}', true)`;
+        // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu
+        let clickAction;
+        if (cat.type === '公民投票') {
+             clickAction = `renderReferendumSubMenu(true)`;
+        } else if (cat.type === '立法委員') {
+             clickAction = `renderLegislatorSubMenu(true)`;
+        } else {
+             clickAction = `renderElectionList('${cat.type}', true)`;
+        }
 
         html += `<div class="menu-button" onclick="${clickAction}">
             <span class="menu-icon">${cat.icon}</span>
@@ -1823,6 +1825,51 @@
                 <div class="menu-button" onclick="renderElectionList('地方性公民投票', true)">
                     <span class="menu-icon">🏝️</span>
                     <span class="menu-text">地方性公民投票</span>
+                </div>
+
+            </div>
+        </div>`;
+
+        dom.content.innerHTML = html;
+    };
+
+    // ================= 新增：立法委員子選單渲染 =================
+
+    window.renderLegislatorSubMenu = function(pushState = true) {
+        
+        const url = `?view=legislatorMenu`;
+        const state = { view: 'legislatorMenu' };
+        updateUrl(state, "金門選舉資料庫 - 立法委員類別", url, pushState); 
+
+        appState.currentLevel = 'legislatorMenu'; // 設定一個新的層級狀態
+        
+        if (pushState) {
+            window.scrollTo(0, 0); 
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
+        updateBreadcrumb(); 
+        
+        // 清空舊圖表
+        appState.chartInstances.forEach(chart => chart.destroy()); 
+        appState.chartInstances = [];
+        
+        let html = '';
+
+        html += `<div class="main-section">
+            <div class="menu-section-title">請選擇立委類別</div>
+            <div class="main-menu-grid">
+                
+                <div class="menu-button" onclick="renderElectionList('區域立委', true)">
+                    <span class="menu-icon">🗺️</span>
+                    <span class="menu-text">區域立委</span>
+                </div>
+
+                <div class="menu-button" onclick="renderElectionList('不分區立委', true)">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-text">不分區立委</span>
                 </div>
 
             </div>
@@ -2062,23 +2109,33 @@
         if (level === 'referendumMenu') {
              html += `<span class="active">公民投票</span>`;
         } 
+    // === 新增：立委選單層級 ===
+        else if (level === 'legislatorMenu') {
+             html += `<span class="active">立法委員</span>`;
+        }
         // === 修改：原本的 electionList 邏輯 ===
         else if (level === 'electionList') {
             // 判斷是否為公投相關的類型
-            if (appState.currentTown === '全國性公民投票' || appState.currentTown === '地方性公民投票') {
+            if (['全國性公民投票', '地方性公民投票'].includes(appState.currentTown)) {
                 html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
+                html += `<span class="active">${appState.currentTown}</span>`;
+            } else if (['區域立委', '不分區立委'].includes(appState.currentTown)) {
+                html += `<span onclick="renderLegislatorSubMenu(true)">立法委員</span> / `;
                 html += `<span class="active">${appState.currentTown}</span>`;
             } else {
                 html += `<span class="active">${appState.currentTown}</span>`;
             }
         } 
-        // === 修改：原本的 county 邏輯 (判斷公投回上一頁的路徑) ===
+        // === 修改：原本的 county 邏輯 (判斷公投與立委回上一頁的路徑) ===
         else if (level === 'county') {
             const currentEle = availableElections.find(e => e.uiName === appState.electionName);
             const electionType = currentEle ? currentEle.type : '';
             
-            if (electionType === '全國性公民投票' || electionType === '地方性公民投票') {
+            if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
                  html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
+                 html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+            } else if (['區域立委', '不分區立委'].includes(electionType)) {
+                 html += `<span onclick="renderLegislatorSubMenu(true)">立法委員</span> / `;
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
             } else {
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
@@ -2090,8 +2147,11 @@
              const currentEle = availableElections.find(e => e.uiName === appState.electionName);
              const electionType = currentEle ? currentEle.type : '';
 
-             if (electionType === '全國性公民投票' || electionType === '地方性公民投票') {
+             if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
                  html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
+                 html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
+             } else if (['區域立委', '不分區立委'].includes(electionType)) {
+                 html += `<span onclick="renderLegislatorSubMenu(true)">立法委員</span> / `;
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
              } else {
                  html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
@@ -2283,6 +2343,10 @@
         // === 新增：處理公投選單的路由 ===
         else if (params.view === 'referendumMenu') {
             renderReferendumSubMenu(pushState);
+        }
+        // === 新增：處理立法委員選單的路由 ===
+        else if (params.view === 'legislatorMenu') {
+            renderLegislatorSubMenu(pushState);
         }
         // ==============================
         else if (params.view === 'list' && params.type) {
