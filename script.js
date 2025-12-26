@@ -57,6 +57,16 @@
         {file: "elections/F2005.csv",year: "2005",type: "縣議員",uiName: "2005年 縣議員選舉",summaryData: null},
         {file: "elections/F2002.csv",year: "2002",type: "縣議員",uiName: "2002年 縣議員選舉",summaryData: null},
         {file: "elections/F1998.csv",year: "1998",type: "縣議員",uiName: "1998年 縣議員選舉",summaryData: null},
+        {file: "elections/F1994-D5.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第5選區",summaryData: null},
+        {file: "elections/F1994-D4.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第4選區",summaryData: null},
+        {file: "elections/F1994-D3.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第3選區",summaryData: null},
+        {file: "elections/F1994-D2.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第2選區",summaryData: null},
+        {file: "elections/F1994-D1.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第1選區",summaryData: null},
+        {file: "elections/F1990-D5.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉烈嶼選區",summaryData: null},
+        {file: "elections/F1990-D4.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金沙選區",summaryData: null},
+        {file: "elections/F1990-D3.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金湖選區",summaryData: null},
+        {file: "elections/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金寧選區",summaryData: null},
+        {file: "elections/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金城選區",summaryData: null},
 
         {file: "elections/G2022F.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G2022E.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烈嶼鄉長選舉",summaryData: null},
@@ -134,7 +144,15 @@
     
     function isElectionWithoutTowns(electionName) {
         const noTownsElections = [
-            "1992年 立法委員選舉","1991年 國大代表選舉","1989年 增額立委選舉"
+            "1992年 立法委員選舉",
+	    "1991年 國大代表選舉",
+	    "1989年 增額立委選舉",
+	    "1994年 縣議員選舉第1選區",
+	    "1994年 縣議員選舉第2選區",
+	    "1994年 縣議員選舉第3選區",
+	    "1994年 縣議員選舉第4選區",
+	    "1994年 縣議員選舉第5選區",
+
         ];
         return noTownsElections.includes(electionName);
     }
@@ -339,28 +357,39 @@
         }
     }
 
-    // ================= 候選人詳細資料載入與處理 (新增) =================
+    // ================= 候選人詳細資料載入與處理 (修改) =================
     
     async function loadCandidateData() {
         try {
             const response = await fetch('candidates.csv');
             if (!response.ok) throw new Error('無法讀取 candidates.csv');
             const text = await response.text();
-           // 解析 CSV: 姓名,性別,出生年,出生地,照片檔名
+
+            // 解析 CSV
             const rows = text.split('\n').map(r => r.trim()).filter(r => r);
+    
             // 跳過標題列 (index 0)
-            for(let i=1; i<rows.length; i++) {
+            for (let i = 1; i < rows.length; i++) {
                 const cols = rows[i].split(',');
-                if(cols.length >= 1) {
-                    const name = cols[0].trim();
-                    const sex = cols[1] ? cols[1].trim() : '';
-                    const birthYear = cols[2] ? cols[2].trim() : '';
-                    // [修改] 新增讀取出生地 (第4欄，index 3)
-                    const birthPlace = cols[3] ? cols[3].trim() : '';        // [修改] 照片檔名往後移一欄 (第5欄，index 4)
-                    const photo = cols[4] ? cols[4].trim() : '';
-                           // [修改] 將 birthPlace 存入全域變數
-                    globalCandidateData[name] = { sex, birthYear, birthPlace, photo };
-                }
+    
+                // ★ 新增：讀取 candidateId
+                const candidateId = cols[0] ? cols[0].trim() : '';
+                const name        = cols[1] ? cols[1].trim() : '';
+                const sex         = cols[2] ? cols[2].trim() : '';
+                const birthYear   = cols[3] ? cols[3].trim() : '';
+                const birthPlace  = cols[4] ? cols[4].trim() : '';
+                const photo       = cols[5] ? cols[5].trim() : '';
+    
+                if (!name || !candidateId) continue;
+    
+                // ★ 關鍵：把 id 一起存進去
+                globalCandidateData[name] = {
+                    id: candidateId,
+                    sex,
+                    birthYear,
+                    birthPlace,
+                    photo
+                };
             }
         } catch (e) {
             console.warn("載入候選人資料失敗或檔案不存在", e);
@@ -408,22 +437,34 @@
 
         const photoSrc = info.photo ? `candidates/${info.photo}` : '';
         
-        // 4. 搜尋參選經歷
-        const historyList = [];
-        availableElections.forEach(e => {
-            if (e.summaryData && e.summaryData.allCandidates) {
-                const match = e.summaryData.allCandidates.find(c => c.name === name);
-                if (match) {
-                    historyList.push({
-                        year: e.year,
-                        electionName: e.uiName,
-                        party: match.party,
-                        isWinner: match.isWinner,
-                        isIncumbent: match.isIncumbent
-                    });
-                }
-            }
-        });
+	// 4. 搜尋參選經歷
+	const historyList = [];
+	
+	// ★ 關鍵門禁：先確認這個人有沒有 ID
+	const targetId = globalCandidateData[name]?.id;
+	if (!targetId) {
+	    console.warn(`找不到候選人資料：${name}`);
+	} else {
+	    availableElections.forEach(e => {
+	        if (e.summaryData && e.summaryData.allCandidates) {
+	
+	            const match = e.summaryData.allCandidates.find(c =>
+	                globalCandidateData[c.name]?.id === targetId
+	            );
+	
+	            if (match) {
+	                historyList.push({
+	                    year: e.year,
+	                    electionName: e.uiName,
+	                    party: match.party,
+	                    isWinner: match.isWinner,
+	                    isIncumbent: match.isIncumbent
+	                });
+	            }
+	        }
+	    });
+	}
+
         historyList.sort((a, b) => parseInt(b.year) - parseInt(a.year));
         
         let historyHtml = ''; 
