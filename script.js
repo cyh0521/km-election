@@ -62,11 +62,11 @@
         {file: "elections/F1994-D3.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第3選區",summaryData: null},
         {file: "elections/F1994-D2.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第2選區",summaryData: null},
         {file: "elections/F1994-D1.csv",year: "1994",type: "縣議員",uiName: "1994年 縣議員選舉第1選區",summaryData: null},
-        {file: "elections/F1990-D5.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉烈嶼選區",summaryData: null},
-        {file: "elections/F1990-D4.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金沙選區",summaryData: null},
-        {file: "elections/F1990-D3.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金湖選區",summaryData: null},
-        {file: "elections/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金寧選區",summaryData: null},
-        {file: "elections/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉金城選區",summaryData: null},
+        {file: "elections/F1990-D5.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-烈嶼鄉",summaryData: null},
+        {file: "elections/F1990-D4.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金沙鎮",summaryData: null},
+        {file: "elections/F1990-D3.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金湖鎮",summaryData: null},
+        {file: "elections/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金寧鄉",summaryData: null},
+        {file: "elections/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金城鎮",summaryData: null},
 
         {file: "elections/G2022F.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G2022E.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烈嶼鄉長選舉",summaryData: null},
@@ -152,6 +152,11 @@
 	    "1994年 縣議員選舉第3選區",
 	    "1994年 縣議員選舉第4選區",
 	    "1994年 縣議員選舉第5選區",
+	    "1990年 諮詢代表選舉-金城鎮"
+	    "1990年 諮詢代表選舉-金寧鄉"
+	    "1990年 諮詢代表選舉-金湖鎮"
+	    "1990年 諮詢代表選舉-金沙鎮"
+	    "1990年 諮詢代表選舉-烈嶼鄉"
 
         ];
         return noTownsElections.includes(electionName);
