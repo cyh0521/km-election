@@ -112,6 +112,12 @@
         {file: "elections/G/G1998B.csv",year: "1998",type: "鄉鎮長",uiName: "1998年 金寧鄉長選舉",summaryData: null},
         {file: "elections/G/G1998A.csv",year: "1998",type: "鄉鎮長",uiName: "1998年 金城鎮長選舉",summaryData: null},
 
+        {file: "elections/H/H2018F.csv",year: "2018",type: "鄉鎮民代表",uiName: "2018年 烏坵鄉民代表選舉",summaryData: null},
+        {file: "elections/H/H2018E.csv",year: "2018",type: "鄉鎮民代表",uiName: "2018年 烈嶼鄉民代表選舉",summaryData: null},
+        {file: "elections/H/H2018D.csv",year: "2018",type: "鄉鎮民代表",uiName: "2018年 金沙鎮民代表選舉",summaryData: null},
+        {file: "elections/H/H2018C.csv",year: "2018",type: "鄉鎮民代表",uiName: "2018年 金湖鎮民代表選舉",summaryData: null},
+        {file: "elections/H/H2018B.csv",year: "2018",type: "鄉鎮民代表",uiName: "2018年 金寧鄉民代表選舉",summaryData: null},
+        {file: "elections/H/H2018A.csv",year: "2018",type: "鄉鎮民代表",uiName: "2018年 金城鎮民代表選舉",summaryData: null},
         {file: "elections/H/H2022F.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 烏坵鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022E.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 烈嶼鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022D.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金沙鎮民代表選舉",summaryData: null},
