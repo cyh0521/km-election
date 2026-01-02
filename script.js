@@ -2208,61 +2208,45 @@ dom.breadcrumb.innerHTML = html;
         });
     })();
 
-
-
-/* === Stamp-then-navigate (robust for touch) ==============================
-   Fix: touch ':active' can transfer to next page element under the finger in SPA navigation.
-   We do:
-   - intercept pointerdown on .menu-button (capture)
-   - add .stamp-pressed immediately (red stamp)
-   - delay running the inline onclick slightly ("蓋章一下再進去")
-   - block the follow-up synthetic click
-   ======================================================================= */
+// === Stamp-then-navigate (mobile-friendly) ==============================
+// Show active state briefly before navigation; avoids focus carry-over.
+// Delay ~140ms for tactile feedback.
 (function(){
   const DELAY_MS = 140;
-  let blockUntil = 0;
 
-  function onPointerDown(e){
+  function handle(e){
     const btn = e.target.closest('.menu-button');
     if(!btn) return;
 
-    const handler = btn.getAttribute('onclick');
-    if(!handler) return;
-
-    // Only primary pointer
-    if (e.isPrimary === false) return;
-
-    // Prevent default to reduce native :active + click chain on touch
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    // Visual stamp
-    btn.classList.add('stamp-pressed');
-
-    // Clear focus to avoid any focus-related persistence
-    try { btn.blur && btn.blur(); } catch(_) {}
-    try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch(_) {}
-
-    blockUntil = Date.now() + 400;
-
-    setTimeout(() => {
-      try {
-        (new Function(handler))();
-      } finally {
-        // If still in DOM, remove class (safe)
-        btn.classList.remove('stamp-pressed');
-      }
-    }, DELAY_MS);
-  }
-
-  function onClickCapture(e){
-    if(Date.now() < blockUntil){
-      e.preventDefault();
+    // Only intercept left-click / tap
+    if (e.type === 'click') {
+      // Prevent immediate inline onclick execution
       e.stopImmediatePropagation();
+      e.preventDefault();
+
+      // Visual press state
+      btn.classList.add('pressed');
+
+      // Execute the original onclick after a short delay
+      const handler = btn.getAttribute('onclick');
+      if (handler) {
+        setTimeout(() => {
+          try {
+            // Clear focus to avoid carry-over
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+              document.activeElement.blur();
+            }
+            // Run inline handler
+            (new Function(handler))();
+          } finally {
+            btn.classList.remove('pressed');
+          }
+        }, DELAY_MS);
+      }
     }
   }
 
-  document.addEventListener('pointerdown', onPointerDown, true);
-  document.addEventListener('click', onClickCapture, true);
+  // Capture phase to beat inline onclick
+  document.addEventListener('click', handle, true);
 })();
-/* ======================================================================= */
+// ========================================================================
