@@ -2208,45 +2208,39 @@ dom.breadcrumb.innerHTML = html;
         });
     })();
 
-// === Stamp-then-navigate (mobile-friendly) ==============================
-// Show active state briefly before navigation; avoids focus carry-over.
-// Delay ~140ms for tactile feedback.
+
+// === Stamp-then-navigate (mobile-friendly) [v4] ===
+// Show stamp feedback briefly before navigation; avoids focus carry-over.
+// Delay ~140ms for tactile feedback. Uses .stamp-pressed (CSS).
 (function(){
   const DELAY_MS = 140;
 
-  function handle(e){
+  document.addEventListener('click', function(e){
     const btn = e.target.closest('.menu-button');
     if(!btn) return;
 
-    // Only intercept left-click / tap
-    if (e.type === 'click') {
-      // Prevent immediate inline onclick execution
-      e.stopImmediatePropagation();
-      e.preventDefault();
+    const handler = btn.getAttribute('onclick');
+    if(!handler) return;
 
-      // Visual press state
-      btn.classList.add('pressed');
+    // Beat inline onclick
+    e.stopImmediatePropagation();
+    e.preventDefault();
 
-      // Execute the original onclick after a short delay
-      const handler = btn.getAttribute('onclick');
-      if (handler) {
-        setTimeout(() => {
-          try {
-            // Clear focus to avoid carry-over
-            if (document.activeElement && typeof document.activeElement.blur === 'function') {
-              document.activeElement.blur();
-            }
-            // Run inline handler
-            (new Function(handler))();
-          } finally {
-            btn.classList.remove('pressed');
-          }
-        }, DELAY_MS);
+    // Visual press state
+    btn.classList.add('stamp-pressed');
+
+    // Blur to prevent next-screen focus inheriting styles
+    try { btn.blur && btn.blur(); } catch(_) {}
+    try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch(_) {}
+
+    setTimeout(() => {
+      try {
+        (new Function(handler))();
+      } finally {
+        btn.classList.remove('stamp-pressed');
       }
-    }
-  }
-
-  // Capture phase to beat inline onclick
-  document.addEventListener('click', handle, true);
+    }, DELAY_MS);
+  }, true);
 })();
 // ========================================================================
+
