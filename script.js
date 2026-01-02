@@ -2208,45 +2208,86 @@ dom.breadcrumb.innerHTML = html;
         });
     })();
 
-// === Stamp-then-navigate (mobile-friendly) ==============================
-// Show active state briefly before navigation; avoids focus carry-over.
-// Delay ~140ms for tactile feedback.
-(function(){
+// === Stamp-then-navigate (HARD FIX: prevent hover/active carry-over) =====
+// - Touch devices can "stick" :hover/:active across SPA navigations.
+// - We avoid using :hover/:active for the RED stamp on touch.
+// - JS toggles .stamp-pressed briefly, then runs the original onclick.
+// ========================================================================
+(function () {
   const DELAY_MS = 140;
+  const BTN_SEL = '.menu-button.no-icon';
 
-  function handle(e){
-    const btn = e.target.closest('.menu-button');
-    if(!btn) return;
+  function clearAll() {
+    document.querySelectorAll(BTN_SEL + '.stamp-pressed').forEach(el => {
+      el.classList.remove('stamp-pressed');
+    });
+  }
 
-    // Only intercept left-click / tap
-    if (e.type === 'click') {
-      // Prevent immediate inline onclick execution
-      e.stopImmediatePropagation();
-      e.preventDefault();
+  function mark(btn) {
+    clearAll();
+    btn.classList.add('stamp-pressed');
+  }
 
-      // Visual press state
-      btn.classList.add('pressed');
+  function runInlineOnclick(btn) {
+    const handler = btn.getAttribute('onclick');
+    if (!handler) return;
 
-      // Execute the original onclick after a short delay
-      const handler = btn.getAttribute('onclick');
-      if (handler) {
-        setTimeout(() => {
-          try {
-            // Clear focus to avoid carry-over
-            if (document.activeElement && typeof document.activeElement.blur === 'function') {
-              document.activeElement.blur();
-            }
-            // Run inline handler
-            (new Function(handler))();
-          } finally {
-            btn.classList.remove('pressed');
-          }
-        }, DELAY_MS);
+    // Clear focus to reduce state carry-over on mobile browsers
+    try {
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
       }
+    } catch (_) {}
+
+    // Execute the original inline handler
+    try {
+      (new Function(handler))();
+    } catch (err) {
+      console.error('[stamp-nav] onclick failed:', err);
     }
   }
 
-  // Capture phase to beat inline onclick
-  document.addEventListener('click', handle, true);
+  // Show stamp as soon as the press starts (better tactile feedback)
+  document.addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest(BTN_SEL);
+    if (!btn) return;
+
+    // Only primary button for mouse
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+    mark(btn);
+  }, true);
+
+  // Intercept click BEFORE inline onclick runs (capture phase)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(BTN_SEL);
+    if (!btn) return;
+
+    const handler = btn.getAttribute('onclick');
+    if (!handler) return;
+
+    // Stop the browser / inline onclick from running immediately
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    e.stopPropagation();
+
+    // Ensure we show the stamp during the delay
+    mark(btn);
+
+    setTimeout(() => {
+      // IMPORTANT: clear pressed state BEFORE navigation/render
+      // to avoid applying to the next page's element at the same position.
+      clearAll();
+      runInlineOnclick(btn);
+    }, DELAY_MS);
+  }, true);
+
+  // Safety clears
+  ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(evt => {
+    document.addEventListener(evt, clearAll, true);
+  });
+  window.addEventListener('popstate', clearAll);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') clearAll();
+  });
 })();
-// ========================================================================
