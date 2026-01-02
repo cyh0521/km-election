@@ -61,7 +61,7 @@ h1 span { cursor: pointer; }
 }
 
 /* --- 滑鼠懸停效果 (Hover) --- */
-.menu-button:hover .menu-icon {
+.menu-button:not(.stamp-btn):hover .menu-icon {
     background-color: var(--primary); /* 背景變深色 */
     color: white;                     /* 文字變白色 */
     transform: scale(1.1) rotate(-5deg); /* 微微放大並旋轉一點點，增加趣味性 */
@@ -501,130 +501,129 @@ footer {
     padding-top: 20px;
 }
 
+
 /* =========================
-   Home menu: CSS-drawn icons
-   使用 data-ico 決定圖示造型
+   新版扁平章戳按鈕（套用於主選單＋子分類）
+   使用：<div class="menu-button stamp-btn"> ... <span class="stamp-btn__stamp"></span> ...
    ========================= */
 
-/* 讓 menu-icon 變成畫布：不靠文字顯示 */
-.menu-button .menu-icon{
-  position: relative;
-  overflow: hidden;
-  text-indent: -999px;     /* 保留文字當備援，但視覺隱藏 */
-  white-space: nowrap;
+.menu-button.stamp-btn{
+    position: relative;
+    overflow: hidden;
+
+    /* 扁平：弱陰影、清爽邊框 */
+    border-radius: 12px;
+    box-shadow: none;
+
+    /* 版面：左對齊，讓文字長短更穩 */
+    text-align: left;
+    padding: 16px 18px;
+
+    /* 輕薄的底色層次（仍屬扁平風格） */
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+
+    transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
 }
 
-/* icon 基本筆觸 */
-.menu-button .menu-icon::before,
-.menu-button .menu-icon::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
+/* 右上角「章戳」：淡色、不粗，靠動態傳達存在感 */
+.stamp-btn__stamp{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+
+    background: rgba(56, 135, 176, 0.14);
+    border: 1px solid rgba(56, 135, 176, 0.22);
+    box-shadow: inset 0 0 0 3px rgba(56, 135, 176, 0.06);
+
+    transform: translateX(0) rotate(0deg);
+    transition: transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
+    opacity: .95;
 }
 
-/* 手機點按也要有回饋（你之前痛過一次我懂） */
-.menu-button:active .menu-icon,
-.menu-button:focus-visible .menu-icon{
-  background-color: var(--primary);
-  color: #fff;
-  transform: scale(1.06) rotate(-4deg);
-  box-shadow: 0 4px 10px rgba(56, 135, 176, 0.25);
+/* 圖示：改成扁平小方塊（若某些子分類 icon 是單字，仍能穩定呈現） */
+.menu-button.stamp-btn .menu-icon{
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+
+    background: rgba(56, 135, 176, 0.10);
+    color: var(--primary);
+
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+
+    margin: 0 0 10px 0;
+    transition: transform .22s cubic-bezier(.2,.8,.2,1), background .22s ease, color .22s ease;
 }
 
-/* 也讓整顆按鈕在手機點按時稍微抬起 */
-.menu-button:active{
-  transform: translateY(-2px);
-  border-color: var(--primary);
-  box-shadow: 0 8px 15px rgba(56, 135, 176, 0.12);
+/* 文字：保留原本字級，但加上位移動畫 */
+.menu-button.stamp-btn .menu-text{
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--secondary);
+    transition: transform .22s cubic-bezier(.2,.8,.2,1), color .22s ease;
 }
 
-/* ========= 預設：中性圓點 ========= */
-.menu-button[data-ico="default"] .menu-icon::before{
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  border: 3px solid currentColor;
-  opacity: .9;
+/* Hover：文字往左、icon 往右、章戳微移 → “交錯移動” */
+.menu-button.stamp-btn:hover{
+    border-color: rgba(56, 135, 176, 0.35);
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    transform: translateY(-1px);
 }
 
-/* ========= 總統副總統：旗幟 ========= */
-.menu-button[data-ico="president"] .menu-icon::before{
-  width: 18px; height: 26px;
-  border-left: 3px solid currentColor;   /* 旗竿 */
-  border-radius: 2px;
-  left: 40%;
-}
-.menu-button[data-ico="president"] .menu-icon::after{
-  width: 22px; height: 14px;             /* 旗面 */
-  border: 3px solid currentColor;
-  border-left: none;
-  border-radius: 3px 6px 6px 3px;
-  left: 56%;
-  top: 46%;
-  transform: translate(-50%, -50%) skewX(-12deg);
-  opacity: .95;
+.menu-button.stamp-btn:hover .stamp-btn__stamp{
+    transform: translateX(-8px) translateY(2px) rotate(-8deg);
+    opacity: 1;
 }
 
-/* ========= 立法委員：小國會（屋頂+柱子） ========= */
-.menu-button[data-ico="legislator"] .menu-icon::before{
-  width: 26px; height: 16px;             /* 主體 */
-  border: 3px solid currentColor;
-  border-radius: 4px;
-  top: 56%;
-}
-.menu-button[data-ico="legislator"] .menu-icon::after{
-  width: 0; height: 0;                   /* 三角屋頂 */
-  border-left: 16px solid transparent;
-  border-right: 16px solid transparent;
-  border-bottom: 12px solid currentColor;
-  top: 36%;
-}
-/* 柱子用 background 線條畫（不另外加節點） */
-.menu-button[data-ico="legislator"] .menu-icon{
-  background-image:
-    linear-gradient(currentColor, currentColor),
-    linear-gradient(currentColor, currentColor),
-    linear-gradient(currentColor, currentColor);
-  background-size: 3px 10px, 3px 10px, 3px 10px;
-  background-position: 40% 58%, 50% 58%, 60% 58%;
-  background-repeat: no-repeat;
+.menu-button.stamp-btn:hover .menu-icon{
+    transform: translateX(6px);
+    background: rgba(56, 135, 176, 0.14);
+    color: #1f6fb2;
 }
 
-/* ========= 公民投票：勾勾 + 小框 ========= */
-.menu-button[data-ico="referendum"] .menu-icon::before{
-  width: 26px; height: 22px;
-  border: 3px solid currentColor;        /* 票匣/框 */
-  border-radius: 6px;
-  top: 52%;
-}
-.menu-button[data-ico="referendum"] .menu-icon::after{
-  width: 10px; height: 16px;             /* 勾勾 */
-  border-right: 4px solid currentColor;
-  border-bottom: 4px solid currentColor;
-  border-radius: 1px;
-  top: 52%;
-  left: 54%;
-  transform: translate(-50%, -50%) rotate(35deg);
+.menu-button.stamp-btn:hover .menu-text{
+    transform: translateX(-4px);
 }
 
-/* ========= 首長類（縣長/鄉鎮長）：徽章 ========= */
-.menu-button[data-ico="mayor"] .menu-icon::before,
-.menu-button[data-ico="township"] .menu-icon::before{
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  border: 3px solid currentColor;        /* 徽章圈 */
-  top: 46%;
-}
-.menu-button[data-ico="mayor"] .menu-icon::after,
-.menu-button[data-ico="township"] .menu-icon::after{
-  width: 18px; height: 10px;             /* 徽章緞帶 */
-  border: 3px solid currentColor;
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  top: 64%;
-  opacity: .95;
+/* 手機點按回饋 */
+.menu-button.stamp-btn:active{
+    transform: translateY(0px) scale(0.995);
 }
 
-/* 其他類別先走 default，你之後想要「縣議員/代表/村里」也各有不同圖示，我可以再補齊 */
+.menu-button.stamp-btn:active .stamp-btn__stamp{
+    transform: translateX(-10px) translateY(3px) rotate(-10deg);
+}
+
+.menu-button.stamp-btn:active .menu-icon{
+    transform: translateX(8px);
+}
+
+/* 手機版微調 */
+@media (max-width: 768px){
+    .menu-button.stamp-btn{
+        padding: 14px 14px;
+        border-radius: 12px;
+    }
+    .menu-button.stamp-btn .menu-icon{
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+    .stamp-btn__stamp{
+        width: 30px;
+        height: 30px;
+        top: 10px;
+        right: 10px;
+    }
+}
