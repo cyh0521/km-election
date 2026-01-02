@@ -501,137 +501,130 @@ footer {
     padding-top: 20px;
 }
 
-/* ==========================================================
-   FLAT STAMP TILE – 2026 Refresh
-   - 扁平化、公文/選票風格
-   - 印章常態淡色；hover / 點選（.stamp-pressed）加深
-   - 不使用模糊/歪斜；線條不粗
-   Target: .menu-button.no-icon
-   ========================================================== */
+/* =========================
+   Home menu: CSS-drawn icons
+   使用 data-ico 決定圖示造型
+   ========================= */
 
-.menu-button.no-icon{
-  /* responsive knobs */
-  --pad-x: clamp(12px, 3.6vw, 18px);
-  --pad-y: clamp(14px, 3.2vw, 18px);
-  --stamp: clamp(24px, 7vw, 36px);
-  --gap:   clamp(10px, 2.8vw, 14px);
-
-  /* ink (default / hover) */
-  --ink: rgba(56,135,176,.38);          /* 淡藍灰 */
-  --ink-strong: rgba(56,135,176,.72);   /* 加深（hover / tap） */
-
+/* 讓 menu-icon 變成畫布：不靠文字顯示 */
+.menu-button .menu-icon{
   position: relative;
-  padding: var(--pad-y) var(--pad-x);
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: none;                     /* 扁平化 */
   overflow: hidden;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color .15s ease, background-color .15s ease;
-}
-
-/* 細緻格線 + 右上折角（更淡、更扁平） */
-.menu-button.no-icon::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-
-  background-image:
-    /* 折角 */
-    linear-gradient(135deg, rgba(56,135,176,.10) 0 50%, transparent 50%),
-    /* 垂直格線 */
-    linear-gradient(to right, rgba(56,135,176,.06) 1px, transparent 1px),
-    /* 水平格線 */
-    linear-gradient(to bottom, rgba(56,135,176,.05) 1px, transparent 1px);
-
-  background-size:
-    18px 18px,
-    22px 22px,
-    22px 22px;
-
-  background-position:
-    top right,
-    top left,
-    top left;
-
-  background-repeat:
-    no-repeat,
-    repeat,
-    repeat;
-
-  opacity: .95;
-}
-
-/* 左側印章（選票/勾選圖樣）— 使用 mask + 輕微不均勻吃色 */
-.menu-button.no-icon::before{
-  content:"";
-  position:absolute;
-  left: var(--pad-x);
-  top: 50%;
-  width: var(--stamp);
-  height: var(--stamp);
-  transform: translateY(-50%);
-  border-radius: 999px;
-  pointer-events:none;
-
-  /* 先用 ink 當底，再疊幾層「不均」：不模糊、不歪斜，只是吃色不均 */
-  background:
-    radial-gradient(circle at 28% 32%, rgba(255,255,255,.40) 0 18%, transparent 19%),
-    radial-gradient(circle at 72% 64%, rgba(255,255,255,.30) 0 14%, transparent 15%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.10) 0 2px, transparent 2px 6px),
-    var(--ink);
-
-  opacity: .62;
-  mix-blend-mode: multiply;
-
-  /* 選票/勾選圖樣 mask（線條偏細） */
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='42'/%3E%3Crect x='28' y='30' width='44' height='50' rx='6'/%3E%3Cpath d='M38 55 l8 8 16-20'/%3E%3Cpath d='M35 40 h30'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='42'/%3E%3Crect x='28' y='30' width='44' height='50' rx='6'/%3E%3Cpath d='M38 55 l8 8 16-20'/%3E%3Cpath d='M35 40 h30'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
-
-  transition: opacity .12s ease, background-color .12s ease;
-}
-
-/* 文字（16px、靠左、盡量一行） */
-.menu-button.no-icon .menu-text{
-  display:block;
-  padding-left: calc(var(--stamp) + var(--gap));
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--secondary);
-  line-height: 1.2;
-  text-align: left;
+  text-indent: -999px;     /* 保留文字當備援，但視覺隱藏 */
   white-space: nowrap;
 }
 
-/* 極窄螢幕：微縮字級避免「鄉鎮民代表」爆行 */
-@media (max-width: 360px){
-  .menu-button.no-icon .menu-text{ font-size: 15px; }
+/* icon 基本筆觸 */
+.menu-button .menu-icon::before,
+.menu-button .menu-icon::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
 }
 
-/* Hover / Tap：只加深印章，不改外框為紅色 */
-.menu-button.no-icon:hover::before,
-.menu-button.no-icon:active::before,
-.menu-button.no-icon.stamp-pressed::before{
-  background:
-    radial-gradient(circle at 28% 32%, rgba(255,255,255,.32) 0 18%, transparent 19%),
-    radial-gradient(circle at 72% 64%, rgba(255,255,255,.22) 0 14%, transparent 15%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.10) 0 2px, transparent 2px 6px),
-    var(--ink-strong);
-  opacity: .92;
+/* 手機點按也要有回饋（你之前痛過一次我懂） */
+.menu-button:active .menu-icon,
+.menu-button:focus-visible .menu-icon{
+  background-color: var(--primary);
+  color: #fff;
+  transform: scale(1.06) rotate(-4deg);
+  box-shadow: 0 4px 10px rgba(56, 135, 176, 0.25);
 }
 
-.menu-button.no-icon:hover,
-.menu-button.no-icon:active,
-.menu-button.no-icon.stamp-pressed{
-  border-color: var(--border);
-  background-color: #fff;
+/* 也讓整顆按鈕在手機點按時稍微抬起 */
+.menu-button:active{
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 15px rgba(56, 135, 176, 0.12);
 }
 
-/* 可及性：鍵盤 focus 顯示細藍框（不影響換頁殘留） */
-.menu-button.no-icon:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(56,135,176,.18);
+/* ========= 預設：中性圓點 ========= */
+.menu-button[data-ico="default"] .menu-icon::before{
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  opacity: .9;
 }
+
+/* ========= 總統副總統：旗幟 ========= */
+.menu-button[data-ico="president"] .menu-icon::before{
+  width: 18px; height: 26px;
+  border-left: 3px solid currentColor;   /* 旗竿 */
+  border-radius: 2px;
+  left: 40%;
+}
+.menu-button[data-ico="president"] .menu-icon::after{
+  width: 22px; height: 14px;             /* 旗面 */
+  border: 3px solid currentColor;
+  border-left: none;
+  border-radius: 3px 6px 6px 3px;
+  left: 56%;
+  top: 46%;
+  transform: translate(-50%, -50%) skewX(-12deg);
+  opacity: .95;
+}
+
+/* ========= 立法委員：小國會（屋頂+柱子） ========= */
+.menu-button[data-ico="legislator"] .menu-icon::before{
+  width: 26px; height: 16px;             /* 主體 */
+  border: 3px solid currentColor;
+  border-radius: 4px;
+  top: 56%;
+}
+.menu-button[data-ico="legislator"] .menu-icon::after{
+  width: 0; height: 0;                   /* 三角屋頂 */
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-bottom: 12px solid currentColor;
+  top: 36%;
+}
+/* 柱子用 background 線條畫（不另外加節點） */
+.menu-button[data-ico="legislator"] .menu-icon{
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-size: 3px 10px, 3px 10px, 3px 10px;
+  background-position: 40% 58%, 50% 58%, 60% 58%;
+  background-repeat: no-repeat;
+}
+
+/* ========= 公民投票：勾勾 + 小框 ========= */
+.menu-button[data-ico="referendum"] .menu-icon::before{
+  width: 26px; height: 22px;
+  border: 3px solid currentColor;        /* 票匣/框 */
+  border-radius: 6px;
+  top: 52%;
+}
+.menu-button[data-ico="referendum"] .menu-icon::after{
+  width: 10px; height: 16px;             /* 勾勾 */
+  border-right: 4px solid currentColor;
+  border-bottom: 4px solid currentColor;
+  border-radius: 1px;
+  top: 52%;
+  left: 54%;
+  transform: translate(-50%, -50%) rotate(35deg);
+}
+
+/* ========= 首長類（縣長/鄉鎮長）：徽章 ========= */
+.menu-button[data-ico="mayor"] .menu-icon::before,
+.menu-button[data-ico="township"] .menu-icon::before{
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 3px solid currentColor;        /* 徽章圈 */
+  top: 46%;
+}
+.menu-button[data-ico="mayor"] .menu-icon::after,
+.menu-button[data-ico="township"] .menu-icon::after{
+  width: 18px; height: 10px;             /* 徽章緞帶 */
+  border: 3px solid currentColor;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  top: 64%;
+  opacity: .95;
+}
+
+/* 其他類別先走 default，你之後想要「縣議員/代表/村里」也各有不同圖示，我可以再補齊 */
