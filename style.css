@@ -504,7 +504,7 @@ footer {
 /* ==========================================================
    FINAL – Official Document Tile with TW Voting Stamp
    - Blue/gray always-on stamp (aligned)
-   - Red stamp on hover / tap
+   - Red stamp on hover / tap / pressed class
    - No red border on press
    - Folded corner with visible blue-gray outline
    - Darker background grid
@@ -588,7 +588,7 @@ footer {
     repeat,
     repeat;
 
-  opacity: .75;
+  opacity: .78;
 }
 
 /* ==========================================================
@@ -627,11 +627,11 @@ footer {
     inset 0 0 0 2px rgba(56,135,176,.30),
     inset 0 0 0 calc(var(--seal) * 0.20) rgba(56,135,176,.08);
 
-  transition: opacity .12s ease, box-shadow .12s ease;
+  transition: opacity .10s ease, box-shadow .10s ease;
 }
 
 /* ==========================================================
-   Text
+   Text: 16px, left aligned, single line
    ========================================================== */
 .menu-button.no-icon .menu-text{
   position: relative;
@@ -661,17 +661,16 @@ footer {
 }
 
 /* ==========================================================
-   Interaction: RED stamp only (no red border)
+   Interaction: RED stamp only (NO red border)
+   - hover: desktop
+   - active: mobile press
+   - .stamp-pressed: JS 延遲換頁期間維持紅章
    ========================================================== */
 
-/* 讓 div 可 focus（需 script.js 加 tabindex） */
-.menu-button.no-icon:focus{ outline: none; }
-
-/* hover / active / focus：換成紅章，但外框不變色 */
+/* 紅章：只吃 hover / active / pressed class（不吃 focus，避免換頁續紅） */
 .menu-button.no-icon:hover::before,
 .menu-button.no-icon:active::before,
-.menu-button.no-icon:focus::before,
-.menu-button.no-icon:focus-visible::before{
+.menu-button.no-icon.stamp-pressed::before{
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
@@ -682,11 +681,11 @@ footer {
     inset 0 0 0 calc(var(--seal) * 0.22) rgba(198,40,40,.12);
 }
 
-/* 保證外框永遠維持官方藍灰，不因互動變紅 */
+/* 外框：永遠維持原樣（互動不變紅） */
 .menu-button.no-icon:hover,
 .menu-button.no-icon:active,
-.menu-button.no-icon:focus,
-.menu-button.no-icon:focus-visible{
+.menu-button.no-icon.stamp-pressed{
   border-color: var(--border-main);
   box-shadow: 0 1px 6px rgba(0,0,0,.05);
 }
+

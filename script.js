@@ -137,26 +137,28 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
-        {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
-        {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
-        {file: "elections/J/J2018-A16.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第16案（廢止電業法非核家園條文）",summaryData: null},
-        {file: "elections/J/J2018-A15.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第15案（國中小性平教育明定入法）",summaryData: null},
-        {file: "elections/J/J2018-A14.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第14案（以民法保障同性婚姻）",summaryData: null},
-        {file: "elections/J/J2018-A13.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第13案（東奧台灣正名）",summaryData: null},
-        {file: "elections/J/J2018-A12.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第12案（非民法保障同性共同生活）",summaryData: null},
-        {file: "elections/J/J2018-A11.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第11案（國中小不實施同志教育）",summaryData: null},
-        {file: "elections/J/J2018-A10.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第10案（民法婚姻限定一男一女）",summaryData: null},
-        {file: "elections/J/J2018-A09.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第09案（反日本核食進口）",summaryData: null},
-        {file: "elections/J/J2018-A08.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第08案（反燃煤發電）",summaryData: null},
-        {file: "elections/J/J2018-A07.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第07案（反空污）",summaryData: null},
-        {file: "elections/J/J2008-A06.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第06案（務實返聯）",summaryData: null},
-        {file: "elections/J/J2008-A05.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第05案（台灣入聯）",summaryData: null},
-        {file: "elections/J/J2008-A04.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第04案（反貪腐）",summaryData: null},
-        {file: "elections/J/J2008-A03.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第03案（討黨產）",summaryData: null},
-        {file: "elections/J/J2004-A02.csv", year: "2004", type: "全國性公民投票", uiName: "2004年 全國性公投第02案（對等談判）",summaryData: null},
-        {file: "elections/J/J2004-A01.csv", year: "2004", type: "全國性公民投票", uiName: "2004年 全國性公投第01案（強化國防）",summaryData: null},
+        {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 東門里長選舉",summaryData: null},
 
-        {file: "elections/K/K2006-01.csv",year: "2006",type: "地方性公民投票",uiName: "2006年 地方性公投第1案（觀光博弈）",summaryData: null}
+        {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公投", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
+        {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公投", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
+        {file: "elections/J/J2018-A16.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第16案（廢止電業法非核家園條文）",summaryData: null},
+        {file: "elections/J/J2018-A15.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第15案（國中小性平教育明定入法）",summaryData: null},
+        {file: "elections/J/J2018-A14.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第14案（以民法保障同性婚姻）",summaryData: null},
+        {file: "elections/J/J2018-A13.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第13案（東奧台灣正名）",summaryData: null},
+        {file: "elections/J/J2018-A12.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第12案（非民法保障同性共同生活）",summaryData: null},
+        {file: "elections/J/J2018-A11.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第11案（國中小不實施同志教育）",summaryData: null},
+        {file: "elections/J/J2018-A10.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第10案（民法婚姻限定一男一女）",summaryData: null},
+        {file: "elections/J/J2018-A09.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第09案（反日本核食進口）",summaryData: null},
+        {file: "elections/J/J2018-A08.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第08案（反燃煤發電）",summaryData: null},
+        {file: "elections/J/J2018-A07.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第07案（反空污）",summaryData: null},
+        {file: "elections/J/J2008-A06.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第06案（務實返聯）",summaryData: null},
+        {file: "elections/J/J2008-A05.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第05案（台灣入聯）",summaryData: null},
+        {file: "elections/J/J2008-A04.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第04案（反貪腐）",summaryData: null},
+        {file: "elections/J/J2008-A03.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第03案（討黨產）",summaryData: null},
+        {file: "elections/J/J2004-A02.csv", year: "2004", type: "全國性公投", uiName: "2004年 全國性公投第02案（對等談判）",summaryData: null},
+        {file: "elections/J/J2004-A01.csv", year: "2004", type: "全國性公投", uiName: "2004年 全國性公投第01案（強化國防）",summaryData: null},
+
+        {file: "elections/K/K2006-01.csv",year: "2006",type: "地方性公投",uiName: "2006年 地方性公投第1案（觀光博弈）",summaryData: null}
 
     
 
@@ -184,8 +186,8 @@ const ELECTION_LEVEL_RULES = {
     "鄉鎮長":     { minLevel: ADMIN_LEVEL.TOWN,   maxLevel: ADMIN_LEVEL.VILLAGE },
     "鄉鎮民代表": { minLevel: ADMIN_LEVEL.TOWN,   maxLevel: ADMIN_LEVEL.VILLAGE },
     "村里長":     { minLevel: ADMIN_LEVEL.VILLAGE,maxLevel: ADMIN_LEVEL.VILLAGE },
-    "全國性公民投票": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE },
-    "地方性公民投票": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE }
+    "全國性公投": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE },
+    "地方性公投": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE }
 };
 
 // =========================
@@ -1279,12 +1281,12 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button no-icon" onclick="renderElectionList('全國性公民投票', true)">
-                    <span class="menu-text">全國性公民投票</span>
+                   <div class="menu-button no-icon" onclick="renderElectionList('全國性公投', true)">
+                    <span class="menu-text">全國性公投</span>
                 </div>
 
-                <div class="menu-button no-icon" onclick="renderElectionList('地方性公民投票', true)">
-                    <span class="menu-text">地方性公民投票</span>
+                <div class="menu-button no-icon" onclick="renderElectionList('地方性公投', true)">
+                    <span class="menu-text">地方性公投</span>
                 </div>
 
             </div>
@@ -1790,7 +1792,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
              html += `<span class="active">${appState.currentTownshipName}</span>`;
         }
         else if (level === 'electionList') {
-            if (['全國性公民投票', '地方性公民投票'].includes(appState.currentTown)) {
+            if (['全國性公投', '地方性公投'].includes(appState.currentTown)) {
                 html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
                 html += `<span class="active">${appState.currentTown}</span>`;
             } else if (['區域立委', '不分區立委'].includes(appState.currentTown)) {
@@ -1815,7 +1817,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         }
         html += `<span class="active">${appState.electionName}</span>`;
     } else {
-        if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
+        if (['全國性公投', '地方性公投'].includes(electionType)) {
              html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
              html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
         } else if (['區域立委', '不分區立委'].includes(electionType)) {
@@ -1844,7 +1846,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
          html += `<span class="active">${appState.electionName}</span>`;
      } else {
          // 其他類型：維持既有路徑（公投 / 立委有上層分類）
-         if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
+         if (['全國性公投', '地方性公投'].includes(electionType)) {
              html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
              html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
          } else if (['區域立委', '不分區立委'].includes(electionType)) {
@@ -1878,7 +1880,7 @@ else if (level === 'village') {
     }
     else {
         // 其他類型：維持既有路徑（公投 / 立委有上層分類）
-        if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
+        if (['全國性公投', '地方性公投'].includes(electionType)) {
             html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
             html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
         } else if (['區域立委', '不分區立委'].includes(electionType)) {
@@ -2205,3 +2207,46 @@ dom.breadcrumb.innerHTML = html;
                  updateUrl(state, "金門選舉資料庫 - 首頁", "?view=main", false);     renderMainMenu(false);}
         });
     })();
+
+// === Stamp-then-navigate (mobile-friendly) ==============================
+// Show active state briefly before navigation; avoids focus carry-over.
+// Delay ~140ms for tactile feedback.
+(function(){
+  const DELAY_MS = 140;
+
+  function handle(e){
+    const btn = e.target.closest('.menu-button');
+    if(!btn) return;
+
+    // Only intercept left-click / tap
+    if (e.type === 'click') {
+      // Prevent immediate inline onclick execution
+      e.stopImmediatePropagation();
+      e.preventDefault();
+
+      // Visual press state
+      btn.classList.add('pressed');
+
+      // Execute the original onclick after a short delay
+      const handler = btn.getAttribute('onclick');
+      if (handler) {
+        setTimeout(() => {
+          try {
+            // Clear focus to avoid carry-over
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+              document.activeElement.blur();
+            }
+            // Run inline handler
+            (new Function(handler))();
+          } finally {
+            btn.classList.remove('pressed');
+          }
+        }, DELAY_MS);
+      }
+    }
+  }
+
+  // Capture phase to beat inline onclick
+  document.addEventListener('click', handle, true);
+})();
+// ========================================================================
