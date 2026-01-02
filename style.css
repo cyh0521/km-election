@@ -46,33 +46,49 @@ h1 span { cursor: pointer; }
 }
 
 /* =========================
-   主選單按鈕（新版：無內框圖示／字章水印風）
-   - 不再出現「按鈕裡面又一個框框＋圖示」的感覺
-   - menu-icon 變成右上角的「低透明水印字章」
+   主選單按鈕（切角票券感：無箭頭、無內框圖示）
    ========================= */
 
-.menu-button{
+.menu-button {
     position: relative;
     overflow: hidden;
 
+    /* 票券紙感：乾淨底＋極淡紋理 */
     background:
-        radial-gradient(900px 260px at 15% 0%,
-            rgba(56, 135, 176, 0.14) 0%,
-            rgba(56, 135, 176, 0.06) 38%,
-            rgba(255, 255, 255, 0.0) 70%),
-        linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.025) 100%);
+        radial-gradient(circle at 18% 22%, rgba(56, 135, 176, 0.10) 0%, rgba(56, 135, 176, 0.00) 55%),
+        linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.03) 100%);
     border: 1px solid rgba(225, 228, 232, 0.95);
-    border-radius: 14px;
 
-    padding: 18px 18px 16px;
+    /* 切角票券 */
+    border-radius: 12px;
+    -webkit-clip-path: polygon(
+        14px 0,
+        calc(100% - 14px) 0,
+        100% 14px,
+        100% calc(100% - 14px),
+        calc(100% - 14px) 100%,
+        14px 100%,
+        0 calc(100% - 14px),
+        0 14px
+    );
+    clip-path: polygon(
+        14px 0,
+        calc(100% - 14px) 0,
+        100% 14px,
+        100% calc(100% - 14px),
+        calc(100% - 14px) 100%,
+        14px 100%,
+        0 calc(100% - 14px),
+        0 14px
+    );
+
+    padding: 18px 18px;
     text-align: left;
-
-    font-size: 16px;
-    font-weight: 650;
-    color: var(--secondary);
     cursor: pointer;
 
+    color: var(--secondary);
     box-shadow: 0 2px 10px rgba(44, 62, 80, 0.06);
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease,
@@ -80,132 +96,124 @@ h1 span { cursor: pointer; }
         background 0.2s ease;
 }
 
-/* 左側「節奏線」：讓按鈕有識別度但不浮誇 */
-.menu-button::before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
-    width:4px;
-    background: linear-gradient(180deg,
-        rgba(56, 135, 176, 0.0) 0%,
-        rgba(56, 135, 176, 0.55) 35%,
-        rgba(56, 135, 176, 0.0) 100%);
-    opacity: 0.55;
-    transform: translateX(-1px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-/* 右下角引導箭頭：暗示可點 */
-.menu-button::after{
-    content:"➜";
-    position:absolute;
-    right: 14px;
+/* 票券「齒孔/打孔」縫線：放在左側，不做箭頭 */
+.menu-button::after {
+    content: "";
+    position: absolute;
+    top: 12px;
     bottom: 12px;
-    font-size: 18px;
-    line-height: 1;
-    color: var(--primary);
-    opacity: 0.14;
-    transform: translateX(-6px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events:none;
+    left: 16px;
+    width: 1px;
+    opacity: 0.55;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(56, 135, 176, 0.00) 0px,
+        rgba(56, 135, 176, 0.00) 5px,
+        rgba(56, 135, 176, 0.35) 5px,
+        rgba(56, 135, 176, 0.35) 7px
+    );
+    pointer-events: none;
 }
 
-/* 「字章水印」：把 menu-icon 當成裝飾，不再是框框圖示 */
-.menu-icon{
-    position:absolute;
-    right: 14px;
-    top: 10px;
+/* 淡淡的光影掃過（品牌感） */
+.menu-button::before {
+    content: "";
+    position: absolute;
+    inset: -35% -20%;
+    background: radial-gradient(circle at 30% 20%,
+        rgba(56, 135, 176, 0.14) 0%,
+        rgba(56, 135, 176, 0.07) 24%,
+        rgba(56, 135, 176, 0.00) 60%);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+}
 
+/* 不做「內框＋圖示」，改成右上角水印字章 */
+.menu-icon {
+    position: absolute;
+    right: 14px;
+    top: 12px;
+
+    display: block;
     width: auto;
     height: auto;
+
+    background: transparent;
+    border: none;
     border-radius: 0;
 
-    background: none;
-    border: none;
-
-    padding: 0;
-    margin: 0;
-
-    font-size: 40px;
-    font-weight: 850;
-    letter-spacing: -1px;
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.8px;
     line-height: 1;
 
     color: var(--primary);
     opacity: 0.12;
+    transform: rotate(-8deg);
 
-    transform: rotate(8deg) translateY(0);
-    transform-origin: 100% 0%;
+    pointer-events: none;
+    user-select: none;
+
     transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events:none;
 }
 
-/* 主要文字 */
-.menu-text{
-    display:block;
+.menu-text {
+    display: block;
     font-size: 16px;
-    font-weight: 750;
+    font-weight: 800;
     letter-spacing: 0.2px;
-    padding-left: 6px; /* 跟左側節奏線拉開一點點距離 */
+
+    /* 讓左側縫線有呼吸空間 */
+    padding-left: 18px;
+    padding-right: 44px;
 }
 
 /* Hover（桌機） */
-.menu-button:hover{
+.menu-button:hover {
     transform: translateY(-4px);
     border-color: rgba(56, 135, 176, 0.55);
-    box-shadow: 0 12px 26px rgba(56, 135, 176, 0.16);
+    box-shadow: 0 12px 24px rgba(56, 135, 176, 0.18);
 }
 
-.menu-button:hover::before{
-    opacity: 0.9;
-    transform: translateX(0);
+.menu-button:hover::before {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.menu-button:hover::after{
-    opacity: 0.32;
-    transform: translateX(0);
-}
-
-.menu-button:hover .menu-icon{
+.menu-button:hover .menu-icon {
     opacity: 0.18;
-    transform: rotate(6deg) translateY(-1px);
+    transform: rotate(-10deg) translateY(-1px);
 }
 
-/* Focus（鍵盤可用性） */
-.menu-button:focus-visible{
-    outline: 3px solid rgba(56, 135, 176, 0.30);
+/* Focus（鍵盤） */
+.menu-button:focus-visible {
+    outline: 3px solid rgba(56, 135, 176, 0.35);
     outline-offset: 3px;
 }
 
-/* Active（手機點按回饋） */
-.menu-button:active{
+/* Active（手機點按/滑鼠按住） */
+.menu-button:active {
     transform: translateY(-1px);
-    box-shadow: 0 7px 18px rgba(56, 135, 176, 0.14);
+    box-shadow: 0 7px 16px rgba(56, 135, 176, 0.16);
 }
 
-.menu-button:active .menu-icon{
-    opacity: 0.20;
-    transform: rotate(6deg) translateY(0);
+/* 手機：縮小一點但保持票券切角 */
+@media (max-width: 768px) {
+    .menu-button { padding: 16px 12px; border-radius: 12px; }
+    .menu-button::after { left: 14px; top: 10px; bottom: 10px; }
+    .menu-icon { font-size: 30px; right: 12px; top: 10px; }
+    .menu-text { font-size: 14px; padding-left: 16px; padding-right: 40px; }
 }
 
-/* 手機版微調 */
-@media (max-width: 768px){
-    .menu-button{ padding: 16px 14px 14px; border-radius: 12px; }
-    .menu-icon{ font-size: 34px; right: 12px; top: 10px; }
-    .menu-text{ font-size: 14px; }
-}
-
-/* 降低動態偏好 */
-@media (prefers-reduced-motion: reduce){
-    .menu-button,
-    .menu-button::before,
-    .menu-button::after,
-    .menu-icon{
+/* 減少動態偏好 */
+@media (prefers-reduced-motion: reduce) {
+    .menu-button, .menu-button::before, .menu-button::after, .menu-icon {
         transition: none !important;
     }
 }
+
 
 .menu-section-title {
     font-size: 24px;
