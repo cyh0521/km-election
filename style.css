@@ -502,93 +502,89 @@ footer {
 }
 
 /* =================================================
-   Official Election Style – Formal / Governmental
-   適用：全部 no-icon 的首頁與子分類按鈕
+   Official v2 – Left Seal + TW Voting Stamp (Rubber)
    ================================================= */
 
 .menu-button.no-icon{
   position: relative;
-  padding: 26px 20px 22px 20px;
-  text-align: left;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  padding: 22px 18px 20px 18px;
+  background: #fff;
+  border: 1px solid rgba(225,228,232,0.95);
+  border-radius: 12px;
   box-shadow: 0 1px 6px rgba(0,0,0,.05);
   overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  transition: border-color .18s ease, box-shadow .18s ease;
 }
 
-/* ---------- 主標題 ---------- */
-.menu-button.no-icon .menu-text{
-  position: relative;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: .3px;
-  color: var(--secondary);
-  padding-left: 44px; /* 留給左側選票符號 */
-  line-height: 1.25;
-}
-
-/* ---------- 左側：選票符號（正式線條） ---------- */
-.menu-button.no-icon::before{
-  content:"";
-  position:absolute;
-  left:18px;
-  top:22px;
-  width:22px;
-  height:28px;
-  border:2px solid rgba(56,135,176,.45);
-  border-radius:4px;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(56,135,176,.18) 0%,
-      rgba(56,135,176,.18) 4px,
-      transparent 4px,
-      transparent 9px,
-      rgba(56,135,176,.18) 9px,
-      rgba(56,135,176,.18) 13px,
-      transparent 13px
-    );
-  opacity:.9;
-}
-
-/* ---------- 勾選符號（很淡，不搶戲） ---------- */
-.menu-button.no-icon .menu-text::before{
-  content:"";
-  position:absolute;
-  left:23px;
-  top:30px;
-  width:6px;
-  height:12px;
-  border-right:3px solid rgba(56,135,176,.6);
-  border-bottom:3px solid rgba(56,135,176,.6);
-  transform: rotate(45deg);
-}
-
-/* ---------- 右下角：票匭輪廓（背景水印） ---------- */
+/* ───── 淡格線水印（文件感） ───── */
 .menu-button.no-icon::after{
   content:"";
   position:absolute;
-  right:-30px;
-  bottom:-34px;
-  width:160px;
-  height:160px;
-  border-radius:18px;
-  border:2px solid rgba(56,135,176,.18);
-  box-sizing:border-box;
-  opacity:.35;
+  inset:0;
+  background-image:
+    linear-gradient(to right, rgba(56,135,176,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56,135,176,0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity:.55;
+  pointer-events:none;
 }
 
-/* ---------- Hover（正式＝很克制） ---------- */
-.menu-button.no-icon:hover{
-  border-color: rgba(56,135,176,.45);
-  box-shadow: 0 6px 16px rgba(56,135,176,.12);
+/* ───── 左上：官方圓章底（平時） ───── */
+.menu-button.no-icon::before{
+  content:"";
+  position:absolute;
+  left:14px;
+  top:14px;
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  box-shadow:
+    inset 0 0 0 2px rgba(56,135,176,.35),
+    inset 0 0 0 9px rgba(56,135,176,.10);
+  background: rgba(255,255,255,.6);
+  pointer-events:none;
+  transition: box-shadow .18s ease;
 }
 
+/* ───── 標題 ───── */
+.menu-button.no-icon .menu-text{
+  position: relative;
+  padding-left: 56px;
+  font-size: 16px;
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: var(--secondary);
+  line-height: 1.25;
+}
+
+/* 抬頭線 */
+.menu-button.no-icon .menu-text::after{
+  content:"";
+  position:absolute;
+  left:56px;
+  top:-10px;
+  width:120px;
+  border-top:2px solid rgba(56,135,176,.2);
+}
+
+/* =================================================
+   Hover：在左上圓章上「蓋」投票章
+   ================================================= */
+
+/* 投票章疊加層 */
 .menu-button.no-icon:hover::before{
-  border-color: rgba(56,135,176,.65);
-}
+  /* 疊加紅色投票章 SVG */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23D32F2F' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size: 38px 38px;
 
-.menu-button.no-icon:hover::after{
-  opacity:.5;
-}
+  /* 橡皮章質感 */
+  filter: blur(0.3px) saturate(1.05);
+  mix-blend-mode: multiply;
+
+  /* 印泥不均勻 */
+  opacity: .8
