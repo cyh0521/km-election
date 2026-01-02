@@ -402,6 +402,14 @@ function isCountyPseudoTownName(name) {
         return longNamesMap[party] || longNamesMap[key] || party; 
     }
 
+    // ================= UI 元件：選舉按鈕通用圖示（不使用兩字縮寫） =================
+    const ELECTION_ICON_SVG = `<svg class="election-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <path d="M8 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M4 12h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M9 16l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+
 
     const dom = {
         content: document.getElementById("content"),
@@ -1225,9 +1233,8 @@ function extractCountySummary(text) {
              clickAction = `renderElectionList('${cat.type}', true)`;
         }
 
-        html += `<div class="menu-button stamp-btn" onclick="${clickAction}">
-            <span class="stamp-btn__stamp" aria-hidden="true"></span>
-            <span class="menu-icon">${cat.icon}</span>
+        html += `<div class="menu-button election-btn" onclick="${clickAction}">
+            <span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span>
             <span class="menu-text">${cat.type}</span>
         </div>`;
     });
@@ -1281,14 +1288,12 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button stamp-btn" onclick="renderElectionList('全國性公民投票', true)">
-                    <span class="stamp-btn__stamp" aria-hidden="true"></span>
-                    <span class="menu-icon">全國</span> <span class="menu-text">全國性公民投票</span>
+                   <div class="menu-button election-btn" onclick="renderElectionList('全國性公民投票', true)">
+                    <span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span> <span class="menu-text">全國性公民投票</span>
                 </div>
 
-                <div class="menu-button stamp-btn" onclick="renderElectionList('地方性公民投票', true)">
-                    <span class="stamp-btn__stamp" aria-hidden="true"></span>
-                    <span class="menu-icon">地方</span> <span class="menu-text">地方性公民投票</span>
+                <div class="menu-button election-btn" onclick="renderElectionList('地方性公民投票', true)">
+                    <span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span> <span class="menu-text">地方性公民投票</span>
                 </div>
 
             </div>
@@ -1322,13 +1327,11 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇立委類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button stamp-btn" onclick="renderElectionList('區域立委', true)">
-                    <span class="stamp-btn__stamp" aria-hidden="true"></span>
+                   <div class="menu-button" onclick="renderElectionList('區域立委', true)">
                     <span class="menu-icon">區域</span> <span class="menu-text">區域立委</span>
                 </div>
 
-                <div class="menu-button stamp-btn" onclick="renderElectionList('不分區立委', true)">
-                    <span class="stamp-btn__stamp" aria-hidden="true"></span>
+                <div class="menu-button" onclick="renderElectionList('不分區立委', true)">
                     <span class="menu-icon">政黨</span> <span class="menu-text">不分區立委</span>
                 </div>
 
@@ -1369,10 +1372,9 @@ function extractCountySummary(text) {
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
-            html += `<div class="menu-button stamp-btn" onclick="renderElectionListByTown('${type}', '${t}', true)">
-            <span class="stamp-btn__stamp" aria-hidden="true"></span>
-            <span class="menu-icon">${t.slice(0,1)}</span>
-            <span class="menu-text">${t}</span>
+            html += `<div class="menu-button election-btn" onclick="renderElectionListByTown('${type}', '${t}', true)">
+<span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span>
+<span class="menu-text">${t}</span>
             </div>`;
         });
 

@@ -61,7 +61,7 @@ h1 span { cursor: pointer; }
 }
 
 /* --- 滑鼠懸停效果 (Hover) --- */
-.menu-button:not(.stamp-btn):hover .menu-icon {
+.menu-button:hover .menu-icon {
     background-color: var(--primary); /* 背景變深色 */
     color: white;                     /* 文字變白色 */
     transform: scale(1.1) rotate(-5deg); /* 微微放大並旋轉一點點，增加趣味性 */
@@ -503,127 +503,138 @@ footer {
 
 
 /* =========================
-   新版扁平章戳按鈕（套用於主選單＋子分類）
-   使用：<div class="menu-button stamp-btn"> ... <span class="stamp-btn__stamp"></span> ...
+   2026-01 新版：選舉概念扁平按鈕（套用到首頁 + 子分類）
+   - 移除兩字圖示，改用通用選票 SVG
+   - 扁平、簡約、帶微動畫（hover/active）
    ========================= */
 
-.menu-button.stamp-btn{
+.menu-button{
     position: relative;
     overflow: hidden;
 
-    /* 扁平：弱陰影、清爽邊框 */
+    /* 扁平外觀 */
     border-radius: 12px;
+    border: 1px solid var(--border);
     box-shadow: none;
+    background: #ffffff;
 
-    /* 版面：左對齊，讓文字長短更穩 */
+    /* 版面：內容靠左更像「功能按鈕」 */
     text-align: left;
-    padding: 16px 18px;
+    align-items: flex-start;
 
-    /* 輕薄的底色層次（仍屬扁平風格） */
-    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
-
+    /* 微過渡 */
     transition:
         transform .18s ease,
         border-color .18s ease,
         background .18s ease;
 }
 
-/* 右上角「章戳」：淡色、不粗，靠動態傳達存在感 */
-.stamp-btn__stamp{
+/* 右上角淡淡的「章戳點」：不搶戲但有選舉感（像蓋章/認證） */
+.menu-button::after{
+    content: "";
     position: absolute;
     top: 12px;
     right: 12px;
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     border-radius: 999px;
-
-    background: rgba(56, 135, 176, 0.14);
-    border: 1px solid rgba(56, 135, 176, 0.22);
-    box-shadow: inset 0 0 0 3px rgba(56, 135, 176, 0.06);
-
+    background: rgba(56, 135, 176, 0.10);
+    border: 1px solid rgba(56, 135, 176, 0.18);
+    box-shadow: inset 0 0 0 3px rgba(56, 135, 176, 0.05);
     transform: translateX(0) rotate(0deg);
     transition: transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
     opacity: .95;
 }
 
-/* 圖示：改成扁平小方塊（若某些子分類 icon 是單字，仍能穩定呈現） */
-.menu-button.stamp-btn .menu-icon{
+/* 圖示：統一使用 SVG（選票/票匭/勾選） */
+.menu-icon.election-icon{
     width: 44px;
     height: 44px;
     border-radius: 10px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background: rgba(56, 135, 176, 0.10);
     color: var(--primary);
 
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-
     margin: 0 0 10px 0;
-    transition: transform .22s cubic-bezier(.2,.8,.2,1), background .22s ease, color .22s ease;
+
+    transition:
+        transform .22s cubic-bezier(.2,.8,.2,1),
+        background .22s ease,
+        color .22s ease;
 }
 
-/* 文字：保留原本字級，但加上位移動畫 */
-.menu-button.stamp-btn .menu-text{
+.menu-icon.election-icon .election-svg{
+    width: 22px;
+    height: 22px;
     display: block;
-    font-size: 16px;
+}
+
+/* 文字 */
+.menu-text{
+    display: block;
     font-weight: 700;
-    color: var(--secondary);
     transition: transform .22s cubic-bezier(.2,.8,.2,1), color .22s ease;
 }
 
-/* Hover：文字往左、icon 往右、章戳微移 → “交錯移動” */
-.menu-button.stamp-btn:hover{
-    border-color: rgba(56, 135, 176, 0.35);
-    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+/* Hover：文字往左、圖示往右、章戳微旋轉（交錯移動） */
+.menu-button:hover{
+    border-color: rgba(56, 135, 176, 0.32);
+    background: #fbfdff;
     transform: translateY(-1px);
 }
 
-.menu-button.stamp-btn:hover .stamp-btn__stamp{
-    transform: translateX(-8px) translateY(2px) rotate(-8deg);
+.menu-button:hover::after{
+    transform: translateX(-8px) rotate(-8deg);
     opacity: 1;
 }
 
-.menu-button.stamp-btn:hover .menu-icon{
+.menu-button:hover .menu-icon.election-icon{
     transform: translateX(6px);
     background: rgba(56, 135, 176, 0.14);
     color: #1f6fb2;
 }
 
-.menu-button.stamp-btn:hover .menu-text{
+.menu-button:hover .menu-text{
     transform: translateX(-4px);
 }
 
-/* 手機點按回饋 */
-.menu-button.stamp-btn:active{
+/* 手機點按：立即回饋 */
+.menu-button:active{
     transform: translateY(0px) scale(0.995);
 }
 
-.menu-button.stamp-btn:active .stamp-btn__stamp{
-    transform: translateX(-10px) translateY(3px) rotate(-10deg);
+.menu-button:active::after{
+    transform: translateX(-10px) rotate(-10deg);
 }
 
-.menu-button.stamp-btn:active .menu-icon{
+.menu-button:active .menu-icon.election-icon{
     transform: translateX(8px);
 }
 
-/* 手機版微調 */
+/* 手機尺寸微調 */
 @media (max-width: 768px){
-    .menu-button.stamp-btn{
-        padding: 14px 14px;
+    .menu-button{
         border-radius: 12px;
     }
-    .menu-button.stamp-btn .menu-icon{
+    .menu-icon.election-icon{
         width: 40px;
         height: 40px;
         border-radius: 10px;
-        font-size: 15px;
         margin-bottom: 8px;
     }
-    .stamp-btn__stamp{
-        width: 30px;
-        height: 30px;
+    .menu-icon.election-icon .election-svg{
+        width: 20px;
+        height: 20px;
+    }
+    .menu-button::after{
+        width: 28px;
+        height: 28px;
         top: 10px;
         right: 10px;
     }
 }
+
