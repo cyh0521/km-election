@@ -669,7 +669,6 @@ footer {
 
 /* 紅章：只吃 hover / active / pressed class（不吃 focus，避免換頁續紅） */
 .menu-button.no-icon:hover::before,
-.menu-button.no-icon:active::before,
 .menu-button.no-icon.stamp-pressed::before{
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
@@ -689,24 +688,39 @@ footer {
   box-shadow: 0 1px 6px rgba(0,0,0,.05);
 }
 
-/* === Patch: prevent red stamp carry-over after navigation ===
-   Use .pressed (set by JS) + :hover/:active only. Do NOT use :focus states.
-*/
-.menu-button.no-icon:hover::before,
-.menu-button.no-icon:active::before,
-.menu-button.no-icon.stamp-pressed::before{
-  /* Red stamp (same SVGs as final) */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
-  opacity: .95;
-  box-shadow:
-    inset 0 0 0 2px rgba(198,40,40,.65),
-    inset 0 0 0 calc(var(--seal) * 0.22) rgba(198,40,40,.12);
+
+
+/* === Patch: prevent-touch-active-carryover ==============================
+   On touch screens, :active may transfer to the next view element under the finger.
+   Strategy:
+   - Use JS class .stamp-pressed for tap feedback
+   - Keep :hover for desktop
+   - Limit :active to fine pointers only
+   - Neutralize :active for coarse pointers
+   ======================================================================= */
+
+@media (hover: hover) and (pointer: fine){
+  /* Allow :active only on mouse/trackpad devices */
+  .menu-button.no-icon:active::before{
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: .95;
+    box-shadow:
+      inset 0 0 0 2px rgba(198,40,40,.65),
+      inset 0 0 0 calc(var(--seal) * 0.22) rgba(198,40,40,.12);
+  }
 }
 
-/* Explicitly neutralize focus-triggered red stamp if older rules exist */
-.menu-button.no-icon:focus::before,
-.menu-button.no-icon:focus-visible::before{
-  /* do nothing special; keep whatever non-hover state is */
+@media (hover: none) and (pointer: coarse){
+  /* Touch devices: neutralize :active so it can't carry over to next view */
+  .menu-button.no-icon:active::before{
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%236F8FA3' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%236F8FA3' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: .68;
+    box-shadow:
+      inset 0 0 0 2px rgba(56,135,176,.30),
+      inset 0 0 0 calc(var(--seal) * 0.20) rgba(56,135,176,.08);
+  }
 }
