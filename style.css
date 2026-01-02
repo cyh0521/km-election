@@ -501,23 +501,36 @@ footer {
     padding-top: 20px;
 }
 
-/* =================================================
-   Official v2 – Left Seal + TW Voting Stamp (Rubber)
-   ================================================= */
+/* ==========================================================
+   Unified Official v2 + TW Voting Stamp (no blur, no tilt)
+   Works from iPhone SE (320px) to Desktop
+   Target: .menu-button.no-icon
+   ========================================================== */
 
 .menu-button.no-icon{
+  /* Responsive sizing knobs */
+  --pad-x: clamp(10px, 3.2vw, 18px);
+  --pad-y: clamp(14px, 2.6vw, 22px);
+  --seal:  clamp(28px, 8vw, 42px);
+  --seal-inset: clamp(8px, 2.4vw, 14px);
+  --indent: calc(var(--seal) + 16px); /* text left padding */
+  --grid: clamp(18px, 5vw, 22px);
+
   position: relative;
-  padding: 22px 18px 20px 18px;
+  padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - 2px) var(--pad-x);
   background: #fff;
   border: 1px solid rgba(225,228,232,0.95);
   border-radius: 12px;
   box-shadow: 0 1px 6px rgba(0,0,0,.05);
   overflow: hidden;
+
+  /* 公文切角（保持 v2 的官方感） */
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+
   transition: border-color .18s ease, box-shadow .18s ease;
 }
 
-/* ───── 淡格線水印（文件感） ───── */
+/* 背景：淡格線水印（統計表/文件感） */
 .menu-button.no-icon::after{
   content:"";
   position:absolute;
@@ -525,133 +538,102 @@ footer {
   background-image:
     linear-gradient(to right, rgba(56,135,176,0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(56,135,176,0.05) 1px, transparent 1px);
-  background-size: 22px 22px;
+  background-size: var(--grid) var(--grid);
   opacity:.55;
   pointer-events:none;
+  transition: opacity .18s ease;
 }
 
-/* ───── 左上：官方圓章底（平時） ───── */
+/* 左上：官方圓章底（平時） */
 .menu-button.no-icon::before{
   content:"";
   position:absolute;
-  left:14px;
-  top:14px;
-  width:42px;
-  height:42px;
-  border-radius:999px;
+  left: var(--seal-inset);
+  top:  var(--seal-inset);
+  width: var(--seal);
+  height: var(--seal);
+  border-radius: 999px;
+
+  /* 藍色官方章底 */
+  background: rgba(255,255,255,.6);
   box-shadow:
     inset 0 0 0 2px rgba(56,135,176,.35),
-    inset 0 0 0 9px rgba(56,135,176,.10);
-  background: rgba(255,255,255,.6);
+    inset 0 0 0 calc(var(--seal) * 0.22) rgba(56,135,176,.10);
+
   pointer-events:none;
-  transition: box-shadow .18s ease;
+  transition: box-shadow .18s ease, opacity .18s ease;
 }
 
-/* ───── 標題 ───── */
+/* 文字：16px、靠左、強制單行（不截斷） */
 .menu-button.no-icon .menu-text{
   position: relative;
-  padding-left: 56px;
+  display: block;
+  padding-left: var(--indent);
   font-size: 16px;
-  text-align: left;
   font-weight: 700;
-  letter-spacing: .2px;
+  letter-spacing: .15px;
   color: var(--secondary);
   line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;   /* ✅ 「鄉鎮民代表」保持一行 */
 }
 
-/* 抬頭線 */
+/* 抬頭線：桌機/平板保留，手機自動縮短、必要時淡出 */
 .menu-button.no-icon .menu-text::after{
   content:"";
   position:absolute;
-  left:56px;
-  top:-10px;
-  width:120px;
-  border-top:2px solid rgba(56,135,176,.2);
+  left: var(--indent);
+  top: -10px;
+  width: clamp(64px, 22vw, 120px);
+  border-top: 2px solid rgba(56,135,176,.20);
+  opacity: .9;
 }
 
-/* ───── Hover：左上圓章蓋上投票章（乾淨不均版） ───── */
+/* iPhone SE 等極窄螢幕：抬頭線淡出（不佔視覺、也避免擠字） */
+@media (max-width: 360px){
+  .menu-button.no-icon .menu-text::after{ opacity: .35; }
+}
+
+/* =========================
+   Hover：在左上圓章上蓋投票章
+   - 不模糊、不歪斜
+   - 用「雙層章（不同透明度）+ 不均勻內圈」做印泥感
+   ========================= */
+
+/* hover 整體高亮：克制 */
+.menu-button.no-icon:hover{
+  border-color: rgba(198,40,40,.45);
+  box-shadow: 0 10px 22px rgba(198,40,40,.14);
+}
+.menu-button.no-icon:hover::after{
+  opacity:.70; /* 水印略清楚 */
+}
+
+/* hover 左上圓章：疊兩層 stamp（第二層內建較淡 stroke-opacity） */
 .menu-button.no-icon:hover::before{
-  /* 主章：清晰、不旋轉 */
+  /* 兩層 SVG：第一層正常、第二層較淡並微位移（用 background-position） */
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size: 38px 38px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat;
 
-  /* 印泥主層 */
-  opacity: .88;
+  /* 章大小跟著圓章走（內縮一點避免撞到邊） */
+  background-size:
+    calc(var(--seal) * 0.78) calc(var(--seal) * 0.78),
+    calc(var(--seal) * 0.78) calc(var(--seal) * 0.78);
+
+  /* 第二層微位移：造成「印泥不均 + 二次壓印」的視覺錯覺 */
+  background-position:
+    center,
+    calc(50% + 1px) calc(50% + 1px);
+
+  /* 疊色更像印泥壓印（不模糊、不歪斜） */
   mix-blend-mode: multiply;
+  opacity: .95;
 
-  /* 邊緣吃色不一致（模擬印泥多寡） */
+  /* 印泥不均：圓章內圈吃色層次（更強烈但乾淨） */
   box-shadow:
     inset 0 0 0 2px rgba(198,40,40,.70),
-    inset 0 0 0 6px rgba(198,40,40,.18),
-    inset 0 0 0 11px rgba(198,40,40,.08);
-}
-
-/* 副章：輕微位移、但不旋轉、不模糊 */
-.menu-button.no-icon:hover::after{
-  content:"";
-  position:absolute;
-  left:15px;   /* +1px 位移 */
-  top:15px;    /* +1px 位移 */
-  width:42px;
-  height:42px;
-  border-radius:999px;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size: 38px 38px;
-
-  /* 副層更淡，模擬沒吃到印泥 */
-  opacity: .32;
-  mix-blend-mode: multiply;
-  pointer-events:none;
-}
-
-/* ===== Mobile compact: keep long text (e.g., 鄉鎮民代表) in one line ===== */
-.menu-button.no-icon .menu-text{
-  white-space: nowrap;   /* 強制單行 */
-}
-
-/* 手機窄螢幕：縮小左側章、減少左右留白 */
-@media (max-width: 420px){
-  .menu-button.no-icon{
-    padding: 18px 12px 16px 12px;  /* 左右 padding 變薄，右邊不再浪費 */
-  }
-
-  /* 左上圓章縮小並更靠左上 */
-  .menu-button.no-icon::before{
-    left: 10px;
-    top: 10px;
-    width: 34px;
-    height: 34px;
-  }
-
-  /* 文字內縮減少，給更多橫向空間 */
-  .menu-button.no-icon .menu-text{
-    padding-left: 44px; /* 原本 56px → 44px */
-    font-size: 16px;    /* 維持你要的 16 */
-  }
-
-  /* 抬頭線縮短一點，避免擠到字 */
-  .menu-button.no-icon .menu-text::after{
-    left: 44px;
-    width: 88px;
-  }
-
-  /* hover 的副章（你那個 ::after 疊印）也跟著縮小/對齊 */
-  .menu-button.no-icon:hover::after{
-    left: 11px;
-    top: 11px;
-    width: 34px;
-    height: 34px;
-    background-size: 30px 30px;
-  }
-
-  /* hover 主章也縮小一點以符合新圓章 */
-  .menu-button.no-icon:hover::before{
-    background-size: 30px 30px;
-  }
+    inset 0 0 0 calc(var(--seal) * 0.16) rgba(198,40,40,.20),
+    inset 0 0 0 calc(var(--seal) * 0.28) rgba(198,40,40,.10);
 }
