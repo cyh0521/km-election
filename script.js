@@ -2208,86 +2208,59 @@ dom.breadcrumb.innerHTML = html;
         });
     })();
 
-// === Stamp-then-navigate (HARD FIX: prevent hover/active carry-over) =====
-// - Touch devices can "stick" :hover/:active across SPA navigations.
-// - We avoid using :hover/:active for the RED stamp on touch.
-// - JS toggles .stamp-pressed briefly, then runs the original onclick.
-// ========================================================================
-(function () {
+// === Stamp-then-navigate (menu buttons only) ============================
+// 目的：手機點下去先「蓋章一下」再進去，同時避免上一頁的狀態帶到下一頁。
+// 做法：攔截 .menu-button.no-icon 的 click（捕獲階段），先加上 .stamp-pressed，
+// 延遲後執行原本 inline onclick，再把 class 清掉。
+(function(){
   const DELAY_MS = 140;
-  const BTN_SEL = '.menu-button.no-icon';
 
-  function clearAll() {
-    document.querySelectorAll(BTN_SEL + '.stamp-pressed').forEach(el => {
-      el.classList.remove('stamp-pressed');
-    });
+  function clearAll(){
+    document.querySelectorAll('.menu-button.no-icon.stamp-pressed')
+      .forEach(el => el.classList.remove('stamp-pressed'));
   }
 
-  function mark(btn) {
-    clearAll();
-    btn.classList.add('stamp-pressed');
-  }
+  // 確保換頁回來（bfcache）不會殘留
+  window.addEventListener('pageshow', clearAll);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') clearAll();
+  });
 
-  function runInlineOnclick(btn) {
+  function handleClick(e){
+    const btn = e.target.closest('.menu-button.no-icon');
+    if(!btn) return;
+
+    // 只攔截真的會導頁的主選單按鈕（有 onclick 的）
     const handler = btn.getAttribute('onclick');
-    if (!handler) return;
+    if(!handler) return;
 
-    // Clear focus to reduce state carry-over on mobile browsers
-    try {
-      if (document.activeElement && typeof document.activeElement.blur === 'function') {
-        document.activeElement.blur();
-      }
-    } catch (_) {}
+    // 防止重複觸發
+    if(btn.classList.contains('stamp-pressed')) return;
 
-    // Execute the original inline handler
-    try {
-      (new Function(handler))();
-    } catch (err) {
-      console.error('[stamp-nav] onclick failed:', err);
-    }
-  }
-
-  // Show stamp as soon as the press starts (better tactile feedback)
-  document.addEventListener('pointerdown', (e) => {
-    const btn = e.target.closest(BTN_SEL);
-    if (!btn) return;
-
-    // Only primary button for mouse
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-
-    mark(btn);
-  }, true);
-
-  // Intercept click BEFORE inline onclick runs (capture phase)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest(BTN_SEL);
-    if (!btn) return;
-
-    const handler = btn.getAttribute('onclick');
-    if (!handler) return;
-
-    // Stop the browser / inline onclick from running immediately
+    // 先阻止原本 inline onclick 立刻跑
     e.preventDefault();
-    e.stopImmediatePropagation();
     e.stopPropagation();
 
-    // Ensure we show the stamp during the delay
-    mark(btn);
+    // 同一個 view 裡，其他按鈕不要維持「已蓋章」
+    document.querySelectorAll('.menu-button.no-icon.stamp-pressed').forEach(el => {
+      if(el !== btn) el.classList.remove('stamp-pressed');
+    });
+
+    // 立即顯示「蓋章」狀態
+    btn.classList.add('stamp-pressed');
 
     setTimeout(() => {
-      // IMPORTANT: clear pressed state BEFORE navigation/render
-      // to avoid applying to the next page's element at the same position.
-      clearAll();
-      runInlineOnclick(btn);
+      try {
+        // 執行原本 inline onclick（保持你既有的 routing 邏輯）
+        (new Function(handler))();
+      } finally {
+        // 保險：離開前清一次，避免 bfcache / focus 殘留
+        btn.classList.remove('stamp-pressed');
+      }
     }, DELAY_MS);
-  }, true);
+  }
 
-  // Safety clears
-  ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(evt => {
-    document.addEventListener(evt, clearAll, true);
-  });
-  window.addEventListener('popstate', clearAll);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState !== 'visible') clearAll();
-  });
-})();
+  // 捕獲階段：比 inline onclick 先一步
+  document.addEventListener('click', handleClick, true);
+})(); 
+// ========================================================================
