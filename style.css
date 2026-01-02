@@ -502,188 +502,136 @@ footer {
 }
 
 /* ==========================================================
-   STAMP TILE – "選票／章戳" 按鈕（from scratch）
-   - 不用紅章也成立：預設「藍灰章」，互動時「深藍章」
-   - 無模糊、無歪斜，但有「橡皮章吃墨不均」質感（用遮罩顆粒）
-   - iPhone SE (320) 到桌機都能讓最長字「鄉鎮民代表」維持一行
+   FLAT STAMP TILE – 2026 Refresh
+   - 扁平化、公文/選票風格
+   - 印章常態淡色；hover / 點選（.stamp-pressed）加深
+   - 不使用模糊/歪斜；線條不粗
    Target: .menu-button.no-icon
    ========================================================== */
 
 .menu-button.no-icon{
   /* responsive knobs */
-  --pad-x: clamp(8px, 2.8vw, 16px);
-  --pad-y: clamp(12px, 2.4vw, 18px);
-  --seal:  clamp(26px, 7.2vw, 42px);
-  --seal-inset: clamp(8px, 2.2vw, 12px);
-  --indent: calc(var(--seal) + 14px);
+  --pad-x: clamp(12px, 3.6vw, 18px);
+  --pad-y: clamp(14px, 3.2vw, 18px);
+  --stamp: clamp(24px, 7vw, 36px);
+  --gap:   clamp(10px, 2.8vw, 14px);
 
-  /* ink colors (tunable) */
-  --ink-base: rgba(56,135,176,.35);     /* 藍灰章 */
-  --ink-strong: rgba(22, 72, 116, .70); /* 深藍章（hover/tap） */
-  --outline: rgba(225,228,232,.95);
+  /* ink (default / hover) */
+  --ink: rgba(56,135,176,.38);          /* 淡藍灰 */
+  --ink-strong: rgba(56,135,176,.72);   /* 加深（hover / tap） */
 
   position: relative;
   padding: var(--pad-y) var(--pad-x);
   background: #fff;
-  border: 1px solid var(--outline);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,.05);
+  box-shadow: none;                     /* 扁平化 */
   overflow: hidden;
-
-  /* 公文折角（保持正式感） */
-  clip-path: polygon(
-    0 0,
-    calc(100% - 16px) 0,
-    100% 16px,
-    100% 100%,
-    0 100%
-  );
-
-  transition: box-shadow .16s ease;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
 }
 
-/* 背景：選票格線＋折角線 */
+/* 細緻格線 + 右上折角（更淡、更扁平） */
 .menu-button.no-icon::after{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
 
-  /* 票面線條（更像選票：淺線＋小方格） */
   background-image:
-    /* 折角邊線 */
-    linear-gradient(135deg, rgba(56,135,176,0.20) 0%, rgba(56,135,176,0.20) 50%, transparent 50%),
-    /* 票面水平細線 */
-    linear-gradient(to bottom, rgba(56,135,176,0.10) 1px, transparent 1px),
-    /* 票面垂直細線 */
-    linear-gradient(to right,  rgba(56,135,176,0.09) 1px, transparent 1px),
-    /* 左側「勾選框」小格（淡淡點綴） */
-    radial-gradient(circle at 18px 18px, rgba(56,135,176,0.10) 0 1px, transparent 2px);
+    /* 折角 */
+    linear-gradient(135deg, rgba(56,135,176,.10) 0 50%, transparent 50%),
+    /* 垂直格線 */
+    linear-gradient(to right, rgba(56,135,176,.06) 1px, transparent 1px),
+    /* 水平格線 */
+    linear-gradient(to bottom, rgba(56,135,176,.05) 1px, transparent 1px);
 
   background-size:
-    16px 16px,
-    clamp(18px, 5.2vw, 22px) clamp(18px, 5.2vw, 22px),
-    clamp(18px, 5.2vw, 22px) clamp(18px, 5.2vw, 22px),
-    28px 28px;
+    18px 18px,
+    22px 22px,
+    22px 22px;
 
   background-position:
     top right,
-    top left,
     top left,
     top left;
 
   background-repeat:
     no-repeat,
     repeat,
-    repeat,
     repeat;
 
-  opacity: .85;
+  opacity: .95;
 }
 
-/* 左側章戳（永遠存在：藍灰） */
+/* 左側印章（選票/勾選圖樣）— 使用 mask + 輕微不均勻吃色 */
 .menu-button.no-icon::before{
   content:"";
   position:absolute;
-  left: var(--seal-inset);
-  top:  var(--seal-inset);
-  width: var(--seal);
-  height: var(--seal);
+  left: var(--pad-x);
+  top: 50%;
+  width: var(--stamp);
+  height: var(--stamp);
+  transform: translateY(-50%);
   border-radius: 999px;
   pointer-events:none;
 
-  /* 章戳底 */
-  background-color: rgba(255,255,255,.70);
+  /* 先用 ink 當底，再疊幾層「不均」：不模糊、不歪斜，只是吃色不均 */
+  background:
+    radial-gradient(circle at 28% 32%, rgba(255,255,255,.40) 0 18%, transparent 19%),
+    radial-gradient(circle at 72% 64%, rgba(255,255,255,.30) 0 14%, transparent 15%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.10) 0 2px, transparent 2px 6px),
+    var(--ink);
 
-  /* 台灣投票章圖形（SVG） */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%233887B0' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%233887B0' stroke-opacity='0.33' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
-
-  background-repeat: no-repeat, no-repeat;
-  background-size:
-    calc(var(--seal) * 0.78) calc(var(--seal) * 0.78),
-    calc(var(--seal) * 0.78) calc(var(--seal) * 0.78);
-  background-position:
-    center,
-    calc(50% + 1px) calc(50% + 1px);
-
-  /* 吃色：外圈＋內圈 */
-  box-shadow:
-    inset 0 0 0 2px var(--ink-base),
-    inset 0 0 0 calc(var(--seal) * 0.20) rgba(56,135,176,.08);
-
-  /* 印泥不均：顆粒遮罩（不模糊、不歪） */
-  -webkit-mask-image: radial-gradient(circle at 35% 40%, rgba(0,0,0,.85) 0 22%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.95) 100%);
-          mask-image: radial-gradient(circle at 35% 40%, rgba(0,0,0,.85) 0 22%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.95) 100%);
-
-  opacity: .72;
+  opacity: .62;
   mix-blend-mode: multiply;
-  transition: opacity .12s ease, box-shadow .12s ease, transform .12s ease;
+
+  /* 選票/勾選圖樣 mask（線條偏細） */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='42'/%3E%3Crect x='28' y='30' width='44' height='50' rx='6'/%3E%3Cpath d='M38 55 l8 8 16-20'/%3E%3Cpath d='M35 40 h30'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='42'/%3E%3Crect x='28' y='30' width='44' height='50' rx='6'/%3E%3Cpath d='M38 55 l8 8 16-20'/%3E%3Cpath d='M35 40 h30'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+
+  transition: opacity .12s ease, background-color .12s ease;
 }
 
-/* 文字：16px、左對齊、單行 */
+/* 文字（16px、靠左、盡量一行） */
 .menu-button.no-icon .menu-text{
-  position: relative;
-  display: block;
-  padding-left: var(--indent);
+  display:block;
+  padding-left: calc(var(--stamp) + var(--gap));
   font-size: 16px;
   font-weight: 700;
-  letter-spacing: .12px;
   color: var(--secondary);
-  line-height: 1.25;
+  line-height: 1.2;
   text-align: left;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* 微「抬頭線」更像文件欄位 */
-.menu-button.no-icon .menu-text::after{
-  content:"";
-  position:absolute;
-  left: var(--indent);
-  top: -9px;
-  width: clamp(56px, 20vw, 120px);
-  border-top: 2px solid rgba(56,135,176,.18);
-  opacity: .9;
+/* 極窄螢幕：微縮字級避免「鄉鎮民代表」爆行 */
+@media (max-width: 360px){
+  .menu-button.no-icon .menu-text{ font-size: 15px; }
 }
 
-/* desktop hover：章戳加深、稍微「壓一下」 */
-.menu-button.no-icon:hover{
-  box-shadow: 0 8px 16px rgba(56,135,176,.10);
-}
-.menu-button.no-icon:hover::before{
-  opacity: .92;
-  box-shadow:
-    inset 0 0 0 2px var(--ink-strong),
-    inset 0 0 0 calc(var(--seal) * 0.22) rgba(22,72,116,.12);
-  transform: scale(.98); /* 像壓印，不會模糊 */
-}
-
-/* mobile press / JS pressed：同 hover 效果 */
+/* Hover / Tap：只加深印章，不改外框為紅色 */
+.menu-button.no-icon:hover::before,
 .menu-button.no-icon:active::before,
 .menu-button.no-icon.stamp-pressed::before{
-  opacity: .95;
-  box-shadow:
-    inset 0 0 0 2px var(--ink-strong),
-    inset 0 0 0 calc(var(--seal) * 0.24) rgba(22,72,116,.14);
-  transform: scale(.97);
+  background:
+    radial-gradient(circle at 28% 32%, rgba(255,255,255,.32) 0 18%, transparent 19%),
+    radial-gradient(circle at 72% 64%, rgba(255,255,255,.22) 0 14%, transparent 15%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.10) 0 2px, transparent 2px 6px),
+    var(--ink-strong);
+  opacity: .92;
 }
 
-/* 互動時外框不變色（避免視覺跳動） */
 .menu-button.no-icon:hover,
 .menu-button.no-icon:active,
 .menu-button.no-icon.stamp-pressed{
-  border-color: var(--outline);
+  border-color: var(--border);
+  background-color: #fff;
 }
 
-/* 極窄螢幕：再縮一點邊距，確保一行 */
-@media (max-width: 360px){
-  .menu-button.no-icon{
-    --pad-x: 8px;
-    --pad-y: 12px;
-    --indent: calc(var(--seal) + 12px);
-  }
-  .menu-button.no-icon .menu-text::after{ opacity: .35; }
+/* 可及性：鍵盤 focus 顯示細藍框（不影響換頁殘留） */
+.menu-button.no-icon:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(56,135,176,.18);
 }

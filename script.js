@@ -2208,59 +2208,45 @@ dom.breadcrumb.innerHTML = html;
         });
     })();
 
-// === Stamp-then-navigate (menu buttons only) ============================
-// 目的：手機點下去先「蓋章一下」再進去，同時避免上一頁的狀態帶到下一頁。
-// 做法：攔截 .menu-button.no-icon 的 click（捕獲階段），先加上 .stamp-pressed，
-// 延遲後執行原本 inline onclick，再把 class 清掉。
+// === Stamp-then-navigate (mobile-friendly) ==============================
+// Show active state briefly before navigation; avoids focus carry-over.
+// Delay ~140ms for tactile feedback.
 (function(){
   const DELAY_MS = 140;
 
-  function clearAll(){
-    document.querySelectorAll('.menu-button.no-icon.stamp-pressed')
-      .forEach(el => el.classList.remove('stamp-pressed'));
-  }
-
-  // 確保換頁回來（bfcache）不會殘留
-  window.addEventListener('pageshow', clearAll);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') clearAll();
-  });
-
-  function handleClick(e){
-    const btn = e.target.closest('.menu-button.no-icon');
+  function handle(e){
+    const btn = e.target.closest('.menu-button');
     if(!btn) return;
 
-    // 只攔截真的會導頁的主選單按鈕（有 onclick 的）
-    const handler = btn.getAttribute('onclick');
-    if(!handler) return;
+    // Only intercept left-click / tap
+    if (e.type === 'click') {
+      // Prevent immediate inline onclick execution
+      e.stopImmediatePropagation();
+      e.preventDefault();
 
-    // 防止重複觸發
-    if(btn.classList.contains('stamp-pressed')) return;
+      // Visual press state
+      btn.classList.add('stamp-pressed');
 
-    // 先阻止原本 inline onclick 立刻跑
-    e.preventDefault();
-    e.stopPropagation();
-
-    // 同一個 view 裡，其他按鈕不要維持「已蓋章」
-    document.querySelectorAll('.menu-button.no-icon.stamp-pressed').forEach(el => {
-      if(el !== btn) el.classList.remove('stamp-pressed');
-    });
-
-    // 立即顯示「蓋章」狀態
-    btn.classList.add('stamp-pressed');
-
-    setTimeout(() => {
-      try {
-        // 執行原本 inline onclick（保持你既有的 routing 邏輯）
-        (new Function(handler))();
-      } finally {
-        // 保險：離開前清一次，避免 bfcache / focus 殘留
-        btn.classList.remove('stamp-pressed');
+      // Execute the original onclick after a short delay
+      const handler = btn.getAttribute('onclick');
+      if (handler) {
+        setTimeout(() => {
+          try {
+            // Clear focus to avoid carry-over
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+              document.activeElement.blur();
+            }
+            // Run inline handler
+            (new Function(handler))();
+          } finally {
+            btn.classList.remove('stamp-pressed');
+          }
+        }, DELAY_MS);
       }
-    }, DELAY_MS);
+    }
   }
 
-  // 捕獲階段：比 inline onclick 先一步
-  document.addEventListener('click', handleClick, true);
-})(); 
+  // Capture phase to beat inline onclick
+  document.addEventListener('click', handle, true);
+})();
 // ========================================================================
