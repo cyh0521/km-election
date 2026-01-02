@@ -46,63 +46,102 @@ h1 span { cursor: pointer; }
 }
 
 .menu-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
     background: var(--card-bg);
-    border: 1px solid var(--border); 
-    border-radius: 8px; 
-    padding: 15px 20px; 
-    text-align: center;
-    font-size: 16px; 
-    font-weight: 500; 
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 14px;
+
     color: var(--secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-    line-height: 1.4;
+
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
 
-/* --- 滑鼠懸停效果 (Hover) --- */
-.menu-button:hover .menu-icon {
-    background-color: var(--primary); /* 背景變深色 */
-    color: white;                     /* 文字變白色 */
-    transform: scale(1.1) rotate(-5deg); /* 微微放大並旋轉一點點，增加趣味性 */
-    box-shadow: 0 4px 10px rgba(56, 135, 176, 0.3); /* 增加陰影 */
+/* 左側色帶（像「導覽標籤」的概念，和之前圓形字章完全不同） */
+.menu-button::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--primary);
+    opacity: 0.85;
+    transition: width 0.18s ease, opacity 0.18s ease;
 }
 
-/* --- 手機版微調 --- */
-@media (max-width: 768px) {
-    .menu-icon { 
-        width: 40px; 
-        height: 40px; 
-        font-size: 20px;
-        margin-bottom: 8px; /* 手機版間距縮小 */
-    } 
+.menu-button:hover,
+.menu-button:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(56, 135, 176, 0.65);
+    box-shadow: 0 10px 18px rgba(56, 135, 176, 0.15);
+    outline: none;
 }
 
-.menu-icon { 
-    display: inline-flex;       
+.menu-button:hover::before,
+.menu-button:focus-visible::before {
+    width: 10px;
+    opacity: 1;
+}
+
+.menu-icon {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    
-    width: 50px;               /* 稍微加大寬度 */
-    height: 50px;              /* 稍微加大高度 */
-    border-radius: 50%;        
-    
-    background-color: rgba(56, 135, 176, 0.1); 
-    color: var(--primary);     
-    
-    font-size: 18px;           /* 調整為 18px 以容納雙字 */
-    font-weight: 700;          
-    font-family: 'Noto Sans TC', sans-serif; /* 雙字建議改回無襯線體，讓排版更緊湊 */
-    
-    margin: 0 auto 12px auto;  
-    line-height: 1;            /* 確保行高正確置中 */
-    transition: all 0.3s ease; 
-    
-    /* 新增：針對雙字或三字的圖標，我們需要更精準的字距微調 */
-    letter-spacing: -0.5px;
+
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+
+    margin-left: 6px; /* 讓圖示不貼到左側色帶 */
+    background: rgba(56, 135, 176, 0.10);
+    color: var(--primary);
+
+    flex: 0 0 auto;
+    transition: transform 0.18s ease, background-color 0.18s ease;
 }
 
-.menu-text { display: block; }
+.menu-button:hover .menu-icon,
+.menu-button:focus-visible .menu-icon {
+    background: rgba(56, 135, 176, 0.18);
+    transform: rotate(-4deg) scale(1.04);
+}
+
+.menu-svg { width: 22px; height: 22px; }
+
+.menu-text {
+    flex: 1;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--secondary);
+}
+
+/* 右側提示箭頭（可點感） */
+.menu-chevron {
+    flex: 0 0 auto;
+    color: var(--text-sub);
+    font-size: 22px;
+    line-height: 1;
+    margin-left: auto;
+    transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.menu-button:hover .menu-chevron,
+.menu-button:focus-visible .menu-chevron {
+    transform: translateX(2px);
+    color: var(--primary);
+}
+
+
+
+
 
 .menu-section-title {
     font-size: 24px;
@@ -446,8 +485,10 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 
 @media (max-width: 768px) {
         .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
-        .menu-button { padding: 15px 5px; }
-        .menu-text { font-size: 14px; }
+        .menu-button { padding: 12px 12px; }
+        .menu-icon { width: 40px; height: 40px; border-radius: 10px; }
+        .menu-svg { width: 20px; height: 20px; }
+        .menu-text { font-size: 15px; }
         .election-list-grid { column-count: 1; }
         .layout-compact { flex-direction: column; align-items: center; }
         .layout-compact .table-area { width: 100%; }
@@ -492,6 +533,9 @@ footer {
    （只影響 鄉鎮長 / 鄉鎮民代表 的子選單）
    ========================= */
 
+
+.township-submenu .menu-button { justify-content: center; }
+.township-submenu .menu-button::before { display: none; }
 .township-submenu .menu-icon {
     display: none;
 }
@@ -500,141 +544,3 @@ footer {
 .township-submenu .menu-button {
     padding-top: 20px;
 }
-
-
-/* =========================
-   2026-01 新版：選舉概念扁平按鈕（套用到首頁 + 子分類）
-   - 移除兩字圖示，改用通用選票 SVG
-   - 扁平、簡約、帶微動畫（hover/active）
-   ========================= */
-
-.menu-button{
-    position: relative;
-    overflow: hidden;
-
-    /* 扁平外觀 */
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: none;
-    background: #ffffff;
-
-    /* 版面：內容靠左更像「功能按鈕」 */
-    text-align: left;
-    align-items: flex-start;
-
-    /* 微過渡 */
-    transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease;
-}
-
-/* 右上角淡淡的「章戳點」：不搶戲但有選舉感（像蓋章/認證） */
-.menu-button::after{
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 30px;
-    height: 30px;
-    border-radius: 999px;
-    background: rgba(56, 135, 176, 0.10);
-    border: 1px solid rgba(56, 135, 176, 0.18);
-    box-shadow: inset 0 0 0 3px rgba(56, 135, 176, 0.05);
-    transform: translateX(0) rotate(0deg);
-    transition: transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
-    opacity: .95;
-}
-
-/* 圖示：統一使用 SVG（選票/票匭/勾選） */
-.menu-icon.election-icon{
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: rgba(56, 135, 176, 0.10);
-    color: var(--primary);
-
-    margin: 0 0 10px 0;
-
-    transition:
-        transform .22s cubic-bezier(.2,.8,.2,1),
-        background .22s ease,
-        color .22s ease;
-}
-
-.menu-icon.election-icon .election-svg{
-    width: 22px;
-    height: 22px;
-    display: block;
-}
-
-/* 文字 */
-.menu-text{
-    display: block;
-    font-weight: 700;
-    transition: transform .22s cubic-bezier(.2,.8,.2,1), color .22s ease;
-}
-
-/* Hover：文字往左、圖示往右、章戳微旋轉（交錯移動） */
-.menu-button:hover{
-    border-color: rgba(56, 135, 176, 0.32);
-    background: #fbfdff;
-    transform: translateY(-1px);
-}
-
-.menu-button:hover::after{
-    transform: translateX(-8px) rotate(-8deg);
-    opacity: 1;
-}
-
-.menu-button:hover .menu-icon.election-icon{
-    transform: translateX(6px);
-    background: rgba(56, 135, 176, 0.14);
-    color: #1f6fb2;
-}
-
-.menu-button:hover .menu-text{
-    transform: translateX(-4px);
-}
-
-/* 手機點按：立即回饋 */
-.menu-button:active{
-    transform: translateY(0px) scale(0.995);
-}
-
-.menu-button:active::after{
-    transform: translateX(-10px) rotate(-10deg);
-}
-
-.menu-button:active .menu-icon.election-icon{
-    transform: translateX(8px);
-}
-
-/* 手機尺寸微調 */
-@media (max-width: 768px){
-    .menu-button{
-        border-radius: 12px;
-    }
-    .menu-icon.election-icon{
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        margin-bottom: 8px;
-    }
-    .menu-icon.election-icon .election-svg{
-        width: 20px;
-        height: 20px;
-    }
-    .menu-button::after{
-        width: 28px;
-        height: 28px;
-        top: 10px;
-        right: 10px;
-    }
-}
-

@@ -271,16 +271,68 @@ function isCountyPseudoTownName(name) {
     });
     
     const electionCategories = [
-	{ type: "總統副總統", icon: "總統" },
-        { type: "立法委員", icon: "立委" },
-        { type: "國大代表", icon: "國代" },
-        { type: "縣長", icon: "縣長" },
-        { type: "縣議員", icon: "議員" },
-        { type: "鄉鎮長", icon: "鄉鎮" }, 
-        { type: "鄉鎮民代表", icon: "代表" },
-        { type: "村里長", icon: "村里" }, 
-        { type: "公民投票", icon: "公投" }
-    ];
+    { type: "總統副總統", iconKey: "president" },
+    { type: "立法委員",   iconKey: "legislator" },
+    { type: "國大代表",   iconKey: "assembly" },
+    { type: "縣長",       iconKey: "magistrate" },
+    { type: "縣議員",     iconKey: "council" },
+    { type: "鄉鎮長",     iconKey: "mayor" }, 
+    { type: "鄉鎮民代表", iconKey: "representative" },
+    { type: "村里長",     iconKey: "village" }, 
+    { type: "公民投票",   iconKey: "referendum" }
+];
+
+/**
+ * 首頁按鈕 Icon（SVG，不再用文字塞在 menu-icon 裡）
+ * - 使用 currentColor：可直接用 CSS 改色
+ * - 僅作為視覺符號，真正的名稱仍由 menu-text 提供
+ */
+function getMenuIconSvg(key) {
+    const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
+    switch (key) {
+        case "president":
+            // 旗幟 + 星
+            return `<svg ${common}><path d="M6 21V4"/><path d="M6 4h10l-2 3 2 3H6"/><path d="M18.5 14.5l.6 1.2 1.3.2-.95.9.22 1.3-1.17-.62-1.17.62.22-1.3-.95-.9 1.3-.2z"/></svg>`;
+        case "legislator":
+            // 權衡/議會：柱 + 講台
+            return `<svg ${common}><path d="M4 20h16"/><path d="M6 20V9"/><path d="M18 20V9"/><path d="M7 9h10"/><path d="M9 9V5h6v4"/><path d="M8 13h8"/><path d="M8 16h8"/></svg>`;
+        case "assembly":
+            // 文件 + 印章點
+            return `<svg ${common}><path d="M7 3h7l3 3v15H7z"/><path d="M14 3v4h4"/><path d="M9 11h6"/><path d="M9 14h6"/><circle cx="12" cy="18" r="1.5"/></svg>`;
+        case "magistrate":
+            // 建物
+            return `<svg ${common}><path d="M4 10l8-5 8 5"/><path d="M6 10v10"/><path d="M18 10v10"/><path d="M4 20h16"/><path d="M10 20v-6h4v6"/></svg>`;
+        case "council":
+            // 會議桌
+            return `<svg ${common}><path d="M5 9h14"/><path d="M6 9v10"/><path d="M18 9v10"/><path d="M8 13h8"/><path d="M8 16h8"/><circle cx="8" cy="6" r="1.5"/><circle cx="16" cy="6" r="1.5"/></svg>`;
+        case "mayor":
+            // 地標/定位
+            return `<svg ${common}><path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/><circle cx="12" cy="10" r="2"/></svg>`;
+        case "representative":
+            // 人像 + 徽章
+            return `<svg ${common}><circle cx="9" cy="8" r="2"/><path d="M5.5 18a3.5 3.5 0 0 1 7 0"/><path d="M14 8h5"/><path d="M14 12h5"/><path d="M14 16h3"/></svg>`;
+        case "village":
+            // 房子 + 路徑
+            return `<svg ${common}><path d="M3 12l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/><path d="M3 20h4"/></svg>`;
+        case "referendum":
+            // 勾選票匣
+            return `<svg ${common}><path d="M4 4h16v16H4z"/><path d="M7 8h6"/><path d="M7 12h6"/><path d="M7 16h6"/><path d="M15 13l1.5 1.5L20 11"/></svg>`;
+        case "nation":
+            // 地球
+            return `<svg ${common}><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>`;
+        case "local":
+            // 標記點
+            return `<svg ${common}><path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/><path d="M9.5 10h5"/></svg>`;
+        case "district":
+            // 地圖區塊
+            return `<svg ${common}><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>`;
+        case "party":
+            // 旗幟
+            return `<svg ${common}><path d="M6 21V4"/><path d="M6 4h12l-2 3 2 3H6"/></svg>`;
+        default:
+            return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
+    }
+}
 
     const partyColors = {
         "中國國民黨": "#3887B0",
@@ -401,14 +453,6 @@ function isCountyPseudoTownName(name) {
         const key = party.split('-')[0];
         return longNamesMap[party] || longNamesMap[key] || party; 
     }
-
-    // ================= UI 元件：選舉按鈕通用圖示（不使用兩字縮寫） =================
-    const ELECTION_ICON_SVG = `<svg class="election-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-  <path d="M8 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M4 12h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M9 16l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
-
 
 
     const dom = {
@@ -1233,9 +1277,10 @@ function extractCountySummary(text) {
              clickAction = `renderElectionList('${cat.type}', true)`;
         }
 
-        html += `<div class="menu-button election-btn" onclick="${clickAction}">
-            <span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span>
-            <span class="menu-text">${cat.type}</span>
+        html += `<div class=\"menu-button\" role=\"button\" tabindex=\"0\" onclick=\"${clickAction}\">
+            <span class=\"menu-icon\" aria-hidden=\"true\">${getMenuIconSvg(cat.iconKey)}</span>
+            <span class=\"menu-text\">${cat.type}</span>
+            <span class=\"menu-chevron\" aria-hidden=\"true\">›</span>
         </div>`;
     });
 
@@ -1288,12 +1333,16 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button election-btn" onclick="renderElectionList('全國性公民投票', true)">
-                    <span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span> <span class="menu-text">全國性公民投票</span>
+                   <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('全國性公民投票', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('nation')}</span>
+                    <span class="menu-text">全國性公民投票</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
-                <div class="menu-button election-btn" onclick="renderElectionList('地方性公民投票', true)">
-                    <span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span> <span class="menu-text">地方性公民投票</span>
+                <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('地方性公民投票', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('local')}</span>
+                    <span class="menu-text">地方性公民投票</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
             </div>
@@ -1327,12 +1376,16 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇立委類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button" onclick="renderElectionList('區域立委', true)">
-                    <span class="menu-icon">區域</span> <span class="menu-text">區域立委</span>
+                   <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('區域立委', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('district')}</span>
+                    <span class="menu-text">區域立委</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
-                <div class="menu-button" onclick="renderElectionList('不分區立委', true)">
-                    <span class="menu-icon">政黨</span> <span class="menu-text">不分區立委</span>
+                <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('不分區立委', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('party')}</span>
+                    <span class="menu-text">不分區立委</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
             </div>
@@ -1372,8 +1425,7 @@ function extractCountySummary(text) {
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
-            html += `<div class="menu-button election-btn" onclick="renderElectionListByTown('${type}', '${t}', true)">
-<span class="menu-icon election-icon">${ELECTION_ICON_SVG}</span>
+            html += `<div class="menu-button" onclick="renderElectionListByTown('${type}', '${t}', true)">
 <span class="menu-text">${t}</span>
             </div>`;
         });
