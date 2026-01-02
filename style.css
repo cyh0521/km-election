@@ -45,48 +45,58 @@ h1 span { cursor: pointer; }
     margin-bottom: 50px;
 }
 
+/* =========================
+   主選單按鈕（新版：現代卡片式）
+   ========================= */
+
 .menu-button {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    overflow: hidden;
 
-    background: var(--card-bg);
-    border: 1px solid var(--border);
+    background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.035) 100%);
+    border: 1px solid rgba(225, 228, 232, 0.95);
     border-radius: 14px;
-    padding: 14px 14px;
 
-    color: var(--secondary);
+    padding: 18px 18px;
+    text-align: center;
     cursor: pointer;
 
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    overflow: hidden;
+    color: var(--secondary);
+    box-shadow: 0 2px 10px rgba(44, 62, 80, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
 }
 
-/* 左側色帶（像「導覽標籤」的概念，和之前圓形字章完全不同） */
 .menu-button::before {
     content: "";
     position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 6px;
-    background: var(--primary);
-    opacity: 0.85;
-    transition: width 0.18s ease, opacity 0.18s ease;
+    inset: -40% -30%;
+    background: radial-gradient(circle at 30% 25%,
+        rgba(56, 135, 176, 0.14) 0%,
+        rgba(56, 135, 176, 0.08) 22%,
+        rgba(56, 135, 176, 0.00) 60%);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
 }
 
-.menu-button:hover,
-.menu-button:focus-visible {
-    transform: translateY(-2px);
-    border-color: rgba(56, 135, 176, 0.65);
-    box-shadow: 0 10px 18px rgba(56, 135, 176, 0.15);
-    outline: none;
-}
-
-.menu-button:hover::before,
-.menu-button:focus-visible::before {
-    width: 10px;
-    opacity: 1;
+.menu-button::after {
+    content: "➜";
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--primary);
+    opacity: 0.16;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
 }
 
 .menu-icon {
@@ -94,53 +104,88 @@ h1 span { cursor: pointer; }
     align-items: center;
     justify-content: center;
 
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
 
-    margin-left: 6px; /* 讓圖示不貼到左側色帶 */
     background: rgba(56, 135, 176, 0.10);
+    border: 1px solid rgba(56, 135, 176, 0.22);
     color: var(--primary);
 
-    flex: 0 0 auto;
-    transition: transform 0.18s ease, background-color 0.18s ease;
-}
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 
-.menu-button:hover .menu-icon,
-.menu-button:focus-visible .menu-icon {
-    background: rgba(56, 135, 176, 0.18);
-    transform: rotate(-4deg) scale(1.04);
-}
+    margin: 0 auto 12px auto;
+    line-height: 1;
 
-.menu-svg { width: 22px; height: 22px; }
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
 .menu-text {
-    flex: 1;
-    text-align: left;
+    display: block;
     font-size: 16px;
     font-weight: 700;
-    line-height: 1.2;
-    color: var(--secondary);
+    letter-spacing: 0.2px;
 }
 
-/* 右側提示箭頭（可點感） */
-.menu-chevron {
-    flex: 0 0 auto;
-    color: var(--text-sub);
-    font-size: 22px;
-    line-height: 1;
-    margin-left: auto;
-    transition: transform 0.18s ease, color 0.18s ease;
+/* Hover（桌機） */
+.menu-button:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 135, 176, 0.55);
+    box-shadow: 0 10px 22px rgba(56, 135, 176, 0.18);
 }
 
-.menu-button:hover .menu-chevron,
-.menu-button:focus-visible .menu-chevron {
-    transform: translateX(2px);
-    color: var(--primary);
+.menu-button:hover::before {
+    opacity: 1;
+    transform: translateY(0);
 }
 
+.menu-button:hover::after {
+    opacity: 0.35;
+    transform: translateX(0);
+}
 
+.menu-button:hover .menu-icon {
+    background: var(--primary);
+    border-color: rgba(56, 135, 176, 0.25);
+    color: #fff;
+    transform: translateY(-1px) rotate(-2deg);
+    box-shadow: 0 10px 18px rgba(56, 135, 176, 0.25);
+}
 
+/* Focus（鍵盤） */
+.menu-button:focus-visible {
+    outline: 3px solid rgba(56, 135, 176, 0.35);
+    outline-offset: 3px;
+}
+
+/* Active（手機點按/滑鼠按住） */
+.menu-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(56, 135, 176, 0.16);
+}
+
+.menu-button:active::after {
+    opacity: 0.45;
+}
+
+/* 手機版微調 */
+@media (max-width: 768px) {
+    .menu-button { padding: 16px 12px; border-radius: 12px; }
+    .menu-icon { width: 46px; height: 46px; border-radius: 14px; font-size: 16px; margin-bottom: 10px; }
+    .menu-text { font-size: 14px; }
+}
+
+/* 減少動態偏好 */
+@media (prefers-reduced-motion: reduce) {
+    .menu-button, .menu-button::before, .menu-button::after, .menu-icon { transition: none !important; }
+}
 
 
 .menu-section-title {
@@ -485,10 +530,8 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 
 @media (max-width: 768px) {
         .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
-        .menu-button { padding: 12px 12px; }
-        .menu-icon { width: 40px; height: 40px; border-radius: 10px; }
-        .menu-svg { width: 20px; height: 20px; }
-        .menu-text { font-size: 15px; }
+        .menu-button { padding: 16px 12px; border-radius: 12px; }
+        .menu-text { font-size: 14px; }
         .election-list-grid { column-count: 1; }
         .layout-compact { flex-direction: column; align-items: center; }
         .layout-compact .table-area { width: 100%; }
@@ -533,9 +576,6 @@ footer {
    （只影響 鄉鎮長 / 鄉鎮民代表 的子選單）
    ========================= */
 
-
-.township-submenu .menu-button { justify-content: center; }
-.township-submenu .menu-button::before { display: none; }
 .township-submenu .menu-icon {
     display: none;
 }
