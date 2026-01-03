@@ -426,7 +426,6 @@ function getMenuIconSvg(key){
 
     return svgs[key] || wrap(`<circle cx="12" cy="12" r="7" />`);
 }
-}
 
 function loadData(file, uiName, pushState = true) {
         dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據...</div>`;
