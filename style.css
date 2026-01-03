@@ -41,8 +41,11 @@ h1 span { cursor: pointer; }
 /* --- 主選單樣式 --- */
 .main-menu-grid{
     display: grid;
-    /* 桌機：縮小每格最小寬度，讓同列格數增加，視覺不會過大 */
-    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 14vw, 150px), 1fr));
+
+    /* 讓「首頁」與「子分類」都維持同一套 tile 尺寸，不因項目數少就被撐大 */
+    grid-template-columns: repeat(auto-fit, minmax(132px, 156px));
+    justify-content: center;
+
     gap: 14px;
     margin-bottom: 50px;
     align-items: stretch;
@@ -114,17 +117,22 @@ h1 span { cursor: pointer; }
 }
 
 .menu-svg{
-    width: clamp(28px, 2.2vw, 38px);
-    height: clamp(28px, 2.2vw, 38px);
+    /* 圖示加大：桌機也更清楚，手機會再另外加大一次 */
+    width: clamp(32px, 2.6vw, 44px);
+    height: clamp(32px, 2.6vw, 44px);
 }
 
 .menu-text{
-    display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;   /* 最多兩行，避免小螢幕溢出 */
+    overflow: hidden;
+
     text-align: center;
-    font-size: clamp(15px, 1.25vw, 18px);
+    font-size: clamp(16px, 1.35vw, 20px);
     font-weight: 800;
     letter-spacing: 0.2px;
-    line-height: 1.25;
+    line-height: 1.2;
 }
 
 /* 既有 HTML 有 menu-chevron，但方形 Tile 不需要箭頭 */
@@ -160,15 +168,16 @@ h1 span { cursor: pointer; }
     .menu-button{
         padding: 10px;
         border-radius: 12px;
-        gap: 9px;
+        gap: 8px;
     }
 
-    .menu-svg{ width: 24px; height: 24px; }
+.menu-svg{ width: 30px; height: 30px; }
 
-    .menu-text{
-        font-size: 13.5px;
-        line-height: 1.2;
+.menu-text{
+        font-size: 15.5px;
+        line-height: 1.15;
     }
+
 }
 
 /* 減少動態偏好 */
@@ -176,6 +185,7 @@ h1 span { cursor: pointer; }
     .menu-button, .menu-button::before, .menu-icon{
         transition: none !important;
     }
+}
 }
 
 
@@ -520,6 +530,9 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 .result-lost { color: #999; font-weight: 400; }
 
 @media (max-width: 768px) {
+        .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
+        .menu-button { padding: 15px 5px; }
+        .menu-text { font-size: 14px; }
         .election-list-grid { column-count: 1; }
         .layout-compact { flex-direction: column; align-items: center; }
         .layout-compact .table-area { width: 100%; }
@@ -568,7 +581,3 @@ footer {
     display: none;
 }
 
-/* 圖示移除後，讓文字自然往上，不留空白 */
-.township-submenu .menu-button {
-    padding-top: 20px;
-}
