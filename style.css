@@ -57,8 +57,9 @@ h1 span { cursor: pointer; }
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 
     padding: 16px;
     aspect-ratio: 1 / 1;
@@ -111,20 +112,25 @@ h1 span { cursor: pointer; }
 
 /* Icon：用小方塊承接，避免視覺飄散 */
 .menu-icon{
-    display: inline-grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: rgba(56, 135, 176, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ✅ 不再做「小方塊底」：只保留圖示本體 */
+    background: none;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+
     color: var(--primary);
     flex: 0 0 auto;
 }
 
-.menu-svg{ width: 22px; height: 22px; }
+.menu-svg{ width: 26px; height: 26px; }
 
 .menu-text{
     display: block;
+    text-align: center;
     font-size: 16px;
     font-weight: 800;
     letter-spacing: 0.2px;
@@ -165,15 +171,10 @@ h1 span { cursor: pointer; }
     .menu-button{
         padding: 12px;
         border-radius: 14px;
+    
+        gap: 10px;
     }
-
-    .menu-icon{
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-    }
-
-    .menu-svg{ width: 20px; height: 20px; }
+.menu-svg{ width: 22px; height: 22px; }
 
     .menu-text{
         font-size: 13px;

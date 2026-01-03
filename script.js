@@ -288,47 +288,102 @@ function isCountyPseudoTownName(name) {
  * - 僅作為視覺符號，真正的名稱仍由 menu-text 提供
  */
 function getMenuIconSvg(key) {
-    const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
+    const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
     switch (key) {
         case "president":
-            // 旗幟 + 星
-            return `<svg ${common}><path d="M6 21V4"/><path d="M6 4h10l-2 3 2 3H6"/><path d="M18.5 14.5l.6 1.2 1.3.2-.95.9.22 1.3-1.17-.62-1.17.62.22-1.3-.95-.9 1.3-.2z"/></svg>`;
+            // 總統副總統：旗幟 + 星（象徵國家元首）
+            return `<svg ${common}>
+                <path d="M6 21V4"/>
+                <path d="M6 4h11l-2 3 2 3H6"/>
+                <path d="M15.8 6.3l.4.8.9.1-.7.6.2.9-.8-.4-.8.4.2-.9-.7-.6.9-.1.4-.8z"/>
+            </svg>`;
         case "legislator":
-            // 權衡/議會：柱 + 講台
-            return `<svg ${common}><path d="M4 20h16"/><path d="M6 20V9"/><path d="M18 20V9"/><path d="M7 9h10"/><path d="M9 9V5h6v4"/><path d="M8 13h8"/><path d="M8 16h8"/></svg>`;
+            // 立法委員：議會建築/柱列
+            return `<svg ${common}>
+                <path d="M4 10l8-4 8 4"/>
+                <path d="M6 10v9"/><path d="M10 10v9"/><path d="M14 10v9"/><path d="M18 10v9"/>
+                <path d="M3.5 19h17"/>
+            </svg>`;
         case "assembly":
-            // 文件 + 印章點
-            return `<svg ${common}><path d="M7 3h7l3 3v15H7z"/><path d="M14 3v4h4"/><path d="M9 11h6"/><path d="M9 14h6"/><circle cx="12" cy="18" r="1.5"/></svg>`;
+            // 國大代表：文件 + 印章
+            return `<svg ${common}>
+                <path d="M7 3h8l2 2v16H7z"/>
+                <path d="M15 3v4h4"/>
+                <path d="M9 10h6"/><path d="M9 13h6"/>
+                <circle cx="12" cy="17.5" r="1.6"/>
+            </svg>`;
         case "magistrate":
-            // 建物
-            return `<svg ${common}><path d="M4 10l8-5 8 5"/><path d="M6 10v10"/><path d="M18 10v10"/><path d="M4 20h16"/><path d="M10 20v-6h4v6"/></svg>`;
+            // 縣長：勳章（行政首長）
+            return `<svg ${common}>
+                <circle cx="12" cy="10" r="4.2"/>
+                <path d="M10 13.6l-2 7 4-2 4 2-2-7"/>
+                <path d="M12 8.2l.6 1.2 1.3.2-1 .9.3 1.3-1.2-.6-1.2.6.3-1.3-1-.9 1.3-.2.6-1.2z"/>
+            </svg>`;
         case "council":
-            // 會議桌
-            return `<svg ${common}><path d="M5 9h14"/><path d="M6 9v10"/><path d="M18 9v10"/><path d="M8 13h8"/><path d="M8 16h8"/><circle cx="8" cy="6" r="1.5"/><circle cx="16" cy="6" r="1.5"/></svg>`;
+            // 縣議員：群眾/議事（對話框）
+            return `<svg ${common}>
+                <path d="M7 8h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H11l-3.5 2V18H7a3 3 0 0 1-3-3v-4a3 3 0 0 1 3-3z"/>
+                <path d="M8.5 12h7"/><path d="M8.5 14.5h5.5"/>
+            </svg>`;
         case "mayor":
-            // 地標/定位
-            return `<svg ${common}><path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/><circle cx="12" cy="10" r="2"/></svg>`;
+            // 鄉鎮長：小型公所/廳舍（含旗）
+            return `<svg ${common}>
+                <path d="M4 10l8-5 8 5"/>
+                <path d="M6 10v10h12V10"/>
+                <path d="M10 20v-6h4v6"/>
+                <path d="M12 5v3"/><path d="M12 5h4l-1 1 1 1h-4"/>
+            </svg>`;
         case "representative":
-            // 人像 + 徽章
-            return `<svg ${common}><circle cx="9" cy="8" r="2"/><path d="M5.5 18a3.5 3.5 0 0 1 7 0"/><path d="M14 8h5"/><path d="M14 12h5"/><path d="M14 16h3"/></svg>`;
+            // 鄉鎮民代表：群體代表（兩人 + 橫線）
+            return `<svg ${common}>
+                <path d="M8 12a3 3 0 1 0-0.01 0z"/>
+                <path d="M16 12a3 3 0 1 0-0.01 0z"/>
+                <path d="M4.5 20a4.5 4.5 0 0 1 7 0"/>
+                <path d="M12.5 20a4.5 4.5 0 0 1 7 0"/>
+                <path d="M7.5 15.5h9"/>
+            </svg>`;
         case "village":
-            // 房子 + 路徑
-            return `<svg ${common}><path d="M3 12l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/><path d="M3 20h4"/></svg>`;
+            // 村里長：房屋 + 樹（社區）
+            return `<svg ${common}>
+                <path d="M4 11l8-6 8 6"/>
+                <path d="M6 11v9h12v-9"/>
+                <path d="M10 20v-5h4v5"/>
+                <path d="M5 20v-4"/>
+                <path d="M5 16c0-2 3-3 4.5-1.5"/>
+            </svg>`;
         case "referendum":
-            // 勾選票匣
-            return `<svg ${common}><path d="M4 4h16v16H4z"/><path d="M7 8h6"/><path d="M7 12h6"/><path d="M7 16h6"/><path d="M15 13l1.5 1.5L20 11"/></svg>`;
+            // 公民投票：票匭 + 勾選
+            return `<svg ${common}>
+                <path d="M7 10l5-4 5 4"/>
+                <path d="M6 10v9h12v-9"/>
+                <path d="M9 14l2 2 4-4"/>
+            </svg>`;
         case "nation":
-            // 地球
-            return `<svg ${common}><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>`;
+            // 國家：地球
+            return `<svg ${common}>
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M3 12h18"/>
+                <path d="M12 3a14 14 0 0 1 0 18"/>
+                <path d="M12 3a14 14 0 0 0 0 18"/>
+            </svg>`;
         case "local":
-            // 標記點
-            return `<svg ${common}><path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/><path d="M9.5 10h5"/></svg>`;
+            // 地方：定位點
+            return `<svg ${common}>
+                <path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/>
+                <circle cx="12" cy="10" r="2"/>
+            </svg>`;
         case "district":
-            // 地圖區塊
-            return `<svg ${common}><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>`;
+            // 區域：地圖區塊
+            return `<svg ${common}>
+                <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
+                <path d="M9 4v14"/><path d="M15 6v14"/>
+            </svg>`;
         case "party":
-            // 旗幟
-            return `<svg ${common}><path d="M6 21V4"/><path d="M6 4h12l-2 3 2 3H6"/></svg>`;
+            // 政黨：旗幟
+            return `<svg ${common}>
+                <path d="M6 21V4"/>
+                <path d="M6 4h12l-2 3 2 3H6"/>
+            </svg>`;
         default:
             return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
     }
