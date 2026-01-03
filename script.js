@@ -287,144 +287,640 @@ function isCountyPseudoTownName(name) {
  * - 使用 currentColor：可直接用 CSS 改色
  * - 僅作為視覺符號，真正的名稱仍由 menu-text 提供
  */
-function getMenuIconSvg(key){
-    // ✅ 統一風格：24x24、線條 icon、同一筆觸粗細與圓角
-    // - fill="none"
-    // - stroke="currentColor"
-    // - stroke-width="1.8"
-    // - stroke-linecap/linejoin="round"
-    const wrap = (inner) => `
-        <svg class="menu-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"
-             fill="none" stroke="currentColor" stroke-width="1.8"
-             stroke-linecap="round" stroke-linejoin="round">
-            ${inner}
-        </svg>
-    `;
+function getMenuIconSvg(key) {
+    // 統一圖示語言：24x24、線條風格一致（currentColor + 圓角端點/轉角）
+    // 目標：每一格 icon 不重複、語意更貼題、整體視覺一致
+    const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
+    switch (key) {
+        case "president":
+            return `<svg ${common}>
+                <path d="M6 21V4"/>
+                <path d="M6 4h12l-2.2 3 2.2 3H6"/>
+                <path d="M14.8 6.2l.5 1 1.1.2-.8.7.2 1.1-1-.5-1 .5.2-1.1-.8-.7 1.1-.2.5-1z"/>
+            </svg>`;
 
-    const svgs = {
-        // 總統：旗幟（單純、象徵性）
-        president: wrap(`
-            <path d="M6 21V4" />
-            <path d="M6 5h11l-1.8 3.2L17 11H6" />
-        `),
+        case "legislator":
+            return `<svg ${common}>
+                <path d="M4 10l8-4 8 4"/>
+                <path d="M6 10v9"/><path d="M10 10v9"/><path d="M14 10v9"/><path d="M18 10v9"/>
+                <path d="M4 19h16"/>
+            </svg>`;
 
-        // 立法委員：議會建築
-        legislator: wrap(`
-            <path d="M4 9h16" />
-            <path d="M6 9v11" />
-            <path d="M10 9v11" />
-            <path d="M14 9v11" />
-            <path d="M18 9v11" />
-            <path d="M3 20h18" />
-            <path d="M12 3l8 5H4l8-5z" />
-        `),
+        case "assembly":
+            return `<svg ${common}>
+                <path d="M8 3h7l3 3v15H8z"/>
+                <path d="M15 3v4h4"/>
+                <path d="M10 11h8"/><path d="M10 14h8"/><path d="M10 17h6"/>
+            </svg>`;
 
-        // 國民大會：文件＋勾選（象徵議決/表決）
-        assembly: wrap(`
-            <path d="M7 3h8l3 3v15H7z" />
-            <path d="M15 3v4h4" />
-            <path d="M9.2 13.2l2 2 4.2-4.2" />
-            <path d="M9 18h6" />
-        `),
+        case "magistrate":
+            return `<svg ${common}>
+                <circle cx="12" cy="9.8" r="3.8"/>
+                <path d="M10 13.2l-2 7 4-2 4 2-2-7"/>
+                <path d="M12 7.7l.6 1.1 1.2.2-.9.8.2 1.2-1.1-.6-1.1.6.2-1.2-.9-.8 1.2-.2.6-1.1z"/>
+            </svg>`;
 
-        // 縣市長：勳章（行政首長）
-        magistrate: wrap(`
-            <circle cx="12" cy="9.5" r="4" />
-            <path d="M10.2 13.5L8.5 21l3.5-2 3.5 2-1.7-7.5" />
-        `),
+        case "council":
+            return `<svg ${common}>
+                <path d="M14 7l3 3"/>
+                <path d="M7 14l7-7 3 3-7 7H7z"/>
+                <path d="M6 18h6"/>
+                <path d="M5 20h8"/>
+            </svg>`;
 
-        // 議員：法槌（議事/表決）
-        council: wrap(`
-            <path d="M14.5 4.5l5 5" />
-            <path d="M12.8 6.2l5 5" />
-            <path d="M11.5 7.5l-6.8 6.8" />
-            <path d="M9 10l5 5" />
-            <path d="M3.5 20.5h7" />
-        `),
+        case "mayor":
+            return `<svg ${common}>
+                <path d="M4 10l8-5 8 5"/>
+                <path d="M6 10v10h12V10"/>
+                <path d="M10 20v-6h4v6"/>
+                <path d="M8.5 13h2"/><path d="M13.5 13h2"/>
+            </svg>`;
 
-        // 鄉鎮長：鄉鎮公所（小型市政廳）
-        townshipMayor: wrap(`
-            <path d="M4 10l8-6 8 6" />
-            <path d="M6 10v10h12V10" />
-            <path d="M10 20v-5h4v5" />
-            <path d="M8 13h2" />
-            <path d="M14 13h2" />
-        `),
-        /* 相容舊 key */
-        mayor: wrap(`
-            <path d="M4 10l8-6 8 6" />
-            <path d="M6 10v10h12V10" />
-            <path d="M10 20v-5h4v5" />
-            <path d="M8 13h2" />
-            <path d="M14 13h2" />
-        `),
+        case "representative":
+            return `<svg ${common}>
+                <path d="M6 12l2-2 4 4 4-4 2 2"/>
+                <path d="M8 13l2 2 2-2"/>
+                <path d="M10 15l2 2 2-2"/>
+                <path d="M5 14l3 3"/>
+                <path d="M19 14l-3 3"/>
+            </svg>`;
 
-        // 鄉鎮民代表：群眾代表（多人）
-        representative: wrap(`
-            <circle cx="9" cy="9" r="2.2" />
-            <circle cx="15" cy="9" r="2.2" />
-            <path d="M4.5 20c.6-3.4 3-5.4 4.5-5.4h0" />
-            <path d="M19.5 20c-.6-3.4-3-5.4-4.5-5.4h0" />
-            <path d="M8.2 20c.6-3.8 2.4-6.2 3.8-6.2s3.2 2.4 3.8 6.2" />
-        `),
+        case "village":
+            return `<svg ${common}>
+                <path d="M4 11l8-6 8 6"/>
+                <path d="M6 11v9h12v-9"/>
+                <path d="M10 20v-5h4v5"/>
+            </svg>`;
 
-        // 村里長：住家（里/村社區）
-        villageChief: wrap(`
-            <path d="M3 10l9-7 9 7" />
-            <path d="M5 10v10h14V10" />
-            <path d="M9 20v-5h6v5" />
-            <path d="M16 6V4" />
-        `),
-        /* 相容舊 key */
-        village: wrap(`
-            <path d="M3 10l9-7 9 7" />
-            <path d="M5 10v10h14V10" />
-            <path d="M9 20v-5h6v5" />
-            <path d="M16 6V4" />
-        `),
+        case "referendum":
+            return `<svg ${common}>
+                <path d="M7 10l5-4 5 4"/>
+                <path d="M6 10v9h12v-9"/>
+                <path d="M11 6.5v4.2"/>
+                <path d="M9.5 15l1.6 1.6 3.6-3.6"/>
+            </svg>`;
 
-        // 公投：投票箱
-        referendum: wrap(`
-            <path d="M9 3h6v4H9z" />
-            <path d="M4 9h16v12H4z" />
-            <path d="M8 9V7h8v2" />
-            <path d="M9 14l2 2 4-4" />
-        `),
+        case "nation":
+            return `<svg ${common}>
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M3 12h18"/>
+                <path d="M12 3a14 14 0 0 1 0 18"/>
+                <path d="M12 3a14 14 0 0 0 0 18"/>
+            </svg>`;
 
-        // 國家層級：地球
-        nation: wrap(`
-            <circle cx="12" cy="12" r="9" />
-            <path d="M3 12h18" />
-            <path d="M12 3c2.8 3 2.8 15 0 18" />
-            <path d="M12 3c-2.8 3-2.8 15 0 18" />
-        `),
+        case "local":
+            return `<svg ${common}>
+                <path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/>
+                <circle cx="12" cy="10" r="2"/>
+            </svg>`;
 
-        // 地方：定位
-        local: wrap(`
-            <path d="M12 21s6-5 6-10a6 6 0 10-12 0c0 5 6 10 6 10z" />
-            <circle cx="12" cy="11" r="2" />
-        `),
+        case "district":
+            return `<svg ${common}>
+                <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
+                <path d="M9 4v14"/><path d="M15 6v14"/>
+            </svg>`;
 
-        // 選區：摺疊地圖
-        district: wrap(`
-            <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" />
-            <path d="M9 4v14" />
-            <path d="M15 6v14" />
-        `),
+        case "party":
+            return `<svg ${common}>
+                <path d="M8 7h12"/><path d="M8 12h12"/><path d="M8 17h12"/>
+                <path d="M4 7h.01"/><path d="M4 12h.01"/><path d="M4 17h.01"/>
+            </svg>`;
 
-        // 政黨：組織網（六邊形＋節點）
-        party: wrap(`
-            <path d="M7 7l5-3 5 3v6l-5 3-5-3z" />
-            <circle cx="12" cy="10" r="1" />
-            <circle cx="10" cy="13" r="1" />
-            <circle cx="14" cy="13" r="1" />
-            <path d="M12 11.2v1" />
-            <path d="M11.2 12.2l-0.6 0.6" />
-            <path d="M12.8 12.2l0.6 0.6" />
-        `)
+        default:
+            return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
+    }
+}
+
+
+    const partyColors = {
+        "中國國民黨": "#3887B0",
+        "民主進步黨": "#008800", 
+        "台灣民眾黨": "#28C8C8",
+        "親民黨": "#F27C00",
+        "新黨": "#ECBE00",
+        "金門高粱黨": "#990033",
+        "台灣基進": "#A23D23",
+        "無黨團結聯盟": "#69032B",
+    	"台灣團結聯盟": "#A66000",
+        "連署參選": "#8D7A96",
+        "無黨籍": "#7F8C8D",
+        "同意": "#0B5880",
+        "不同意": "#537073",
+        "default": "#537073"
     };
 
-    return svgs[key] || wrap(`<circle cx="12" cy="12" r="7" />`);
+    let appState = {
+        data: {},
+        countyMetadata: {}, 
+        currentLevel: 'mainMenu', 
+        currentTown: null,
+        currentVillage: null,
+        sortConfig: { key: 'number', direction: 'asc' }, 
+        globalTotalVotes: 0,
+        electionName: "選舉資料",
+        chartInstances: [] 
+    };
+
+    // *** 新增：取得顯示用名稱 (移除字尾數字) ***
+    function getDisplayName(name) {
+        if (!name) return "";
+    
+	// 移除名字末端的數字 (例如 "蔡建偉1" -> "蔡建偉")
+	    return name.replace(/\d+$/, '');
+    }
+
+    // *** 新增：全域候選人詳細資料暫存 ***
+    let globalCandidateData = {}; 
+    
+    function hexToRgb(hex) {
+        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : { r: 0, b: 0, g: 0 };
+    }
+
+    function getPartyColor(party) {
+        const isIndependent = party.startsWith('無黨籍');
+        if (isIndependent) {
+            return partyColors[party] || partyColors['無黨籍']; 
+        }
+        return partyColors[party] || partyColors['default'];
+    }
+
+    function getShortPartyName(party) {
+        const shortNamesMap = {
+            "中國國民黨": "國民黨",
+            "民主進步黨": "民進黨",
+            "台灣民眾黨": "民眾黨",
+            "親民黨": "親民黨","新黨": "新黨",
+            "台灣團聯聯盟": "台聯黨",
+            "金門高粱黨": "高粱黨","龍黨": "龍黨","教科文預算保障e聯盟": "教科文",
+            "台灣基進": "台灣基進",
+            "中華新住民黨": "新住民黨",
+            "中國生產黨": "生產黨",
+            "中華統一促進黨": "統促黨",
+            "軍公教聯盟黨": "軍公教",
+            "台灣工黨": "台灣工黨",
+            "健保免費連線": "健保免費",
+            "無黨團結聯盟": "無黨聯盟",
+            "公民黨": "公民黨",
+            "中華民族致公黨": "致公黨",
+            "青年陽光黨": "陽光黨",
+            "連署參選": "連署",
+            "無黨籍-1": "無黨籍","無黨籍-2": "無黨籍",
+            "無黨籍-3": "無黨籍",
+            "無黨籍-4": "無黨籍",
+            "無黨籍": "無黨籍",
+            "default": "無"
+        };
+        const key = party.split('-')[0];
+        return shortNamesMap[party] || shortNamesMap[key] || party; 
+    }
+    
+    function getLongPartyName(party) {
+        const longNamesMap = {
+            "中國國民黨": "中國國民黨",
+            "民主進步黨": "民主進步黨",
+            "台灣民眾黨": "台灣民眾黨",
+            "親民黨": "親民黨","新黨": "新黨",
+            "台灣團結聯盟": "台灣團結聯盟",
+            "金門高粱黨": "金門高粱黨","龍黨": "龍黨","教科文預算保障e聯盟": "教科文預算保障e聯盟",
+            "台灣基進": "台灣基進",
+            "中華新住民黨": "中華新住民黨",
+            "中國生產黨": "中國生產黨",
+            "中華統一促進黨": "中華統一促進黨",
+            "軍公教聯盟黨": "軍公教聯盟黨",
+            "台灣工黨": "台灣工黨",
+            "健保免費連線": "健保免費連線",
+            "無黨團結聯盟": "無黨團結聯盟",
+            "公民黨": "公民黨",
+            "中華民族致公黨": "中華民族致公黨",
+            "青年陽光黨": "陽光黨",
+            "無黨籍-1": "無黨籍","無黨籍-2": "無黨籍",
+            "無黨籍-3": "無黨籍",
+            "無黨籍-4": "無黨籍",
+            "無黨籍": "無黨籍",
+            "default": "無"
+        };
+        const key = party.split('-')[0];
+        return longNamesMap[party] || longNamesMap[key] || party; 
+    }
+
+
+    const dom = {
+        content: document.getElementById("content"),
+        breadcrumb: document.getElementById("breadcrumb"),
+        breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
+        header: document.querySelector('header')
+    };
+    
+    // ================= 歷史記錄 API 輔助函式 =================
+    
+    function getCurrentUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            view: params.get('view') || 'main',
+            type: params.get('type'),
+            election: params.get('election'),
+            town: params.get('town'),
+            village: params.get('village')
+        };
+    }
+
+// 文字正規化：避免空白/編碼差異導致找不到選舉
+function normalizeText(str) {
+    return (str || '')
+        .toString()
+        .replace(/\+/g, ' ')
+        .trim()
+        .replace(/\s+/g, ' ');
+}
+    
+    function updateUrl(state, title, url, push = true) {
+        if (push) {
+            // [新增] 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
+            const currentState = history.state || {};
+            currentState.scrollY = window.scrollY;
+            history.replaceState(currentState, document.title, window.location.href);
+
+            // 推入新的歷史紀錄
+            history.pushState(state, title, url);
+        } else {
+            history.replaceState(state, title, url); 
+        }
+    }
+
+    // ================= 候選人詳細資料載入與處理 (修改) =================
+    
+    async function loadCandidateData() {
+        try {
+            const response = await fetch('candidates.csv');
+            if (!response.ok) throw new Error('無法讀取 candidates.csv');
+            const text = await response.text();
+
+            // 解析 CSV
+            const rows = text.split('\n').map(r => r.trim()).filter(r => r);
+    
+            // 跳過標題列 (index 0)
+            for (let i = 1; i < rows.length; i++) {
+                const cols = rows[i].split(',');
+    
+                // ★ 新增：讀取 candidateId
+                const candidateId = cols[0] ? cols[0].trim() : '';
+                const name        = cols[1] ? cols[1].trim() : '';
+                const sex         = cols[2] ? cols[2].trim() : '';
+                const birthYear   = cols[3] ? cols[3].trim() : '';
+                const birthPlace  = cols[4] ? cols[4].trim() : '';
+                const photo       = cols[5] ? cols[5].trim() : '';
+    
+                if (!name || !candidateId) continue;
+    
+                // ★ 關鍵：把 id 一起存進去
+                globalCandidateData[name] = {
+                    id: candidateId,
+                    sex,
+                    birthYear,
+                    birthPlace,
+                    photo
+                };
+            }
+        } catch (e) {
+            console.warn("載入候選人資料失敗或檔案不存在", e);
+        }
+    }
+    
+    // 開啟候選人 Modal
+    window.showCandidateModal = function(name, currentElectionYear) {
+        // 如果是政黨票選舉，則不顯示 Modal
+        if (isPartyListElection(appState.electionName)) return;
+
+        const modal = document.getElementById('candidate-modal');
+        const modalBody = document.getElementById('modal-body');
+        
+        // 1. 取得基本資料
+        const info = globalCandidateData[name] || { sex: '未知', birthYear: '', birthPlace: '', photo: '' };
+        
+        // 2. 準備顯示文字：第一行 (性別．參選年紀 XX 歲)
+        let line1Parts = [];
+        
+        // 加入性別
+        if (info.sex) line1Parts.push(info.sex);
+        
+        // 計算並加入年紀 (參選年紀 XX 歲)
+        let ageHtml = '';
+        if (info.birthYear && currentElectionYear) {
+            const age = parseInt(currentElectionYear) - parseInt(info.birthYear);
+            ageHtml = `參選年紀 ${age} 歲`;
+            line1Parts.push(ageHtml);
+        }
+        
+        const line1Html = line1Parts.join('．'); // 用全形點連接
+
+        // 3. 準備顯示文字：第二行 (年份／出生地 出生)
+        let line2Html = "";
+        if (info.birthYear || info.birthPlace) {
+            const yearPart = info.birthYear ? `${info.birthYear}年` : '';
+            const placePart = info.birthPlace || '';
+           // 使用「／」來分隔年份與出生地，最後加上「出生」
+            let combinedPart = [yearPart, placePart].filter(p => p).join('／');
+           if (combinedPart) {
+                 line2Html = `${combinedPart} 出生`;
+            }
+        }
+
+        const photoSrc = info.photo ? `candidates/${info.photo}` : '';
+        
+	// 4. 搜尋參選經歷
+	const historyList = [];
+	
+	// ★ 關鍵門禁：先確認這個人有沒有 ID
+	const targetId = globalCandidateData[name]?.id;
+	if (!targetId) {
+	    console.warn(`找不到候選人資料：${name}`);
+	} else {
+	    availableElections.forEach(e => {
+	        if (e.summaryData && e.summaryData.allCandidates) {
+	
+	            const match = e.summaryData.allCandidates.find(c =>
+	                globalCandidateData[c.name]?.id === targetId
+	            );
+	
+	            if (match) {
+	                historyList.push({
+	                    year: e.year,
+	                    electionName: e.uiName,
+	                    party: match.party,
+	                    isWinner: match.isWinner,
+	                    isIncumbent: match.isIncumbent
+	                });
+	            }
+	        }
+	    });
+	}
+
+        historyList.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+        
+        let historyHtml = ''; 
+        if (historyList.length > 0) {
+            historyHtml += `<div class="history-title">參選經歷</div><ul class="history-list">`;
+            historyList.forEach(h => {
+                const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, '');    const resultClass = h.isWinner ? 'result-won' : 'result-lost';
+                const resultText = h.isWinner ? '當選' : '未當選';
+                const partyName = getLongPartyName(h.party);
+                historyHtml += `
+                    <li class="history-item">
+                        <div>
+                            <span class="history-year-tag">${h.year}</span>
+                            <span class="history-name">${electionNameWithoutYear}</span> <span class="history-party">${partyName}</span>
+                        </div>
+                        <div class="history-result ${resultClass}">
+                            ${resultText}
+                        </div>
+                    </li>
+                `;
+            });
+            historyHtml += `</ul>`;
+        } else {
+            historyHtml = `<div style="color:#999; margin-top:20px;">無其他參選紀錄</div>`;
+        }
+        
+    // 5. 組合 HTML 
+        const imgDisplay = photoSrc ? `<img src="${photoSrc}" class="profile-photo" alt="${name}">` : `<div class="profile-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:#ccc;">👤</div>`;
+        
+        modalBody.innerHTML = `
+            <div class="profile-header">
+                ${imgDisplay}
+                <div class="profile-info">
+                    <h2>${getDisplayName(name)}</h2>
+                    <div class="profile-detail">
+                        <div style="margin-bottom: 2px;">
+                            ${line1Html}
+                        </div>
+                        <div style="color: var(--text-sub);">
+                            ${line2Html}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ${historyHtml}
+        `;
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; 
+    };
+    
+    window.closeModal = function() {
+        document.getElementById('candidate-modal').classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    // ================= 資料載入與解析 =================
+    
+    function parseCSV(text) {
+    const rows = text.split('\n')
+        .map(r => r.trim())
+        .filter(r => r)
+        .map(r => r.split(','));
+
+    if (rows.length < 4) return;
+
+    // 讀取 A1 (選舉名稱) 和 B1 (投票日期)
+    const electionNameFromCSV = rows[0][0] ? rows[0][0].trim() : '';
+    const electionDateFromCSV = rows[0][1] ? rows[0][1].trim() : '';
+
+    // 解析候選人欄位範圍（從第 3 欄開始連續）
+    const headerRowIndices = [];
+    let currentIdx = 2;
+    while (rows[0][currentIdx] && rows[1][currentIdx]) {
+        headerRowIndices.push(currentIdx);
+        currentIdx++;
+    }
+
+    const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
+
+    const VOTES_COL = currentIdx;
+    const INVALID_COL = currentIdx + 1;
+    const ELIGIBLE_COL = currentIdx + 2;
+
+    const candInfo = [];
+    let independentCounter = 1;
+
+    headerRowIndices.forEach(colIndex => {
+        const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
+        let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
+        let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
+
+        // 處理 [] 中的文字
+        const bracketMatch = name.match(/\[(.*?)\]/);
+        const bracketText = bracketMatch ? bracketMatch[1] : null;
+
+        const isWomenQuota = name.includes('*!');
+        const isIncumbent = name.includes('#');
+        const isWinner = name.includes('*') || isWomenQuota;
+
+        // 清理名字，移除所有標記
+        name = name.replace(/\[.*?\]/g, '').replace('*!', '').replace('*', '').replace('#', '').trim();
+        party = party === '無' ? '無黨籍' : party;
+
+        if (name && number) {
+            if (party === '無黨籍') {
+                if (!partyColors[`無黨籍-${independentCounter}`] && independentCounter <= 4) {
+                    partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍'];
+                }
+                party = `無黨籍-${independentCounter}`;
+                independentCounter++;
+            }
+
+            candInfo.push({
+                number: String(number),
+                name,
+                party,
+                colIndex,
+                isWinner,
+                isWomenQuota,
+                isIncumbent,
+                bracketText
+            });
+        }
+    });
+
+    const candidates = {};
+    const towns = {};
+    const townOrder = [];
+
+    let globalValidVotes = 0;
+    let globalInvalidVotes = 0;
+    let globalEligibleVoters = 0;
+
+    const parseNum = (val) => parseInt(String(val || '').replace(/[^0-9]/g, '')) || 0;
+
+    for (let i = 3; i < rows.length; i++) {
+        const row = rows[i];
+        if (row.length < (ELIGIBLE_COL + 1)) continue;
+
+        // 跳過表頭/分隔列
+        if ((row[0] || '').includes('鄉鎮')) continue;
+
+        const townRaw = (row[0] || '').trim();
+        const village = (row[1] || '').trim();
+
+        const validVotes = parseNum(row[VOTES_COL]);
+        const invalidVotes = parseNum(row[INVALID_COL]);
+        const eligibleVoters = parseNum(row[ELIGIBLE_COL]);
+
+        // 無論是否有鄉鎮/村里，都要計入全縣總計
+        globalValidVotes += validVotes;
+        globalInvalidVotes += invalidVotes;
+        globalEligibleVoters += eligibleVoters;
+
+        const isTownRow = townRaw && !isCountyPseudoTownName(townRaw);
+        const town = townRaw;
+
+        // ✅ 鄉鎮層：只有真的是鄉鎮列，才建立 towns 結構並累加
+        if (isTownRow) {
+            if (!towns[town]) {
+                towns[town] = {
+                    villages: {},
+                    validVotes: 0,
+                    invalidVotes: 0,
+                    eligibleVoters: 0,
+                    candidates: {}
+                };
+                townOrder.push(town);
+            }
+
+            towns[town].validVotes += validVotes;
+            towns[town].invalidVotes += invalidVotes;
+            towns[town].eligibleVoters += eligibleVoters;
+
+            // ✅ 村里層：village 有值才建立
+            if (village) {
+                if (!towns[town].villages[village]) {
+                    towns[town].villages[village] = {
+                        validVotes: 0,
+                        invalidVotes: 0,
+                        eligibleVoters: 0,
+                        candidates: {}
+                    };
+                }
+                towns[town].villages[village].validVotes += validVotes;
+                towns[town].villages[village].invalidVotes += invalidVotes;
+                towns[town].villages[village].eligibleVoters += eligibleVoters;
+            }
+        }
+
+        // 候選人票數累加（全縣）
+        candInfo.forEach(c => {
+            const votes = parseNum(row[c.colIndex]);
+
+            if (!candidates[c.name]) {
+                candidates[c.name] = {
+                    number: c.number,
+                    party: c.party,
+                    votes: 0,
+                    isWinner: c.isWinner,
+                    isWomenQuota: c.isWomenQuota,
+                    isIncumbent: c.isIncumbent,
+                    bracketText: c.bracketText
+                };
+            }
+            candidates[c.name].votes += votes;
+
+            // 鄉鎮/村里（只有 isTownRow 才寫）
+            if (isTownRow) {
+                if (!towns[town].candidates[c.name]) {
+                    towns[town].candidates[c.name] = {
+                        number: c.number,
+                        party: c.party,
+                        votes: 0,
+                        isWinner: c.isWinner,
+                        isWomenQuota: c.isWomenQuota,
+                        isIncumbent: c.isIncumbent,
+                        bracketText: c.bracketText
+                    };
+                }
+                towns[town].candidates[c.name].votes += votes;
+
+                if (village) {
+                    if (!towns[town].villages[village].candidates[c.name]) {
+                        towns[town].villages[village].candidates[c.name] = {
+                            number: c.number,
+                            party: c.party,
+                            votes: 0,
+                            isWinner: c.isWinner,
+                            isWomenQuota: c.isWomenQuota,
+                            isIncumbent: c.isIncumbent,
+                            bracketText: c.bracketText
+                        };
+                    }
+                    towns[town].villages[village].candidates[c.name].votes += votes;
+                }
+            }
+        });
+    }
+
+    appState.data = {
+        county: candidates,
+        towns: towns,
+        townOrder: [...new Set(townOrder)]
+    };
+
+    appState.countyMetadata = {
+        validVotes: globalValidVotes,
+        invalidVotes: globalInvalidVotes,
+        eligibleVoters: globalEligibleVoters,
+        seatsCount: seatsCount,
+        electionNameFromCSV: electionNameFromCSV,
+        electionDateFromCSV: electionDateFromCSV
+    };
+
+    appState.globalTotalVotes = globalValidVotes;
 }
 
 function loadData(file, uiName, pushState = true) {
