@@ -38,37 +38,35 @@ h1 span { cursor: pointer; }
 .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 
 /* --- 主選單樣式 --- */
-/* --- 主選單樣式 --- */
+/* =========================
+   主選單 / 子分類按鈕（長方形：圖示左、文字右）
+   - 同一套 .menu-button 套用於首頁與子分類：尺寸一致、不會變大
+   - 手機：每列兩格
+   ========================= */
+
 .main-menu-grid{
     display: grid;
-
-    /* 讓「首頁」與「子分類」都維持同一套 tile 尺寸，不因項目數少就被撐大 */
-    grid-template-columns: repeat(auto-fit, minmax(132px, 156px));
-    justify-content: center;
-
+    /* 桌機：自適應欄數，保持按鈕不會過寬 */
+    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 18vw, 260px), 1fr));
     gap: 14px;
     margin-bottom: 50px;
     align-items: stretch;
 }
 
-/* =========================
-   主選單按鈕（方形 Tile：手機每列三格）
-   - 移除左上角雙層方塊
-   - 不再有「格內小方塊」
-   - Icon / 字體加大，但桌機每格縮小避免過大
-   ========================= */
 .menu-button{
     position: relative;
     overflow: hidden;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;          /* ✅ 圖示左、文字右 */
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 12px;
 
-    padding: 12px;
-    aspect-ratio: 1 / 1;
+    padding: 12px 14px;
+    min-height: 58px;             /* ✅ 固定高度感（首頁/子分類一致） */
+    width: 100%;
+    aspect-ratio: auto;           /* ✅ 不再強制方形 */
 
     background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.04) 100%);
     border: 1px solid rgba(225, 228, 232, 0.95);
@@ -89,7 +87,7 @@ h1 span { cursor: pointer; }
         background 0.2s ease;
 }
 
-/* 低調柔光：hover 才出現，避免搶內容 */
+/* 低調柔光：hover 才出現 */
 .menu-button::before{
     content: "";
     position: absolute;
@@ -103,7 +101,7 @@ h1 span { cursor: pointer; }
     pointer-events: none;
 }
 
-/* Icon：只留圖示本體（不加小方塊底） */
+/* Icon：左側固定，不加內框 */
 .menu-icon{
     display: inline-flex;
     align-items: center;
@@ -117,25 +115,21 @@ h1 span { cursor: pointer; }
 }
 
 .menu-svg{
-    /* 圖示加大：桌機也更清楚，手機會再另外加大一次 */
-    width: clamp(32px, 2.6vw, 44px);
-    height: clamp(32px, 2.6vw, 44px);
+    width: clamp(22px, 2vw, 30px);
+    height: clamp(22px, 2vw, 30px);
 }
 
+/* 文字：靠左，允許換行 */
 .menu-text{
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;   /* 最多兩行，避免小螢幕溢出 */
-    overflow: hidden;
-
-    text-align: center;
-    font-size: clamp(16px, 1.35vw, 20px);
+    display: block;
+    text-align: left;
+    font-size: clamp(14px, 1.1vw, 17px);
     font-weight: 800;
     letter-spacing: 0.2px;
     line-height: 1.2;
 }
 
-/* 既有 HTML 有 menu-chevron，但方形 Tile 不需要箭頭 */
+/* 既有 HTML 有 menu-chevron，但此設計不需要箭頭 */
 .menu-chevron{ display: none; }
 
 /* Hover（桌機） */
@@ -158,26 +152,26 @@ h1 span { cursor: pointer; }
     box-shadow: 0 7px 16px rgba(56, 135, 176, 0.14);
 }
 
-/* 手機：每列三格 */
+/* 手機：每列兩格 */
 @media (max-width: 768px){
     .main-menu-grid{
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
 
     .menu-button{
-        padding: 10px;
+        padding: 10px 12px;
+        min-height: 52px;
         border-radius: 12px;
-        gap: 8px;
+        gap: 10px;
     }
 
-.menu-svg{ width: 30px; height: 30px; }
+    .menu-svg{ width: 22px; height: 22px; }
 
-.menu-text{
-        font-size: 15.5px;
-        line-height: 1.15;
+    .menu-text{
+        font-size: 14px;
+        line-height: 1.2;
     }
-
 }
 
 /* 減少動態偏好 */
@@ -186,8 +180,6 @@ h1 span { cursor: pointer; }
         transition: none !important;
     }
 }
-}
-
 
 .menu-section-title {
     font-size: 24px;
@@ -530,9 +522,6 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 .result-lost { color: #999; font-weight: 400; }
 
 @media (max-width: 768px) {
-        .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
-        .menu-button { padding: 15px 5px; }
-        .menu-text { font-size: 14px; }
         .election-list-grid { column-count: 1; }
         .layout-compact { flex-direction: column; align-items: center; }
         .layout-compact .table-area { width: 100%; }
@@ -573,11 +562,8 @@ footer {
 }
 
 /* =========================
-   鄉鎮子選單：不顯示圓形圖示
-   （只影響 鄉鎮長 / 鄉鎮民代表 的子選單）
+   鄉鎮子選單：沿用一般按鈕樣式
+   - 不再隱藏圖示
+   - 不再額外加大 padding
+   - 讓子分類按鈕尺寸與首頁一致
    ========================= */
-
-.township-submenu .menu-icon {
-    display: none;
-}
-
