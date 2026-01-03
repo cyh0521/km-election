@@ -38,35 +38,34 @@ h1 span { cursor: pointer; }
 .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 
 /* --- 主選單樣式 --- */
-/* =========================
-   主選單 / 子分類按鈕（長方形：圖示左、文字右）
-   - 同一套 .menu-button 套用於首頁與子分類：尺寸一致、不會變大
-   - 手機：每列兩格
-   ========================= */
-
+/* --- 主選單樣式 --- */
 .main-menu-grid{
     display: grid;
-    /* 桌機：自適應欄數，保持按鈕不會過寬 */
-    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 18vw, 260px), 1fr));
+    /* 桌機：縮小每格最小寬度，讓同列格數增加，視覺不會過大 */
+    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 14vw, 150px), 1fr));
     gap: 14px;
     margin-bottom: 50px;
     align-items: stretch;
 }
 
+/* =========================
+   主選單按鈕（方形 Tile：手機每列三格）
+   - 移除左上角雙層方塊
+   - 不再有「格內小方塊」
+   - Icon / 字體加大，但桌機每格縮小避免過大
+   ========================= */
 .menu-button{
     position: relative;
     overflow: hidden;
 
     display: flex;
-    flex-direction: row;          /* ✅ 圖示左、文字右 */
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
+    justify-content: center;
+    gap: 10px;
 
-    padding: 12px 14px;
-    min-height: 58px;             /* ✅ 固定高度感（首頁/子分類一致） */
-    width: 100%;
-    aspect-ratio: auto;           /* ✅ 不再強制方形 */
+    padding: 12px;
+    aspect-ratio: 1 / 1;
 
     background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.04) 100%);
     border: 1px solid rgba(225, 228, 232, 0.95);
@@ -87,7 +86,7 @@ h1 span { cursor: pointer; }
         background 0.2s ease;
 }
 
-/* 低調柔光：hover 才出現 */
+/* 低調柔光：hover 才出現，避免搶內容 */
 .menu-button::before{
     content: "";
     position: absolute;
@@ -101,7 +100,7 @@ h1 span { cursor: pointer; }
     pointer-events: none;
 }
 
-/* Icon：左側固定，不加內框 */
+/* Icon：只留圖示本體（不加小方塊底） */
 .menu-icon{
     display: inline-flex;
     align-items: center;
@@ -115,21 +114,20 @@ h1 span { cursor: pointer; }
 }
 
 .menu-svg{
-    width: clamp(22px, 2vw, 30px);
-    height: clamp(22px, 2vw, 30px);
+    width: clamp(28px, 2.2vw, 38px);
+    height: clamp(28px, 2.2vw, 38px);
 }
 
-/* 文字：靠左，允許換行 */
 .menu-text{
     display: block;
-    text-align: left;
-    font-size: clamp(14px, 1.1vw, 17px);
+    text-align: center;
+    font-size: clamp(15px, 1.25vw, 18px);
     font-weight: 800;
     letter-spacing: 0.2px;
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
-/* 既有 HTML 有 menu-chevron，但此設計不需要箭頭 */
+/* 既有 HTML 有 menu-chevron，但方形 Tile 不需要箭頭 */
 .menu-chevron{ display: none; }
 
 /* Hover（桌機） */
@@ -152,24 +150,23 @@ h1 span { cursor: pointer; }
     box-shadow: 0 7px 16px rgba(56, 135, 176, 0.14);
 }
 
-/* 手機：每列兩格 */
+/* 手機：每列三格 */
 @media (max-width: 768px){
     .main-menu-grid{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 10px;
     }
 
     .menu-button{
-        padding: 10px 12px;
-        min-height: 52px;
+        padding: 10px;
         border-radius: 12px;
-        gap: 10px;
+        gap: 9px;
     }
 
-    .menu-svg{ width: 22px; height: 22px; }
+    .menu-svg{ width: 24px; height: 24px; }
 
     .menu-text{
-        font-size: 14px;
+        font-size: 13.5px;
         line-height: 1.2;
     }
 }
@@ -180,6 +177,8 @@ h1 span { cursor: pointer; }
         transition: none !important;
     }
 }
+}
+
 
 .menu-section-title {
     font-size: 24px;
@@ -522,6 +521,9 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 .result-lost { color: #999; font-weight: 400; }
 
 @media (max-width: 768px) {
+        .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
+        .menu-button { padding: 15px 5px; }
+        .menu-text { font-size: 14px; }
         .election-list-grid { column-count: 1; }
         .layout-compact { flex-direction: column; align-items: center; }
         .layout-compact .table-area { width: 100%; }
@@ -562,8 +564,43 @@ footer {
 }
 
 /* =========================
-   鄉鎮子選單：沿用一般按鈕樣式
-   - 不再隱藏圖示
-   - 不再額外加大 padding
-   - 讓子分類按鈕尺寸與首頁一致
+   鄉鎮子選單（鄉鎮長 / 鄉鎮民代表）：加上同一個圖示
+   - 此子選單的 HTML 只有 .menu-text，沒有 .menu-icon
+   - 因此用 pseudo-element 注入「基層選舉意象」圖示（投票箱＋選票）
    ========================= */
+
+/* 讓鄉鎮按鈕跟一般 menu-button 一樣是橫向（左圖示、右文字） */
+.township-submenu .menu-button{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+/* 注入同一個圖示（不依賴 JS/HTML） */
+.township-submenu .menu-button::before{
+    content: "";
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+    background-color: var(--primary);
+
+    /* iOS Safari 需要 -webkit-mask-* */
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+
+    /* 投票箱＋選票（純色 icon，可吃 primary 色） */
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 3c-.55 0-1 .45-1 1v2h2V5h8v1h2V4c0-.55-.45-1-1-1H7zm4.3 3.2 3.2 3.2-.9.9-2.3-2.3-1.5 1.5-.9-.9 2.4-2.4zM4 9c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-7c0-1.1-.9-2-2-2H4zm4.5 2h7c.28 0 .5.22.5.5v2.2c0 .13.05.26.15.35l1.7 1.7c.2.2.06.55-.22.55H6.87c-.28 0-.42-.34-.22-.55l1.7-1.7c.1-.09.15-.22.15-.35v-2.2c0-.28.22-.5.5-.5z'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 3c-.55 0-1 .45-1 1v2h2V5h8v1h2V4c0-.55-.45-1-1-1H7zm4.3 3.2 3.2 3.2-.9.9-2.3-2.3-1.5 1.5-.9-.9 2.4-2.4zM4 9c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-7c0-1.1-.9-2-2-2H4zm4.5 2h7c.28 0 .5.22.5.5v2.2c0 .13.05.26.15.35l1.7 1.7c.2.2.06.55-.22.55H6.87c-.28 0-.42-.34-.22-.55l1.7-1.7c.1-.09.15-.22.15-.35v-2.2c0-.28.22-.5.5-.5z'/></svg>");
+    opacity: 0.95;
+}
+
+/* 手機稍微縮小 icon，維持兩欄時的呼吸感 */
+@media (max-width: 768px){
+    .township-submenu .menu-button{ gap: 10px; }
+    .township-submenu .menu-button::before{ width: 24px; height: 24px; }
+}
