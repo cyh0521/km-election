@@ -40,16 +40,18 @@ h1 span { cursor: pointer; }
 /* --- 主選單樣式 --- */
 .main-menu-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
+    /* ✅ 桌機：固定「小而精緻」的 tile 尺寸，不再被 1fr 撐到太大 */
+    grid-template-columns: repeat(auto-fit, minmax(140px, 170px));
+    gap: 14px;
     margin-bottom: 50px;
     align-items: stretch;
+    justify-content: center;
 }
 
 /* =========================
    主選單按鈕（方形 Tile：手機每列三格）
-   - 與網站整體色系一致（primary/secondary）
-   - 桌機 hover、手機點按都有回饋
+   - 移除左上角「雙層方塊」裝飾
+   - 桌機：tile 變小、icon/字變大（減少空虛感）
    ========================= */
 .menu-button{
     position: relative;
@@ -59,14 +61,14 @@ h1 span { cursor: pointer; }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
 
-    padding: 16px;
+    padding: 12px;
     aspect-ratio: 1 / 1;
 
-    background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.04) 100%);
+    background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.05) 100%);
     border: 1px solid rgba(225, 228, 232, 0.95);
-    border-radius: 16px;
+    border-radius: 14px;
 
     color: var(--secondary);
     box-shadow: 0 2px 10px rgba(44, 62, 80, 0.06);
@@ -77,56 +79,41 @@ h1 span { cursor: pointer; }
     touch-action: manipulation;
 
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease,
-        background 0.2s ease;
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
 }
 
-/* 角落識別 + 柔光（保持低調，不搶內容） */
-.menu-button::after{
-    content: "";
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 10px;
-    height: 10px;
-    border-radius: 3px;
-    background: rgba(56, 135, 176, 0.40);
-    box-shadow: 0 0 0 7px rgba(56, 135, 176, 0.10);
-    pointer-events: none;
-}
-
+/* 柔光（維持質感，但不加任何角落小方塊） */
 .menu-button::before{
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
     background:
-        radial-gradient(circle at 18% 18%, rgba(56, 135, 176, 0.16) 0%, rgba(56, 135, 176, 0.00) 55%),
+        radial-gradient(circle at 22% 18%, rgba(56, 135, 176, 0.16) 0%, rgba(56, 135, 176, 0.00) 55%),
         radial-gradient(circle at 86% 92%, rgba(44, 62, 80, 0.10) 0%, rgba(44, 62, 80, 0.00) 60%);
     opacity: 0;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.22s ease;
     pointer-events: none;
 }
 
-/* Icon：用小方塊承接，避免視覺飄散 */
 .menu-icon{
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    /* ✅ 不再做「小方塊底」：只保留圖示本體 */
-    background: none;
+    background: none; /* ✅ 不要格內小方塊底 */
     width: auto;
     height: auto;
-    border-radius: 0;
 
     color: var(--primary);
     flex: 0 0 auto;
 }
 
-.menu-svg{ width: 26px; height: 26px; }
+/* ✅ 桌機 icon 放大一些，視覺更「有內容」 */
+.menu-svg{ width: 34px; height: 34px; }
 
 .menu-text{
     display: block;
@@ -134,7 +121,7 @@ h1 span { cursor: pointer; }
     font-size: 16px;
     font-weight: 800;
     letter-spacing: 0.2px;
-    line-height: 1.25;
+    line-height: 1.2;
 }
 
 /* 既有 HTML 有 menu-chevron，但方形 Tile 不需要箭頭 */
@@ -142,9 +129,9 @@ h1 span { cursor: pointer; }
 
 /* Hover（桌機） */
 .menu-button:hover{
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     border-color: rgba(56, 135, 176, 0.55);
-    box-shadow: 0 12px 24px rgba(56, 135, 176, 0.16);
+    box-shadow: 0 12px 22px rgba(56, 135, 176, 0.16);
 }
 
 .menu-button:hover::before{ opacity: 1; }
@@ -161,30 +148,36 @@ h1 span { cursor: pointer; }
     box-shadow: 0 7px 16px rgba(56, 135, 176, 0.14);
 }
 
-/* 手機：每列三格（字與 icon 也同步縮小） */
+/* 手機：每列三格（icon/字比例更舒服） */
 @media (max-width: 768px){
     .main-menu-grid{
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 10px;
+        justify-content: stretch;
     }
 
     .menu-button{
-        padding: 12px;
-        border-radius: 14px;
-    
-        gap: 10px;
+        padding: 10px;
+        border-radius: 12px;
+        gap: 8px;
     }
-.menu-svg{ width: 22px; height: 22px; }
+
+    .menu-svg{ width: 26px; height: 26px; }
 
     .menu-text{
         font-size: 13px;
-        line-height: 1.2;
+        line-height: 1.15;
     }
+}
+
+/* 更小螢幕避免換行擠爆 */
+@media (max-width: 380px){
+    .menu-text{ font-size: 12px; }
 }
 
 /* 減少動態偏好 */
 @media (prefers-reduced-motion: reduce){
-    .menu-button, .menu-button::before, .menu-button::after, .menu-icon{
+    .menu-button, .menu-button::before, .menu-icon{
         transition: none !important;
     }
 }
