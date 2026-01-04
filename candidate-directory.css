@@ -226,7 +226,7 @@ header{
 .cd-photo{
     width: 96px;
     height: 96px;
-    border-radius: 14px;
+    border-radius: 50%;
     object-fit: cover;
     background: #eee;
     border: 1px solid var(--cd-border);
@@ -245,6 +245,39 @@ header{
 }
 .cd-open-modal:hover{
     text-decoration: underline;
+}
+
+
+/* 基本資料：無方框、直式三列（性別 / 出生年 / 出生地） */
+.cd-basic{
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.cd-basic-row{
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.7;
+    min-width: 0;
+}
+.cd-basic-label{
+    font-size: 12px;
+    color: var(--cd-sub);
+    font-weight: 800;
+    flex: 0 0 auto;
+    min-width: 52px;
+}
+.cd-basic-value{
+    font-size: 13px;
+    color: var(--cd-secondary);
+    font-weight: 800;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cd-info-grid{
@@ -411,7 +444,7 @@ header{
     .cd-top{
         grid-template-columns: 80px 1fr;
     }
-    .cd-photo{ width: 80px; height: 80px; border-radius: 12px; }
+    .cd-photo{ width: 80px; height: 80px; border-radius: 50%; }
 }
 
 

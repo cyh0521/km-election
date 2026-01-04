@@ -478,7 +478,16 @@ function normalizeParty(p) {
       .replace(/'/g, '&#039;');
   }
 
-  function unescapeHtml(str) {
+    function stripLeadingYearFromName(name, year){
+    const s = (name ?? '').toString();
+    const y = String(year ?? '').trim();
+    if (!y) return s.trim();
+    const re1 = new RegExp('^\\s*' + y + '\\s*年\\s*');
+    const re2 = new RegExp('^\\s*' + y + '\\s*');
+    return s.replace(re1, '').replace(re2, '').trim();
+  }
+
+function unescapeHtml(str) {
     const txt = document.createElement('textarea');
     txt.innerHTML = String(str || '');
     return txt.value;
@@ -576,12 +585,19 @@ function normalizeParty(p) {
       </div>
     `;
 
-    const gender = normalizeGender(c.gender) || '—';
+    const genderN = normalizeGender(c.gender);
+    const genderDisplay = genderN ? (genderN === '男' ? '男性' : '女性') : '—';
 
-    // candidates.csv 多半只有出生年；你希望顯示「出生日」，就以「YYYY年」呈現（若不是純數字則照原值）
+    // candidates.csv 多半只有出生年；顯示「出生年」
     const birthRaw = (c.birthYear || '').toString().trim();
-    const birth = birthRaw
-      ? (/^\d{3,4}$/.test(birthRaw) ? `${escapeHtml(birthRaw)}年` : escapeHtml(birthRaw))
+    let birthYear = '';
+    if (birthRaw) {
+      // 抓到第一個 3~4 位數年份（支援 1968、057、1968-01-01、1968/01/01 等）
+      const mm = birthRaw.match(/\d{3,4}/);
+      birthYear = mm ? mm[0] : birthRaw;
+    }
+    const birth = birthYear
+      ? (/^\d{3,4}$/.test(birthYear) ? `${escapeHtml(birthYear)}年` : escapeHtml(birthYear))
       : '—';
 
     const birthPlace = (c.birthPlace || '').toString().trim() ? escapeHtml(c.birthPlace) : '—';
@@ -606,7 +622,7 @@ function normalizeParty(p) {
         : '';
 
       const result = h.isWinner ? `<span class="cd-h-right cd-win">當選</span>` : `<span class="cd-h-right cd-lose">未當選</span>`;
-      const ename = `${escapeHtml(h.electionName)}`;
+      const ename = `${escapeHtml(stripLeadingYearFromName(h.electionName, h.year))}`;
 
       return `
         <div class="cd-history-item">
@@ -636,19 +652,11 @@ function normalizeParty(p) {
               </div>
             </div>
 
-            <div class="cd-info-grid" aria-label="候選人基本資料">
-              <div class="cd-info-item">
-                <div class="cd-info-label">性別</div>
-                <div class="cd-info-value">${escapeHtml(gender)}</div>
-              </div>
-              <div class="cd-info-item">
-                <div class="cd-info-label">出生日</div>
-                <div class="cd-info-value">${birth}</div>
-              </div>
-              <div class="cd-info-item">
-                <div class="cd-info-label">出生地</div>
-                <div class="cd-info-value">${birthPlace}</div>
-              </div>
+            
+            <div class="cd-basic" aria-label="候選人基本資料">
+              <div class="cd-basic-row"><span class="cd-basic-label">性別</span><span class="cd-basic-value">${escapeHtml(genderDisplay)}</span></div>
+              <div class="cd-basic-row"><span class="cd-basic-label">出生年</span><span class="cd-basic-value">${birth}</span></div>
+              <div class="cd-basic-row"><span class="cd-basic-label">出生地</span><span class="cd-basic-value">${birthPlace}</span></div>
             </div>
           </div>
         </div>
