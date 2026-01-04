@@ -222,6 +222,30 @@
     return map[s] || '#7A7A7A';
   }
 
+  function getLongPartyNameSafe(partyName){
+    try{
+      // eslint-disable-next-line no-undef
+      if (typeof getLongPartyName === 'function') return getLongPartyName(partyName);
+    }catch(e){}
+    try{
+      if (typeof window.getLongPartyName === 'function') return window.getLongPartyName(partyName);
+    }catch(e){}
+    return (partyName ?? '').toString();
+  }
+
+  function getShortPartyNameSafe(partyName){
+    try{
+      // eslint-disable-next-line no-undef
+      if (typeof getShortPartyName === 'function') return getShortPartyName(partyName);
+    }catch(e){}
+    try{
+      if (typeof window.getShortPartyName === 'function') return window.getShortPartyName(partyName);
+    }catch(e){}
+    // 沒有短名函式就退回同名
+    return (partyName ?? '').toString();
+  }
+
+
 function normalizeParty(p) {
     let party = (p || '').toString().trim();
     if (!party) return '';
@@ -477,14 +501,30 @@ function normalizeParty(p) {
     const dd = $('.cd-dropdown', wrapperEl);
     if (!dd) return;
 
+    const isParty = wrapperEl && wrapperEl.id === 'cd-party';
+
     dd.innerHTML = options.map(name => {
       const safe = escapeHtml(name);
       const checked = selectedSet.has(name) ? 'checked' : '';
       const meta = (countMap && countMap[name]) ? `(${countMap[name]})` : '';
+
+      let displayHtml = safe;
+      if (isParty) {
+        const color = escapeHtml(getPartyColorSafe(name));
+        const longName = escapeHtml(getLongPartyNameSafe(name));
+        const shortName = escapeHtml(getShortPartyNameSafe(name));
+        displayHtml = `
+          <span class="party-cell cd-party-cell">
+            <span class="party-badge party-long" style="background:${color}">${longName}</span>
+            <span class="party-badge party-short" style="background:${color}">${shortName}</span>
+          </span>
+        `.trim();
+      }
+
       return `
         <div class="cd-opt" data-value="${safe}">
           <input type="checkbox" ${checked} aria-label="${safe}">
-          <div class="cd-opt-name">${safe}</div>
+          <div class="cd-opt-name">${displayHtml}</div>
           <div class="cd-opt-meta">${meta}</div>
         </div>
       `;
@@ -526,7 +566,8 @@ function normalizeParty(p) {
   function renderCandidateCard(c) {
     const photoSrc = c.photo ? `candidates/${c.photo}` : '';
     const photo = photoSrc
-      ? `<img class="cd-photo" src="${escapeHtml(photoSrc)}" alt="${escapeHtml(c.displayName)}" onerror="this.style.display='none'; this.parentElement.querySelector('.cd-photo-fallback').style.display='flex';">`
+      ? `<img class="cd-photo" src="${escapeHtml(photoSrc)}" alt="${escapeHtml(c.displayName)}"
+              onerror="this.style.display='none'; this.parentElement.querySelector('.cd-photo-fallback').style.display='flex';">`
       : '';
 
     const fallback = `
@@ -535,20 +576,38 @@ function normalizeParty(p) {
       </div>
     `;
 
-    const badges = [
-      (c.gender ? `<span class="cd-pill">${escapeHtml(c.gender)}</span>` : '')
-    ].filter(Boolean).join('');
+    const gender = normalizeGender(c.gender) || '—';
 
-    const metaParts = [];
-    if (c.birthYear) metaParts.push(`出生年：${escapeHtml(c.birthYear)}`);
-    if (c.birthPlace) metaParts.push(`出生地：${escapeHtml(c.birthPlace)}`);
+    // candidates.csv 多半只有出生年；你希望顯示「出生日」，就以「YYYY年」呈現（若不是純數字則照原值）
+    const birthRaw = (c.birthYear || '').toString().trim();
+    const birth = birthRaw
+      ? (/^\d{3,4}$/.test(birthRaw) ? `${escapeHtml(birthRaw)}年` : escapeHtml(birthRaw))
+      : '—';
+
+    const birthPlace = (c.birthPlace || '').toString().trim() ? escapeHtml(c.birthPlace) : '—';
 
     const histCount = c.histories ? c.histories.length : 0;
+    const modalYear = (c.histories && c.histories.length) ? c.histories[0].year : '';
 
     const historyHtml = (c.histories || []).map(h => {
-      const party = h.party ? `<span class="cd-party" style="--party-color:${escapeHtml(getPartyColorSafe(h.party))}">${escapeHtml(h.party)}</span>` : '';
+      const partyName = h.party || '';
+      const party = partyName
+        ? (() => {
+            const color = escapeHtml(getPartyColorSafe(partyName));
+            const longName = escapeHtml(getLongPartyNameSafe(partyName));
+            const shortName = escapeHtml(getShortPartyNameSafe(partyName));
+            return `
+              <span class="party-cell cd-party-cell">
+                <span class="party-badge party-long" style="background:${color}">${longName}</span>
+                <span class="party-badge party-short" style="background:${color}">${shortName}</span>
+              </span>
+            `.trim();
+          })()
+        : '';
+
       const result = h.isWinner ? `<span class="cd-h-right cd-win">當選</span>` : `<span class="cd-h-right cd-lose">未當選</span>`;
       const ename = `${escapeHtml(h.electionName)}`;
+
       return `
         <div class="cd-history-item">
           <div class="cd-h-left">
@@ -561,8 +620,6 @@ function normalizeParty(p) {
       `;
     }).join('');
 
-    const modalYear = (c.histories && c.histories.length) ? c.histories[0].year : '';
-
     return `
       <div class="card cd-result-card">
         <div class="cd-top">
@@ -573,13 +630,26 @@ function normalizeParty(p) {
           <div>
             <div class="cd-name-row">
               <div class="cd-name">
-                <a href="#" class="cd-open-modal" data-name="${escapeHtml(c.modalName)}" data-year="${escapeHtml(modalYear)}" style="color:inherit;text-decoration:none;">
+                <a href="#" class="cd-open-modal" data-name="${escapeHtml(c.modalName)}" data-year="${escapeHtml(modalYear)}">
                   ${escapeHtml(c.displayName)}
                 </a>
               </div>
-              <div class="cd-badges">${badges}</div>
             </div>
-            ${metaParts.length ? `<div class="cd-meta">${metaParts.join('　')}</div>` : `<div class="cd-meta">（尚無更多個人資料）</div>`}
+
+            <div class="cd-info-grid" aria-label="候選人基本資料">
+              <div class="cd-info-item">
+                <div class="cd-info-label">性別</div>
+                <div class="cd-info-value">${escapeHtml(gender)}</div>
+              </div>
+              <div class="cd-info-item">
+                <div class="cd-info-label">出生日</div>
+                <div class="cd-info-value">${birth}</div>
+              </div>
+              <div class="cd-info-item">
+                <div class="cd-info-label">出生地</div>
+                <div class="cd-info-value">${birthPlace}</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -592,6 +662,7 @@ function normalizeParty(p) {
       </div>
     `;
   }
+
 
   function renderResults() {
     if (!__index) return;
