@@ -12,7 +12,21 @@
 <body>
 
 <header>
-    <h1><span onclick="renderMainMenu()">金門選舉資料庫</span></h1>
+    <div class="header-inner">
+        <h1 class="header-title"><span onclick="renderMainMenu()">金門選舉資料庫</span></h1>
+
+        <!-- 候選人名鑑（右側圖示） -->
+        <button class="header-icon-btn" type="button" onclick="renderCandidateDirectory(true)" aria-label="候選人名鑑" title="候選人名鑑">
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M8 7h11" />
+                <path d="M8 12h11" />
+                <path d="M8 17h11" />
+                <path d="M4 7h.01" />
+                <path d="M4 12h.01" />
+                <path d="M4 17h.01" />
+            </svg>
+        </button>
+    </div>
 </header>
 
 <div class="container">
