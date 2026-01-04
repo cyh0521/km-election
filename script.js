@@ -420,15 +420,7 @@ function getMenuIconSvg(key) {
         sortConfig: { key: 'number', direction: 'asc' }, 
         globalTotalVotes: 0,
         electionName: "選舉資料",
-        chartInstances: [],
-
-        // 候選人名鑑（名冊/索引/篩選狀態）
-        candidateDirectoryIndex: null,
-        candidateDirectoryPartyOptions: null,
-        candidateDirectoryTypeOptions: null,
-        candidateDirectoryFilters: null,
-        _candidateDirectoryListenersAttached: false,
-        _isReady: false
+        chartInstances: [] 
     };
 
     // *** 新增：取得顯示用名稱 (移除字尾數字) ***
@@ -441,94 +433,6 @@ function getMenuIconSvg(key) {
 
     // *** 新增：全域候選人詳細資料暫存 ***
     let globalCandidateData = {}; 
-
-    // ================= 候選人名鑑：索引建置 =================
-    function normalizeGender(sex) {
-        const s = (sex || '').trim();
-        if (!s) return '未知';
-        if (['男', '男性', 'M', 'Male'].includes(s)) return '男';
-        if (['女', '女性', 'F', 'Female'].includes(s)) return '女';
-        return s;
-    }
-
-    function uniqueSorted(arr, locale = 'zh-TW') {
-        return Array.from(new Set(arr.filter(Boolean))).sort((a, b) => a.localeCompare(b, locale));
-    }
-
-    function buildCandidateDirectoryIndex() {
-        const byId = new Map();
-
-        // 1) 先用 candidates.csv 建出名單底稿（以 id 為唯一鍵）
-        Object.entries(globalCandidateData).forEach(([name, info]) => {
-            if (!info || !info.id) return;
-            const id = info.id;
-            if (!byId.has(id)) {
-                byId.set(id, {
-                    id,
-                    modalName: name,
-                    rawNames: new Set([name]),
-                    displayName: getDisplayName(name),
-                    sex: normalizeGender(info.sex),
-                    birthYear: info.birthYear || '',
-                    birthPlace: info.birthPlace || '',
-                    photo: info.photo || '',
-                    history: [],
-                    partySet: new Set(),
-                    typeSet: new Set()
-                });
-            } else {
-                byId.get(id).rawNames.add(name);
-            }
-        });
-
-        // 2) 掃描所有選舉摘要，把參選經歷塞進去
-        const partySet = new Set();
-        const typeSet = new Set();
-
-        availableElections.forEach(e => {
-            if (!e || !e.summaryData || !e.summaryData.allCandidates) return;
-            const eType = e.type || '';
-            if (eType) typeSet.add(eType);
-
-            e.summaryData.allCandidates.forEach(c => {
-                const cid = globalCandidateData[c.name]?.id;
-                if (!cid) return;
-                const entry = byId.get(cid);
-                if (!entry) return;
-
-                const party = getLongPartyName(c.party || '');
-                if (party) partySet.add(party);
-                if (party) entry.partySet.add(party);
-                if (eType) entry.typeSet.add(eType);
-
-                entry.history.push({
-                    year: e.year,
-                    electionName: e.uiName,
-                    electionType: eType,
-                    party,
-                    isWinner: !!c.isWinner,
-                    isIncumbent: !!c.isIncumbent
-                });
-            });
-        });
-
-        // 3) 排序 & 輸出
-        const list = Array.from(byId.values());
-        list.forEach(item => item.history.sort((a, b) => parseInt(b.year) - parseInt(a.year)));
-
-        appState.candidateDirectoryIndex = list.sort((a, b) => a.displayName.localeCompare(b.displayName, 'zh-TW'));
-        appState.candidateDirectoryPartyOptions = uniqueSorted(Array.from(partySet), 'zh-TW');
-        appState.candidateDirectoryTypeOptions = uniqueSorted(Array.from(typeSet), 'zh-TW');
-
-        if (!appState.candidateDirectoryFilters) {
-            appState.candidateDirectoryFilters = {
-                name: '',
-                genders: new Set(),
-                parties: new Set(),
-                types: new Set()
-            };
-        }
-    }
     
     function hexToRgb(hex) {
         const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1464,325 +1368,6 @@ function extractCountySummary(text) {
         dom.content.innerHTML = html;
     };
 
-    // ================= 候選人名鑑 =================
-
-    function renderCandidateDirectoryCard(c) {
-        const placeholderAvatar = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23e9eef2%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2224%22%20r%3D%2212%22%20fill%3D%22%23b7c3cc%22%2F%3E%3Cpath%20d%3D%22M14%2056c2-12%2012-18%2018-18s16%206%2018%2018%22%20fill%3D%22%23b7c3cc%22%2F%3E%3C%2Fsvg%3E";
-        const photoSrc = c.photo ? `candidates/${c.photo}` : placeholderAvatar;
-
-        const birthInfo = [c.birthYear ? `${c.birthYear}年` : '', c.birthPlace || ''].filter(Boolean).join('／');
-        const infoLine = [c.sex || '未知', birthInfo ? `${birthInfo} 出生` : ''].filter(Boolean).join('．');
-
-        const runs = c.history.length;
-        const latest = c.history[0]
-            ? `${c.history[0].year}年 ${c.history[0].electionName.replace(/^\d+年\s*/, '')}`
-            : '';
-
-        // 只顯示前 6 筆（避免卡片太長）
-        const maxHistory = 6;
-        const shown = c.history.slice(0, maxHistory);
-
-        let historyHtml = '';
-        if (shown.length > 0) {
-            historyHtml += `<div class="candidate-history-mini">`;
-            historyHtml += `<div class="history-title">參選經歷</div>`;
-            historyHtml += `<ul class="history-list">`;
-
-            shown.forEach(h => {
-                const electionNameWithoutYear = (h.electionName || '').replace(/^\d+年\s*/, '');
-                const resultClass = h.isWinner ? 'result-won' : 'result-lost';
-                const resultText = h.isWinner ? '當選' : '未當選';
-                historyHtml += `
-                    <li class="history-item">
-                        <div>
-                            <span class="history-year-tag">${h.year}</span>
-                            <span class="history-name">${electionNameWithoutYear}</span>
-                            <span class="history-party">${h.party || ''}</span>
-                        </div>
-                        <div class="history-result ${resultClass}">${resultText}</div>
-                    </li>
-                `;
-            });
-
-            historyHtml += `</ul>`;
-
-            if (c.history.length > maxHistory) {
-                historyHtml += `<div class="card-footer-info">另有 ${c.history.length - maxHistory} 筆較早紀錄</div>`;
-            }
-
-            historyHtml += `</div>`;
-        } else {
-            historyHtml = `<div class="card-footer-info">（尚無參選經歷資料：可能 candidates.csv 中有此人，但摘要資料中未能對應）</div>`;
-        }
-
-        return `
-            <div class="candidate-directory-card">
-                <div class="candidate-directory-head">
-                    <img class="candidate-avatar" src="${photoSrc}" alt="" onerror="this.onerror=null;this.src='${placeholderAvatar}'" />
-                    <div class="candidate-meta">
-                        <div class="name candidate-link" onclick="showCandidateModal('${c.modalName}', '${c.history[0]?.year || ''}')">${c.displayName}</div>
-                        <div class="sub">${infoLine || ''}</div>
-                        <div class="tag-row">
-                            <span class="meta-tag"><span class="dot"></span>參選 ${runs} 次</span>
-                            ${latest ? `<span class="meta-tag"><span class="dot"></span>最近：${latest}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                ${historyHtml}
-            </div>
-        `;
-    }
-
-    function updateCandidateDirectoryResults() {
-        const list = appState.candidateDirectoryIndex || [];
-        const f = appState.candidateDirectoryFilters;
-        if (!f) return;
-
-        const nameKey = normalizeText((f.name || '').trim());
-        const genders = f.genders || new Set();
-        const parties = f.parties || new Set();
-        const types = f.types || new Set();
-
-        const results = list.filter(c => {
-            if (nameKey) {
-                if (!normalizeText(c.displayName).includes(nameKey)) return false;
-            }
-            if (genders.size) {
-                const sex = c.sex || '未知';
-                if (!genders.has(sex)) return false;
-            }
-            if (parties.size) {
-                let ok = false;
-                c.partySet.forEach(p => { if (parties.has(p)) ok = true; });
-                if (!ok) return false;
-            }
-            if (types.size) {
-                let ok = false;
-                c.typeSet.forEach(t => { if (types.has(t)) ok = true; });
-                if (!ok) return false;
-            }
-            return true;
-        });
-
-        const statsEl = document.getElementById('cd-stats');
-        if (statsEl) statsEl.textContent = `符合：${results.length} 人`;
-
-        const resultsEl = document.getElementById('cd-results');
-        if (!resultsEl) return;
-
-        if (results.length === 0) {
-            resultsEl.innerHTML = `<div class="loading-state">沒有符合條件的候選人</div>`;
-            return;
-        }
-
-        resultsEl.innerHTML = results.map(renderCandidateDirectoryCard).join('');
-    }
-
-    function setMultiSelectHint(wrapperEl, set, placeholder = '全部') {
-        const hintEl = wrapperEl.querySelector('.hint');
-        if (!hintEl) return;
-        hintEl.textContent = set.size ? `已選 ${set.size}` : placeholder;
-    }
-
-    function ensureCandidateDirectoryGlobalListeners() {
-        if (appState._candidateDirectoryListenersAttached) return;
-        appState._candidateDirectoryListenersAttached = true;
-
-        // 點擊空白處：關閉多選下拉
-        document.addEventListener('click', (e) => {
-            if (appState.currentLevel !== 'candidateDirectory') return;
-            document.querySelectorAll('.multi-select.is-open').forEach(ms => {
-                if (!ms.contains(e.target)) ms.classList.remove('is-open');
-            });
-        }, true);
-    }
-
-    window.renderCandidateDirectory = function(pushState = true) {
-        const url = `?view=candidateDirectory`;
-        const state = { view: 'candidateDirectory' };
-        updateUrl(state, "金門選舉資料庫 - 候選人名鑑", url, pushState);
-
-        appState.currentLevel = 'candidateDirectory';
-
-        if (!appState._isReady) {
-            dom.content.innerHTML = `<div class="loading-state">資料仍在載入中... 請稍後再開啟候選人名鑑。</div>`;
-            updateBreadcrumb();
-            return;
-        }
-
-        if (pushState) {
-            window.scrollTo(0, 0);
-        } else {
-            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
-        }
-
-        updateBreadcrumb();
-
-        appState.chartInstances.forEach(chart => chart.destroy());
-        appState.chartInstances = [];
-
-        // 確保索引已建
-        if (!appState.candidateDirectoryIndex) {
-            buildCandidateDirectoryIndex();
-        }
-
-        ensureCandidateDirectoryGlobalListeners();
-
-        const parties = appState.candidateDirectoryPartyOptions || [];
-        const types = appState.candidateDirectoryTypeOptions || [];
-
-        let html = '';
-
-        html += `<div class="main-section">
-            <div class="section-header">
-                <div class="section-title">候選人名鑑</div>
-                <div class="section-badge" id="cd-stats">載入中...</div>
-            </div>
-        </div>`;
-
-        html += `<div class="candidate-directory-filters">
-            <div class="filter-grid">
-                <div class="filter-item">
-                    <label>姓名</label>
-                    <input id="cd-name" class="filter-input" type="text" placeholder="輸入姓名關鍵字" value="${(appState.candidateDirectoryFilters?.name || '').replace(/"/g,'&quot;')}" />
-                </div>
-
-                <div class="filter-item">
-                    <label>性別</label>
-                    <div class="chip-row" id="cd-gender-chips">
-                        <div class="chip" data-value="男"><span class="chip-dot"></span>男</div>
-                        <div class="chip" data-value="女"><span class="chip-dot"></span>女</div>
-                        <div class="chip" data-value="未知"><span class="chip-dot"></span>未知</div>
-                    </div>
-                </div>
-
-                <div class="filter-item">
-                    <label>推薦黨籍</label>
-                    <div class="multi-select" id="cd-party">
-                        <div class="multi-select-btn" role="button" tabindex="0">
-                            <span>選擇政黨</span>
-                            <span class="hint">全部</span>
-                        </div>
-                        <div class="multi-select-panel">
-                            ${parties.map(p => `
-                                <div class="multi-select-option" data-value="${p.replace(/"/g,'&quot;')}">
-                                    <input type="checkbox" />
-                                    <span>${p}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="filter-item">
-                    <label>選舉類型</label>
-                    <div class="multi-select" id="cd-type">
-                        <div class="multi-select-btn" role="button" tabindex="0">
-                            <span>選擇類型</span>
-                            <span class="hint">全部</span>
-                        </div>
-                        <div class="multi-select-panel">
-                            ${types.map(t => `
-                                <div class="multi-select-option" data-value="${t.replace(/"/g,'&quot;')}">
-                                    <input type="checkbox" />
-                                    <span>${t}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="directory-stats" style="margin-top:10px;">選項變更後，結果會即時更新。</div>
-        </div>`;
-
-        html += `<div id="cd-results" class="directory-results"></div>`;
-
-        dom.content.innerHTML = html;
-
-        // === 綁定事件 ===
-        const filters = appState.candidateDirectoryFilters;
-
-        // 姓名
-        const nameInput = document.getElementById('cd-name');
-        if (nameInput) {
-            nameInput.addEventListener('input', () => {
-                filters.name = nameInput.value || '';
-                updateCandidateDirectoryResults();
-            });
-        }
-
-        // 性別 chips
-        const chipWrap = document.getElementById('cd-gender-chips');
-        if (chipWrap) {
-            chipWrap.querySelectorAll('.chip').forEach(chip => {
-                const v = chip.getAttribute('data-value');
-                if (filters.genders.has(v)) chip.classList.add('is-on');
-
-                chip.addEventListener('click', () => {
-                    const value = chip.getAttribute('data-value');
-                    if (filters.genders.has(value)) {
-                        filters.genders.delete(value);
-                        chip.classList.remove('is-on');
-                    } else {
-                        filters.genders.add(value);
-                        chip.classList.add('is-on');
-                    }
-                    updateCandidateDirectoryResults();
-                });
-            });
-        }
-
-        // 多選：共用
-        function bindMultiSelect(wrapperId, targetSet) {
-            const wrap = document.getElementById(wrapperId);
-            if (!wrap) return;
-
-            const btn = wrap.querySelector('.multi-select-btn');
-            const panel = wrap.querySelector('.multi-select-panel');
-            if (!btn || !panel) return;
-
-            // 初始化勾選
-            panel.querySelectorAll('.multi-select-option').forEach(opt => {
-                const value = opt.getAttribute('data-value');
-                const cb = opt.querySelector('input[type="checkbox"]');
-                if (!cb) return;
-                cb.checked = targetSet.has(value);
-            });
-
-            setMultiSelectHint(wrap, targetSet, '全部');
-
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                wrap.classList.toggle('is-open');
-            });
-
-            panel.querySelectorAll('.multi-select-option').forEach(opt => {
-                opt.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const value = opt.getAttribute('data-value');
-                    const cb = opt.querySelector('input[type="checkbox"]');
-                    if (!cb) return;
-                    const nextChecked = !targetSet.has(value);
-                    cb.checked = nextChecked;
-
-                    if (nextChecked) targetSet.add(value);
-                    else targetSet.delete(value);
-
-                    setMultiSelectHint(wrap, targetSet, '全部');
-                    updateCandidateDirectoryResults();
-                });
-            });
-        }
-
-        bindMultiSelect('cd-party', filters.parties);
-        bindMultiSelect('cd-type', filters.types);
-
-        // 初次渲染
-        updateCandidateDirectoryResults();
-    };
-
     window.renderReferendumSubMenu = function(pushState = true) {
         
         const url = `?view=referendumMenu`;
@@ -2312,14 +1897,14 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
 
         html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
 
-        if (level === 'referendumMenu') {
+        if (level === 'candidateDirectory') {
+             html += `<span class="active">候選人名鑑</span>`;
+        }
+        else if (level === 'referendumMenu') {
              html += `<span class="active">公民投票</span>`;
         } 
         else if (level === 'legislatorMenu') {
              html += `<span class="active">立法委員</span>`;
-        }
-        else if (level === 'candidateDirectory') {
-             html += `<span class="active">候選人名鑑</span>`;
         }
         else if (level === 'townshipMenu') {
              // 鄉鎮長 / 鄉鎮民代表：此層就是分類入口，不顯示「依鄉鎮」
@@ -2594,6 +2179,16 @@ dom.breadcrumb.innerHTML = html;
         return;
     }
 
+    if (params.view === 'candidateDirectory') {
+        if (window.renderCandidateDirectory) {
+            window.renderCandidateDirectory(pushState);
+            return;
+        }
+        // 若名鑑模組尚未載入，退回首頁
+        renderMainMenu(pushState);
+        return;
+    }
+
     if (params.view === 'referendumMenu') {
         renderReferendumSubMenu(pushState);
         return;
@@ -2601,11 +2196,6 @@ dom.breadcrumb.innerHTML = html;
 
     if (params.view === 'legislatorMenu') {
         renderLegislatorSubMenu(pushState);
-        return;
-    }
-
-    if (params.view === 'candidateDirectory') {
-        renderCandidateDirectory(pushState);
         return;
     }
 
@@ -2743,10 +2333,11 @@ dom.breadcrumb.innerHTML = html;
             loadAllElectionSummaries(availableElections),
             loadCandidateData()
         ]).then(() => {
-           // ✅ 站內資料已就緒：可建置候選人名鑑索引
-           appState._isReady = true;
-           buildCandidateDirectoryIndex();
-
+           try { 
+               if (window.initCandidateDirectory) window.initCandidateDirectory(); 
+           } catch (e) { 
+               console.error("候選人名鑑初始化失敗：", e);
+           }
            const params = getCurrentUrlParams();
            if (params.view && params.view !== 'main') {
                  checkUrlAndRender(params, false);} else {

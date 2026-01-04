@@ -1,0 +1,415 @@
+/* ============================================================
+   候選人名鑑（獨立樣式）
+   - 儘量用 cd- 前綴，避免污染既有樣式
+   ============================================================ */
+
+header { padding-right: 64px; } /* 右側要放圖示按鈕 */
+
+.header-icon-btn{
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.header-icon-btn:hover{
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.28);
+  transform: translateY(-50%) scale(1.02);
+}
+.header-icon-btn:active{
+  transform: translateY(-50%) scale(0.98);
+}
+.header-icon-btn:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.header-icon{
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* Filters */
+.cd-filters{
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.cd-filter-row{
+  position: relative;
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.cd-filter-row:last-child{ margin-bottom: 0; }
+
+.cd-two-cols{
+  grid-template-columns: 90px 1fr;
+}
+.cd-two-cols .cd-col{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.cd-two-cols{
+  align-items: start;
+}
+.cd-two-cols .cd-col:first-child{
+  max-width: 260px;
+}
+
+.cd-label{
+  font-weight: 700;
+  color: var(--secondary);
+  font-size: 14px;
+}
+.cd-input, .cd-select{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(225,228,232,0.95);
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.cd-input:focus, .cd-select:focus{
+  border-color: rgba(56,135,176,0.7);
+  box-shadow: 0 0 0 3px rgba(56,135,176,0.12);
+}
+
+.cd-multi-wrap{ position: relative; }
+
+/* Multi select trigger */
+.cd-multi{
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(225,228,232,0.95);
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+.cd-multi:focus-visible{
+  outline: 3px solid rgba(56,135,176,0.22);
+  outline-offset: 2px;
+}
+.cd-multi-text{
+  font-size: 14px;
+  color: var(--text-main);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cd-placeholder{
+  color: var(--text-sub);
+}
+.cd-multi-caret{
+  opacity: 0.7;
+}
+
+/* Panel */
+.cd-panel{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+
+  background: #fff;
+  border: 1px solid rgba(225,228,232,0.95);
+  border-radius: 14px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.10);
+
+  padding: 8px;
+  max-height: 280px;
+  overflow: auto;
+
+  display: none;
+  z-index: 1500;
+}
+.cd-panel.open{ display: block; }
+
+.cd-option{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.cd-option:hover{
+  background: rgba(56,135,176,0.06);
+}
+.cd-option input{
+  width: 16px;
+  height: 16px;
+}
+.cd-option-text{
+  font-size: 14px;
+  color: var(--text-main);
+}
+.cd-panel-empty{
+  padding: 10px;
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+/* Actions row */
+.cd-actions{
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+}
+.cd-btn{
+  justify-self: start;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(225,228,232,0.95);
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--secondary);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.cd-btn:hover{
+  border-color: rgba(56,135,176,0.55);
+  box-shadow: 0 10px 20px rgba(56,135,176,0.10);
+  transform: translateY(-1px);
+}
+.cd-btn:active{ transform: translateY(0); }
+.cd-count{
+  justify-self: end;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+/* Results */
+.cd-results{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* Candidate Card */
+.cd-card{
+  padding: 16px;
+}
+.cd-top{
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.cd-photo-wrap{
+  width: 72px;
+  height: 72px;
+  flex: 0 0 auto;
+}
+.cd-photo{
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid rgba(225,228,232,0.95);
+  background: #eee;
+}
+.cd-photo-placeholder{
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: rgba(56,135,176,0.10);
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 22px;
+  border: 1px solid rgba(225,228,232,0.95);
+}
+
+.cd-info{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.cd-name-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.cd-name{
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cd-mini-link{
+  border: none;
+  background: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 0;
+}
+.cd-mini-link:hover{
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cd-detail{
+  margin-top: 6px;
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* History */
+.cd-history{
+  margin-top: 14px;
+}
+.cd-history-title{
+  font-weight: 900;
+  color: var(--secondary);
+  font-size: 14px;
+  border-left: 4px solid var(--primary);
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+.cd-history-list{
+  display: grid;
+  gap: 10px;
+}
+
+/* 讓參選紀錄不被截斷（#6） */
+.cd-history-item{
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 12px;
+  align-items: center;
+
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(225,228,232,0.95);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.03) 100%);
+}
+.cd-history-left{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cd-year{
+  font-weight: 900;
+  color: var(--secondary);
+  font-size: 13px;
+}
+.cd-type{
+  color: var(--text-sub);
+  font-size: 12px;
+  font-weight: 700;
+}
+.cd-history-mid{
+  min-width: 0;
+}
+.cd-election{
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.25;
+
+  /* 可換行，避免超過 6 筆時看起來像被切掉 */
+  white-space: normal;
+  word-break: break-word;
+}
+.cd-partyline{
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.cd-history-right{
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cd-win, .cd-lose{
+  font-size: 12px;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.cd-win{
+  background: rgba(217, 83, 79, 0.12);
+  color: #d9534f;
+  border: 1px solid rgba(217, 83, 79, 0.25);
+}
+.cd-lose{
+  background: rgba(0,0,0,0.04);
+  color: #777;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.cd-history-empty{
+  color: var(--text-sub);
+  font-weight: 700;
+  padding: 8px 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px){
+  header { padding-right: 58px; }
+
+  .cd-filter-row{
+    grid-template-columns: 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+  .cd-actions{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .cd-count{ justify-self: start; }
+
+  .cd-top{
+    align-items: flex-start;
+  }
+  .cd-name{
+    white-space: normal;
+  }
+  .cd-history-item{
+    grid-template-columns: 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+  .cd-history-right{
+    justify-self: start;
+  }
+}
