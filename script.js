@@ -1897,10 +1897,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
 
         html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
 
-        if (level === 'candidateDirectory') {
-             html += `<span class="active">候選人名鑑</span>`;
-        }
-        else if (level === 'referendumMenu') {
+        if (level === 'referendumMenu') {
              html += `<span class="active">公民投票</span>`;
         } 
         else if (level === 'legislatorMenu') {
@@ -2179,16 +2176,6 @@ dom.breadcrumb.innerHTML = html;
         return;
     }
 
-    if (params.view === 'candidateDirectory') {
-        if (window.renderCandidateDirectory) {
-            window.renderCandidateDirectory(pushState);
-            return;
-        }
-        // 若名鑑模組尚未載入，退回首頁
-        renderMainMenu(pushState);
-        return;
-    }
-
     if (params.view === 'referendumMenu') {
         renderReferendumSubMenu(pushState);
         return;
@@ -2333,11 +2320,6 @@ dom.breadcrumb.innerHTML = html;
             loadAllElectionSummaries(availableElections),
             loadCandidateData()
         ]).then(() => {
-           try { 
-               if (window.initCandidateDirectory) window.initCandidateDirectory(); 
-           } catch (e) { 
-               console.error("候選人名鑑初始化失敗：", e);
-           }
            const params = getCurrentUrlParams();
            if (params.view && params.view !== 'main') {
                  checkUrlAndRender(params, false);} else {
