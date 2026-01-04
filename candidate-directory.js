@@ -1,5 +1,5 @@
 /* =========================
-   候選人名鑑（獨立功能模組）
+   候選人檢索（獨立功能模組）
    檔名：candidate-directory.js
 
    ✅ 目標
@@ -193,7 +193,36 @@
     return rawName;
   }
 
-  function normalizeParty(p) {
+  
+  function normalizeGender(v){
+    const s = (v ?? '').toString().trim();
+    if (!s) return '';
+    if (s === '男' || s === '男性' || s === '男生') return '男';
+    if (s === '女' || s === '女性' || s === '女生') return '女';
+    if (s.includes('男')) return '男';
+    if (s.includes('女')) return '女';
+    return '';
+  }
+
+  function getPartyColorSafe(partyName){
+    try{
+      if (typeof window.getPartyColor === 'function') return window.getPartyColor(partyName);
+    }catch(e){}
+    const s = (partyName ?? '').toString();
+    const map = {
+      '民主進步黨': '#1B9431',
+      '中國國民黨': '#000095',
+      '台灣民眾黨': '#0CB5B5',
+      '親民黨': '#FF6A00',
+      '新黨': '#F7B500',
+      '時代力量': '#FBBE00',
+      '無黨籍': '#7A7A7A',
+      '無': '#7A7A7A'
+    };
+    return map[s] || '#7A7A7A';
+  }
+
+function normalizeParty(p) {
     let party = (p || '').toString().trim();
     if (!party) return '';
     if (party.startsWith('無黨籍')) return '無黨籍';
@@ -276,7 +305,7 @@
             key,
             id: id || null,
             displayName: safeDisplayName(rawName),
-            gender: (profile && (profile.sex === '男' || profile.sex === '女')) ? profile.sex : '',
+            gender: normalizeGender(profile?.sex || profile?.gender || ''),
             photo: profile?.photo || '',
             birthYear: profile?.birthYear || '',
             birthPlace: profile?.birthPlace || '',
@@ -337,8 +366,8 @@
     btn.id = 'cd-header-btn';
     btn.className = 'cd-header-btn';
     btn.type = 'button';
-    btn.title = '候選人名鑑';
-    btn.setAttribute('aria-label', '候選人名鑑');
+    btn.title = '候選人檢索';
+    btn.setAttribute('aria-label', '候選人檢索');
 
     btn.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -361,7 +390,7 @@
       <div class="cd-wrap">
         <div class="card cd-panel" id="cd-panel">
           <div class="cd-title-row">
-            <div class="cd-title">候選人名鑑</div>
+            <div class="cd-title">候選人檢索</div>
             <div class="cd-count" id="cd-count">索引建立中…</div>
           </div>
 
@@ -404,7 +433,7 @@
           </div>
 
           <div class="cd-helper-row">
-            <div class="cd-tip">提示：可複選政黨 / 類型，變更選項會即時更新下方結果。</div>
+            <div class="cd-tip">提示：可複選政黨 / 選舉類型，變更選項後會即時更新下方結果。</div>
             <button class="cd-reset-btn" id="cd-reset" type="button">清除條件</button>
           </div>
         </div>
@@ -473,7 +502,7 @@
         const name = c.displayName || '';
         if (!name.includes(q)) return false;
       }
-      if (gender && c.gender !== gender) return false;
+      if (gender && normalizeGender(c.gender) !== gender) return false;
 
       if (parties.size > 0) {
         let ok = false;
@@ -517,7 +546,7 @@
     const histCount = c.histories ? c.histories.length : 0;
 
     const historyHtml = (c.histories || []).map(h => {
-      const party = h.party ? `<span class="cd-party">${escapeHtml(h.party)}</span>` : '';
+      const party = h.party ? `<span class="cd-party" style="--party-color:${escapeHtml(getPartyColorSafe(h.party))}">${escapeHtml(h.party)}</span>` : '';
       const result = h.isWinner ? `<span class="cd-h-right cd-win">當選</span>` : `<span class="cd-h-right cd-lose">未當選</span>`;
       const ename = `${escapeHtml(h.electionName)}`;
       return `
@@ -555,10 +584,7 @@
         </div>
 
         <div class="cd-history">
-          <div class="cd-history-title">
-            <div>參選經歷</div>
-            <span>${histCount} 次</span>
-          </div>
+          <div class="cd-history-title">參選經歷（${histCount}次）</div>
           <div class="cd-history-list">
             ${historyHtml}
           </div>
@@ -728,7 +754,7 @@
       try { as.currentLevel = VIEW; } catch (e) { /* ignore */ }
     }
 
-    updateUrlSafe({ view: VIEW }, '金門選舉資料庫 - 候選人名鑑', `?view=${VIEW}`, pushState);
+    updateUrlSafe({ view: VIEW }, '金門選舉資料庫 - 候選人檢索', `?view=${VIEW}`, pushState);
     renderShell();
 
     waitForDataReady().then((ready) => {

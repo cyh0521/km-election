@@ -144,7 +144,7 @@ header{
     border-radius: 12px;
     box-shadow: 0 16px 34px rgba(0,0,0,0.12);
     padding: 8px;
-    z-index: 1500;
+    z-index: 9999;
     display:none;
     max-height: 260px;
     overflow:auto;
@@ -362,4 +362,43 @@ header{
         grid-template-columns: 80px 1fr;
     }
     .cd-photo{ width: 80px; height: 80px; border-radius: 12px; }
+}
+
+
+/* ---- fixes: dropdown menu should not be clipped by cards ---- */
+.cd-panel.card,
+.cd-result-card.card{
+  overflow: visible !important;
+}
+
+
+/* ---- desktop: two columns for result cards ---- */
+@media (min-width: 980px){
+  .cd-results{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+
+/* ---- party badge: smaller + party color ---- */
+.cd-party{
+  font-size: 12px;
+  padding: 2px 8px 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+.cd-party::before{
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--party-color, #7A7A7A);
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.95) inset;
 }
