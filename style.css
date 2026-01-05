@@ -38,71 +38,148 @@ h1 span { cursor: pointer; }
 .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 
 /* --- 主選單樣式 --- */
-.main-menu-grid {
+/* =========================
+   主選單 / 子分類按鈕（長方形：圖示左、文字右）
+   - 同一套 .menu-button 套用於首頁與子分類：尺寸一致、不會變大
+   - 手機：每列兩格
+   ========================= */
+
+.main-menu-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-    gap: 15px; 
+    /* 桌機：自適應欄數，保持按鈕不會過寬 */
+    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 18vw, 260px), 1fr));
+    gap: 14px;
     margin-bottom: 50px;
+    align-items: stretch;
 }
 
-.menu-button {
-    background: var(--card-bg);
-    border: 1px solid var(--border); 
-    border-radius: 8px; 
-    padding: 15px 20px; 
-    text-align: center;
-    font-size: 16px; 
-    font-weight: 500; 
+.menu-button{
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: row;          /* ✅ 圖示左、文字右 */
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+
+    padding: 12px 14px;
+    min-height: 58px;             /* ✅ 固定高度感（首頁/子分類一致） */
+    width: 100%;
+    aspect-ratio: auto;           /* ✅ 不再強制方形 */
+
+    background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.04) 100%);
+    border: 1px solid rgba(225, 228, 232, 0.95);
+    border-radius: 14px;
+
     color: var(--secondary);
+    box-shadow: 0 2px 10px rgba(44, 62, 80, 0.05);
+
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-    line-height: 1.4;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
 }
 
-/* --- 滑鼠懸停效果 (Hover) --- */
-.menu-button:hover .menu-icon {
-    background-color: var(--primary); /* 背景變深色 */
-    color: white;                     /* 文字變白色 */
-    transform: scale(1.1) rotate(-5deg); /* 微微放大並旋轉一點點，增加趣味性 */
-    box-shadow: 0 4px 10px rgba(56, 135, 176, 0.3); /* 增加陰影 */
+/* 低調柔光：hover 才出現 */
+.menu-button::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(56, 135, 176, 0.16) 0%, rgba(56, 135, 176, 0.00) 55%),
+        radial-gradient(circle at 86% 92%, rgba(44, 62, 80, 0.10) 0%, rgba(44, 62, 80, 0.00) 60%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
 }
 
-/* --- 手機版微調 --- */
-@media (max-width: 768px) {
-    .menu-icon { 
-        width: 40px; 
-        height: 40px; 
-        font-size: 20px;
-        margin-bottom: 8px; /* 手機版間距縮小 */
-    } 
-}
-
-.menu-icon { 
-    display: inline-flex;       
+/* Icon：左側固定，不加內框 */
+.menu-icon{
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    
-    width: 50px;               /* 稍微加大寬度 */
-    height: 50px;              /* 稍微加大高度 */
-    border-radius: 50%;        
-    
-    background-color: rgba(56, 135, 176, 0.1); 
-    color: var(--primary);     
-    
-    font-size: 18px;           /* 調整為 18px 以容納雙字 */
-    font-weight: 700;          
-    font-family: 'Noto Sans TC', sans-serif; /* 雙字建議改回無襯線體，讓排版更緊湊 */
-    
-    margin: 0 auto 12px auto;  
-    line-height: 1;            /* 確保行高正確置中 */
-    transition: all 0.3s ease; 
-    
-    /* 新增：針對雙字或三字的圖標，我們需要更精準的字距微調 */
-    letter-spacing: -0.5px;
+    background: none;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    color: var(--primary);
+    flex: 0 0 auto;
 }
 
-.menu-text { display: block; }
+.menu-svg{
+    width: clamp(22px, 2vw, 30px);
+    height: clamp(22px, 2vw, 30px);
+}
+
+/* 文字：靠左，允許換行 */
+.menu-text{
+    display: block;
+    text-align: left;
+    font-size: clamp(14px, 1.1vw, 17px);
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+}
+
+/* 既有 HTML 有 menu-chevron，但此設計不需要箭頭 */
+.menu-chevron{ display: none; }
+
+/* Hover（桌機） */
+.menu-button:hover{
+    transform: translateY(-3px);
+    border-color: rgba(56, 135, 176, 0.55);
+    box-shadow: 0 12px 24px rgba(56, 135, 176, 0.16);
+}
+.menu-button:hover::before{ opacity: 1; }
+
+/* Focus（鍵盤） */
+.menu-button:focus-visible{
+    outline: 3px solid rgba(56, 135, 176, 0.35);
+    outline-offset: 3px;
+}
+
+/* Active（手機點按 / 滑鼠按住） */
+.menu-button:active{
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 0 7px 16px rgba(56, 135, 176, 0.14);
+}
+
+/* 手機：每列兩格 */
+@media (max-width: 768px){
+    .main-menu-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .menu-button{
+        padding: 10px 12px;
+        min-height: 52px;
+        border-radius: 12px;
+        gap: 10px;
+    }
+
+    .menu-svg{ width: 22px; height: 22px; }
+
+    .menu-text{
+        font-size: 14px;
+        line-height: 1.2;
+    }
+}
+
+/* 減少動態偏好 */
+@media (prefers-reduced-motion: reduce){
+    .menu-button, .menu-button::before, .menu-icon{
+        transition: none !important;
+    }
+}
 
 .menu-section-title {
     font-size: 24px;
@@ -445,9 +522,6 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 .result-lost { color: #999; font-weight: 400; }
 
 @media (max-width: 768px) {
-        .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
-        .menu-button { padding: 15px 5px; }
-        .menu-text { font-size: 14px; }
         .election-list-grid { column-count: 1; }
         .layout-compact { flex-direction: column; align-items: center; }
         .layout-compact .table-area { width: 100%; }
@@ -488,288 +562,39 @@ footer {
 }
 
 /* =========================
-   鄉鎮子選單：不顯示圓形圖示
-   （只影響 鄉鎮長 / 鄉鎮民代表 的子選單）
+   鄉鎮子選單：沿用一般按鈕樣式
+   - 不再隱藏圖示
+   - 不再額外加大 padding
+   - 讓子分類按鈕尺寸與首頁一致
    ========================= */
 
-.township-submenu .menu-icon {
-    display: none;
+
+/* === 鄉鎮長 / 鄉鎮民代表：鄉鎮子分類統一加上「小鄉鎮」圖示（同一個） === */
+.township-submenu .menu-button::after{
+    content: "";
+    order: -1;              /* ✅ 放到最左邊（不影響既有 ::before 柔光） */
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+
+    background-color: var(--primary);
+    opacity: 0.95;
+
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%3Cpath%20fill%3D%22black%22%20d%3D%22M2%2012l6-5%206%205v10H2V12z%22%2F%3E%0A%3Ccircle%20fill%3D%22black%22%20cx%3D%2219%22%20cy%3D%2210.5%22%20r%3D%223.2%22%2F%3E%0A%3Crect%20fill%3D%22black%22%20x%3D%2218.4%22%20y%3D%2213.7%22%20width%3D%221.2%22%20height%3D%228.3%22%20rx%3D%220.6%22%2F%3E%0A%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%3Cpath%20fill%3D%22black%22%20d%3D%22M2%2012l6-5%206%205v10H2V12z%22%2F%3E%0A%3Ccircle%20fill%3D%22black%22%20cx%3D%2219%22%20cy%3D%2210.5%22%20r%3D%223.2%22%2F%3E%0A%3Crect%20fill%3D%22black%22%20x%3D%2218.4%22%20y%3D%2213.7%22%20width%3D%221.2%22%20height%3D%228.3%22%20rx%3D%220.6%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 
-/* 圖示移除後，讓文字自然往上，不留空白 */
-.township-submenu .menu-button {
-    padding-top: 20px;
-}
-
-/* ==========================================================
-   FINAL – Official Document Tile with TW Voting Stamp
-   - Blue/gray always-on stamp (aligned)
-   - Red stamp on hover / tap / pressed class
-   - No red border on press
-   - Folded corner with visible blue-gray outline
-   - Darker background grid
-   - iPhone SE (320px) -> Desktop
-   Target: .menu-button.no-icon
-   ========================================================== */
-
-.menu-button.no-icon{
-  /* ===== Responsive knobs ===== */
-  --pad-x: clamp(10px, 3.2vw, 18px);
-  --pad-y: clamp(14px, 2.6vw, 22px);
-  --seal:  clamp(28px, 8vw, 42px);
-  --seal-inset: clamp(8px, 2.4vw, 14px);
-  --indent: calc(var(--seal) + 16px);
-  --grid: clamp(18px, 5vw, 22px);
-  --border-main: rgba(225,228,232,.95);
-  --blue-gray: rgba(56,135,176,.35);
-
-  position: relative;
-  padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - 2px) var(--pad-x);
-  background: #fff;
-  border: 1px solid var(--border-main);
-  border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,.05);
-  overflow: hidden;
-
-  /* 公文折角 */
-  clip-path: polygon(
-    0 0,
-    calc(100% - 16px) 0,
-    100% 16px,
-    100% 100%,
-    0 100%
-  );
-
-  transition: box-shadow .18s ease;
-}
-
-/* ==========================================================
-   Background: darker grid + folded-corner outline
-   ========================================================== */
-.menu-button.no-icon::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-
-  background-image:
-    /* 右上折角邊線（藍灰） */
-    linear-gradient(
-      135deg,
-      var(--blue-gray) 0%,
-      var(--blue-gray) 50%,
-      transparent 50%
-    ),
-    /* 垂直格線（加深） */
-    linear-gradient(
-      to right,
-      rgba(56,135,176,0.10) 1px,
-      transparent 1px
-    ),
-    /* 水平格線（加深） */
-    linear-gradient(
-      to bottom,
-      rgba(56,135,176,0.09) 1px,
-      transparent 1px
-    );
-
-  background-size:
-    16px 16px,
-    var(--grid) var(--grid),
-    var(--grid) var(--grid);
-
-  background-position:
-    top right,
-    top left,
-    top left;
-
-  background-repeat:
-    no-repeat,
-    repeat,
-    repeat;
-
-  opacity: .78;
-}
-
-/* ==========================================================
-   Left seal: base + LIGHT BLUE stamp (always on)
-   ========================================================== */
-.menu-button.no-icon::before{
-  content:"";
-  position:absolute;
-  left: var(--seal-inset);
-  top:  var(--seal-inset);
-  width: var(--seal);
-  height: var(--seal);
-  border-radius: 999px;
-  pointer-events:none;
-
-  background-color: rgba(255,255,255,.70);
-
-  /* 淺藍投票章（主 + 副，完全對齊） */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%236F8FA3' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%236F8FA3' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
-
-  background-repeat: no-repeat, no-repeat;
-  background-size:
-    calc(var(--seal) * 0.78) calc(var(--seal) * 0.78),
-    calc(var(--seal) * 0.78) calc(var(--seal) * 0.78);
-  background-position:
-    center,
-    calc(50% + 1px) calc(50% + 1px);
-
-  opacity: .68;
-  mix-blend-mode: multiply;
-
-  /* 圓章邊框與吃色 */
-  box-shadow:
-    inset 0 0 0 2px rgba(56,135,176,.30),
-    inset 0 0 0 calc(var(--seal) * 0.20) rgba(56,135,176,.08);
-
-  transition: opacity .10s ease, box-shadow .10s ease;
-}
-
-/* ==========================================================
-   Text: 16px, left aligned, single line
-   ========================================================== */
-.menu-button.no-icon .menu-text{
-  position: relative;
-  display: block;
-  padding-left: var(--indent);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: .15px;
-  color: var(--secondary);
-  line-height: 1.25;
-  text-align: left;
-  white-space: nowrap;   /* 鄉鎮民代表一行 */
-}
-
-/* 抬頭線（極窄螢幕自動淡出） */
-.menu-button.no-icon .menu-text::after{
-  content:"";
-  position:absolute;
-  left: var(--indent);
-  top: -10px;
-  width: clamp(64px, 22vw, 120px);
-  border-top: 2px solid rgba(56,135,176,.22);
-  opacity: .9;
-}
-@media (max-width: 360px){
-  .menu-button.no-icon .menu-text::after{ opacity: .35; }
-}
-
-/* ==========================================================
-   Interaction: RED stamp only (NO red border)
-   - hover: desktop
-   - active: mobile press
-   - .stamp-pressed: JS 延遲換頁期間維持紅章
-   ========================================================== */
-
-/* 紅章：只吃 hover / active / pressed class（不吃 focus，避免換頁續紅） */
-.menu-button.no-icon:hover::before,
-.menu-button.no-icon:active::before,
-.menu-button.no-icon.stamp-pressed::before{
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C62828' stroke-opacity='0.35' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Cpath d='M50 15 V85'/%3E%3Cpath d='M50 55 L28 74'/%3E%3Cpath d='M50 55 L50 85'/%3E%3C/g%3E%3C/svg%3E");
-
-  opacity: .95;
-  box-shadow:
-    inset 0 0 0 2px rgba(198,40,40,.65),
-    inset 0 0 0 calc(var(--seal) * 0.22) rgba(198,40,40,.12);
-}
-
-/* 外框：永遠維持原樣（互動不變紅） */
-.menu-button.no-icon:hover,
-.menu-button.no-icon:active,
-.menu-button.no-icon.stamp-pressed{
-  border-color: var(--border-main);
-  box-shadow: 0 1px 6px rgba(0,0,0,.05);
-}
-
-
-/* ==========================================================
-   Integrated Swap Motion (Text -> LEFT, Stamp -> RIGHT)
-   - Trigger: desktop hover (fine pointer) OR JS class .stamp-pressed
-   - Uses container-based left animation for stamp (reliable direction)
-   - Keeps your existing stamp artwork + red/blue behavior
-   ========================================================== */
-
-/* Ensure we can animate left on the stamp (override prior transform-based moves) */
-.menu-button.no-icon::before{
-  /* lock to vertical center for motion, independent of top inset */
-  top: 50% !important;
-  left: var(--seal-inset) !important;
-  right: auto !important;
-  transform: translateY(-50%) !important;
-
-  /* animate left for horizontal move */
-  transition:
-    left .22s cubic-bezier(.2,.9,.2,1),
-    opacity .10s ease,
-    box-shadow .10s ease,
-    background-image .10s ease !important;
-}
-
-/* Text motion (override any previous transforms) */
-.menu-button.no-icon .menu-text{
-  transform: translateX(0) !important;
-  transition: transform .22s cubic-bezier(.2,.9,.2,1) !important;
-}
-
-/* ---- Desktop hover: move text left, stamp right ---- */
-@media (hover: hover) and (pointer: fine){
-  .menu-button.no-icon:hover .menu-text{
-    /* move left by the reserved stamp indent (so it "swaps lanes") */
-    transform: translateX(calc(-1 * (var(--indent) - var(--pad-x)))) !important;
-  }
-  .menu-button.no-icon:hover::before{
-    /* move stamp to the right inner edge */
-    left: calc(100% - var(--seal) - var(--seal-inset)) !important;
-  }
-}
-
-/* ---- Mobile/Touch: use JS-driven class .stamp-pressed ---- */
-.menu-button.no-icon.stamp-pressed .menu-text{
-  transform: translateX(calc(-1 * (var(--indent) - var(--pad-x)))) !important;
-}
-.menu-button.no-icon.stamp-pressed::before{
-  left: calc(100% - var(--seal) - var(--seal-inset)) !important;
-}
-
-/* Optional safety: on touch devices, don't let :hover/:active drive motion (prevents "sticky" states)
-   Your pressed class will still animate.
-*/
-@media (hover: none) and (pointer: coarse){
-  .menu-button.no-icon:hover .menu-text,
-  .menu-button.no-icon:active .menu-text{
-    transform: translateX(0) !important;
-  }
-  .menu-button.no-icon:hover::before,
-  .menu-button.no-icon:active::before{
-    left: var(--seal-inset) !important;
-  }
-}
-
-/* ==========================================================
-   Refined Swap Distance
-   Stamp moves RIGHT by a fixed amount (not to edge)
-   ========================================================== */
-
-.menu-button.no-icon{
-  --stamp-shift: 48px; /* ← 你之後只要調這個 */
-}
-
-/* hover（桌機） */
-@media (hover: hover) and (pointer: fine){
-  .menu-button.no-icon:hover::before{
-    left: calc(var(--seal-inset) + var(--stamp-shift)) !important;
-  }
-}
-
-/* 點選（手機，JS 加 stamp-pressed） */
-.menu-button.no-icon.stamp-pressed::before{
-  left: calc(var(--seal-inset) + var(--stamp-shift)) !important;
+@media (max-width: 768px){
+    .township-submenu .menu-button::after{
+        width: 24px;
+        height: 24px;
+    }
 }

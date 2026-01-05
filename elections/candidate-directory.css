@@ -1,0 +1,494 @@
+:root{
+    /* 使用既有主題變數（若 style.css 已定義，這裡只是保底） */
+    --cd-primary: var(--primary, #3887B0);
+    --cd-secondary: var(--secondary, #2c3e50);
+    --cd-bg: var(--bg, #f4f7f6);
+    --cd-card-bg: var(--card-bg, #ffffff);
+    --cd-text: var(--text-main, #2c3e50);
+    --cd-sub: var(--text-sub, #7f8c8d);
+    --cd-border: var(--border, #e1e4e8);
+}
+
+/* === Header 右上角 icon（不改原本 header HTML） === */
+header{
+    /* header 本來就是 position:fixed；確保子元素 absolute 以 header 為定位 */
+    position: fixed;
+}
+
+.cd-header-btn{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.cd-header-btn:hover{
+    transform: translateY(-50%) scale(1.03);
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.35);
+}
+.cd-header-btn:active{
+    transform: translateY(-50%) scale(0.99);
+}
+.cd-header-btn svg{ width: 20px; height: 20px; opacity: 0.95; }
+
+/* === Candidate Directory 主畫面 === */
+.cd-wrap{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cd-panel.card{
+    padding: 18px;
+}
+
+.cd-title-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.cd-title{
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--cd-secondary);
+    border-left: 4px solid var(--cd-primary);
+    padding-left: 10px;
+    line-height: 1.2;
+}
+.cd-count{
+    font-size: 13px;
+    color: var(--cd-sub);
+    white-space: nowrap;
+}
+
+.cd-filter-grid{
+    display:grid;
+    grid-template-columns: 1.4fr 0.8fr 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.cd-field label{
+    display:block;
+    font-size: 13px;
+    color: var(--cd-sub);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.cd-input, .cd-select-like{
+    width: 100%;
+    border: 1px solid var(--cd-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #fff;
+    color: var(--cd-text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.cd-input:focus, .cd-select-like:focus-within{
+    border-color: rgba(56,135,176,0.55);
+    box-shadow: 0 0 0 3px rgba(56,135,176,0.15);
+}
+
+/* 多選下拉（自製） */
+.cd-multi{
+    position: relative;
+}
+.cd-select-like{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.cd-select-like .cd-selected{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cd-text);
+}
+.cd-select-like .cd-placeholder{
+    color: rgba(44,62,80,0.5);
+}
+.cd-select-like .cd-caret{
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid rgba(44,62,80,0.55);
+    flex: 0 0 auto;
+}
+
+.cd-dropdown{
+    position:absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    background: #fff;
+    border: 1px solid var(--cd-border);
+    border-radius: 12px;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.12);
+    padding: 8px;
+    z-index: 9999;
+    display:none;
+    max-height: 260px;
+    overflow:auto;
+}
+.cd-multi.open .cd-dropdown{ display:block; }
+
+.cd-opt{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 8px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.cd-opt:hover{ background: rgba(56,135,176,0.06); }
+.cd-opt input{ cursor: pointer; }
+.cd-opt .cd-opt-name{
+    font-size: 14px;
+    color: var(--cd-text);
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.cd-opt .cd-opt-meta{
+    font-size: 12px;
+    color: var(--cd-sub);
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+/* reset / helper row */
+.cd-helper-row{
+    margin-top: 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.cd-tip{
+    font-size: 12px;
+    color: var(--cd-sub);
+}
+.cd-reset-btn{
+    border: 1px solid var(--cd-border);
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--cd-secondary);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.cd-reset-btn:hover{
+    transform: translateY(-1px);
+    border-color: rgba(56,135,176,0.5);
+    box-shadow: 0 10px 18px rgba(56,135,176,0.14);
+}
+.cd-reset-btn:active{ transform: translateY(0px); }
+
+/* === 結果清單 === */
+.cd-results{
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.cd-result-card.card{
+    padding: 16px;
+}
+
+.cd-top{
+    display:grid;
+    grid-template-columns: 96px 1fr;
+    gap: 14px;
+    align-items: start;
+}
+
+.cd-photo{
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eee;
+    border: 1px solid var(--cd-border);
+}
+
+.cd-name-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.cd-open-modal{
+    color: inherit;
+    text-decoration: none;
+}
+.cd-open-modal:hover{
+    text-decoration: underline;
+}
+
+
+/* 基本資料：無方框、直式三列（性別 / 出生年 / 出生地） */
+.cd-basic{
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.cd-basic-row{
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.7;
+    min-width: 0;
+}
+.cd-basic-label{
+    font-size: 12px;
+    color: var(--cd-sub);
+    font-weight: 800;
+    flex: 0 0 auto;
+    min-width: 52px;
+}
+.cd-basic-value{
+    font-size: 13px;
+    color: var(--cd-secondary);
+    font-weight: 800;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cd-info-grid{
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+.cd-info-item{
+    border: 1px solid var(--cd-border);
+    background: rgba(0,0,0,0.02);
+    border-radius: 12px;
+    padding: 8px 10px;
+    min-width: 0;
+}
+.cd-info-label{
+    font-size: 12px;
+    color: var(--cd-sub);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.cd-info-value{
+    font-size: 13px;
+    color: var(--cd-secondary);
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 政黨徽章：沿用站內 .party-badge 風格 */
+.cd-party-cell{
+    display: inline-flex;
+    align-items: center;
+}
+.cd-party-cell .party-badge{
+    margin-right: 0;
+}
+
+@media (max-width: 520px){
+    .cd-info-grid{ grid-template-columns: 1fr 1fr; }
+    .cd-info-item:nth-child(3){ grid-column: 1 / -1; }
+}
+.cd-name{
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--cd-secondary);
+    line-height: 1.2;
+}
+.cd-badges{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.cd-pill{
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--cd-border);
+    color: var(--cd-secondary);
+    background: rgba(56,135,176,0.06);
+    white-space: nowrap;
+}
+.cd-meta{
+    margin-top: 6px;
+    color: var(--cd-sub);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.cd-history{
+    margin-top: 12px;
+    border-top: 1px dashed var(--cd-border);
+    padding-top: 10px;
+}
+
+.cd-history-title{
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--cd-secondary);
+    margin-bottom: 8px;
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.cd-history-title span{
+    font-weight: 600;
+    color: var(--cd-sub);
+    font-size: 12px;
+}
+
+.cd-history-list{
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cd-history-item{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.02);
+}
+.cd-h-left{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    min-width: 0;
+}
+.cd-year{
+    font-size: 12px;
+    font-weight: 800;
+    color: #555;
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 8px;
+    flex: 0 0 auto;
+}
+.cd-ename{
+    font-size: 13px;
+    color: var(--cd-text);
+    font-weight: 600;
+    min-width: 0;
+}
+.cd-party{
+    font-size: 12px;
+    color: #fff;
+    background: #999;
+    padding: 2px 6px;
+    border-radius: 8px;
+    flex: 0 0 auto;
+}
+.cd-h-right{
+    font-size: 12px;
+    font-weight: 800;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+.cd-win{ color: #d9534f; }
+.cd-lose{ color: #888; font-weight: 600; }
+
+.cd-empty{
+    text-align:center;
+    padding: 30px 15px;
+    color: var(--cd-sub);
+    font-size: 15px;
+}
+
+@media (max-width: 860px){
+    .cd-filter-grid{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (max-width: 520px){
+    .cd-filter-grid{
+        grid-template-columns: 1fr;
+    }
+    .cd-top{
+        grid-template-columns: 80px 1fr;
+    }
+    .cd-photo{ width: 80px; height: 80px; border-radius: 50%; }
+}
+
+
+/* ---- fixes: dropdown menu should not be clipped by cards ---- */
+.cd-panel.card,
+.cd-result-card.card{
+  overflow: visible !important;
+}
+
+
+/* ---- desktop: two columns for result cards ---- */
+@media (min-width: 980px){
+  /* 兩欄瀑布流：卡片高度不一致時，下面會自動補上（不留空洞） */
+  .cd-results{
+    display: block;
+    column-count: 2;
+    column-gap: 14px;
+  }
+  .cd-result-card.card{
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 14px;
+    break-inside: avoid;
+  }
+}
+
+/* ---- party badge: smaller + party color ---- */
+.cd-party{
+  font-size: 12px;
+  padding: 2px 8px 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+.cd-party::before{
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--party-color, #7A7A7A);
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.95) inset;
+}

@@ -137,28 +137,28 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
-        {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 東門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
 
-        {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公投", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
-        {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公投", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
-        {file: "elections/J/J2018-A16.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第16案（廢止電業法非核家園條文）",summaryData: null},
-        {file: "elections/J/J2018-A15.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第15案（國中小性平教育明定入法）",summaryData: null},
-        {file: "elections/J/J2018-A14.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第14案（以民法保障同性婚姻）",summaryData: null},
-        {file: "elections/J/J2018-A13.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第13案（東奧台灣正名）",summaryData: null},
-        {file: "elections/J/J2018-A12.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第12案（非民法保障同性共同生活）",summaryData: null},
-        {file: "elections/J/J2018-A11.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第11案（國中小不實施同志教育）",summaryData: null},
-        {file: "elections/J/J2018-A10.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第10案（民法婚姻限定一男一女）",summaryData: null},
-        {file: "elections/J/J2018-A09.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第09案（反日本核食進口）",summaryData: null},
-        {file: "elections/J/J2018-A08.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第08案（反燃煤發電）",summaryData: null},
-        {file: "elections/J/J2018-A07.csv", year: "2018", type: "全國性公投", uiName: "2018年 全國性公投第07案（反空污）",summaryData: null},
-        {file: "elections/J/J2008-A06.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第06案（務實返聯）",summaryData: null},
-        {file: "elections/J/J2008-A05.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第05案（台灣入聯）",summaryData: null},
-        {file: "elections/J/J2008-A04.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第04案（反貪腐）",summaryData: null},
-        {file: "elections/J/J2008-A03.csv", year: "2008", type: "全國性公投", uiName: "2008年 全國性公投第03案（討黨產）",summaryData: null},
-        {file: "elections/J/J2004-A02.csv", year: "2004", type: "全國性公投", uiName: "2004年 全國性公投第02案（對等談判）",summaryData: null},
-        {file: "elections/J/J2004-A01.csv", year: "2004", type: "全國性公投", uiName: "2004年 全國性公投第01案（強化國防）",summaryData: null},
+        {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
+        {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
+        {file: "elections/J/J2018-A16.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第16案（廢止電業法非核家園條文）",summaryData: null},
+        {file: "elections/J/J2018-A15.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第15案（國中小性平教育明定入法）",summaryData: null},
+        {file: "elections/J/J2018-A14.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第14案（以民法保障同性婚姻）",summaryData: null},
+        {file: "elections/J/J2018-A13.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第13案（東奧台灣正名）",summaryData: null},
+        {file: "elections/J/J2018-A12.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第12案（非民法保障同性共同生活）",summaryData: null},
+        {file: "elections/J/J2018-A11.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第11案（國中小不實施同志教育）",summaryData: null},
+        {file: "elections/J/J2018-A10.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第10案（民法婚姻限定一男一女）",summaryData: null},
+        {file: "elections/J/J2018-A09.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第09案（反日本核食進口）",summaryData: null},
+        {file: "elections/J/J2018-A08.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第08案（反燃煤發電）",summaryData: null},
+        {file: "elections/J/J2018-A07.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第07案（反空污）",summaryData: null},
+        {file: "elections/J/J2008-A06.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第06案（務實返聯）",summaryData: null},
+        {file: "elections/J/J2008-A05.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第05案（台灣入聯）",summaryData: null},
+        {file: "elections/J/J2008-A04.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第04案（反貪腐）",summaryData: null},
+        {file: "elections/J/J2008-A03.csv", year: "2008", type: "全國性公民投票", uiName: "2008年 全國性公投第03案（討黨產）",summaryData: null},
+        {file: "elections/J/J2004-A02.csv", year: "2004", type: "全國性公民投票", uiName: "2004年 全國性公投第02案（對等談判）",summaryData: null},
+        {file: "elections/J/J2004-A01.csv", year: "2004", type: "全國性公民投票", uiName: "2004年 全國性公投第01案（強化國防）",summaryData: null},
 
-        {file: "elections/K/K2006-01.csv",year: "2006",type: "地方性公投",uiName: "2006年 地方性公投第1案（觀光博弈）",summaryData: null}
+        {file: "elections/K/K2006-01.csv",year: "2006",type: "地方性公民投票",uiName: "2006年 地方性公投第1案（觀光博弈）",summaryData: null}
 
     
 
@@ -186,8 +186,8 @@ const ELECTION_LEVEL_RULES = {
     "鄉鎮長":     { minLevel: ADMIN_LEVEL.TOWN,   maxLevel: ADMIN_LEVEL.VILLAGE },
     "鄉鎮民代表": { minLevel: ADMIN_LEVEL.TOWN,   maxLevel: ADMIN_LEVEL.VILLAGE },
     "村里長":     { minLevel: ADMIN_LEVEL.VILLAGE,maxLevel: ADMIN_LEVEL.VILLAGE },
-    "全國性公投": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE },
-    "地方性公投": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE }
+    "全國性公民投票": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE },
+    "地方性公民投票": { minLevel: ADMIN_LEVEL.COUNTY, maxLevel: ADMIN_LEVEL.VILLAGE }
 };
 
 // =========================
@@ -273,16 +273,126 @@ function isCountyPseudoTownName(name) {
     });
     
     const electionCategories = [
-	{ type: "總統副總統", icon: "總統" },
-        { type: "立法委員", icon: "立委" },
-        { type: "國大代表", icon: "國代" },
-        { type: "縣長", icon: "縣長" },
-        { type: "縣議員", icon: "議員" },
-        { type: "鄉鎮長", icon: "鄉鎮" }, 
-        { type: "鄉鎮民代表", icon: "代表" },
-        { type: "村里長", icon: "村里" }, 
-        { type: "公民投票", icon: "公投" }
-    ];
+    { type: "總統副總統", iconKey: "president" },
+    { type: "立法委員",   iconKey: "legislator" },
+    { type: "國大代表",   iconKey: "assembly" },
+    { type: "縣長",       iconKey: "magistrate" },
+    { type: "縣議員",     iconKey: "council" },
+    { type: "鄉鎮長",     iconKey: "mayor" }, 
+    { type: "鄉鎮民代表", iconKey: "representative" },
+    { type: "村里長",     iconKey: "village" }, 
+    { type: "公民投票",   iconKey: "referendum" }
+];
+
+/**
+ * 首頁按鈕 Icon（SVG，不再用文字塞在 menu-icon 裡）
+ * - 使用 currentColor：可直接用 CSS 改色
+ * - 僅作為視覺符號，真正的名稱仍由 menu-text 提供
+ */
+function getMenuIconSvg(key) {
+    // 統一圖示語言：24x24、線條風格一致（currentColor + 圓角端點/轉角）
+    // 目標：每一格 icon 不重複、語意更貼題、整體視覺一致
+    const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
+    switch (key) {
+        case "president":
+            return `<svg ${common}>
+                <path d="M6 21V4"/>
+                <path d="M6 4h12l-2.2 3 2.2 3H6"/>
+                <path d="M14.8 6.2l.5 1 1.1.2-.8.7.2 1.1-1-.5-1 .5.2-1.1-.8-.7 1.1-.2.5-1z"/>
+            </svg>`;
+
+        case "legislator":
+            return `<svg ${common}>
+                <path d="M4 10l8-4 8 4"/>
+                <path d="M6 10v9"/><path d="M10 10v9"/><path d="M14 10v9"/><path d="M18 10v9"/>
+                <path d="M4 19h16"/>
+            </svg>`;
+
+        case "assembly":
+            return `<svg ${common}>
+                <path d="M8 3h7l3 3v15H8z"/>
+                <path d="M15 3v4h4"/>
+                <path d="M10 11h8"/><path d="M10 14h8"/><path d="M10 17h6"/>
+            </svg>`;
+
+        case "magistrate":
+            return `<svg ${common}>
+                <circle cx="12" cy="9.8" r="3.8"/>
+                <path d="M10 13.2l-2 7 4-2 4 2-2-7"/>
+                <path d="M12 7.7l.6 1.1 1.2.2-.9.8.2 1.2-1.1-.6-1.1.6.2-1.2-.9-.8 1.2-.2.6-1.1z"/>
+            </svg>`;
+
+        case "council":
+            return `<svg ${common}>
+                <path d="M14 7l3 3"/>
+                <path d="M7 14l7-7 3 3-7 7H7z"/>
+                <path d="M6 18h6"/>
+                <path d="M5 20h8"/>
+            </svg>`;
+
+        case "mayor":
+            return `<svg ${common}>
+                <path d="M4 10l8-5 8 5"/>
+                <path d="M6 10v10h12V10"/>
+                <path d="M10 20v-6h4v6"/>
+                <path d="M8.5 13h2"/><path d="M13.5 13h2"/>
+            </svg>`;
+
+        case "representative":
+            return `<svg ${common}>
+                <path d="M6 12l2-2 4 4 4-4 2 2"/>
+                <path d="M8 13l2 2 2-2"/>
+                <path d="M10 15l2 2 2-2"/>
+                <path d="M5 14l3 3"/>
+                <path d="M19 14l-3 3"/>
+            </svg>`;
+
+        case "village":
+            return `<svg ${common}>
+                <path d="M4 11l8-6 8 6"/>
+                <path d="M6 11v9h12v-9"/>
+                <path d="M10 20v-5h4v5"/>
+            </svg>`;
+
+        case "referendum":
+            return `<svg ${common}>
+                <path d="M7 10l5-4 5 4"/>
+                <path d="M6 10v9h12v-9"/>
+                <path d="M11 6.5v4.2"/>
+                <path d="M9.5 15l1.6 1.6 3.6-3.6"/>
+            </svg>`;
+
+        case "nation":
+            return `<svg ${common}>
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M3 12h18"/>
+                <path d="M12 3a14 14 0 0 1 0 18"/>
+                <path d="M12 3a14 14 0 0 0 0 18"/>
+            </svg>`;
+
+        case "local":
+            return `<svg ${common}>
+                <path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/>
+                <circle cx="12" cy="10" r="2"/>
+            </svg>`;
+
+        case "district":
+            return `<svg ${common}>
+                <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
+                <path d="M9 4v14"/><path d="M15 6v14"/>
+            </svg>`;
+
+        case "party":
+            return `<svg ${common}>
+                <path d="M8 7h12"/><path d="M8 12h12"/><path d="M8 17h12"/>
+                <path d="M4 7h.01"/><path d="M4 12h.01"/><path d="M4 17h.01"/>
+            </svg>`;
+
+        default:
+            return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
+    }
+}
+
 
     const partyColors = {
         "中國國民黨": "#3887B0",
@@ -1227,8 +1337,10 @@ function extractCountySummary(text) {
              clickAction = `renderElectionList('${cat.type}', true)`;
         }
 
-        html += `<div class="menu-button no-icon" onclick="${clickAction}">
-            <span class="menu-text">${cat.type}</span>
+        html += `<div class=\"menu-button\" role=\"button\" tabindex=\"0\" onclick=\"${clickAction}\">
+            <span class=\"menu-icon\" aria-hidden=\"true\">${getMenuIconSvg(cat.iconKey)}</span>
+            <span class=\"menu-text\">${cat.type}</span>
+            <span class=\"menu-chevron\" aria-hidden=\"true\">›</span>
         </div>`;
     });
 
@@ -1281,12 +1393,16 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button no-icon" onclick="renderElectionList('全國性公投', true)">
-                    <span class="menu-text">全國性公投</span>
+                   <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('全國性公民投票', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('nation')}</span>
+                    <span class="menu-text">全國性公民投票</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
-                <div class="menu-button no-icon" onclick="renderElectionList('地方性公投', true)">
-                    <span class="menu-text">地方性公投</span>
+                <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('地方性公民投票', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('local')}</span>
+                    <span class="menu-text">地方性公民投票</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
             </div>
@@ -1320,12 +1436,16 @@ function extractCountySummary(text) {
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇立委類別</div>
             <div class="main-menu-grid">
-                   <div class="menu-button no-icon" onclick="renderElectionList('區域立委', true)">
+                   <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('區域立委', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('district')}</span>
                     <span class="menu-text">區域立委</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
-                <div class="menu-button no-icon" onclick="renderElectionList('不分區立委', true)">
+                <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('不分區立委', true)">
+                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('party')}</span>
                     <span class="menu-text">不分區立委</span>
+                    <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
 
             </div>
@@ -1365,7 +1485,7 @@ function extractCountySummary(text) {
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
-            html += `<div class="menu-button no-icon" onclick="renderElectionListByTown('${type}', '${t}', true)">
+            html += `<div class="menu-button" onclick="renderElectionListByTown('${type}', '${t}', true)">
 <span class="menu-text">${t}</span>
             </div>`;
         });
@@ -1792,7 +1912,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
              html += `<span class="active">${appState.currentTownshipName}</span>`;
         }
         else if (level === 'electionList') {
-            if (['全國性公投', '地方性公投'].includes(appState.currentTown)) {
+            if (['全國性公民投票', '地方性公民投票'].includes(appState.currentTown)) {
                 html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
                 html += `<span class="active">${appState.currentTown}</span>`;
             } else if (['區域立委', '不分區立委'].includes(appState.currentTown)) {
@@ -1817,7 +1937,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         }
         html += `<span class="active">${appState.electionName}</span>`;
     } else {
-        if (['全國性公投', '地方性公投'].includes(electionType)) {
+        if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
              html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
              html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
         } else if (['區域立委', '不分區立委'].includes(electionType)) {
@@ -1846,7 +1966,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
          html += `<span class="active">${appState.electionName}</span>`;
      } else {
          // 其他類型：維持既有路徑（公投 / 立委有上層分類）
-         if (['全國性公投', '地方性公投'].includes(electionType)) {
+         if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
              html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
              html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
          } else if (['區域立委', '不分區立委'].includes(electionType)) {
@@ -1880,7 +2000,7 @@ else if (level === 'village') {
     }
     else {
         // 其他類型：維持既有路徑（公投 / 立委有上層分類）
-        if (['全國性公投', '地方性公投'].includes(electionType)) {
+        if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
             html += `<span onclick="renderReferendumSubMenu(true)">公民投票</span> / `;
             html += `<span onclick="renderElectionList('${electionType}', true)">${electionType}</span> / `;
         } else if (['區域立委', '不分區立委'].includes(electionType)) {
@@ -2207,87 +2327,3 @@ dom.breadcrumb.innerHTML = html;
                  updateUrl(state, "金門選舉資料庫 - 首頁", "?view=main", false);     renderMainMenu(false);}
         });
     })();
-
-// === Stamp-then-navigate (HARD FIX: prevent hover/active carry-over) =====
-// - Touch devices can "stick" :hover/:active across SPA navigations.
-// - We avoid using :hover/:active for the RED stamp on touch.
-// - JS toggles .stamp-pressed briefly, then runs the original onclick.
-// ========================================================================
-(function () {
-  const DELAY_MS = 140;
-  const BTN_SEL = '.menu-button.no-icon';
-
-  function clearAll() {
-    document.querySelectorAll(BTN_SEL + '.stamp-pressed').forEach(el => {
-      el.classList.remove('stamp-pressed');
-    });
-  }
-
-  function mark(btn) {
-    clearAll();
-    btn.classList.add('stamp-pressed');
-  }
-
-  function runInlineOnclick(btn) {
-    const handler = btn.getAttribute('onclick');
-    if (!handler) return;
-
-    // Clear focus to reduce state carry-over on mobile browsers
-    try {
-      if (document.activeElement && typeof document.activeElement.blur === 'function') {
-        document.activeElement.blur();
-      }
-    } catch (_) {}
-
-    // Execute the original inline handler
-    try {
-      (new Function(handler))();
-    } catch (err) {
-      console.error('[stamp-nav] onclick failed:', err);
-    }
-  }
-
-  // Show stamp as soon as the press starts (better tactile feedback)
-  document.addEventListener('pointerdown', (e) => {
-    const btn = e.target.closest(BTN_SEL);
-    if (!btn) return;
-
-    // Only primary button for mouse
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-
-    mark(btn);
-  }, true);
-
-  // Intercept click BEFORE inline onclick runs (capture phase)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest(BTN_SEL);
-    if (!btn) return;
-
-    const handler = btn.getAttribute('onclick');
-    if (!handler) return;
-
-    // Stop the browser / inline onclick from running immediately
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-
-    // Ensure we show the stamp during the delay
-    mark(btn);
-
-    setTimeout(() => {
-      // IMPORTANT: clear pressed state BEFORE navigation/render
-      // to avoid applying to the next page's element at the same position.
-      clearAll();
-      runInlineOnclick(btn);
-    }, DELAY_MS);
-  }, true);
-
-  // Safety clears
-  ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(evt => {
-    document.addEventListener(evt, clearAll, true);
-  });
-  window.addEventListener('popstate', clearAll);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState !== 'visible') clearAll();
-  });
-})();

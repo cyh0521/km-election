@@ -1,0 +1,647 @@
+:root{
+    /* 使用既有主題變數（若 style.css 已定義，這裡只是保底） */
+    --cd-primary: var(--primary, #3887B0);
+    --cd-secondary: var(--secondary, #2c3e50);
+    --cd-bg: var(--bg, #f4f7f6);
+    --cd-card-bg: var(--card-bg, #ffffff);
+    --cd-text: var(--text-main, #2c3e50);
+    --cd-sub: var(--text-sub, #7f8c8d);
+    --cd-border: var(--border, #e1e4e8);
+}
+
+/* === Header 右上角 icon（不改原本 header HTML） === */
+header{
+    /* header 本來就是 position:fixed；確保子元素 absolute 以 header 為定位 */
+    position: fixed;
+}
+
+.cd-header-btn{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.cd-header-btn:hover{
+    transform: translateY(-50%) scale(1.03);
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.35);
+}
+.cd-header-btn:active{
+    transform: translateY(-50%) scale(0.99);
+}
+.cd-header-btn svg{ width: 20px; height: 20px; opacity: 0.95; }
+
+/* === Candidate Directory 主畫面 === */
+.cd-wrap{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cd-panel.card{
+    padding: 18px;
+    overflow: visible; /* 讓自製下拉選單不被 card 的 overflow:hidden 裁掉 */
+}
+
+.cd-title-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.cd-title{
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--cd-secondary);
+    border-left: 4px solid var(--cd-primary);
+    padding-left: 10px;
+    line-height: 1.2;
+}
+.cd-count{
+    font-size: 13px;
+    color: var(--cd-sub);
+    white-space: nowrap;
+}
+
+.cd-filter-grid{
+    display:grid;
+    grid-template-columns: 1.4fr 0.8fr 1fr 1fr 0.75fr;
+    gap: 12px;
+    align-items: start;
+}
+
+/* reset button in grid */
+.cd-label-blank{ visibility:hidden; }
+.cd-field-reset{ display:flex; flex-direction:column; justify-content:flex-end; }
+.cd-reset-ingrid{ width:100%; min-height: 42px; }
+
+.cd-field label{
+    display:block;
+    font-size: 13px;
+    color: var(--cd-sub);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.cd-input, .cd-select-like{
+    width: 100%;
+    border: 1px solid var(--cd-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #fff;
+    color: var(--cd-text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 統一 select 外觀（避免 iOS/Android 原生樣式與其他欄位不一致） */
+select.cd-input{
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5' fill='none' stroke='%235f6c7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+    padding-right: 38px;
+}
+
+.cd-select-like{
+    min-height: 42px; /* 欄位高度固定，避免內容變長時撐高 */
+}
+.cd-input:focus, .cd-select-like:focus-within{
+    border-color: rgba(56,135,176,0.55);
+    box-shadow: 0 0 0 3px rgba(56,135,176,0.15);
+}
+
+/* 多選下拉（自製） */
+.cd-multi{
+    position: relative;
+}
+.cd-select-like{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.cd-select-like .cd-selected{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cd-text);
+}
+.cd-select-like .cd-placeholder{
+    color: rgba(44,62,80,0.5);
+}
+.cd-select-like .cd-caret{
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid rgba(44,62,80,0.55);
+    flex: 0 0 auto;
+}
+
+.cd-dropdown{
+    position:absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    background: #fff;
+    border: 1px solid var(--cd-border);
+    border-radius: 12px;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.12);
+    padding: 8px;
+    z-index: 1500;
+    display:none;
+    max-height: 260px;
+    overflow:auto;
+}
+.cd-multi.open .cd-dropdown{ display:block; }
+
+.cd-opt{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 8px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.cd-opt-all{
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.cd-opt:hover{ background: rgba(56,135,176,0.06); }
+.cd-opt input{ cursor: pointer; }
+.cd-opt .cd-opt-name{
+    font-size: 14px;
+    color: var(--cd-text);
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.cd-opt .cd-opt-meta{
+    font-size: 12px;
+    color: var(--cd-sub);
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+/* reset / helper row */
+.cd-helper-row{
+    margin-top: 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.cd-tip{
+    font-size: 12px;
+    color: var(--cd-sub);
+}
+.cd-reset-btn{
+    border: 1px solid var(--cd-border);
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--cd-secondary);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.cd-reset-btn:hover{
+    transform: translateY(-1px);
+    border-color: rgba(56,135,176,0.5);
+    box-shadow: 0 10px 18px rgba(56,135,176,0.14);
+}
+.cd-reset-btn:active{ transform: translateY(0px); }
+
+/* === 結果清單 === */
+.cd-results{
+    margin-top: 18px;
+    column-count: 1;
+    column-gap: 14px;
+}
+
+@media (min-width: 860px){
+    .cd-results{ column-count: 2; }
+}
+
+.cd-result-card.card{
+    padding: 16px;
+    overflow: visible;
+    display: inline-block; /* 讓 column layout 可運作 */
+    width: 100%;
+    margin: 0 0 14px;
+    break-inside: avoid;
+}
+
+/* 套用候選人小卡（Modal）視覺，但縮小間距以適合列表 */
+.cd-profile-header{
+    gap: 14px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+}
+.cd-result-card .profile-photo{
+    width: 82px;
+    height: 82px;
+}
+.cd-result-card .profile-info h2{
+    margin-bottom: 4px;
+}
+.cd-result-card .profile-info h2 a{
+    color: inherit;
+    text-decoration: none;
+}
+.cd-result-card .profile-info h2 a:hover{
+    text-decoration: underline;
+}
+.cd-result-card .profile-detail{
+    line-height: 1.25;
+    margin-top: 1px;
+}
+
+.cd-history-left{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.cd-history-left .history-name{
+    min-width: 0;
+}
+
+.cd-top{
+    display:grid;
+    grid-template-columns: 96px 1fr;
+    gap: 14px;
+    align-items: start;
+}
+
+.cd-photo{
+    width: 96px;
+    height: 96px;
+    border-radius: 14px;
+    object-fit: cover;
+    background: #eee;
+    border: 1px solid var(--cd-border);
+}
+
+.cd-name-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+.cd-name{
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--cd-secondary);
+    line-height: 1.2;
+}
+.cd-badges{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.cd-pill{
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--cd-border);
+    color: var(--cd-secondary);
+    background: rgba(56,135,176,0.06);
+    white-space: nowrap;
+}
+.cd-meta{
+    margin-top: 6px;
+    color: var(--cd-sub);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.cd-history{
+    margin-top: 12px;
+    border-top: 1px dashed var(--cd-border);
+    padding-top: 10px;
+}
+
+.cd-history-title{
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--cd-secondary);
+    margin-bottom: 8px;
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.cd-history-title span{
+    font-weight: 600;
+    color: var(--cd-sub);
+    font-size: 12px;
+}
+
+.cd-history-list{
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cd-history-item{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.02);
+}
+.cd-h-left{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    min-width: 0;
+}
+.cd-year{
+    font-size: 12px;
+    font-weight: 800;
+    color: #555;
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 8px;
+    flex: 0 0 auto;
+}
+.cd-ename{
+    font-size: 13px;
+    color: var(--cd-text);
+    font-weight: 600;
+    min-width: 0;
+}
+.cd-party{
+    font-size: 12px;
+    color: #fff;
+    background: #999;
+    padding: 2px 6px;
+    border-radius: 8px;
+    flex: 0 0 auto;
+}
+.cd-h-right{
+    font-size: 12px;
+    font-weight: 800;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+.cd-win{ color: #d9534f; }
+.cd-lose{ color: #888; font-weight: 600; }
+
+.cd-empty{
+    text-align:center;
+    padding: 30px 15px;
+    color: var(--cd-sub);
+    font-size: 15px;
+}
+
+@media (max-width: 860px){
+    .cd-filter-grid{
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .cd-field-reset{ grid-column: 1 / -1; }
+
+    .cd-top{
+        grid-template-columns: 80px 1fr;
+    }
+    .cd-photo{ width: 80px; height: 80px; border-radius: 12px; }
+}
+
+@media (max-width: 520px){
+    /* 更緊湊的手機檢索區 */
+    .cd-panel.card{ padding: 14px; }
+    .cd-title-row{ margin-bottom: 10px; }
+    .cd-title{ font-size: 18px; }
+    .cd-count{ font-size: 12px; }
+
+    .cd-filter-grid{
+        grid-template-columns: 1fr 1fr; /* iPhone SE2 仍保持兩欄 */
+        gap: 8px;
+    }
+    .cd-field label{
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+        /* iOS：輸入框字級 <16px 會自動放大（zoom），所以文字輸入與原生 select 固定 16px */
+    .cd-input{
+        font-size: 16px;
+        padding: 8px 10px;
+        border-radius: 12px;
+    }
+    /* 自製多選下拉可維持較小字級，保留緊湊感 */
+    .cd-select-like{
+        font-size: 13px;
+        padding: 8px 10px;
+        border-radius: 12px;
+    }
+    .cd-select-like{ min-height: 38px; }
+
+    .cd-dropdown{ max-height: 220px; padding: 6px; }
+    .cd-opt{ padding: 7px 7px; }
+    .cd-opt .cd-opt-name{ font-size: 13px; }
+    .cd-opt .cd-opt-meta{ font-size: 11px; }
+
+    .cd-field-reset{ grid-column: 1 / -1; }
+    .cd-reset-btn{ padding: 8px 10px; }
+}
+
+@media (max-width: 360px){
+    .cd-filter-grid{ grid-template-columns: 1fr; }
+}
+
+/* =========================
+   2026-01-05 修正：檢索欄位高度一致 / 小卡左右垂直置中 / 手機維持左右版型 / 多選不撐高
+   ========================= */
+
+:root{
+  --cd-control-h: 44px;
+}
+
+/* 1) 檢索欄位（姓名/性別/多選/清除）高度統一 */
+.cd-input,
+.cd-select-like,
+.cd-reset-ingrid{
+  box-sizing: border-box;
+  height: var(--cd-control-h);
+  min-height: var(--cd-control-h);
+}
+
+/* input / select：用固定高度 + 置中 line-height，避免不同瀏覽器撐高 */
+input.cd-input,
+select.cd-input{
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: calc(var(--cd-control-h) - 2px); /* 扣掉邊框，視覺置中 */
+}
+
+/* 多選：固定高度、文字不換行、超出以省略號 */
+.cd-select-like{
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.cd-select-like .cd-selected{
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 清除條件：高度與欄位一致，文字置中 */
+.cd-reset-ingrid{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* 2) 候選人圖像與右側資訊垂直置中 */
+.cd-result-card .profile-header,
+.cd-result-card .cd-profile-header{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.cd-result-card .profile-header > div:first-child{
+  flex: 0 0 auto;
+}
+.cd-result-card .profile-info{
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 3) 手機版維持「左圖右文」不堆疊 */
+@media (max-width: 860px){
+  .cd-result-card .profile-header,
+  .cd-result-card .cd-profile-header{
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* 4) 手機緊湊版仍維持一致高度（避免 iOS 變形） */
+@media (max-width: 520px){
+  :root{ --cd-control-h: 44px; }
+  input.cd-input,
+  select.cd-input{
+    line-height: calc(var(--cd-control-h) - 2px);
+  }
+}
+
+
+/* =========================
+   2026-01-05 追加修正：
+   1) 多選文字過長時，避免撐大欄位「寬度」（Grid 欄位可縮）
+   2) 手機版候選人資訊改為向左對齊
+   3) 桌機「清除條件」按鈕外觀更像輸入欄位
+   ========================= */
+
+/* 1) Grid 子項目預設 min-width:auto 會被內容撐開；強制允許縮小 */
+.cd-filter-grid{ width:100%; }
+.cd-filter-grid > .cd-field,
+.cd-filter-grid > .cd-field *{
+  min-width: 0;
+}
+
+/* 多選顯示區：一定要能縮，超出以省略號呈現 */
+.cd-multi,
+.cd-select-like{
+  max-width: 100%;
+  min-width: 0;
+}
+.cd-select-like .cd-selected{
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 檢索卡片允許下拉選單往下溢出，但避免水平被內容撐寬 */
+.cd-panel.card{
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+/* 2) 手機版候選人資訊向左對齊（避免被全站樣式置中） */
+.cd-result-card .profile-info,
+.cd-result-card .profile-info h2,
+.cd-result-card .profile-detail{
+  text-align: left;
+}
+.cd-result-card .profile-header{
+  justify-content: flex-start;
+}
+
+/* 3) 清除條件（grid 內）按鈕：改成「像輸入框」的扁平樣式 */
+.cd-reset-btn.cd-reset-ingrid{
+  border-radius: 12px;
+  border: 1px solid var(--cd-border);
+  background: #fff;
+  color: var(--cd-text);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: none;
+  transform: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.cd-reset-btn.cd-reset-ingrid:hover{
+  border-color: rgba(56,135,176,0.55);
+  box-shadow: 0 0 0 3px rgba(56,135,176,0.12);
+  transform: none;
+}
+.cd-reset-btn.cd-reset-ingrid:active{
+  transform: none;
+}
+
+
+/* =========================
+   2026-01-05 追加修正：
+   A) 自製多選下拉選單被邊框/容器裁切（overflow）問題
+   ========================= */
+
+/* 一些全站 .card 或容器可能預設 overflow:hidden 造成下拉選單被裁切
+   這裡在候選人檢索範圍內強制允許溢出顯示（只影響名鑑區塊） */
+.cd-panel.card{ overflow: visible !important; }
+.cd-filter-grid{ overflow: visible; }
+.cd-field{ overflow: visible; }
+.cd-multi{ overflow: visible; }
+.cd-select-like{ overflow: visible; }
+
+/* 下拉選單本體：確保盒模型一致，避免陰影/邊框看起來像被切掉 */
+.cd-dropdown{
+  box-sizing: border-box;
+}
+
+/*（保險）讓展開的那個欄位浮到上層，避免被相鄰欄位蓋住 */
+.cd-multi.open{ z-index: 2000; }
