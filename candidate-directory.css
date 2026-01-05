@@ -429,7 +429,7 @@ select.cd-input{
     .cd-top{
         grid-template-columns: 80px 1fr;
     }
-    .cd-result-card .profile-photo {width: 72px; height: 72px; 
+    .cd-result-card .profile-photo {width: 82px; height: 82px; 
     }
 }
 
