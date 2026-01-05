@@ -427,10 +427,9 @@ select.cd-input{
     .cd-field-reset{ grid-column: 1 / -1; }
 
     .cd-top{
-        grid-template-columns: 80px 1fr;
+        grid-template-columns: 82px 1fr;
     }
-    .cd-result-card .profile-photo {width: 82px; height: 82px; 
-    }
+    .cd-photo{ width: 82px; height: 82px; border-radius: 12px; }
 }
 
 @media (max-width: 520px){
