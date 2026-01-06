@@ -138,6 +138,19 @@
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-4.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮北門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-5.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮賢庵里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-6.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮金水里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-7.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮古城里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-8.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮珠沙里長選舉",summaryData: null},
+        {file: "elections/I/I2022B-1.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉古寧村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-2.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉安美村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-3.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉湖埔村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-4.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉榜林村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-5.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉盤山村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-6.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉后盤村長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
@@ -1485,7 +1498,7 @@ function extractCountySummary(text) {
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
-            html += `<div class="menu-button" onclick="renderElectionListByTown('${type}', '${t}', true)">
+            html += `<div class="menu-button" data-town="${t}" onclick="renderElectionListByTown('${type}', '${t}', true)">
 <span class="menu-text">${t}</span>
             </div>`;
         });

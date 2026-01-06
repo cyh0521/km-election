@@ -2,14 +2,8 @@
    候選人檢索（獨立功能模組）
    檔名：candidate-directory.js
 
-   ✅ 目標
-   - 不改動原本功能（主選單/選舉頁/小卡/Modal 等）
-   - 以「獨立 JS + 獨立 CSS」形式掛接到標題列右側
-   - 篩選：姓名 / 性別(男/女) / 推薦政黨(多選) / 選舉類型(多選)
-   - 選舉類型排除：總統副總統、不分區立委、公投
-   - 參選經歷不截斷（完整顯示）
 
-   ✅ 可選排序設定（可放在 index.html 內、載入本檔前）
+   可選排序設定（可放在 index.html 內、載入本檔前）
    window.CANDIDATE_DIRECTORY_PARTY_SORT = 'freq' | 'name' | 'custom'   // 預設 freq
    window.CANDIDATE_DIRECTORY_PARTY_CUSTOM_ORDER = ['中國國民黨','民主進步黨',...]
    window.CANDIDATE_DIRECTORY_TYPE_SORT  = 'freq' | 'name' | 'custom'   // 預設 name
@@ -380,12 +374,11 @@ if (isReferendumType(s)) return true;
     btn.title = '候選人檢索';
     btn.setAttribute('aria-label', '候選人檢索');
 
+    // 放大鏡（一般搜尋 icon）
     btn.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M7 7.5C7 5.57 8.57 4 10.5 4h3C15.43 4 17 5.57 17 7.5v.5H7v-.5Z" stroke="currentColor" stroke-width="1.7"/>
-        <path d="M6 8h12a2 2 0 0 1 2 2v8.5a2.5 2.5 0 0 1-2.5 2.5H6.5A2.5 2.5 0 0 1 4 18.5V10a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7"/>
-        <path d="M8 13.2h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-        <path d="M8 16.8h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/>
+        <path d="M16.2 16.2L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     `;
     btn.addEventListener('click', () => renderCandidateDirectory(true));
@@ -415,8 +408,8 @@ if (isReferendumType(s)) return true;
               <label>性別</label>
               <select id="cd-gender" class="cd-input">
                 <option value="">全部</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
+                <option value="男">男性</option>
+                <option value="女">女性</option>
               </select>
             </div>
 
