@@ -236,6 +236,7 @@ function getDisplayLevels(electionType, data) {
     }
 
     const levels = [];
+    const isFixedSingleLevel = rule.minLevel === rule.maxLevel;
 
     // 依規則的最小層級起跳
     if (rule.minLevel === ADMIN_LEVEL.COUNTY && available.hasCounty) levels.push(ADMIN_LEVEL.COUNTY);
@@ -244,7 +245,8 @@ function getDisplayLevels(electionType, data) {
 
     // 依規則往下延伸（且資料真的存在）
     if (rule.maxLevel === ADMIN_LEVEL.VILLAGE && available.hasVillage) {
-        if (!levels.includes(ADMIN_LEVEL.TOWN) && available.hasTown) levels.push(ADMIN_LEVEL.TOWN);
+        // 若規則是單一固定層級（例如：村里長 village -> village），就不要自動補進中間層（town）
+        if (!isFixedSingleLevel && !levels.includes(ADMIN_LEVEL.TOWN) && available.hasTown) levels.push(ADMIN_LEVEL.TOWN);
         if (!levels.includes(ADMIN_LEVEL.VILLAGE)) levels.push(ADMIN_LEVEL.VILLAGE);
     } else if (rule.maxLevel === ADMIN_LEVEL.TOWN && available.hasTown) {
         if (!levels.includes(ADMIN_LEVEL.TOWN)) levels.push(ADMIN_LEVEL.TOWN);
@@ -964,11 +966,24 @@ function loadData(file, uiName, pushState = true) {
                 const electionType = currentElectionObj ? currentElectionObj.type : '';
                 const displayLevels = getDisplayLevels(electionType, appState.data);
 
-                // 若第一層是鄉鎮（例如：鄉鎮長 / 鄉鎮民代表），直接進入第一個鄉鎮
+                // ✅ 若第一層是鄉鎮（例如：鄉鎮長 / 鄉鎮民代表），直接進入第一個鄉鎮
                 if (displayLevels.length > 0 && displayLevels[0] === ADMIN_LEVEL.TOWN) {
                     const firstTown = appState.data && appState.data.townOrder ? appState.data.townOrder[0] : null;
                     if (firstTown) {
                         renderTown(firstTown, true, pushState);
+                        return;
+                    }
+                }
+
+                // ✅ 若第一層是村里（例如：村里長），直接進入第一個村里
+                if (displayLevels.length > 0 && displayLevels[0] === ADMIN_LEVEL.VILLAGE) {
+                    const firstTown = appState.data && appState.data.townOrder ? appState.data.townOrder[0] : null;
+                    const firstVillage = (firstTown && appState.data.towns && appState.data.towns[firstTown] && appState.data.towns[firstTown].villages)
+                        ? Object.keys(appState.data.towns[firstTown].villages)[0]
+                        : null;
+
+                    if (firstTown && firstVillage) {
+                        renderVillage(firstTown, firstVillage, true, pushState);
                         return;
                     }
                 }
