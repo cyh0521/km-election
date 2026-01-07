@@ -151,6 +151,37 @@
         {file: "elections/I/I2022B-4.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉榜林村長選舉",summaryData: null},
         {file: "elections/I/I2022B-5.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉盤山村長選舉",summaryData: null},
         {file: "elections/I/I2022B-6.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉后盤村長選舉",summaryData: null},
+        {file: "elections/I/I2022C-1.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮新市里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-2.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮山外里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-3.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮溪湖里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-4.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮蓮庵里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-5.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮料羅里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-6.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮新湖里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-7.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮正義里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-8.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮瓊林里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-1.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮汶沙里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-2.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮何斗里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-3.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮浦山里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-4.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮西園里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-5.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮官嶼里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-6.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮三山里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-7.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮大洋里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-8.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮光前里長選舉",summaryData: null},
+        {file: "elections/I/I2022E-1.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉林湖村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-2.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉黃埔村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-3.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉西口村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-4.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉上林村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-5.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉上岐村長選舉",summaryData: null},
+        {file: "elections/I/I2022F-1.csv",year: "2022",type: "村里長",uiName: "2022年 烏坵鄉大坵村長選舉",summaryData: null},
+        {file: "elections/I/I2022F-2.csv",year: "2022",type: "村里長",uiName: "2022年 烏坵鄉小坵村長選舉",summaryData: null},
+        {file: "elections/I/I2018A-1.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮東門里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-2.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮南門里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-3.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮西門里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-4.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮北門里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-5.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮賢庵里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-6.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮金水里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-7.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮古城里長選舉",summaryData: null},
+        {file: "elections/I/I2018A-8.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮珠沙里長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
@@ -227,6 +258,8 @@ function getDisplayLevels(electionType, data) {
     const rule = ELECTION_LEVEL_RULES[electionType];
     const available = detectAvailableLevels(data);
 
+    const isFixedSingleLevel = rule.minLevel === rule.maxLevel;
+
     // 若沒有規則：保守依資料顯示（由上而下）
     if (!rule) {
         if (available.hasCounty) return [ADMIN_LEVEL.COUNTY];
@@ -236,7 +269,6 @@ function getDisplayLevels(electionType, data) {
     }
 
     const levels = [];
-    const isFixedSingleLevel = rule.minLevel === rule.maxLevel;
 
     // 依規則的最小層級起跳
     if (rule.minLevel === ADMIN_LEVEL.COUNTY && available.hasCounty) levels.push(ADMIN_LEVEL.COUNTY);
@@ -245,7 +277,6 @@ function getDisplayLevels(electionType, data) {
 
     // 依規則往下延伸（且資料真的存在）
     if (rule.maxLevel === ADMIN_LEVEL.VILLAGE && available.hasVillage) {
-        // 若規則是單一固定層級（例如：村里長 village -> village），就不要自動補進中間層（town）
         if (!isFixedSingleLevel && !levels.includes(ADMIN_LEVEL.TOWN) && available.hasTown) levels.push(ADMIN_LEVEL.TOWN);
         if (!levels.includes(ADMIN_LEVEL.VILLAGE)) levels.push(ADMIN_LEVEL.VILLAGE);
     } else if (rule.maxLevel === ADMIN_LEVEL.TOWN && available.hasTown) {
@@ -403,7 +434,13 @@ function getMenuIconSvg(key) {
                 <path d="M4 7h.01"/><path d="M4 12h.01"/><path d="M4 17h.01"/>
             </svg>`;
 
-        default:
+        
+        case 'village':
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                <path fill="currentColor" d="M12 2 3 9v11a2 2 0 0 0 2 2h4v-7h6v7h4a2 2 0 0 0 2-2V9l-9-7zm3 19v-6H9v6H5V10l7-5 7 5v11h-4z"/>
+                <path fill="currentColor" d="M7.8 11.8h2.2v2.2H7.8zM14 11.8h2.2v2.2H14z"/>
+            </svg>`;
+default:
             return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
     }
 }
@@ -966,7 +1003,7 @@ function loadData(file, uiName, pushState = true) {
                 const electionType = currentElectionObj ? currentElectionObj.type : '';
                 const displayLevels = getDisplayLevels(electionType, appState.data);
 
-                // ✅ 若第一層是鄉鎮（例如：鄉鎮長 / 鄉鎮民代表），直接進入第一個鄉鎮
+                // 若第一層是鄉鎮（例如：鄉鎮長 / 鄉鎮民代表），直接進入第一個鄉鎮
                 if (displayLevels.length > 0 && displayLevels[0] === ADMIN_LEVEL.TOWN) {
                     const firstTown = appState.data && appState.data.townOrder ? appState.data.townOrder[0] : null;
                     if (firstTown) {
@@ -975,20 +1012,23 @@ function loadData(file, uiName, pushState = true) {
                     }
                 }
 
-                // ✅ 若第一層是村里（例如：村里長），直接進入第一個村里
+                
+                // 若第一層是村里（例如：村里長），直接進入第一個鄉鎮/村里
                 if (displayLevels.length > 0 && displayLevels[0] === ADMIN_LEVEL.VILLAGE) {
-                    const firstTown = appState.data && appState.data.townOrder ? appState.data.townOrder[0] : null;
-                    const firstVillage = (firstTown && appState.data.towns && appState.data.towns[firstTown] && appState.data.towns[firstTown].villages)
-                        ? Object.keys(appState.data.towns[firstTown].villages)[0]
-                        : null;
-
-                    if (firstTown && firstVillage) {
-                        renderVillage(firstTown, firstVillage, true, pushState);
-                        return;
+                    const firstTown = (appState.data && appState.data.townOrder && appState.data.townOrder[0]) 
+                        || (appState.data && appState.data.towns ? Object.keys(appState.data.towns)[0] : null);
+                    if (firstTown) {
+                        const townData = appState.data.towns[firstTown];
+                        const firstVillage = (townData && townData.villageOrder && townData.villageOrder[0])
+                            || (townData && townData.villages ? Object.keys(townData.villages)[0] : null);
+                        if (firstVillage) {
+                            renderVillage(firstTown, firstVillage, true, pushState);
+                            return;
+                        }
                     }
                 }
 
-                // 其他情況預設進入縣層
+// 其他情況預設進入縣層
                 renderCounty(true, pushState);
             })
             .catch(error => {
@@ -1361,6 +1401,8 @@ function extractCountySummary(text) {
              clickAction = `renderLegislatorSubMenu(true)`;
         } else if (cat.type === '鄉鎮長' || cat.type === '鄉鎮民代表') {
              clickAction = `renderTownshipSubMenu('${cat.type}', true)`;
+        } else if (cat.type === '村里長') {
+             clickAction = `renderVillageChiefTownSubMenu(true)`;
         } else {
              clickAction = `renderElectionList('${cat.type}', true)`;
         }
@@ -1509,7 +1551,7 @@ function extractCountySummary(text) {
         const towns = ["金城鎮","金寧鄉","金湖鎮","金沙鎮","烈嶼鄉","烏坵鄉"];
 
         let html = `<div class="main-section">
-            <div class="menu-section-title">${type}：請選擇鄉鎮</div>
+            <div class="menu-section-title">請選擇鄉鎮</div>
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
@@ -1522,7 +1564,162 @@ function extractCountySummary(text) {
         dom.content.innerHTML = html;
     };
 
-    // ================= 鄉鎮長 / 鄉鎮民代表：依鄉鎮列出選舉（新增） =================
+    
+    // ================= 村里長：兩層子分類（鄉鎮 → 村里）（新增） =================
+    window.renderVillageChiefTownSubMenu = function(pushState = true) {
+        const type = '村里長';
+        const url = `?view=villageChiefTownMenu&type=${encodeURIComponent(type)}`;
+        const state = { view: 'villageChiefTownMenu', type: type };
+        updateUrl(state, `金門選舉資料庫 - ${type}（依鄉鎮 / 村里）`, url, pushState);
+
+        appState.currentLevel = 'villageChiefTownMenu';
+        appState.currentVillageChiefTown = null;
+        appState.currentVillageChiefName = null;
+
+        if (pushState) {
+            window.scrollTo(0, 0);
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
+        updateBreadcrumb();
+
+        appState.chartInstances.forEach(chart => chart.destroy());
+        appState.chartInstances = [];
+
+        const towns = ["金城鎮","金寧鄉","金湖鎮","金沙鎮","烈嶼鄉","烏坵鄉"];
+
+        let html = `<div class="main-section">
+            <div class="menu-section-title">請選擇鄉鎮</div>
+            <div class="main-menu-grid township-submenu">`;
+
+        towns.forEach(t => {
+            html += `<div class="menu-button" data-town="${t}" onclick="renderVillageChiefVillageSubMenu('${t}', true)">
+<span class="menu-text">${t}</span>
+            </div>`;
+        });
+
+        html += `</div></div>`;
+        dom.content.innerHTML = html;
+    };
+
+    // 第二層：列出指定鄉鎮底下的村里（由 uiName 判斷）
+    window.renderVillageChiefVillageSubMenu = function(townName, pushState = true) {
+        const type = '村里長';
+        const url = `?view=villageChiefVillageMenu&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}`;
+        const state = { view: 'villageChiefVillageMenu', type: type, town: townName };
+        updateUrl(state, `金門選舉資料庫 - ${type}（${townName}）`, url, pushState);
+
+        appState.currentLevel = 'villageChiefVillageMenu';
+        appState.currentVillageChiefTown = townName;
+        appState.currentVillageChiefName = null;
+
+        if (pushState) {
+            window.scrollTo(0, 0);
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
+        updateBreadcrumb();
+
+        appState.chartInstances.forEach(chart => chart.destroy());
+        appState.chartInstances = [];
+
+        // 解析 uiName：例「2022年 金城鎮東門里長選舉」「2022年 金寧鄉古寧村長選舉」
+        const villageSet = new Set();
+        availableElections
+            .filter(e => e.type === type && (e.uiName || '').includes(townName))
+            .forEach(e => {
+                const ui = (e.uiName || '').replace(/^\s*\d{4}\s*年\s*/,'').trim();
+                const afterTown = ui.includes(townName) ? ui.split(townName).slice(1).join(townName) : ui;
+                const afterTownClean = (afterTown || '').replace(/\s+/g,'').trim();
+
+                let v = '';
+                const m = afterTownClean.match(/^(.+?)(里|村)長選舉$/);
+                if (m) {
+                    v = `${m[1]}${m[2]}`; // ✅ 保留「里/村」字尾：例如「東門里」「古寧村」
+                } else {
+                    v = afterTownClean.replace(/(里長|村長)\s*選舉\s*$/,'').trim();
+                    // 保底：若解析後沒有「里/村」字尾，依原字串補回
+                    if (v && !/[村里]$/.test(v)) {
+                        if (afterTownClean.includes('村長')) v += '村';
+                        else if (afterTownClean.includes('里長')) v += '里';
+                    }
+                }
+                if (v) villageSet.add(v);
+            });
+
+        const villages = Array.from(villageSet).sort((a,b)=>a.localeCompare(b,'zh-TW'));
+
+        let html = `<div class="main-section">
+            <div class="menu-section-title">請選擇村里</div>
+            <div class="main-menu-grid">`;
+
+        if (villages.length > 0) {
+            villages.forEach(v => {
+                html += `<div class="menu-button" role="button" tabindex="0"
+                            onclick="renderElectionListByVillage('${type}', '${townName}', '${v}', true)">
+                            <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('village')}</span>
+                            <span class="menu-text">${v}</span>
+                         </div>`;
+            });
+        } else {
+            html += `<div class="loading-state" style="padding:40px;">該鄉鎮目前無村里長選舉資料。</div>`;
+        }
+
+        html += `</div></div>`;
+        dom.content.innerHTML = html;
+    };
+
+    // 村里長：依「鄉鎮＋村里」列出選舉列表（通常會是不同年份）
+    window.renderElectionListByVillage = function(type, townName, villageName, pushState = true) {
+        const url = `?view=villageChiefList&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}&village=${encodeURIComponent(villageName)}`;
+        const state = { view: 'villageChiefList', type: type, town: townName, village: villageName };
+        updateUrl(state, `金門選舉資料庫 - ${type}（${townName}${villageName}）`, url, pushState);
+
+        appState.currentLevel = 'villageChiefList';
+        appState.currentVillageChiefTown = townName;
+        appState.currentVillageChiefName = villageName;
+
+        if (pushState) {
+            window.scrollTo(0, 0);
+        } else {
+            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
+            setTimeout(() => window.scrollTo(0, savedY), 0);
+        }
+
+        updateBreadcrumb();
+
+        appState.chartInstances.forEach(chart => chart.destroy());
+        appState.chartInstances = [];
+
+        const matchingElections = availableElections
+            .filter(e => e.type === type && (e.uiName || '').includes(townName) && (e.uiName || '').includes(villageName))
+            .sort((a, b) => {
+                const yearA = parseInt(a.year);
+                const yearB = parseInt(b.year);
+                if (yearA !== yearB) return yearB - yearA;
+                return (a.uiName || '').localeCompare((b.uiName || ''), 'zh-TW');
+            });
+
+        let html = `<div class="main-section">
+            <div class="menu-section-title">${type}（${townName}${villageName}）選舉列表</div>
+        </div>`;
+
+        if (matchingElections.length > 0) {
+            html += `<div class="election-list-grid">`;
+            matchingElections.forEach(e => { html += generateSummaryCardHTML(e); });
+            html += `</div>`;
+        } else {
+            html += `<div class="loading-state" style="padding:40px;">該村里目前無資料可供查詢。</div>`;
+        }
+
+        dom.content.innerHTML = html;
+    };
+
+// ================= 鄉鎮長 / 鄉鎮民代表：依鄉鎮列出選舉（新增） =================
     window.renderElectionListByTown = function(type, townName, pushState = true) {
 
         const url = `?view=townshipList&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}`;
@@ -1925,7 +2122,39 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
 
         html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
 
-        if (level === 'referendumMenu') {
+        
+        if (level === 'villageChiefTownMenu') {
+            html += `<span class="active">村里長</span>`;
+            dom.breadcrumb.innerHTML = html;
+            dom.breadcrumbBottom.innerHTML = html;
+            dom.breadcrumb.style.display = 'block';
+            dom.breadcrumbBottom.style.display = 'block';
+            return;
+        }
+        if (level === 'villageChiefVillageMenu') {
+            const town = appState.currentVillageChiefTown || '';
+            html += `<span onclick="renderVillageChiefTownSubMenu(true)">村里長</span> / `;
+            html += `<span class="active">${town}</span>`;
+            dom.breadcrumb.innerHTML = html;
+            dom.breadcrumbBottom.innerHTML = html;
+            dom.breadcrumb.style.display = 'block';
+            dom.breadcrumbBottom.style.display = 'block';
+            return;
+        }
+        if (level === 'villageChiefList') {
+            const town = appState.currentVillageChiefTown || '';
+            const village = appState.currentVillageChiefName || '';
+            html += `<span onclick="renderVillageChiefTownSubMenu(true)">村里長</span> / `;
+            if (town) html += `<span onclick="renderVillageChiefVillageSubMenu('${town}', true)">${town}</span> / `;
+            html += `<span class="active">${village || '村里'}</span>`;
+            dom.breadcrumb.innerHTML = html;
+            dom.breadcrumbBottom.innerHTML = html;
+            dom.breadcrumb.style.display = 'block';
+            dom.breadcrumbBottom.style.display = 'block';
+            return;
+        }
+
+if (level === 'referendumMenu') {
              html += `<span class="active">公民投票</span>`;
         } 
         else if (level === 'legislatorMenu') {
@@ -1963,6 +2192,15 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         if (township) {
             html += `<span onclick="renderElectionListByTown('${type}', '${township}', true)">${township}</span> / `;
         }
+        html += `<span class="active">${appState.electionName}</span>`;
+    } else if (electionType === '村里長') {
+        const type = '村里長';
+        const town = appState.currentVillageChiefTown;
+        const village = appState.currentVillageChiefName;
+
+        html += `<span onclick="renderVillageChiefTownSubMenu(true)">${type}</span> / `;
+        if (town) html += `<span onclick="renderVillageChiefVillageSubMenu('${town}', true)">${town}</span> / `;
+        if (town && village) html += `<span onclick="renderElectionListByVillage('${type}', '${town}', '${village}', true)">${village}</span> / `;
         html += `<span class="active">${appState.electionName}</span>`;
     } else {
         if (['全國性公民投票', '地方性公民投票'].includes(electionType)) {
@@ -2216,6 +2454,26 @@ dom.breadcrumb.innerHTML = html;
 
     if (params.view === 'townshipMenu' && params.type) {
         renderTownshipSubMenu(params.type, pushState);
+        return;
+    }
+
+
+    if (params.view === 'villageChiefTownMenu') {
+        renderVillageChiefTownSubMenu(pushState);
+        return;
+    }
+
+    if (params.view === 'villageChiefVillageMenu' && params.town) {
+        const town = decodeURIComponent((params.town || '').replace(/\+/g, ' '));
+        renderVillageChiefVillageSubMenu(town, pushState);
+        return;
+    }
+
+    if (params.view === 'villageChiefList' && params.type && params.town && params.village) {
+        const type = decodeURIComponent((params.type || '').replace(/\+/g, ' '));
+        const town = decodeURIComponent((params.town || '').replace(/\+/g, ' '));
+        const village = decodeURIComponent((params.village || '').replace(/\+/g, ' '));
+        renderElectionListByVillage(type, town, village, pushState);
         return;
     }
 
