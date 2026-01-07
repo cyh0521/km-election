@@ -22,7 +22,7 @@
         {file: "elections/B/B1998.csv",year: "1998",type: "區域立委",uiName: "1998年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1995.csv",year: "1995",type: "區域立委",uiName: "1995年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1992.csv",year: "1992",type: "區域立委",uiName: "1992年 立法委員選舉",summaryData: null},
-        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 增額立委選舉",summaryData: null},
+        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 增額立委選舉（福建省選舉區）",summaryData: null},
 
         {file: "elections/C/C2024.csv",year: "2024",type: "不分區立委",uiName: "2024年 不分區立委選舉",summaryData: null},
         {file: "elections/C/C2020.csv",year: "2020",type: "不分區立委",uiName: "2020年 不分區立委選舉",summaryData: null},
