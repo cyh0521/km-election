@@ -2281,8 +2281,19 @@ else if (level === 'village') {
     const currentEle = availableElections.find(e => e.uiName === appState.electionName);
     const electionType = currentEle ? currentEle.type : '';
 
+    // ✅ 村里長：從「村里長 / 鄉鎮 / 村里」進來時，選舉名稱要放在最後
+    if (electionType === '村里長') {
+        const town = appState.currentVillageChiefTown || appState.currentTown || '';
+        const village = appState.currentVillageChiefName || appState.currentVillage || '';
+
+        html += `<span onclick="renderVillageChiefTownSubMenu(true)">村里長</span> / `;
+        if (town) html += `<span onclick="renderVillageChiefVillageSubMenu('${town}', true)">${town}</span> / `;
+        if (town && village) html += `<span onclick="renderElectionListByVillage('村里長', '${town}', '${village}', true)">${village}</span> / `;
+        html += `<span class="active">${appState.electionName}</span>`;
+    }
+
     // ✅ 鄉鎮長 / 鄉鎮民代表：麵包屑以「依鄉鎮」的導覽路徑為主
-    if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
+    else if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
         // 期望：首頁 / 鄉鎮長 / 金城鎮 / 2022年金城鎮長選舉 / 東門里
         html += `<span onclick="renderTownshipSubMenu('${electionType}', true)">${electionType}</span> / `;
 
@@ -2395,14 +2406,6 @@ dom.breadcrumb.innerHTML = html;
              isPartyList = isPartyListElection(appState.electionName);
         }
 
-        // 公投 / 修憲複決：雖然同樣會被視為「政黨票型」（用來隱藏推薦政黨欄），
-        // 但第二欄應顯示為「選項」（同意/不同意等），而不是「政黨」。
-        const isReferendum = (() => {
-            const t1 = (title == null) ? '' : String(title);
-            const t2 = (appState && appState.electionName != null) ? String(appState.electionName) : '';
-            return /(公投|公民投票|複決)/.test(t1) || /(公投|公民投票|複決)/.test(t2);
-        })();
-
         function renderTableHeader(title, sortKey, style = '', className = '') {
            const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2414,7 +2417,7 @@ dom.breadcrumb.innerHTML = html;
                 headerTextHtml = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
                 finalClassName = `${className} col-party`;
             } else if (sortKey === 'name' && isPartyList) {
-                 headerTextHtml = isReferendum ? `選項` : `政黨`; 
+                 headerTextHtml = `政黨`; 
             }
 
             const headerClass = isPartyList && sortKey === 'party' ? 'col-party hidden-party' : finalClassName;
