@@ -409,64 +409,6 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
 
 .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
 
-/* === Loading 動畫（首頁載入與讀取 CSV） === */
-.loading-state.loading-animated {
-    min-height: 45vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    padding: 60px 20px;
-}
-
-.loading-text {
-    color: var(--text-main);
-    font-weight: 700;
-}
-
-
-/* 固定「開票進度」數字寬度，避免置中時因位數變化而左右跳動 */
-.loading-text.loading-progress{
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
-}
-.loading-text.loading-progress #loading-done,
-.loading-text.loading-progress #loading-total{
-    display: inline-block;
-    width: calc(var(--lp-digits, 1) * 1ch);
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
-}
-
-.loading-sub {
-    font-size: 14px;
-    color: var(--text-sub);
-}
-
-.loading-dots {
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
-}
-.loading-dots span {
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: var(--primary);
-    opacity: 0.25;
-    transform: translateY(0);
-    animation: kmDots 1s ease-in-out infinite;
-}
-.loading-dots span:nth-child(2) { animation-delay: 0.15s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes kmDots {
-    0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
-    40% { opacity: 1; transform: translateY(-4px); }
-}
-
 .top-summary-grid {
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; align-items: start;
 }

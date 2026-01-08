@@ -602,61 +602,6 @@ default:
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
-
-    // ================= Loading UI（動畫讀取提示）=================
-    // 用於首頁初始化載入，以及切換選舉讀取 CSV 時顯示
-    function showLoading(message, subMessage = '') {
-        const safeMsg = (message || '').toString();
-        const safeSub = (subMessage || '').toString();
-        dom.content.innerHTML = `
-            <div class="loading-state loading-animated" role="status" aria-live="polite">
-                <div class="loading-text">${safeMsg}</div>
-                ${safeSub ? `<div class="loading-sub">${safeSub}</div>` : ''}
-                <div class="loading-dots" aria-hidden="true">
-                    <span></span><span></span><span></span>
-                </div>
-            </div>
-        `;
-    }
-
-    // ================= Loading 進度（首頁初始化）=================
-    // 顯示「開票進度 xxx/yyy」，並在 CSV 載入完成時更新。
-    const loadingProgress = { total: 0, done: 0, active: false };
-
-    function showLoadingProgress(totalFiles, doneFiles = 0) {
-        loadingProgress.total = Number(totalFiles) || 0;
-        loadingProgress.done = Number(doneFiles) || 0;
-        loadingProgress.active = true;
-
-        // 固定字寬：用「總數 yyy 的位數」當作 done/total 的保留寬度，避免置中時左右跳動
-        const digits = String(loadingProgress.total || 0).length || 1;
-
-        dom.content.innerHTML = `
-            <div class="loading-state loading-animated" role="status" aria-live="polite">
-                <div class="loading-text loading-progress" style="--lp-digits:${digits}">
-                    開票進度 <span id="loading-done">${loadingProgress.done}</span>/<span id="loading-total">${loadingProgress.total}</span>
-                </div>
-                <div class="loading-dots" aria-hidden="true">
-                    <span></span><span></span><span></span>
-                </div>
-            </div>
-        `;
-    }
-
-
-    function updateLoadingProgress(doneFiles) {
-        if (!loadingProgress.active) return;
-        loadingProgress.done = Number(doneFiles) || 0;
-        const doneEl = document.getElementById('loading-done');
-        const totalEl = document.getElementById('loading-total');
-        if (doneEl) doneEl.textContent = String(loadingProgress.done);
-        if (totalEl) totalEl.textContent = String(loadingProgress.total);
-    }
-
-    function bumpLoadingProgress() {
-        if (!loadingProgress.active) return;
-        updateLoadingProgress(loadingProgress.done + 1);
-    }
     
     // ================= 歷史記錄 API 輔助函式 =================
     
@@ -730,9 +675,6 @@ function normalizeText(str) {
             }
         } catch (e) {
             console.warn("載入候選人資料失敗或檔案不存在", e);
-        } finally {
-            // 首頁初始化載入進度（不影響原本功能；若未啟用進度顯示則不會有任何變化）
-            bumpLoadingProgress();
         }
     }
     
@@ -1065,7 +1007,7 @@ function normalizeText(str) {
 }
 
 function loadData(file, uiName, pushState = true) {
-        showLoading(`正在載入 ${uiName} 完整數據…`);
+        dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據...</div>`;
 
         appState.electionName = uiName;
         // ✅ 若此選舉屬於鄉鎮長/鄉鎮民代表：確保類型存在（鄉鎮名稱由子選單先行設定）
@@ -1225,10 +1167,6 @@ function extractCountySummary(text) {
             } catch (error) {
                 console.error(`載入 ${e.file} 摘要失敗:`, error.message);
                 e.summaryData = null;}
-            finally {
-                // 首頁初始化載入進度（不影響原本功能；若未啟用進度顯示則不會有任何變化）
-                bumpLoadingProgress();
-            }
             return e;
         });
 
@@ -2457,6 +2395,14 @@ dom.breadcrumb.innerHTML = html;
              isPartyList = isPartyListElection(appState.electionName);
         }
 
+        // 公投 / 修憲複決：雖然同樣會被視為「政黨票型」（用來隱藏推薦政黨欄），
+        // 但第二欄應顯示為「選項」（同意/不同意等），而不是「政黨」。
+        const isReferendum = (() => {
+            const t1 = (title == null) ? '' : String(title);
+            const t2 = (appState && appState.electionName != null) ? String(appState.electionName) : '';
+            return /(公投|公民投票|複決)/.test(t1) || /(公投|公民投票|複決)/.test(t2);
+        })();
+
         function renderTableHeader(title, sortKey, style = '', className = '') {
            const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2468,7 +2414,7 @@ dom.breadcrumb.innerHTML = html;
                 headerTextHtml = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
                 finalClassName = `${className} col-party`;
             } else if (sortKey === 'name' && isPartyList) {
-                 headerTextHtml = `政黨`; 
+                 headerTextHtml = isReferendum ? `選項` : `政黨`; 
             }
 
             const headerClass = isPartyList && sortKey === 'party' ? 'col-party hidden-party' : finalClassName;
@@ -2614,7 +2560,7 @@ dom.breadcrumb.innerHTML = html;
         const file = election.file;
         const uiName = election.uiName;
 
-        showLoading(`正在載入 ${uiName} 完整數據…`, `回溯到 ${townName}`);
+        dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName})...</div>`;
         appState.electionName = uiName;
 
         fetch(file)
@@ -2652,7 +2598,7 @@ dom.breadcrumb.innerHTML = html;
         const file = election.file;
         const uiName = election.uiName;
 
-        showLoading(`正在載入 ${uiName} 完整數據…`, `回溯到 ${townName} / ${villageName}`);
+        dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName} / ${villageName})...</div>`;
         appState.electionName = uiName;
 
         fetch(file)
@@ -2691,15 +2637,12 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
-        // 首頁初始化會讀取：所有 elections/*.csv（用於摘要）+ candidates.csv（候選人名冊）
-        showLoadingProgress(availableElections.length + 1, 0);
+        dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
         
         Promise.all([
             loadAllElectionSummaries(availableElections),
             loadCandidateData()
         ]).then(() => {
-            // 初始化完成，避免後續其他流程誤用進度條
-            loadingProgress.active = false;
            const params = getCurrentUrlParams();
            if (params.view && params.view !== 'main') {
                  checkUrlAndRender(params, false);} else {
