@@ -627,16 +627,22 @@ default:
         loadingProgress.total = Number(totalFiles) || 0;
         loadingProgress.done = Number(doneFiles) || 0;
         loadingProgress.active = true;
+
+        // 固定字寬：用「總數 yyy 的位數」當作 done/total 的保留寬度，避免置中時左右跳動
+        const digits = String(loadingProgress.total || 0).length || 1;
+
         dom.content.innerHTML = `
             <div class="loading-state loading-animated" role="status" aria-live="polite">
-                <div class="loading-text">開票進度 <span id="loading-done">${loadingProgress.done}</span>/<span id="loading-total">${loadingProgress.total}</span></div>
-                <div class="loading-sub">正在讀取摘要與候選人名冊</div>
+                <div class="loading-text loading-progress" style="--lp-digits:${digits}">
+                    開票進度 <span id="loading-done">${loadingProgress.done}</span>/<span id="loading-total">${loadingProgress.total}</span>
+                </div>
                 <div class="loading-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
             </div>
         `;
     }
+
 
     function updateLoadingProgress(doneFiles) {
         if (!loadingProgress.active) return;
