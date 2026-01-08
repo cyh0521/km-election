@@ -602,6 +602,55 @@ default:
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
+
+    // ================= Loading UI（動畫讀取提示）=================
+    // 用於首頁初始化載入，以及切換選舉讀取 CSV 時顯示
+    function showLoading(message, subMessage = '') {
+        const safeMsg = (message || '').toString();
+        const safeSub = (subMessage || '').toString();
+        dom.content.innerHTML = `
+            <div class="loading-state loading-animated" role="status" aria-live="polite">
+                <div class="loading-text">${safeMsg}</div>
+                ${safeSub ? `<div class="loading-sub">${safeSub}</div>` : ''}
+                <div class="loading-dots" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+    }
+
+    // ================= Loading 進度（首頁初始化）=================
+    // 顯示「開票進度 xxx/yyy」，並在 CSV 載入完成時更新。
+    const loadingProgress = { total: 0, done: 0, active: false };
+
+    function showLoadingProgress(totalFiles, doneFiles = 0) {
+        loadingProgress.total = Number(totalFiles) || 0;
+        loadingProgress.done = Number(doneFiles) || 0;
+        loadingProgress.active = true;
+        dom.content.innerHTML = `
+            <div class="loading-state loading-animated" role="status" aria-live="polite">
+                <div class="loading-text">開票進度 <span id="loading-done">${loadingProgress.done}</span>/<span id="loading-total">${loadingProgress.total}</span></div>
+                <div class="loading-sub">正在讀取摘要與候選人名冊</div>
+                <div class="loading-dots" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+    }
+
+    function updateLoadingProgress(doneFiles) {
+        if (!loadingProgress.active) return;
+        loadingProgress.done = Number(doneFiles) || 0;
+        const doneEl = document.getElementById('loading-done');
+        const totalEl = document.getElementById('loading-total');
+        if (doneEl) doneEl.textContent = String(loadingProgress.done);
+        if (totalEl) totalEl.textContent = String(loadingProgress.total);
+    }
+
+    function bumpLoadingProgress() {
+        if (!loadingProgress.active) return;
+        updateLoadingProgress(loadingProgress.done + 1);
+    }
     
     // ================= 歷史記錄 API 輔助函式 =================
     
@@ -675,6 +724,9 @@ function normalizeText(str) {
             }
         } catch (e) {
             console.warn("載入候選人資料失敗或檔案不存在", e);
+        } finally {
+            // 首頁初始化載入進度（不影響原本功能；若未啟用進度顯示則不會有任何變化）
+            bumpLoadingProgress();
         }
     }
     
@@ -1007,7 +1059,7 @@ function normalizeText(str) {
 }
 
 function loadData(file, uiName, pushState = true) {
-        dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據...</div>`;
+        showLoading(`正在載入 ${uiName} 完整數據…`);
 
         appState.electionName = uiName;
         // ✅ 若此選舉屬於鄉鎮長/鄉鎮民代表：確保類型存在（鄉鎮名稱由子選單先行設定）
@@ -1167,6 +1219,10 @@ function extractCountySummary(text) {
             } catch (error) {
                 console.error(`載入 ${e.file} 摘要失敗:`, error.message);
                 e.summaryData = null;}
+            finally {
+                // 首頁初始化載入進度（不影響原本功能；若未啟用進度顯示則不會有任何變化）
+                bumpLoadingProgress();
+            }
             return e;
         });
 
@@ -2281,19 +2337,8 @@ else if (level === 'village') {
     const currentEle = availableElections.find(e => e.uiName === appState.electionName);
     const electionType = currentEle ? currentEle.type : '';
 
-    // ✅ 村里長：從「村里長 / 鄉鎮 / 村里」進來時，選舉名稱要放在最後
-    if (electionType === '村里長') {
-        const town = appState.currentVillageChiefTown || appState.currentTown || '';
-        const village = appState.currentVillageChiefName || appState.currentVillage || '';
-
-        html += `<span onclick="renderVillageChiefTownSubMenu(true)">村里長</span> / `;
-        if (town) html += `<span onclick="renderVillageChiefVillageSubMenu('${town}', true)">${town}</span> / `;
-        if (town && village) html += `<span onclick="renderElectionListByVillage('村里長', '${town}', '${village}', true)">${village}</span> / `;
-        html += `<span class="active">${appState.electionName}</span>`;
-    }
-
     // ✅ 鄉鎮長 / 鄉鎮民代表：麵包屑以「依鄉鎮」的導覽路徑為主
-    else if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
+    if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
         // 期望：首頁 / 鄉鎮長 / 金城鎮 / 2022年金城鎮長選舉 / 東門里
         html += `<span onclick="renderTownshipSubMenu('${electionType}', true)">${electionType}</span> / `;
 
@@ -2563,7 +2608,7 @@ dom.breadcrumb.innerHTML = html;
         const file = election.file;
         const uiName = election.uiName;
 
-        dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName})...</div>`;
+        showLoading(`正在載入 ${uiName} 完整數據…`, `回溯到 ${townName}`);
         appState.electionName = uiName;
 
         fetch(file)
@@ -2601,7 +2646,7 @@ dom.breadcrumb.innerHTML = html;
         const file = election.file;
         const uiName = election.uiName;
 
-        dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName} / ${villageName})...</div>`;
+        showLoading(`正在載入 ${uiName} 完整數據…`, `回溯到 ${townName} / ${villageName}`);
         appState.electionName = uiName;
 
         fetch(file)
@@ -2640,12 +2685,15 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
-        dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
+        // 首頁初始化會讀取：所有 elections/*.csv（用於摘要）+ candidates.csv（候選人名冊）
+        showLoadingProgress(availableElections.length + 1, 0);
         
         Promise.all([
             loadAllElectionSummaries(availableElections),
             loadCandidateData()
         ]).then(() => {
+            // 初始化完成，避免後續其他流程誤用進度條
+            loadingProgress.active = false;
            const params = getCurrentUrlParams();
            if (params.view && params.view !== 'main') {
                  checkUrlAndRender(params, false);} else {

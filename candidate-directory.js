@@ -522,15 +522,27 @@ if (isReferendumType(s)) return true;
       }
       if (gender && normalizeGender(c.gender) !== gender) return false;
 
-      if (parties.size > 0) {
+      const hasPartyFilter = parties.size > 0;
+      const hasTypeFilter = types.size > 0;
+
+      // ✅ 關鍵修正：同時選「政黨 + 選舉類型」時，必須在「同一筆參選經歷」同時成立
+      // 例：選「新黨 + 區域立委」→ 必須曾以「新黨」參加過「區域立委」才顯示
+      if (hasPartyFilter && hasTypeFilter) {
+        let ok = false;
+        for (const h of (c.histories || [])) {
+          if (!h) continue;
+          const p = (h.party || '').toString();
+          const t = (h.electionType || '').toString();
+          if (p && parties.has(p) && t && types.has(t)) { ok = true; break; }
+        }
+        if (!ok) return false;
+      } else if (hasPartyFilter) {
         let ok = false;
         for (const p of parties) {
           if (c.partiesSet && c.partiesSet.has(p)) { ok = true; break; }
         }
         if (!ok) return false;
-      }
-
-      if (types.size > 0) {
+      } else if (hasTypeFilter) {
         let ok = false;
         for (const t of types) {
           if (c.typesSet && c.typesSet.has(t)) { ok = true; break; }
