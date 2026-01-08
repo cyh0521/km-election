@@ -584,7 +584,7 @@ default:
             "無黨團結聯盟": "無黨團結聯盟",
             "公民黨": "公民黨",
             "中華民族致公黨": "中華民族致公黨",
-            "青年陽光黨": "陽光黨",
+            "青年陽光黨": "青年陽光黨",
             "無黨籍-1": "無黨籍","無黨籍-2": "無黨籍",
             "無黨籍-3": "無黨籍",
             "無黨籍-4": "無黨籍",
@@ -2281,8 +2281,19 @@ else if (level === 'village') {
     const currentEle = availableElections.find(e => e.uiName === appState.electionName);
     const electionType = currentEle ? currentEle.type : '';
 
+    // ✅ 村里長：從「村里長 / 鄉鎮 / 村里」進來時，選舉名稱要放在最後
+    if (electionType === '村里長') {
+        const town = appState.currentVillageChiefTown || appState.currentTown || '';
+        const village = appState.currentVillageChiefName || appState.currentVillage || '';
+
+        html += `<span onclick="renderVillageChiefTownSubMenu(true)">村里長</span> / `;
+        if (town) html += `<span onclick="renderVillageChiefVillageSubMenu('${town}', true)">${town}</span> / `;
+        if (town && village) html += `<span onclick="renderElectionListByVillage('村里長', '${town}', '${village}', true)">${village}</span> / `;
+        html += `<span class="active">${appState.electionName}</span>`;
+    }
+
     // ✅ 鄉鎮長 / 鄉鎮民代表：麵包屑以「依鄉鎮」的導覽路徑為主
-    if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
+    else if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
         // 期望：首頁 / 鄉鎮長 / 金城鎮 / 2022年金城鎮長選舉 / 東門里
         html += `<span onclick="renderTownshipSubMenu('${electionType}', true)">${electionType}</span> / `;
 
