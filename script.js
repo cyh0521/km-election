@@ -341,6 +341,14 @@ function isCountyPseudoTownName(name) {
         return partyListElections.includes(electionName);
     }
 
+    // *** 判斷是否為「公投/複決」選舉（用於表頭/互動行為的例外處理） ***
+    function isReferendumElection(electionName) {
+        if (!electionName) return false;
+        const n = String(electionName);
+        // 常見命名：全國性公民投票／公投／修憲複決…
+        return n.includes("公民投票") || n.includes("公投") || n.includes("修憲複決") || n.includes("複決");
+    }
+
     // 為每個選舉產生唯一的 ID ***
     availableElections.forEach((e, index) => {
         // 使用索引值產生如 "elec-0", "elec-1" 這樣的唯一 ID
@@ -2406,6 +2414,9 @@ dom.breadcrumb.innerHTML = html;
              isPartyList = isPartyListElection(appState.electionName);
         }
 
+        // 公投/複決：雖然沿用「不顯示政黨欄」的規則，但名稱欄應顯示「選項」而非「政黨」
+        const isReferendum = isReferendumElection(title) || isReferendumElection(appState.electionName);
+
         function renderTableHeader(title, sortKey, style = '', className = '') {
            const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2417,7 +2428,7 @@ dom.breadcrumb.innerHTML = html;
                 headerTextHtml = `<span class="party-title-desktop">推薦政黨</span><span class="party-title-mobile">政黨</span>`;
                 finalClassName = `${className} col-party`;
             } else if (sortKey === 'name' && isPartyList) {
-                 headerTextHtml = `政黨`; 
+                 headerTextHtml = isReferendum ? `選項` : `政黨`;
             }
 
             const headerClass = isPartyList && sortKey === 'party' ? 'col-party hidden-party' : finalClassName;
