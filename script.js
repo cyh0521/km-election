@@ -34,7 +34,6 @@
         {file: "elections/D/D1996.csv",year: "1996",type: "國大代表",uiName: "1996年 國大代表選舉",summaryData: null},
         {file: "elections/D/D1991.csv",year: "1991",type: "國大代表",uiName: "1991年 國大代表選舉",summaryData: null},
 
-        {file: "elections/E/E2026.csv",year: "2026",type: "縣長",uiName: "2026年 縣長選舉",summaryData: null},
         {file: "elections/E/E2022.csv",year: "2022",type: "縣長",uiName: "2022年 縣長選舉",summaryData: null},
         {file: "elections/E/E2018.csv",year: "2018",type: "縣長",uiName: "2018年 縣長選舉",summaryData: null},
         {file: "elections/E/E2014.csv",year: "2014",type: "縣長",uiName: "2014年 縣長選舉",summaryData: null},
@@ -44,9 +43,6 @@
         {file: "elections/E/E1997.csv",year: "1997",type: "縣長",uiName: "1997年 縣長選舉",summaryData: null},
         {file: "elections/E/E1993.csv",year: "1993",type: "縣長",uiName: "1993年 縣長選舉",summaryData: null},
 
-        {file: "elections/F/F2026-D3.csv",year: "2026",type: "縣議員",uiName: "2026年 縣議員選舉第3選區",summaryData: null},
-        {file: "elections/F/F2026-D2.csv",year: "2026",type: "縣議員",uiName: "2026年 縣議員選舉第2選區",summaryData: null},
-        {file: "elections/F/F2026-D1.csv",year: "2026",type: "縣議員",uiName: "2026年 縣議員選舉第1選區",summaryData: null},
         {file: "elections/F/F2022-D3.csv",year: "2022",type: "縣議員",uiName: "2022年 縣議員選舉第3選區",summaryData: null},
         {file: "elections/F/F2022-D2.csv",year: "2022",type: "縣議員",uiName: "2022年 縣議員選舉第2選區",summaryData: null},
         {file: "elections/F/F2022-D1.csv",year: "2022",type: "縣議員",uiName: "2022年 縣議員選舉第1選區",summaryData: null},
@@ -72,12 +68,6 @@
         {file: "elections/F/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金寧鄉",summaryData: null},
         {file: "elections/F/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金城鎮",summaryData: null},
 
-        {file: "elections/G/G2026F.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 烏坵鄉長選舉",summaryData: null},
-        {file: "elections/G/G2026E.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 烈嶼鄉長選舉",summaryData: null},
-        {file: "elections/G/G2026D.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金沙鎮長選舉",summaryData: null},
-        {file: "elections/G/G2026C.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金湖鎮長選舉",summaryData: null},
-        {file: "elections/G/G2026B.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金寧鄉長選舉",summaryData: null},
-        {file: "elections/G/G2026A.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金城鎮長選舉",summaryData: null},
         {file: "elections/G/G2022F.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G/G2022E.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烈嶼鄉長選舉",summaryData: null},
         {file: "elections/G/G2022D.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 金沙鎮長選舉",summaryData: null},
@@ -384,14 +374,6 @@ function isCountyPseudoTownName(name) {
     { type: "村里長",     iconKey: "village" }, 
     { type: "公民投票",   iconKey: "referendum" }
 ];
-// ================= 首頁特殊專區設定 =================
-// 開關：是否顯示首頁第一格「2026 九合一選舉」入口
-// true = 顯示 / false = 隱藏
-const SHOW_SPECIAL_2026_BUTTON = true;
-// 入口顯示名稱
-const SPECIAL_2026_LABEL = "2026 九合一選舉";
-// 以 uiName 含此字串為主，並以 year === 此值作為備援
-const SPECIAL_2026_YEAR_KEY = "2026";
 
 /**
  * 首頁按鈕 Icon（SVG，不再用文字塞在 menu-icon 裡）
@@ -403,18 +385,7 @@ function getMenuIconSvg(key) {
     // 目標：每一格 icon 不重複、語意更貼題、整體視覺一致
     const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
     switch (key) {
-        
-        case "special2026":
-            // 選舉專區：日曆＋勾選（投票日/開票）意象
-            return `<svg ${common}>
-                <rect x="4" y="5" width="16" height="16" rx="2"/>
-                <path d="M8 3v4"/><path d="M16 3v4"/>
-                <path d="M4 9h16"/>
-                <path d="M9 14l2 2 4-4"/>
-                <path d="M8 18h8"/>
-            </svg>`;
-
-case "president":
+        case "president":
             return `<svg ${common}>
                 <path d="M6 21V4"/>
                 <path d="M6 4h12l-2.2 3 2.2 3H6"/>
@@ -796,7 +767,7 @@ function normalizeText(str) {
         
         let historyHtml = ''; 
         if (historyList.length > 0) {
-            historyHtml += `<div class="history-title">參選經歷</div><ul class="history-list">`;
+            historyHtml += `<div class="history-title">參選經歷（${historyList.length}次）</div><ul class="history-list">`;
             historyList.forEach(h => {
                 const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, '');    const resultClass = h.isWinner ? 'result-won' : 'result-lost';
                 const resultText = h.isWinner ? '當選' : '未當選';
@@ -1465,16 +1436,7 @@ function extractCountySummary(text) {
         html += `<div class="main-section">
             <div class="menu-section-title">依選舉及公投類別瀏覽</div>
             <div class="main-menu-grid">`;
-                // ✅ 首頁特殊專區（可由 SHOW_SPECIAL_2026_BUTTON 開關控制）
-        if (SHOW_SPECIAL_2026_BUTTON) {
-            html += `<div class=\"menu-button\" role=\"button\" tabindex=\"0\" onclick=\"renderSpecial2026Hub(true)\">`
-                 + `<span class=\"menu-icon\" aria-hidden=\"true\">${getMenuIconSvg('special2026')}</span>`
-                 + `<span class=\"menu-text\">${SPECIAL_2026_LABEL}</span>`
-                 + `<span class=\"menu-chevron\" aria-hidden=\"true\">›</span>`
-                 + `</div>`;
-        }
-
-
+        
     electionCategories.forEach(cat => {
         // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu
         let clickAction;
@@ -1851,60 +1813,6 @@ function extractCountySummary(text) {
         dom.content.innerHTML = html;
     };
 
-    // ================= 首頁特殊專區：2026 九合一選舉（新增） =================
-    window.renderSpecial2026Hub = function(pushState = true) {
-
-        const url = `?view=special2026`;
-        const state = { view: 'special2026' };
-        updateUrl(state, `金門選舉資料庫 - ${SPECIAL_2026_LABEL}`, url, pushState);
-
-        appState.currentLevel = 'specialElectionHub';
-        appState.specialHubLabel = SPECIAL_2026_LABEL;
-
-        if (pushState) {
-            window.scrollTo(0, 0);
-        } else {
-            const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
-        }
-
-        updateBreadcrumb();
-
-        appState.chartInstances.forEach(chart => chart.destroy());
-        appState.chartInstances = [];
-
-        const matchingElections = availableElections.filter(e => {
-            const ui = String(e.uiName || '');
-            const yr = String(e.year || '');
-            // 依需求：以 uiName 判斷為主；year 作為備援（避免命名不含年份時漏掉）
-            return ui.includes(SPECIAL_2026_YEAR_KEY) || yr === SPECIAL_2026_YEAR_KEY;
-        });
-
-        matchingElections.sort((a, b) => {
-            const yearA = parseInt(a.year);
-            const yearB = parseInt(b.year);
-            if (yearA !== yearB) return yearB - yearA;
-            return a.uiName.localeCompare(b.uiName, 'zh-TW');
-        });
-
-        let html = `<div class="main-section">
-            <div class="menu-section-title">${SPECIAL_2026_LABEL}</div>
-        </div>`;
-
-        if (matchingElections.length > 0) {
-            html += `<div class="election-list-grid">`;
-            matchingElections.forEach(e => {
-                html += generateSummaryCardHTML(e);
-            });
-            html += `</div>`;
-        } else {
-            html += `<div class="loading-state" style="padding:40px;">此專區目前無資料可供查詢。</div>`;
-        }
-
-        dom.content.innerHTML = html;
-    };
-
-
 window.renderElectionList = function(type, pushState = true) { 
         
         const url = `?view=list&type=${encodeURIComponent(type)}`;
@@ -2257,16 +2165,6 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             return;
         }
 
-        if (level === 'specialElectionHub') {
-            const label = appState.specialHubLabel || SPECIAL_2026_LABEL;
-            html += `<span class="active">${label}</span>`;
-            dom.breadcrumb.innerHTML = html;
-            dom.breadcrumbBottom.innerHTML = html;
-            dom.breadcrumb.style.display = 'block';
-            dom.breadcrumbBottom.style.display = 'block';
-            return;
-        }
-
         html += `<span onclick="renderMainMenu(true)">首頁</span> / `;
 
         
@@ -2610,13 +2508,6 @@ dom.breadcrumb.innerHTML = html;
 
     if (params.view === 'legislatorMenu') {
         renderLegislatorSubMenu(pushState);
-        return;
-    }
-
-    
-
-    if (params.view === 'special2026') {
-        renderSpecial2026Hub(pushState);
         return;
     }
 

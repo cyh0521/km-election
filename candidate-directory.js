@@ -621,7 +621,7 @@ if (isReferendumType(s)) return true;
           </div>
           <div class="profile-info">
             <h2>
-              <a href="#" class="cd-open-modal" data-name="${escapeHtml(c.modalName)}" data-year="${escapeHtml(modalYear)}">${escapeHtml(c.displayName)}</a>
+              <span class="cd-name">${escapeHtml(c.displayName)}</span>
             </h2>
             <div class="profile-detail">${escapeHtml(genderDisplay)}</div>
             <div class="profile-detail">${birthLine}</div>
@@ -652,17 +652,7 @@ if (isReferendumType(s)) return true;
 
     resultsEl.innerHTML = filtered.map(c => renderCandidateCard(c)).join('');
 
-    // 點名字 → 既有 Modal
-    $all('.cd-open-modal', resultsEl).forEach(a => {
-      a.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        const modalName = a.getAttribute('data-name') || '';
-        const year = a.getAttribute('data-year') || '';
-        if (modalName && typeof window.showCandidateModal === 'function') {
-          window.showCandidateModal(modalName, year);
-        }
-      });
-    });
+    // 點選候選人姓名：本頁不開啟候選人資訊小卡（避免跳出 Modal）
   }
 
   function closeAllDropdowns() {
