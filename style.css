@@ -672,290 +672,277 @@ footer {
 }
 
 
-/* =========================
-   UI Refresh 2026-01
-   Appearance-only overrides (keep functionality)
-   ========================= */
+/* =========================================================
+   UI Refresh v2 —「票匭之夜」主題（大破大立，但不動功能）
+   - 只用 CSS 翻新：深色底 + 高對比資訊層級 + 票務感卡片
+   - 修正：Modal 不出現 / 可能的捲動鎖死（加強 z-index、pointer-events、:has() 邏輯）
+   ========================================================= */
 
-/* --- Design tokens (override existing) --- */
+/* 1) 全站設計 Token（覆蓋舊值，HTML/JS 不用改） */
 :root{
-  /* Brand */
-  --primary: #2D7FA7;          /* 主色：更沉穩、對比更佳 */
-  --secondary: #1F2A37;        /* 深色文字/標題 */
-  --accent: #18A999;           /* 輔助色（小點綴，不大量使用） */
+  --primary: #38bdf8;          /* 亮青：互動/強調 */
+  --secondary: #0b1320;        /* 深墨：頂欄/強文字 */
+  --bg: #070b14;               /* 全站底色 */
+  --card-bg: rgba(15, 23, 42, 0.92);
+  --text-main: #e5e7eb;
+  --text-sub: #94a3b8;
+  --border: rgba(148,163,184,0.18);
 
-  /* Surfaces */
-  --bg: #F5F7FB;
-  --card-bg: rgba(255,255,255,0.86);
-  --surface-2: rgba(255,255,255,0.72);
-
-  /* Text */
-  --text-main: #1F2A37;
-  --text-sub: #5B6776;
-
-  /* Lines / Shadows */
-  --border: rgba(17, 24, 39, 0.10);
-  --hairline: rgba(17, 24, 39, 0.06);
-
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-
-  --shadow-sm: 0 6px 18px rgba(17, 24, 39, 0.06);
-  --shadow-md: 0 14px 34px rgba(17, 24, 39, 0.10);
-  --shadow-lg: 0 26px 60px rgba(17, 24, 39, 0.14);
-
-  --focus: 0 0 0 4px rgba(45, 127, 167, 0.22);
+  --ui-radius: 18px;
+  --ui-radius-sm: 14px;
+  --ui-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  --ui-shadow-soft: 0 10px 24px rgba(0,0,0,0.22);
+  --ui-ring: 0 0 0 3px rgba(56,189,248,0.18);
 }
 
-/* --- Global background & typography polish --- */
+/* 2) 背景：深色漸層 + 微弱格紋（不增加 DOM） */
 body{
   background:
-    radial-gradient(1200px 800px at 15% -10%, rgba(45,127,167,0.18) 0%, rgba(45,127,167,0.00) 55%),
-    radial-gradient(900px 700px at 95% 15%, rgba(24,169,153,0.10) 0%, rgba(24,169,153,0.00) 60%),
-    linear-gradient(180deg, #F6F8FC 0%, #F2F6FB 65%, #F5F7FB 100%);
+    radial-gradient(1200px 600px at 15% -10%, rgba(56,189,248,0.18) 0%, rgba(56,189,248,0.00) 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(251,113,133,0.10) 0%, rgba(251,113,133,0.00) 55%),
+    linear-gradient(180deg, #050812 0%, var(--bg) 45%, #060a12 100%);
   color: var(--text-main);
-  padding-top: 64px; /* header height compensation */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* subtle glow layer */
+/* 低調格紋層 */
 body::before{
   content:"";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.00) 45%),
-    radial-gradient(circle at 75% 80%, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.00) 50%);
+  background-image:
+    linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(60% 45% at 50% 0%, black 0%, transparent 70%);
   opacity: 0.55;
+  z-index: 0;
 }
 
-/* Ensure main content is above background layer */
-header, .container, .modal-overlay{ position: relative; z-index: 1; }
+/* 內容層永遠在格紋上面 */
+header, .container, footer, .modal-overlay{ position: relative; z-index: 1; }
 
-/* --- Header: premium bar + subtle depth --- */
+/* 3) 頂欄：更像「資料平台」 */
 header{
   background:
-    linear-gradient(90deg, rgba(31,42,55,0.98) 0%, rgba(31,42,55,0.92) 55%, rgba(45,127,167,0.88) 115%);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-  padding: 10px 18px;
+    linear-gradient(180deg, rgba(11,19,32,0.96) 0%, rgba(11,19,32,0.82) 100%);
+  border-bottom: 1px solid rgba(56,189,248,0.18);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
-@supports (backdrop-filter: blur(10px)){
-  header{
-    background:
-      linear-gradient(90deg, rgba(31,42,55,0.85) 0%, rgba(31,42,55,0.78) 55%, rgba(45,127,167,0.72) 115%);
-    backdrop-filter: blur(12px);
-  }
-}
-h1{
-  font-size: 18px;
-  letter-spacing: 0.2px;
-}
+
+h1{ letter-spacing: 0.4px; }
 .site-title{ gap: 10px; }
-.site-logo{ width: 18px; height: 18px; opacity: 0.95; }
-
-/* --- Container spacing --- */
-.container{
-  max-width: 1180px;
-  margin: 22px auto;
-  padding: 0 16px;
+.site-logo{
+  width: 20px; height: 20px;
+  color: rgba(56,189,248,0.92);
+  filter: drop-shadow(0 8px 16px rgba(56,189,248,0.25));
 }
 
-/* --- Section header polish --- */
+/* 4) 區塊：更清晰的層級 */
+.menu-section-title,
 .section-header{
-  align-items: baseline;
-  gap: 12px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 12px;
+  border-bottom-color: rgba(148,163,184,0.18);
 }
-.section-title{ font-size: 22px; letter-spacing: 0.2px; }
+.section-title{ color: var(--text-main); }
 .section-badge{
-  background: linear-gradient(180deg, rgba(45,127,167,1) 0%, rgba(45,127,167,0.86) 100%);
-  box-shadow: 0 10px 18px rgba(45,127,167,0.18);
+  background: rgba(56,189,248,0.18);
+  color: rgba(226,232,240,0.95);
+  border: 1px solid rgba(56,189,248,0.28);
 }
 
-/* --- Cards --- */
-.card{
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-@supports (backdrop-filter: blur(8px)){
-  .card{ backdrop-filter: blur(10px); }
-}
-.card.clickable:hover{
-  transform: translateY(-3px);
-  border-color: rgba(45,127,167,0.45);
-  box-shadow: var(--shadow-md);
-}
-.card-header{ margin-bottom: 14px; }
-.card-title{ border-left-width: 5px; }
-.card-action{ color: rgba(45,127,167,0.95); }
-.card-action:hover{ color: #1F6E93; }
-
-/* --- Breadcrumb as “chips” feel (without changing HTML) --- */
+/* 5) 麵包屑：改成 Chips（不改 HTML） */
 .breadcrumb{
-  padding: 8px 0 14px;
-  margin-bottom: 12px;
-  font-size: 14px;
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0 14px;
   color: var(--text-sub);
 }
 .breadcrumb span{
-  display: inline-flex;
-  align-items: center;
+  display:inline-flex;
+  align-items:center;
   gap: 6px;
-  padding: 3px 10px;
+  padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.70);
-  border: 1px solid var(--hairline);
-  box-shadow: 0 6px 14px rgba(17,24,39,0.05);
-  margin: 2px 4px 2px 0;
-}
-.breadcrumb span.active{
-  background: rgba(255,255,255,0.92);
-  border-color: rgba(45,127,167,0.22);
+  background: rgba(148,163,184,0.08);
+  border: 1px solid rgba(148,163,184,0.12);
+  color: rgba(56,189,248,0.95);
+  text-decoration: none;
 }
 .breadcrumb span:hover{
+  background: rgba(56,189,248,0.12);
+  border-color: rgba(56,189,248,0.26);
   text-decoration: none;
-  border-color: rgba(45,127,167,0.35);
-  box-shadow: 0 10px 22px rgba(45,127,167,0.10);
+}
+.breadcrumb span.active{
+  background: rgba(226,232,240,0.08);
+  border-color: rgba(226,232,240,0.16);
+  color: rgba(226,232,240,0.95);
 }
 
-/* --- Menu buttons: slightly richer, consistent with cards --- */
+/* 6) 主選單按鈕：改成「票券/面板」感（仍沿用 .menu-button） */
 .menu-button{
-  border-radius: var(--radius-md);
-  border-color: rgba(17,24,39,0.10);
-  box-shadow: 0 10px 22px rgba(17,24,39,0.06);
-  background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(45,127,167,0.06) 100%);
+  border-radius: var(--ui-radius);
+  border: 1px solid rgba(148,163,184,0.18);
+  background:
+    radial-gradient(600px 220px at 10% 15%, rgba(56,189,248,0.20) 0%, rgba(56,189,248,0.00) 60%),
+    linear-gradient(180deg, rgba(15,23,42,0.96) 0%, rgba(15,23,42,0.86) 100%);
+  box-shadow: var(--ui-shadow-soft);
+  color: var(--text-main);
 }
-.menu-button:hover{ box-shadow: 0 18px 34px rgba(45,127,167,0.18); }
 
-/* --- Table: soft container; keep existing vote-rate bar mechanics --- */
+/* 票券切角：用偽元素做「缺口」 */
+.menu-button::after{
+  content:"";
+  position:absolute;
+  right: -16px;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px rgba(148,163,184,0.12);
+  pointer-events:none;
+  opacity: 0.95;
+}
+
+.menu-icon{ color: rgba(56,189,248,0.95); }
+.menu-text{ color: rgba(226,232,240,0.95); font-weight: 900; }
+.menu-button:hover{
+  transform: translateY(-4px);
+  border-color: rgba(56,189,248,0.36);
+  box-shadow: 0 22px 44px rgba(0,0,0,0.38);
+}
+
+/*（你原本隱藏的箭頭）現在拿回來當「向右導引」 */
+.menu-chevron{
+  display: inline-flex !important;
+  margin-left: auto;
+  color: rgba(148,163,184,0.9);
+  font-weight: 900;
+  opacity: 0.9;
+  transform: translateX(0);
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.menu-button:hover .menu-chevron{
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+@media (max-width: 768px){
+  .menu-button{
+    border-radius: var(--ui-radius-sm);
+    box-shadow: 0 12px 26px rgba(0,0,0,0.30);
+  }
+  .menu-button::after{ display:none; } /* 手機簡化，減少視覺噪音 */
+}
+
+/* 7) 卡片：更像資訊面板 */
+.card, .summary-panel{
+  background: var(--card-bg);
+  border-radius: var(--ui-radius);
+  border: 1px solid rgba(148,163,184,0.14);
+  box-shadow: var(--ui-shadow-soft);
+}
+.card.clickable:hover{
+  border-color: rgba(56,189,248,0.32);
+  box-shadow: var(--ui-shadow);
+}
+.card-title{
+  color: rgba(226,232,240,0.95);
+  border-left-color: rgba(56,189,248,0.85);
+}
+.card-stats, .card-footer-info{ color: rgba(148,163,184,0.95); }
+.card-action{ color: rgba(56,189,248,0.95); }
+
+/* 8) 表格：深色表頭 + 內容層更清楚（保留你的跨欄位得票率長條） */
 .table-responsive{
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: rgba(255,255,255,0.82);
-  box-shadow: 0 10px 26px rgba(17,24,39,0.05);
+  background: rgba(15,23,42,0.72);
+  border: 1px solid rgba(148,163,184,0.14);
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow-soft);
+  padding: 6px;
 }
-
-/* Header cells */
+table{
+  color: rgba(226,232,240,0.95);
+}
 th{
-  background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(245,247,251,0.92) 100%);
-  color: rgba(31,42,55,0.80);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 10px;
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 0.4px;
+  background: rgba(226,232,240,0.06);
+  color: rgba(226,232,240,0.82);
+  border-bottom-color: rgba(148,163,184,0.18);
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
-th:hover{
-  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(240,245,250,0.98) 100%);
-}
-td{
-  padding: 10px 10px;
-  border-bottom: 1px solid var(--hairline);
-}
-/* Row hover: do NOT destroy background-image bar; just add overlay */
-tr:hover{ background-color: rgba(255,255,255,0.40); }
+th:hover{ background: rgba(56,189,248,0.10); }
+td{ border-bottom-color: rgba(148,163,184,0.14); }
+tr:hover{ background-color: rgba(226,232,240,0.04); }
 
-/* Winner / number badge refresh */
+/* 小徽章們也一起黑化 */
 .number-badge{
-  background: rgba(31,42,55,0.06);
-  border-color: rgba(255,255,255,0.85);
-  box-shadow: 0 0 0 1px rgba(17,24,39,0.07);
+  background: rgba(226,232,240,0.08);
+  color: rgba(226,232,240,0.85);
+  border-color: rgba(15,23,42,0.92);
 }
 .number-badge.is-winner{
-  border-color: rgba(217,83,79,0.70);
-  box-shadow: 0 0 0 1px rgba(217,83,79,0.18), 0 10px 22px rgba(217,83,79,0.10);
+  border-color: rgba(251,113,133,0.90);
+  color: rgba(251,113,133,0.95);
 }
+.party-badge{ filter: saturate(1.05); }
 
-/* Party badge: consistent pill */
-.party-badge{
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  box-shadow: 0 8px 18px rgba(17,24,39,0.10);
+/* 9) Modal：加強穩定（z-index/顯示優先級/捲動手感） */
+.modal-overlay{
+  z-index: 9999;
+  /* 讓「沒 active 時」完全不吃事件（避免你說的滑動卡住） */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+  display: flex; /* 永遠 flex，避免被其他規則覆蓋造成顯示不出來 */
 }
-
-/* Extra badges */
-.women-quota-badge,
-.bracket-label-badge{
-  border-radius: 999px;
-  border: 1px solid var(--hairline);
-  box-shadow: 0 8px 18px rgba(17,24,39,0.06);
-}
-.incumbent-badge{
-  border-radius: 8px;
-  box-shadow: 0 8px 18px rgba(17,24,39,0.10);
-}
-
-/* --- Modal refresh --- */
-.modal-overlay{ background: rgba(17, 24, 39, 0.55); }
-@supports (backdrop-filter: blur(10px)){
-  .modal-overlay{ backdrop-filter: blur(10px); }
+.modal-overlay.active{
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 .modal-card{
-  background: rgba(255,255,255,0.92);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  background: rgba(15,23,42,0.96);
+  border: 1px solid rgba(148,163,184,0.18);
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow);
+  -webkit-overflow-scrolling: touch;
 }
 .modal-close-btn{
-  background: rgba(255,255,255,0.75);
-  border: 1px solid var(--hairline);
-  box-shadow: 0 10px 18px rgba(17,24,39,0.10);
+  background: rgba(15,23,42,0.75);
+  border: 1px solid rgba(148,163,184,0.18);
+  color: rgba(226,232,240,0.85);
 }
-.modal-close-btn:hover{ background: rgba(255,255,255,0.92); }
-
-/* Focus ring */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-a:focus-visible{
-  outline: none;
-  box-shadow: var(--focus);
-  border-radius: 10px;
+.modal-close-btn:hover{
+  background: rgba(56,189,248,0.14);
+  color: rgba(226,232,240,0.95);
 }
 
-/* --- Dark mode support (optional, automatic) --- */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg: #0B1220;
-    --card-bg: rgba(17, 24, 39, 0.72);
-    --surface-2: rgba(17, 24, 39, 0.55);
-    --text-main: rgba(255,255,255,0.92);
-    --text-sub: rgba(255,255,255,0.62);
-    --border: rgba(255,255,255,0.12);
-    --hairline: rgba(255,255,255,0.08);
-    --shadow-sm: 0 12px 26px rgba(0,0,0,0.35);
-    --shadow-md: 0 22px 50px rgba(0,0,0,0.45);
-    --shadow-lg: 0 34px 80px rgba(0,0,0,0.55);
-  }
-
+/* 10) 防「捲動鎖死」：只有 Modal 開啟時才鎖背景（支援 :has 的瀏覽器） */
+@supports(selector(body:has(.modal-overlay.active))){
   body{
-    background:
-      radial-gradient(900px 600px at 15% -10%, rgba(45,127,167,0.22) 0%, rgba(45,127,167,0.00) 60%),
-      radial-gradient(900px 700px at 95% 15%, rgba(24,169,153,0.14) 0%, rgba(24,169,153,0.00) 60%),
-      linear-gradient(180deg, #050A14 0%, #0B1220 55%, #08101D 100%);
+    overflow-y: auto !important;
   }
+  body:has(.modal-overlay.active){
+    overflow: hidden !important;
+  }
+}
 
-  .table-responsive{ background: rgba(17,24,39,0.64); }
-  th{
-    background: linear-gradient(180deg, rgba(17,24,39,0.92) 0%, rgba(11,18,32,0.92) 100%);
-    color: rgba(255,255,255,0.70);
+/* 11) 動畫偏好：尊重使用者設定 */
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
-  td{ border-bottom-color: rgba(255,255,255,0.08); }
-  tr:hover{ background-color: rgba(255,255,255,0.04); }
-  .breadcrumb span{ background: rgba(17,24,39,0.55); border-color: rgba(255,255,255,0.10); }
-  .breadcrumb span.active{ background: rgba(17,24,39,0.78); border-color: rgba(45,127,167,0.22); }
-  .menu-button{ background: linear-gradient(180deg, rgba(17,24,39,0.88) 0%, rgba(45,127,167,0.10) 100%); }
-  .modal-card{ background: rgba(11,18,32,0.88); }
-  .modal-close-btn{ background: rgba(17,24,39,0.65); color: rgba(255,255,255,0.72); }
 }
