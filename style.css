@@ -494,6 +494,11 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
     border: 2px solid var(--border);
     flex-shrink: 0;
 }
+
+.modal-card .profile-photo{
+    width: 82px;
+    height: 82px;
+}
 .profile-info h2 {
     font-size: 22px;
     font-weight: 700;
@@ -563,8 +568,20 @@ table.large-table td:nth-child(2) { padding-top: 8px; padding-bottom: 8px; }
     .top-summary-grid { grid-template-columns: 1fr; }
     table td:nth-child(2) { padding-top: 5px; padding-bottom: 5px; }
     
-    /* Modal Mobile tweak */
-    .profile-header { flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+    /* Modal Mobile tweak：手機版維持「左圖右文」(參考 Candidate Directory) */
+    .modal-card .profile-header{
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+        gap: 14px;
+    }
+    .modal-card .profile-info,
+    .modal-card .profile-info h2,
+    .modal-card .profile-detail{
+        text-align: left;
+    }
+    .modal-card .profile-photo{ width: 82px; height: 82px; }
 }
 
 footer {
