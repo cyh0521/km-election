@@ -671,360 +671,261 @@ footer {
     }
 }
 
-/* =========================
-   Star Trek LCARS Theme Override (2026-01-09)
-   - 外觀大翻新：不改 HTML / 不改 JS / 不動功能
-   - 以現有 class 為基礎覆蓋，保持相容性
-   ========================= */
 
-:root {
-  /* LCARS palette */
-  --lcars-bg0: #05070d;
-  --lcars-bg1: #0b1020;
-  --lcars-panel: rgba(14, 20, 40, 0.78);
-  --lcars-panel-2: rgba(18, 26, 52, 0.92);
-  --lcars-border: rgba(140, 170, 255, 0.18);
-  --lcars-text: rgba(235, 244, 255, 0.94);
-  --lcars-sub: rgba(204, 220, 255, 0.72);
 
-  --lcars-orange: #ff9d00;
-  --lcars-peach:  #ffb26a;
-  --lcars-purple: #b58bff;
-  --lcars-blue:   #3aa8ff;
-  --lcars-cyan:   #33e6ff;
-  --lcars-teal:   #29ffd2;
-  --lcars-red:    #ff4d6d;
+/* =========================================================
+   Kelvin / SNW  現代艦橋風（CSS-only 視覺翻新）
+   - 不改 HTML / 不改 JS / 不動功能
+   - 保留得票率跨欄位背景長條（tr 的 background-size: var(--bar-width) 既有機制）
+   ========================================================= */
 
-  /* Map old tokens -> new theme tokens (全站沿用既有變數系統) */
-  --primary:   var(--lcars-orange);
-  --secondary: #11162a;
-  --bg:        var(--lcars-bg1);
-  --card-bg:   rgba(18, 26, 52, 0.72);
-  --text-main: var(--lcars-text);
-  --text-sub:  var(--lcars-sub);
-  --border:    var(--lcars-border);
+/* ---- Theme tokens ---- */
+:root{
+  /* 主要色：偏青藍霓虹（艦橋 HUD 感） */
+  --primary: #2DE2E6;            /* neon cyan */
+  --secondary: #0B1220;          /* deep bridge */
+  --bg: #060A12;                 /* space black */
+  --card-bg: rgba(255,255,255,0.06);
+  --text-main: rgba(255,255,255,0.92);
+  --text-sub: rgba(255,255,255,0.68);
+  --border: rgba(255,255,255,0.12);
 
-  --lcars-radius: 18px;
-  --lcars-radius-2: 10px;
-  --lcars-shadow: 0 18px 46px rgba(0,0,0,0.35);
-  --lcars-shadow-soft: 0 10px 26px rgba(0,0,0,0.24);
-
-  --lcars-grid: rgba(58, 168, 255, 0.08);
+  /* 額外 token（只做視覺） */
+  --glass: rgba(255,255,255,0.06);
+  --glass-strong: rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.14);
+  --shadow-1: 0 10px 28px rgba(0,0,0,0.45);
+  --shadow-2: 0 16px 44px rgba(0,0,0,0.55);
+  --glow: 0 0 0 1px rgba(45,226,230,0.18), 0 0 22px rgba(45,226,230,0.14);
+  --radius-xl: 18px;
 }
 
-* {
-  scroll-behavior: smooth;
-}
-
-body {
+/* ---- Background: subtle nebula + grid ---- */
+html, body{ height: 100%; }
+body{
   background:
-    radial-gradient(1200px 700px at 15% -10%, rgba(51, 230, 255, 0.16) 0%, rgba(51, 230, 255, 0) 55%),
-    radial-gradient(900px 520px at 85% 0%, rgba(181, 139, 255, 0.14) 0%, rgba(181, 139, 255, 0) 55%),
-    radial-gradient(900px 700px at 70% 110%, rgba(255, 157, 0, 0.12) 0%, rgba(255, 157, 0, 0) 55%),
-    linear-gradient(180deg, var(--lcars-bg0) 0%, var(--lcars-bg1) 100%);
+    radial-gradient(900px 600px at 18% -10%, rgba(45,226,230,0.16) 0%, rgba(45,226,230,0.00) 60%),
+    radial-gradient(800px 520px at 88% 18%, rgba(120,92,255,0.14) 0%, rgba(120,92,255,0.00) 62%),
+    radial-gradient(900px 700px at 55% 105%, rgba(255,74,141,0.10) 0%, rgba(255,74,141,0.00) 60%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, rgba(255,255,255,0.00) 1px, rgba(255,255,255,0.00) 48px),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 55%),
+    var(--bg);
   color: var(--text-main);
 }
 
-.container {
-  padding: 0 16px;
+/* ---- Header: glass bridge bar + neon scanline ---- */
+header{
+  background: rgba(11,18,32,0.72);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
 }
+header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-1px;
+  height: 2px;
+  background: linear-gradient(90deg,
+    rgba(45,226,230,0.00) 0%,
+    rgba(45,226,230,0.55) 22%,
+    rgba(120,92,255,0.40) 55%,
+    rgba(255,74,141,0.42) 78%,
+    rgba(255,74,141,0.00) 100%);
+  filter: blur(0.2px);
+  pointer-events:none;
+}
+h1{ letter-spacing: 0.6px; }
+.site-logo{ color: rgba(255,255,255,0.95); }
 
-/* ===== Header (LCARS Rail) ===== */
-header {
-  background:
-    linear-gradient(180deg, rgba(12, 18, 38, 0.95) 0%, rgba(10, 14, 28, 0.92) 100%);
-  border-bottom: 1px solid rgba(140, 170, 255, 0.12);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
-
-header::before,
-header::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 14px;
-  opacity: 0.95;
-}
-header::before {
-  left: 0;
-  background: linear-gradient(180deg,
-    rgba(255,157,0,0.95) 0%,
-    rgba(58,168,255,0.80) 50%,
-    rgba(181,139,255,0.85) 100%);
-}
-header::after {
-  right: 0;
-  background: linear-gradient(180deg,
-    rgba(41,255,210,0.90) 0%,
-    rgba(51,230,255,0.85) 60%,
-    rgba(255,77,109,0.80) 100%);
-}
-
-h1 {
-  letter-spacing: 0.6px;
-  text-shadow: 0 0 24px rgba(58, 168, 255, 0.18);
-}
-.site-logo {
-  filter: drop-shadow(0 8px 18px rgba(51,230,255,0.18));
-}
-
-/* ===== Section Titles ===== */
+/* ---- Sections ---- */
 .menu-section-title,
-.section-header {
-  border-bottom: 1px solid rgba(140, 170, 255, 0.16);
+.section-title{ color: var(--text-main); }
+.section-header{
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.section-badge{
+  background: rgba(45,226,230,0.18);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(45,226,230,0.22);
+  box-shadow: var(--glow);
 }
 
-.section-header {
-  position: relative;
-  padding-bottom: 14px;
+/* ---- Main menu buttons: modern bridge panels ---- */
+.menu-button{
+  background:
+    radial-gradient(120px 120px at 14% 50%, rgba(45,226,230,0.16) 0%, rgba(45,226,230,0.00) 65%),
+    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid var(--glass-border);
+  color: rgba(255,255,255,0.92);
+  box-shadow: var(--shadow-1);
+  border-radius: var(--radius-xl);
 }
-.section-header::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 140px;
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--lcars-orange), var(--lcars-cyan), var(--lcars-purple));
-  opacity: 0.95;
+.menu-button::before{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(45,226,230,0.22) 0%, rgba(45,226,230,0.00) 55%),
+    radial-gradient(circle at 86% 92%, rgba(120,92,255,0.18) 0%, rgba(120,92,255,0.00) 60%);
+}
+.menu-icon{ color: var(--primary); }
+.menu-button:hover{
+  border-color: rgba(45,226,230,0.36);
+  box-shadow: var(--shadow-2), var(--glow);
+}
+.menu-button:focus-visible{
+  outline: 3px solid rgba(45,226,230,0.25);
 }
 
-.section-title {
+/* ---- Cards: glass ---- */
+.card,
+.summary-panel{
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-1);
+  border-radius: var(--radius-xl);
+}
+.card.clickable:hover{
+  border-color: rgba(45,226,230,0.36);
+  box-shadow: var(--shadow-2), var(--glow);
+}
+.card-title{
   color: var(--text-main);
+  border-left-color: rgba(45,226,230,0.75);
 }
-.section-badge {
-  background: linear-gradient(90deg, rgba(255,157,0,0.95), rgba(255,178,106,0.9));
-  color: #1a1422;
-  font-weight: 900;
-  letter-spacing: 0.4px;
-  border-radius: 999px;
-  box-shadow: 0 10px 22px rgba(255,157,0,0.18);
-}
+.card-stats,
+.card-footer-info{ color: var(--text-sub); }
+.card-stats .rate{ color: #FF4A8D; }
 
-/* ===== Breadcrumb as LCARS Chips ===== */
-.breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  padding: 10px 0 2px;
+/* ---- Breadcrumb: chips ---- */
+.breadcrumb{
+  padding: 10px 0;
   color: var(--text-sub);
 }
-.breadcrumb span {
+.breadcrumb span{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(18, 26, 52, 0.55);
-  border: 1px solid rgba(140, 170, 255, 0.12);
-  color: rgba(51,230,255,0.88);
+  margin: 0 6px 6px 0;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  color: rgba(45,226,230,0.90);
   text-decoration: none !important;
 }
-.breadcrumb span:hover {
-  background: rgba(18, 26, 52, 0.78);
-  border-color: rgba(51,230,255,0.35);
+.breadcrumb span:hover{
+  border-color: rgba(45,226,230,0.26);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35);
 }
-.breadcrumb span.active {
-  background: rgba(255, 157, 0, 0.12);
-  border-color: rgba(255,157,0,0.35);
-  color: rgba(255, 218, 168, 0.95);
-}
-
-/* ===== Cards ===== */
-.card {
-  background: var(--card-bg);
-  border: 1px solid rgba(140,170,255,0.14);
-  border-radius: var(--lcars-radius) var(--lcars-radius-2) var(--lcars-radius) var(--lcars-radius-2);
-  box-shadow: var(--lcars-shadow-soft);
-  backdrop-filter: blur(10px);
-}
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background:
-    linear-gradient(90deg, rgba(255,157,0,0.16) 0%, rgba(51,230,255,0.10) 50%, rgba(181,139,255,0.12) 100%);
-  opacity: 0.35;
-  mix-blend-mode: screen;
-}
-.card > * {
-  position: relative;
-  z-index: 1;
-}
-
-.card-title {
+.breadcrumb span.active{
   color: var(--text-main);
-  border-left: 5px solid rgba(51,230,255,0.75);
-}
-.card-stats .rate {
-  color: rgba(255,157,0,0.95);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
 }
 
-.card.clickable:hover {
-  transform: translateY(-3px);
-  border-color: rgba(51,230,255,0.35);
-  box-shadow: var(--lcars-shadow);
+/* ---- Tables: bridge console ---- */
+.table-responsive{
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  box-shadow: var(--shadow-1);
 }
+table{ color: var(--text-main); }
+th{
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.74);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+th:hover{ background: rgba(255,255,255,0.09); }
+td{ border-bottom: 1px solid rgba(255,255,255,0.08); }
 
-/* ===== Menu Buttons (LCARS Panel Buttons) ===== */
-.menu-button {
-  background:
-    linear-gradient(180deg, rgba(18,26,52,0.75) 0%, rgba(10,14,28,0.90) 100%);
-  border: 1px solid rgba(140,170,255,0.16);
-  border-radius: 22px 10px 22px 10px;
-  box-shadow: 0 14px 34px rgba(0,0,0,0.28);
-}
-.menu-button::after {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: -1px;
-  bottom: -1px;
-  width: 10px;
-  border-radius: 22px 0 0 10px;
-  background: linear-gradient(180deg, var(--lcars-orange), var(--lcars-cyan));
-  opacity: 0.9;
-}
-.menu-icon {
-  color: rgba(51,230,255,0.92);
-  filter: drop-shadow(0 10px 20px rgba(51,230,255,0.16));
-}
-.menu-text {
-  color: rgba(235,244,255,0.94);
-}
-.menu-button:hover {
-  transform: translateY(-3px);
-  border-color: rgba(51,230,255,0.38);
-  box-shadow: 0 22px 50px rgba(0,0,0,0.36);
-}
-.menu-button:hover::before {
-  opacity: 1;
-}
-.menu-button:focus-visible {
-  outline: 3px solid rgba(51,230,255,0.32);
-  outline-offset: 3px;
-}
+/* 重要：不碰 tr 的 background-size / background-image（得票率長條機制留給原本 JS 設定） */
+tr:hover{ background-color: rgba(255,255,255,0.04); }
 
-/* ===== Tables (keep existing vote-rate bar logic) ===== */
-.table-responsive {
-  border-radius: var(--lcars-radius);
-  border: 1px solid rgba(140,170,255,0.14);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.28);
-  background: rgba(10,14,28,0.55);
-  backdrop-filter: blur(10px);
-}
+.sort-icon.asc{ border-bottom-color: rgba(255,255,255,0.92); }
+.sort-icon.desc{ border-top-color: rgba(255,255,255,0.92); }
 
-table {
-  color: var(--text-main);
+.number-badge{
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.82);
+  border: 2px solid rgba(255,255,255,0.12);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.20);
 }
-th {
-  background: rgba(18, 26, 52, 0.92);
-  color: rgba(235, 244, 255, 0.78);
-  border-bottom: 1px solid rgba(140,170,255,0.16);
+.number-badge.is-winner{
+  border-color: rgba(255,74,141,0.75);
+  color: #FF4A8D;
+  background: rgba(255,74,141,0.10);
+  box-shadow: 0 0 0 1px rgba(255,74,141,0.18);
 }
-th:hover {
-  background: rgba(18, 26, 52, 1);
+.party-badge{
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.88);
 }
-td {
-  border-bottom: 1px solid rgba(140,170,255,0.10);
-}
-tr:hover {
-  background-color: rgba(51,230,255,0.06);
-}
-.number-badge {
-  background: rgba(235,244,255,0.10);
-  color: rgba(235,244,255,0.86);
-  border: 2px solid rgba(235,244,255,0.12);
-}
-.number-badge.is-winner {
-  border-color: rgba(255,157,0,0.85);
-  color: rgba(255,157,0,0.95);
-  box-shadow: 0 0 0 1px rgba(255,157,0,0.25);
-}
-.party-badge {
-  background: rgba(181,139,255,0.55);
-}
-.women-quota-badge {
-  background-color: #ff3aa8;
-}
+.women-quota-badge{ box-shadow: 0 0 0 1px rgba(0,0,0,0.25); }
+.incumbent-badge{ box-shadow: 0 0 0 1px rgba(0,0,0,0.25); }
 
-/* ===== Candidate link affordance ===== */
-.candidate-link:hover {
-  text-decoration: none;
-}
-.candidate-name {
-  text-shadow: 0 0 18px rgba(51,230,255,0.12);
-}
-.candidate-link:hover .candidate-name {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-/* ===== Modal: stability + LCARS look ===== */
-/* 強化：避免 overlay 未 active 仍吃事件 / 或 active 被其他 display 規則壓掉 */
-.modal-overlay {
+/* ---- Modal: stable & modern ---- */
+.modal-overlay{
+  /* 覆蓋原本 display:none；用 visibility/opacity/pointer-events 控制，避免 active 被其他規則壓掉 */
   display: flex !important;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  background: rgba(3, 5, 10, 0.72);
-  backdrop-filter: blur(8px);
-  transition: opacity .18s ease, visibility .18s ease;
+  background: rgba(0,0,0,0.62);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  z-index: 9999;
 }
-.modal-overlay.active {
+.modal-overlay.active{
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
-.modal-card {
-  background:
-    linear-gradient(180deg, rgba(18,26,52,0.92) 0%, rgba(10,14,28,0.96) 100%);
-  border: 1px solid rgba(51,230,255,0.22);
-  border-radius: 22px 10px 22px 10px;
-  box-shadow: 0 28px 72px rgba(0,0,0,0.55);
+.modal-card{
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: calc(var(--radius-xl) + 2px);
+  box-shadow: var(--shadow-2);
+  color: var(--text-main);
 }
-.modal-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background:
-    radial-gradient(600px 260px at 18% 10%, rgba(51,230,255,0.12) 0%, rgba(51,230,255,0) 60%),
-    radial-gradient(520px 260px at 82% 0%, rgba(255,157,0,0.12) 0%, rgba(255,157,0,0) 65%);
+.modal-close-btn{
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.78);
+  border: 1px solid rgba(255,255,255,0.12);
 }
-.modal-close-btn {
-  background: rgba(18,26,52,0.88);
-  border: 1px solid rgba(140,170,255,0.18);
-  color: rgba(235,244,255,0.78);
+.modal-close-btn:hover{
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92);
 }
-.modal-close-btn:hover {
-  background: rgba(18,26,52,1);
-  color: rgba(255,157,0,0.95);
-  border-color: rgba(255,157,0,0.35);
+.profile-header{ border-bottom-color: rgba(255,255,255,0.12); }
+.profile-photo{ border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); }
+.profile-info h2{ color: rgba(255,255,255,0.92); }
+.profile-detail{ color: var(--text-sub); }
+.history-title{
+  color: rgba(255,255,255,0.92);
+  border-left-color: rgba(45,226,230,0.70);
 }
-.profile-info h2 {
-  color: rgba(235,244,255,0.95);
-}
-.history-title {
-  color: rgba(235,244,255,0.92);
-  border-left-color: rgba(255,157,0,0.90);
-}
-.result-won { color: rgba(255,157,0,0.95); }
-.result-lost { color: rgba(235,244,255,0.55); }
+.history-item{ border-bottom-color: rgba(255,255,255,0.10); }
+.history-year-tag{ background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.78); }
+.result-won{ color: #FF4A8D; }
+.result-lost{ color: rgba(255,255,255,0.60); }
 
-/* ===== Footer ===== */
-footer {
-  background: rgba(10,14,28,0.55);
-  border-top: 1px solid rgba(140,170,255,0.14);
-  color: rgba(235,244,255,0.55);
+/* 鎖背景捲動：只在 modal active 時（支援 :has 的瀏覽器） */
+@supports selector(body:has(.modal-overlay.active)){
+  body:has(.modal-overlay.active){ overflow: hidden; }
+  body:not(:has(.modal-overlay.active)){ overflow: auto; }
 }
 
-/* ===== Motion safety ===== */
-@media (prefers-reduced-motion: reduce) {
-  * {
+/* ---- Footer ---- */
+footer{
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.60);
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce){
+  header, .menu-button, .card, .modal-card{
     transition: none !important;
     animation: none !important;
   }
