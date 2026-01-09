@@ -618,6 +618,84 @@ default:
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
+
+    // ================= 顯示模式切換（一般 / 暗色） =================
+    const THEME_KEY = 'kmTheme'; // localStorage key（與 index.html 內的預載入一致）
+
+    function getSystemTheme() {
+        try {
+            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        } catch (e) {
+            return 'light';
+        }
+    }
+
+    function setTheme(theme, persist = false) {
+        const t = (theme === 'dark') ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+
+        if (persist) {
+            try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+        }
+
+        // 同步更新按鈕 icon/提示
+        const btn = document.getElementById('theme-toggle-btn');
+        if (btn) {
+            const isDark = (t === 'dark');
+            btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
+            btn.setAttribute('aria-label', btn.title);
+
+            // 太陽 / 月亮（stroke 使用 currentColor）
+            btn.innerHTML = isDark
+                ? `
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 2.5V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 19V21.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4.5 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M22 12H19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M5.1 5.1L6.9 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M17.1 17.1L18.9 18.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M18.9 5.1L17.1 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M6.9 17.1L5.1 18.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  `
+                : `
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3a7 7 0 1 0 11.2 11.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                  `;
+        }
+    }
+
+    function initThemeToggle() {
+        const btn = document.getElementById('theme-toggle-btn');
+        // 沒有按鈕也沒關係：仍維持 data-theme（index.html 已先預載入）
+        let saved = null;
+        try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
+
+        // 如果 index.html 已經套用 data-theme，仍以 saved 優先（避免不同步）
+        const initial = (saved === 'dark' || saved === 'light') ? saved : (document.documentElement.getAttribute('data-theme') || getSystemTheme());
+        setTheme(initial, false);
+
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                const next = (current === 'dark') ? 'light' : 'dark';
+                setTheme(next, true);
+            });
+        }
+
+        // 如果使用者沒手動指定（沒有 saved），就跟著系統深淺色自動切換
+        try {
+            const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            if (mq && typeof mq.addEventListener === 'function' && !(saved === 'dark' || saved === 'light')) {
+                mq.addEventListener('change', (e) => setTheme(e.matches ? 'dark' : 'light', false));
+            }
+        } catch (e) {}
+    }
+
+
     
     // ================= 歷史記錄 API 輔助函式 =================
     
@@ -2659,6 +2737,7 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
+        initThemeToggle();
         dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
         
         Promise.all([
@@ -2672,79 +2751,3 @@ dom.breadcrumb.innerHTML = html;
                  updateUrl(state, "金門選舉資料庫 - 首頁", "?view=main", false);     renderMainMenu(false);}
         });
     })();
-
-
-/* =========================================================
-   Theme toggle (UI only): light <-> SNW/Kelvin dark
-   - 不動功能，只加上 :root.theme-dark class 切換外觀
-   - 修正：初次載入時按鈕圖示不會空白
-   ========================================================= */
-(function(){
-  const STORAGE_KEY = 'km_ui_theme';
-  const root = document.documentElement;
-
-  const moonSvg = `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="currentColor" d="M21 14.2A8.4 8.4 0 0 1 9.8 3a1 1 0 0 0-1.2 1.2A10 10 0 1 0 22.2 15.4a1 1 0 0 0-1.2-1.2Z"></path>
-    </svg>`;
-  const sunSvg = `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-        d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0-15V2m0 20v-1m11-9h-1M3 12H2m17.07 7.07-.7-.7M5.63 5.63l-.7-.7m14.14 0-.7.7M5.63 18.37l-.7.7">
-      </path>
-    </svg>`;
-
-  function getTheme(){
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return (saved === 'dark' || saved === 'light') ? saved : 'light';
-  }
-
-  function paintButton(theme){
-    const btn = document.getElementById('theme-toggle-btn');
-    if (!btn) return;
-    const isDark = theme === 'dark';
-    btn.innerHTML = isDark ? sunSvg : moonSvg; // 顯示「可切換到的模式」
-    btn.setAttribute('aria-label', isDark ? '切換為亮色介面' : '切換為暗色介面');
-    btn.title = isDark ? '切換為亮色介面' : '切換為暗色介面';
-  }
-
-  function applyTheme(theme){
-    const isDark = theme === 'dark';
-    root.classList.toggle('theme-dark', isDark);
-    localStorage.setItem(STORAGE_KEY, theme);
-    paintButton(theme);
-  }
-
-  // 先把 class 套上，避免閃一下（不依賴 header 是否存在）
-  root.classList.toggle('theme-dark', getTheme() === 'dark');
-
-  function ensureButton(){
-    const header = document.querySelector('header');
-    if (!header) return;
-
-    let btn = document.getElementById('theme-toggle-btn');
-    if (!btn){
-      btn = document.createElement('button');
-      btn.id = 'theme-toggle-btn';
-      btn.className = 'theme-toggle-btn';
-      btn.type = 'button';
-      header.appendChild(btn);
-
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const next = (getTheme() === 'dark') ? 'light' : 'dark';
-        applyTheme(next);
-      });
-    }
-
-    // ✅ 修正：按鈕建立後立刻補上圖示/標籤
-    applyTheme(getTheme());
-  }
-
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', ensureButton, { once: true });
-  }else{
-    ensureButton();
-  }
-})();
