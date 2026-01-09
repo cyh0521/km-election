@@ -2672,3 +2672,79 @@ dom.breadcrumb.innerHTML = html;
                  updateUrl(state, "金門選舉資料庫 - 首頁", "?view=main", false);     renderMainMenu(false);}
         });
     })();
+
+
+/* =========================================================
+   Theme toggle (UI only): light <-> SNW/Kelvin dark
+   - 不動功能，只加上 :root.theme-dark class 切換外觀
+   - 修正：初次載入時按鈕圖示不會空白
+   ========================================================= */
+(function(){
+  const STORAGE_KEY = 'km_ui_theme';
+  const root = document.documentElement;
+
+  const moonSvg = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M21 14.2A8.4 8.4 0 0 1 9.8 3a1 1 0 0 0-1.2 1.2A10 10 0 1 0 22.2 15.4a1 1 0 0 0-1.2-1.2Z"></path>
+    </svg>`;
+  const sunSvg = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0-15V2m0 20v-1m11-9h-1M3 12H2m17.07 7.07-.7-.7M5.63 5.63l-.7-.7m14.14 0-.7.7M5.63 18.37l-.7.7">
+      </path>
+    </svg>`;
+
+  function getTheme(){
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return (saved === 'dark' || saved === 'light') ? saved : 'light';
+  }
+
+  function paintButton(theme){
+    const btn = document.getElementById('theme-toggle-btn');
+    if (!btn) return;
+    const isDark = theme === 'dark';
+    btn.innerHTML = isDark ? sunSvg : moonSvg; // 顯示「可切換到的模式」
+    btn.setAttribute('aria-label', isDark ? '切換為亮色介面' : '切換為暗色介面');
+    btn.title = isDark ? '切換為亮色介面' : '切換為暗色介面';
+  }
+
+  function applyTheme(theme){
+    const isDark = theme === 'dark';
+    root.classList.toggle('theme-dark', isDark);
+    localStorage.setItem(STORAGE_KEY, theme);
+    paintButton(theme);
+  }
+
+  // 先把 class 套上，避免閃一下（不依賴 header 是否存在）
+  root.classList.toggle('theme-dark', getTheme() === 'dark');
+
+  function ensureButton(){
+    const header = document.querySelector('header');
+    if (!header) return;
+
+    let btn = document.getElementById('theme-toggle-btn');
+    if (!btn){
+      btn = document.createElement('button');
+      btn.id = 'theme-toggle-btn';
+      btn.className = 'theme-toggle-btn';
+      btn.type = 'button';
+      header.appendChild(btn);
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const next = (getTheme() === 'dark') ? 'light' : 'dark';
+        applyTheme(next);
+      });
+    }
+
+    // ✅ 修正：按鈕建立後立刻補上圖示/標籤
+    applyTheme(getTheme());
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', ensureButton, { once: true });
+  }else{
+    ensureButton();
+  }
+})();
