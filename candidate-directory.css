@@ -31,29 +31,18 @@ header{
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+    transition: transform 0.15s ease, opacity 0.15s ease;
     -webkit-tap-highlight-color: transparent;
 }
 .cd-header-btn::before{
-    content: "";
-    position: absolute;
-    inset: -7px;
-    border-radius: 999px;
-    background:
-        radial-gradient(circle at 30% 30%, rgba(56,135,176,0.45) 0%, rgba(56,135,176,0.00) 60%),
-        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.00) 55%);
-    opacity: 0;
-    transition: opacity 0.18s ease;
-    pointer-events: none;
+    /* 依需求：標題列 hover 只要微放大，不要光暈底色 */
+    display: none;
 }
 .cd-header-btn:hover{
-    transform: translateY(-50%) scale(1.08);
-    filter: drop-shadow(0 6px 12px rgba(56,135,176,0.55));
-    color: #fff;
+    transform: translateY(-50%) scale(1.06);
 }
-.cd-header-btn:hover::before{ opacity: 1; }
 .cd-header-btn:active{
-    transform: translateY(-50%) scale(0.98);
+    transform: translateY(-50%) scale(0.96);
 }
 .cd-header-btn:focus-visible{
     outline: 3px solid rgba(56,135,176,0.35);

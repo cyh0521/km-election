@@ -46,7 +46,7 @@ h1 span { cursor: pointer; }
 /* Header：顯示模式切換（暗色 / 一般） */
 .theme-toggle-btn{
     position: absolute;
-    right: 54px; /* 候選人檢索按鈕左側 */
+    right: 50px; /* 候選人檢索按鈕左側（縮小兩 icon 間距） */
     top: 50%;
     transform: translateY(-50%);
     width: 34px;
@@ -60,9 +60,10 @@ h1 span { cursor: pointer; }
     justify-content: center;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, opacity 0.15s ease;
 }
-.theme-toggle-btn svg{ width: 22px; height: 22px; }
-.theme-toggle-btn:hover{ opacity: 1; }
+.theme-toggle-btn svg{ width: 20px; height: 20px; }
+.theme-toggle-btn:hover{ opacity: 1; transform: translateY(-50%) scale(1.06); }
 .theme-toggle-btn:active{ transform: translateY(-50%) scale(0.96); }
 .theme-toggle-btn:focus-visible{
     outline: 2px solid rgba(255,255,255,0.75);
@@ -732,7 +733,6 @@ footer {
 html[data-theme="dark"], html[data-theme="dark"] body{ height: 100%; }
 html[data-theme="dark"] body{
   background:
-    radial-gradient(900px 600px at 18% -10%, rgba(45,226,230,0.16) 0%, rgba(45,226,230,0.00) 60%),
     radial-gradient(800px 520px at 88% 18%, rgba(120,92,255,0.14) 0%, rgba(120,92,255,0.00) 62%),
     radial-gradient(900px 700px at 55% 105%, rgba(255,74,141,0.10) 0%, rgba(255,74,141,0.00) 60%),
     repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, rgba(255,255,255,0.00) 1px, rgba(255,255,255,0.00) 48px),
@@ -763,7 +763,7 @@ html[data-theme="dark"] header::after{
   filter: blur(0.2px);
   pointer-events:none;
 }
-html[data-theme="dark"] h1{ letter-spacing: 0.6px; }
+html[data-theme="dark"] h1{ letter-spacing: 0px; }
 html[data-theme="dark"] .site-logo{ color: rgba(255,255,255,0.95); }
 
 /* ---- Sections ---- */
@@ -816,6 +816,10 @@ html[data-theme="dark"] .card.clickable:hover{
 html[data-theme="dark"] .card-title{
   color: var(--text-main);
   border-left-color: rgba(45,226,230,0.75);
+}
+/* 修正：暗色模式「投票概況」標題顏色（summary-panel h3 原本用 var(--secondary) 會變黑） */
+html[data-theme="dark"] .summary-panel h3{
+  color: var(--text-main);
 }
 html[data-theme="dark"] .card-stats, html[data-theme="dark"] .card-footer-info{ color: var(--text-sub); }
 html[data-theme="dark"] .card-stats .rate{ color: #FF4A8D; }
