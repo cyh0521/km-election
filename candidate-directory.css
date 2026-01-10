@@ -31,18 +31,29 @@ header{
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.15s ease, opacity 0.15s ease;
+    transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
     -webkit-tap-highlight-color: transparent;
 }
 .cd-header-btn::before{
-    /* 依需求：標題列 hover 只要微放大，不要光暈底色 */
-    display: none;
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 999px;
+    background:
+        radial-gradient(circle at 30% 30%, rgba(56,135,176,0.45) 0%, rgba(56,135,176,0.00) 60%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.00) 55%);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    pointer-events: none;
 }
 .cd-header-btn:hover{
-    transform: translateY(-50%) scale(1.06);
+    transform: translateY(-50%) scale(1.08);
+    filter: drop-shadow(0 6px 12px rgba(56,135,176,0.55));
+    color: #fff;
 }
+.cd-header-btn:hover::before{ opacity: 1; }
 .cd-header-btn:active{
-    transform: translateY(-50%) scale(0.96);
+    transform: translateY(-50%) scale(0.98);
 }
 .cd-header-btn:focus-visible{
     outline: 3px solid rgba(56,135,176,0.35);
@@ -706,6 +717,10 @@ html[data-theme="dark"] .cd-input, html[data-theme="dark"] .cd-select-like{
 html[data-theme="dark"] .cd-input::placeholder{ color: rgba(255,255,255,0.45); }
 html[data-theme="dark"] select.cd-input{
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5' fill='none' stroke='%23B9C6D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+  padding-right: 38px;
 }
 html[data-theme="dark"] .cd-input:focus, html[data-theme="dark"] .cd-select-like:focus-within{
   border-color: rgba(45,226,230,0.40);

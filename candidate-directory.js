@@ -356,7 +356,15 @@ if (isReferendumType(s)) return true;
     const partyOptions = sortOptions(Object.keys(partyCount), partyCount, partySortMode, partyCustom);
     const typeOptions = sortOptions(Object.keys(typeCount), typeCount, typeSortMode, typeCustom);
 
-    return { candidates, partyOptions, typeOptions, partyCount, typeCount };
+    // 性別人數（以候選人為單位）
+    const genderCount = Object.create(null);
+    for (const c of candidates) {
+      const g = normalizeGender(c.gender);
+      if (!g) continue;
+      genderCount[g] = (genderCount[g] || 0) + 1;
+    }
+
+    return { candidates, partyOptions, typeOptions, partyCount, typeCount, genderCount };
   }
 
   // ---------- UI ----------
@@ -403,17 +411,17 @@ if (isReferendumType(s)) return true;
               <label>姓名</label>
               <input id="cd-q" class="cd-input" type="text" placeholder="輸入姓名關鍵字" autocomplete="off">
             </div>
-
             <div class="cd-field">
               <label>性別</label>
-              <select id="cd-gender" class="cd-input">
-                <option value="">全部</option>
-                <option value="男">男性</option>
-                <option value="女">女性</option>
-              </select>
+              <div class="cd-multi cd-single" id="cd-gender">
+                <div class="cd-select-like" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+                  <div class="cd-selected cd-placeholder">全部</div>
+                  <div class="cd-caret"></div>
+                </div>
+                <div class="cd-dropdown" role="listbox" aria-multiselectable="false"></div>
+              </div>
             </div>
-
-            <div class="cd-field">
+<div class="cd-field">
               <label>推薦政黨</label>
               <div class="cd-multi" id="cd-party">
                 <div class="cd-select-like" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
@@ -507,6 +515,91 @@ if (isReferendumType(s)) return true;
     }).join('');
 
     dd.innerHTML = allRow + rows;
+  }
+
+
+  function setSingleSelectedText(wrapperEl, value, placeholder, labelMap){
+    const labelEl = $('.cd-selected', wrapperEl);
+    if (!labelEl) return;
+    if (!value) {
+      labelEl.textContent = placeholder;
+      labelEl.classList.add('cd-placeholder');
+      return;
+    }
+    const label = (labelMap && labelMap[value]) ? labelMap[value] : value;
+    labelEl.textContent = label;
+    labelEl.classList.remove('cd-placeholder');
+  }
+
+ 
+  function fillSingleOptions(wrapperEl, options, countMap, currentValue, placeholder, labelMap){
+    const dd = $('.cd-dropdown', wrapperEl);
+    if (!dd) return;
+
+    const allChecked = !currentValue ? 'checked' : '';
+    const allRow = `
+      <div class="cd-opt cd-opt-all" data-value="__ALL__">
+        <input type="checkbox" ${allChecked} aria-label="${escapeHtml(placeholder)}">
+        <div class="cd-opt-name">${escapeHtml(placeholder)}</div>
+      </div>
+    `;
+
+    const rows = options.map(v => {
+      const safeVal = escapeHtml(v);
+      const checked = (currentValue === v) ? 'checked' : '';
+      const meta = (countMap && countMap[v]) ? `(${countMap[v]})` : '';
+      const showName = (labelMap && labelMap[v]) ? escapeHtml(labelMap[v]) : safeVal;
+      return `
+        <div class="cd-opt" data-value="${safeVal}">
+          <input type="checkbox" ${checked} aria-label="${showName}">
+          <div class="cd-opt-name">${showName}</div>
+          <div class="cd-opt-meta">${meta}</div>
+        </div>
+      `;
+    }).join('');
+
+    dd.innerHTML = allRow + rows;
+  }
+
+
+  function bindSingle(wrapperEl, options, countMap, getValue, setValue, placeholder, labelMap, onChange){
+    if (!wrapperEl) return;
+
+    fillSingleOptions(wrapperEl, options, countMap, getValue(), placeholder, labelMap);
+    setSingleSelectedText(wrapperEl, getValue(), placeholder, labelMap);
+
+    const box = $('.cd-select-like', wrapperEl);
+    if (box) {
+      box.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        toggleMulti(wrapperEl);
+      });
+
+      box.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          toggleMulti(wrapperEl);
+        }
+        if (ev.key === 'Escape') closeMulti(wrapperEl);
+      });
+    }
+
+    wrapperEl.addEventListener('click', (ev) => {
+      const opt = ev.target.closest('.cd-opt');
+      if (!opt) return;
+      const value = opt.getAttribute('data-value');
+      if (!value) return;
+
+      const v = unescapeHtml(value);
+      if (v === '__ALL__') setValue('');
+      else setValue(v);
+
+      fillSingleOptions(wrapperEl, options, countMap, getValue(), placeholder, labelMap);
+      setSingleSelectedText(wrapperEl, getValue(), placeholder, labelMap);
+
+      closeMulti(wrapperEl);
+      if (typeof onChange === 'function') onChange();
+    });
   }
 
   function applyFilters(list) {
@@ -751,14 +844,6 @@ if (isReferendumType(s)) return true;
       });
     }
 
-    if (genderEl) {
-      genderEl.value = state.gender || '';
-      genderEl.addEventListener('change', () => {
-        state.gender = genderEl.value || '';
-        renderResults();
-      });
-    }
-
     if (resetEl) {
       resetEl.addEventListener('click', () => {
         state.q = '';
@@ -767,10 +852,13 @@ if (isReferendumType(s)) return true;
         state.types.clear();
 
         if (qEl) qEl.value = '';
-        if (genderEl) genderEl.value = '';
+
+        setSingleSelectedText(genderEl, state.gender, '全部', { '男':'男性','女':'女性' });
 
         setMultiSelectedText(partyEl, state.parties, '全部政黨');
         setMultiSelectedText(typeEl, state.types, '全部選舉');
+
+        fillSingleOptions(genderEl, ['男','女'], (__index && __index.genderCount) ? __index.genderCount : {}, state.gender, '全部', { '男': '男性', '女': '女性' });
 
         fillMultiOptions(partyEl, __index.partyOptions, __index.partyCount, state.parties);
         fillMultiOptions(typeEl, __index.typeOptions, __index.typeCount, state.types);
@@ -778,6 +866,16 @@ if (isReferendumType(s)) return true;
         renderResults();
       });
     }
+
+    // Single dropdown: gender (with counts)
+    const genderLabelMap = { '男': '男性', '女': '女性' };
+    bindSingle(genderEl, ['男','女'], (__index && __index.genderCount) ? __index.genderCount : {},
+      () => state.gender,
+      (v) => { state.gender = v || ''; },
+      '全部',
+      genderLabelMap,
+      renderResults
+    );
 
     // Multi dropdowns
     bindMulti(partyEl, __index.partyOptions, __index.partyCount, state.parties, '全部政黨', renderResults);
@@ -836,12 +934,15 @@ if (isReferendumType(s)) return true;
       }
 
       // 注入選項
+      const genderEl = document.getElementById('cd-gender');
       const partyEl = document.getElementById('cd-party');
       const typeEl = document.getElementById('cd-type');
 
+      fillSingleOptions(genderEl, ['男','女'], (__index && __index.genderCount) ? __index.genderCount : {}, state.gender, '全部', { '男': '男性', '女': '女性' });
       fillMultiOptions(partyEl, __index.partyOptions, __index.partyCount, state.parties);
       fillMultiOptions(typeEl, __index.typeOptions, __index.typeCount, state.types);
 
+      setSingleSelectedText(genderEl, state.gender, '全部', { '男': '男性', '女': '女性' });
       setMultiSelectedText(partyEl, state.parties, '全部政黨');
       setMultiSelectedText(typeEl, state.types, '全部選舉');
 
