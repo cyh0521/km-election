@@ -7,18 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <script>
-    (function(){
-        try{
-            const key = 'kmTheme';
-            const saved = localStorage.getItem(key);
-            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = saved || (systemDark ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        }catch(e){}
-    })();
-    </script>
-    <link rel="stylesheet" href="style.css">
+    
+<script>
+(function () {
+    try {
+        var KEY = 'kmdb-theme';
+        var saved = localStorage.getItem(KEY);
+        var theme = saved;
+        if (!theme) {
+            theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.removeAttribute('data-theme');
+    } catch (e) {}
+})();
+</script>
+
+<link rel="stylesheet" href="style.css">
     <!-- 候選人名鑑（獨立模組樣式） -->
     <link rel="stylesheet" href="candidate-directory.css">
 </head>
@@ -39,12 +44,15 @@
             金門選舉資料庫
         </span>
     </h1>
-    <button id="theme-toggle-btn" class="theme-toggle-btn" type="button" title="切換暗色模式" aria-label="切換暗色模式">
-        <!-- 月亮 / 太陽 icon（由 JS 依模式切換） -->
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3a7 7 0 1 0 11.2 11.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+<div class="header-actions">
+    <button id="theme-toggle" class="header-icon-btn theme-toggle-btn" type="button"
+            aria-label="切換顯示模式" title="切換顯示模式">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </button>
+</div>
 
 </header>
 

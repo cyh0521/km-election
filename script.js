@@ -1,3 +1,115 @@
+// ================= Theme / 顯示模式（Light / Dark） =================
+(function () {
+    const KEY = 'kmdb-theme';
+
+    function systemTheme() {
+        try {
+            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        } catch (e) { return 'light'; }
+    }
+
+    function getSavedTheme() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+    }
+
+    function setSavedTheme(theme) {
+        try { localStorage.setItem(KEY, theme); } catch (e) {}
+    }
+
+    function applyTheme(theme) {
+        const root = document.documentElement;
+        if (theme === 'dark') root.setAttribute('data-theme', 'dark');
+        else root.removeAttribute('data-theme');
+
+        // broadcast (給其他模組想聽也行)
+        try { window.dispatchEvent(new CustomEvent('kmdb:themechange', { detail: { theme } })); } catch (e) {}
+    }
+
+    function effectiveTheme() {
+        return getSavedTheme() || systemTheme();
+    }
+
+    function setTheme(theme, persist = true) {
+        applyTheme(theme);
+        if (persist) setSavedTheme(theme);
+    }
+
+    function toggleTheme() {
+        const cur = effectiveTheme();
+        const next = (cur === 'dark') ? 'light' : 'dark';
+        setTheme(next, true);
+        updateToggle(next);
+    }
+
+    function svgSun() {
+        return `
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 20v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4.93 4.93l1.41 1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M17.66 17.66l1.41 1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M2 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M20 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4.93 19.07l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        `;
+    }
+
+    function svgMoon() {
+        return `
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+    }
+
+    function updateToggle(theme) {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+
+        const isDark = theme === 'dark';
+        // ✅ 目前是暗色 → 顯示太陽（切回亮色）；目前是亮色 → 顯示月亮（切到暗色）
+        btn.innerHTML = isDark ? svgSun() : svgMoon();
+        btn.setAttribute('aria-label', isDark ? '切換為亮色模式' : '切換為暗色模式');
+        btn.title = isDark ? '切換為亮色模式' : '切換為暗色模式';
+    }
+
+    // 初次套用（若 head preload 已套用，這裡只負責同步按鈕）
+    document.addEventListener('DOMContentLoaded', () => {
+        const theme = effectiveTheme();
+        applyTheme(theme);
+        updateToggle(theme);
+
+        const btn = document.getElementById('theme-toggle');
+        if (btn && !btn.__kmdbBound) {
+            btn.__kmdbBound = true;
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleTheme();
+            });
+        }
+    });
+
+    // 系統主題變更：只有在使用者未手動指定時跟著走
+    try {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        if (mq && mq.addEventListener) {
+            mq.addEventListener('change', () => {
+                if (!getSavedTheme()) {
+                    const t = systemTheme();
+                    applyTheme(t);
+                    updateToggle(t);
+                }
+            });
+        }
+    } catch (e) {}
+})();
+
+
 // ================= 數據與設定區 =================
     
     const availableElections = [
@@ -219,12 +331,6 @@
         {file: "elections/I/I2014A-6.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮金水里長選舉",summaryData: null},
         {file: "elections/I/I2014A-7.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮古城里長選舉",summaryData: null},
         {file: "elections/I/I2014A-8.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮珠沙里長選舉",summaryData: null},
-        {file: "elections/I/I2014B-1.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉古寧村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-2.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉安美村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-3.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉湖埔村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-4.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉榜林村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-5.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉盤山村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-6.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉后盤村長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
@@ -624,84 +730,6 @@ default:
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
-
-    // ================= 顯示模式切換（一般 / 暗色） =================
-    const THEME_KEY = 'kmTheme'; // localStorage key（與 index.html 內的預載入一致）
-
-    function getSystemTheme() {
-        try {
-            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        } catch (e) {
-            return 'light';
-        }
-    }
-
-    function setTheme(theme, persist = false) {
-        const t = (theme === 'dark') ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', t);
-
-        if (persist) {
-            try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
-        }
-
-        // 同步更新按鈕 icon/提示
-        const btn = document.getElementById('theme-toggle-btn');
-        if (btn) {
-            const isDark = (t === 'dark');
-            btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
-            btn.setAttribute('aria-label', btn.title);
-
-            // 太陽 / 月亮（stroke 使用 currentColor）
-            btn.innerHTML = isDark
-                ? `
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/>
-                        <path d="M12 2.5V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 19V21.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M4.5 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M22 12H19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M5.1 5.1L6.9 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M17.1 17.1L18.9 18.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M18.9 5.1L17.1 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M6.9 17.1L5.1 18.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  `
-                : `
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3a7 7 0 1 0 11.2 11.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
-                  `;
-        }
-    }
-
-    function initThemeToggle() {
-        const btn = document.getElementById('theme-toggle-btn');
-        // 沒有按鈕也沒關係：仍維持 data-theme（index.html 已先預載入）
-        let saved = null;
-        try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
-
-        // 如果 index.html 已經套用 data-theme，仍以 saved 優先（避免不同步）
-        const initial = (saved === 'dark' || saved === 'light') ? saved : (document.documentElement.getAttribute('data-theme') || getSystemTheme());
-        setTheme(initial, false);
-
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-                const next = (current === 'dark') ? 'light' : 'dark';
-                setTheme(next, true);
-            });
-        }
-
-        // 如果使用者沒手動指定（沒有 saved），就跟著系統深淺色自動切換
-        try {
-            const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-            if (mq && typeof mq.addEventListener === 'function' && !(saved === 'dark' || saved === 'light')) {
-                mq.addEventListener('change', (e) => setTheme(e.matches ? 'dark' : 'light', false));
-            }
-        } catch (e) {}
-    }
-
-
     
     // ================= 歷史記錄 API 輔助函式 =================
     
@@ -2743,7 +2771,6 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
-        initThemeToggle();
         dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
         
         Promise.all([
