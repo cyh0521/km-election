@@ -225,6 +225,7 @@
         {file: "elections/I/I2014B-4.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉榜林村長選舉",summaryData: null},
         {file: "elections/I/I2014B-5.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉盤山村長選舉",summaryData: null},
         {file: "elections/I/I2014B-6.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉后盤村長選舉",summaryData: null},
+        {file: "elections/I/I2014C-1.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮新市里長選舉",summaryData: null},
         {file: "elections/I/I2014C-2.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮山外里長選舉",summaryData: null},
         {file: "elections/I/I2014C-3.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮溪湖里長選舉",summaryData: null},
         {file: "elections/I/I2014C-4.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮蓮庵里長選舉",summaryData: null},
