@@ -383,8 +383,7 @@ if (isReferendumType(s)) return true;
     `;
     btn.addEventListener('click', () => renderCandidateDirectory(true));
 
-    const actions = header.querySelector('.header-actions');
-    (actions || header).appendChild(btn);
+    header.appendChild(btn);
   }
 
   function renderShell() {

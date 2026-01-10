@@ -47,11 +47,10 @@ header{
     pointer-events: none;
 }
 .cd-header-btn:hover{
-    transform: translateY(-50%) scale(1.04);
-    filter: none;
+    transform: translateY(-50%) scale(1.08);
+    filter: drop-shadow(0 6px 12px rgba(56,135,176,0.55));
     color: #fff;
 }
-
 .cd-header-btn:hover::before{ opacity: 1; }
 .cd-header-btn:active{
     transform: translateY(-50%) scale(0.98);
@@ -61,21 +60,6 @@ header{
     outline-offset: 3px;
 }
 .cd-header-btn svg{ width: 20px; height: 20px; opacity: 0.95; }
-
-/* ✅ 若 header 有 .header-actions（含「顯示模式」），改用 flex 佈局，避免兩顆 icon 互相遮擋 */
-header .header-actions .cd-header-btn{
-    position: static;
-    right: auto;
-    top: auto;
-    transform: none;
-}
-header .header-actions .cd-header-btn:hover{
-    transform: scale(1.04);
-    filter: none;
-}
-header .header-actions .cd-header-btn:active{
-    transform: scale(0.98);
-}
 
 /* === Candidate Directory 主畫面 === */
 .cd-wrap{
@@ -680,94 +664,143 @@ select.cd-input{
 /*（保險）讓展開的那個欄位浮到上層，避免被相鄰欄位蓋住 */
 .cd-multi.open{ z-index: 2000; }
 
+
+/* === THEME:DARK:BEGIN === */
 /* =========================================================
-   Dark mode (Candidate Directory)
+   Kelvin / SNW  現代艦橋風（Candidate Directory）
    ========================================================= */
-html[data-theme="dark"]{
-    --cd-primary: var(--primary, #2DE2E6);
-    --cd-secondary: var(--secondary, #0B1220);
-    --cd-bg: var(--bg, #060A12);
-    --cd-card-bg: var(--card-bg, rgba(255,255,255,0.06));
-    --cd-text: var(--text-main, rgba(255,255,255,0.92));
-    --cd-sub: var(--text-sub, rgba(255,255,255,0.68));
-    --cd-border: var(--border, rgba(255,255,255,0.12));
+
+:root[data-theme="dark"]{
+  --cd-primary: var(--primary, #2DE2E6);
+  --cd-secondary: var(--secondary, #0B1220);
+  --cd-bg: var(--bg, #060A12);
+  --cd-card-bg: var(--card-bg, rgba(255,255,255,0.06));
+  --cd-text: var(--text-main, rgba(255,255,255,0.92));
+  --cd-sub: var(--text-sub, rgba(255,255,255,0.68));
+  --cd-border: var(--border, rgba(255,255,255,0.12));
+
+  --cd-glass: rgba(255,255,255,0.06);
+  --cd-glass-strong: rgba(255,255,255,0.10);
+  --cd-glass-border: rgba(255,255,255,0.14);
 }
 
+/* Header icon button: neon hover */
 html[data-theme="dark"] .cd-header-btn{
-    color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.88);
+}
+html[data-theme="dark"] .cd-header-btn::before{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(45,226,230,0.38) 0%, rgba(45,226,230,0.00) 62%),
+    radial-gradient(circle at 80% 80%, rgba(120,92,255,0.22) 0%, rgba(120,92,255,0.00) 60%);
 }
 
+/* Panel */
 html[data-theme="dark"] .cd-panel.card{
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-    border-radius: 18px;
+  background: var(--cd-glass);
+  border: 1px solid var(--cd-glass-border);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  border-radius: 18px;
 }
 html[data-theme="dark"] .cd-title{
-    color: rgba(255,255,255,0.92);
-    border-left-color: rgba(45,226,230,0.75);
+  color: rgba(255,255,255,0.92);
+  border-left-color: rgba(45,226,230,0.75);
 }
 html[data-theme="dark"] .cd-count{ color: var(--cd-sub); }
 html[data-theme="dark"] .cd-field label{ color: rgba(255,255,255,0.68); }
 
-html[data-theme="dark"] .cd-input,
-html[data-theme="dark"] .cd-select-like{
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14);
-    color: rgba(255,255,255,0.92);
+/* Controls */
+html[data-theme="dark"] .cd-input, html[data-theme="dark"] .cd-select-like{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92);
 }
 html[data-theme="dark"] .cd-input::placeholder{ color: rgba(255,255,255,0.45); }
-html[data-theme="dark"] .cd-input:focus,
-html[data-theme="dark"] .cd-select-like:focus-within{
-    border-color: rgba(45,226,230,0.40);
-    box-shadow: 0 0 0 3px rgba(45,226,230,0.16);
+html[data-theme="dark"] select.cd-input{
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5' fill='none' stroke='%23B9C6D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+html[data-theme="dark"] .cd-input:focus, html[data-theme="dark"] .cd-select-like:focus-within{
+  border-color: rgba(45,226,230,0.40);
+  box-shadow: 0 0 0 3px rgba(45,226,230,0.16);
 }
 html[data-theme="dark"] .cd-select-like .cd-placeholder{ color: rgba(255,255,255,0.48); }
-html[data-theme="dark"] .cd-select-like .cd-caret{ border-top-color: rgba(255,255,255,0.60); }
+html[data-theme="dark"] .cd-select-like .cd-caret{
+  border-top-color: rgba(255,255,255,0.60);
+}
 
+/* Dropdown */
 html[data-theme="dark"] .cd-dropdown{
-    background: rgba(15,22,36,0.92);
-    border: 1px solid rgba(255,255,255,0.14);
-    box-shadow: 0 22px 44px rgba(0,0,0,0.55);
-    backdrop-filter: blur(10px) saturate(140%);
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
+  background: rgba(15,22,36,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 22px 44px rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
 }
 html[data-theme="dark"] .cd-opt:hover{ background: rgba(45,226,230,0.10); }
 html[data-theme="dark"] .cd-opt .cd-opt-name{ color: rgba(255,255,255,0.92); }
 html[data-theme="dark"] .cd-opt .cd-opt-meta{ color: rgba(255,255,255,0.62); }
-html[data-theme="dark"] .cd-opt-all{ border-bottom-color: rgba(255,255,255,0.10); }
+html[data-theme="dark"] .cd-opt-all{
+  border-bottom-color: rgba(255,255,255,0.10);
+}
 
+/* Reset button */
 html[data-theme="dark"] .cd-reset-btn{
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14);
-    color: rgba(255,255,255,0.86);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.86);
 }
 html[data-theme="dark"] .cd-reset-btn:hover{
-    border-color: rgba(45,226,230,0.34);
-    box-shadow: 0 18px 34px rgba(0,0,0,0.50), 0 0 22px rgba(45,226,230,0.12);
+  border-color: rgba(45,226,230,0.34);
+  box-shadow: 0 18px 34px rgba(0,0,0,0.50), 0 0 22px rgba(45,226,230,0.12);
 }
 
+/* Results cards */
 html[data-theme="dark"] .cd-result-card.card{
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14);
-    border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
 }
 html[data-theme="dark"] .cd-result-card.card:hover{
-    border-color: rgba(45,226,230,0.30);
-    box-shadow: 0 16px 44px rgba(0,0,0,0.55), 0 0 22px rgba(45,226,230,0.12);
+  border-color: rgba(45,226,230,0.30);
+  box-shadow: 0 16px 44px rgba(0,0,0,0.55), 0 0 22px rgba(45,226,230,0.12);
 }
-html[data-theme="dark"] .cd-name,
-html[data-theme="dark"] .cd-result-card .profile-info h2{ color: rgba(255,255,255,0.92); }
-html[data-theme="dark"] .cd-meta,
-html[data-theme="dark"] .cd-result-card .profile-detail{ color: rgba(255,255,255,0.66); }
+
+html[data-theme="dark"] .cd-name, html[data-theme="dark"] .cd-result-card .profile-info h2{ color: rgba(255,255,255,0.92); }
+html[data-theme="dark"] .cd-meta, html[data-theme="dark"] .cd-result-card .profile-detail{ color: rgba(255,255,255,0.66); }
 
 html[data-theme="dark"] .cd-photo{
-    border-color: rgba(255,255,255,0.14);
-    background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
 }
 html[data-theme="dark"] .cd-pill{
-    border-color: rgba(255,255,255,0.14);
-    background: rgba(45,226,230,0.10);
-    color: rgba(255,255,255,0.88);
+  border-color: rgba(255,255,255,0.14);
+  background: rgba(45,226,230,0.10);
+  color: rgba(255,255,255,0.88);
 }
+
+html[data-theme="dark"] .cd-history{
+  border-top-color: rgba(255,255,255,0.12);
+}
+html[data-theme="dark"] .cd-history-item{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+html[data-theme="dark"] .cd-year{
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.80);
+}
+html[data-theme="dark"] .cd-party{
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.88);
+}
+html[data-theme="dark"] .cd-win{ color: #FF4A8D; }
+html[data-theme="dark"] .cd-lose{ color: rgba(255,255,255,0.62); }
+
+html[data-theme="dark"] .cd-empty{ color: rgba(255,255,255,0.68); }
+
+/* Mobile: keep readability */
+@media (max-width: 520px){
+  html[data-theme="dark"] .cd-input{ background: rgba(255,255,255,0.07); }
+}
+/* === THEME:DARK:END === */
