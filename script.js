@@ -674,24 +674,30 @@ default:
             btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
             btn.setAttribute('aria-label', btn.title);
 
-            // 太陽 / 月亮（stroke 使用 currentColor）
+            // 顯示模式 icon（與「候選人檢索」同樣的線條風格 / 尺寸，且不做光暈）
             btn.innerHTML = isDark
                 ? `
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/>
-                        <path d="M12 2.5V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 19V21.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M4.5 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M22 12H19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M5.1 5.1L6.9 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M17.1 17.1L18.9 18.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M18.9 5.1L17.1 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M6.9 17.1L5.1 18.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <!-- screen -->
+                        <rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M9 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <!-- sun -->
+                        <circle cx="12" cy="11" r="2.8" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 7.6v-1.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 15.5v-1.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8.5 11H7.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16.6 11h-1.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                   `
                 : `
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3a7 7 0 1 0 11.2 11.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <!-- screen -->
+                        <rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M9 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <!-- moon -->
+                        <path d="M15.8 12.8A4.2 4.2 0 0 1 11.2 8.2a3.6 3.6 0 1 0 4.6 4.6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   `;
         }
@@ -796,6 +802,8 @@ function normalizeText(str) {
                     photo
                 };
             }
+            // ✅ 回報載入進度（不影響其他功能）
+            if (typeof window.__kmdbLoadingTick === 'function') window.__kmdbLoadingTick();
         } catch (e) {
             console.warn("載入候選人資料失敗或檔案不存在", e);
         }
@@ -1290,6 +1298,10 @@ function extractCountySummary(text) {
             } catch (error) {
                 console.error(`載入 ${e.file} 摘要失敗:`, error.message);
                 e.summaryData = null;}
+            finally {
+                // ✅ 回報載入進度（每個摘要 csv 完成就 +1）
+                if (typeof window.__kmdbLoadingTick === 'function') window.__kmdbLoadingTick();
+            }
             return e;
         });
 
@@ -2767,7 +2779,36 @@ dom.breadcrumb.innerHTML = html;
 
     (function init() {
         initThemeToggle();
-        dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
+        // 首次載入：票軌數據載入進度（summary csv + candidates.csv）
+        const totalCsv = (Array.isArray(availableElections) ? availableElections.length : 0) + 1;
+        let loadedCsv = 0;
+
+        const renderLoading = () => {
+            const pct = totalCsv > 0 ? Math.round((loadedCsv / totalCsv) * 100) : 0;
+            dom.content.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-title">正在載入票軌數據</div>
+                    <div class="loading-progress" aria-label="載入進度" aria-valuemin="0" aria-valuemax="${totalCsv}" aria-valuenow="${loadedCsv}" role="progressbar">
+                        <div class="loading-progress-bar" style="width:${pct}%;"></div>
+                    </div>
+                    <div class="loading-count">${loadedCsv}/${totalCsv}</div>
+                </div>
+            `;
+        };
+
+        // 讓載入函式可回報進度（不影響既有功能）
+        window.__kmdbLoadingTick = () => {
+            loadedCsv = Math.min(totalCsv, loadedCsv + 1);
+            const bar = document.querySelector('.loading-progress-bar');
+            const count = document.querySelector('.loading-count');
+            const wrap = document.querySelector('.loading-progress');
+            const pct = totalCsv > 0 ? Math.round((loadedCsv / totalCsv) * 100) : 0;
+            if (bar) bar.style.width = pct + '%';
+            if (count) count.textContent = `${loadedCsv}/${totalCsv}`;
+            if (wrap) wrap.setAttribute('aria-valuenow', String(loadedCsv));
+        };
+
+        renderLoading();
         
         Promise.all([
             loadAllElectionSummaries(availableElections),

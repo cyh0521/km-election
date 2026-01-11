@@ -31,33 +31,21 @@ header{
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+    /* 僅保留輕微放大，不要光暈/發光 */
+    transition: transform 0.15s ease, opacity 0.15s ease;
     -webkit-tap-highlight-color: transparent;
 }
-.cd-header-btn::before{
-    content: "";
-    position: absolute;
-    inset: -7px;
-    border-radius: 999px;
-    background:
-        radial-gradient(circle at 30% 30%, rgba(56,135,176,0.45) 0%, rgba(56,135,176,0.00) 60%),
-        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.00) 55%);
-    opacity: 0;
-    transition: opacity 0.18s ease;
-    pointer-events: none;
-}
 .cd-header-btn:hover{
-    transform: translateY(-50%) scale(1.08);
-    filter: drop-shadow(0 6px 12px rgba(56,135,176,0.55));
+    transform: translateY(-50%) scale(1.06);
     color: #fff;
 }
-.cd-header-btn:hover::before{ opacity: 1; }
 .cd-header-btn:active{
     transform: translateY(-50%) scale(0.98);
 }
 .cd-header-btn:focus-visible{
-    outline: 3px solid rgba(56,135,176,0.35);
-    outline-offset: 3px;
+    outline: 2px solid rgba(255,255,255,0.75);
+    outline-offset: 2px;
+    border-radius: 10px;
 }
 .cd-header-btn svg{ width: 20px; height: 20px; opacity: 0.95; }
 
@@ -688,11 +676,7 @@ select.cd-input{
 html[data-theme="dark"] .cd-header-btn{
   color: rgba(255,255,255,0.88);
 }
-html[data-theme="dark"] .cd-header-btn::before{
-  background:
-    radial-gradient(circle at 30% 30%, rgba(45,226,230,0.38) 0%, rgba(45,226,230,0.00) 62%),
-    radial-gradient(circle at 80% 80%, rgba(120,92,255,0.22) 0%, rgba(120,92,255,0.00) 60%);
-}
+
 
 /* Panel */
 html[data-theme="dark"] .cd-panel.card{
