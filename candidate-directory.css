@@ -31,27 +31,14 @@ header{
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+    transition: transform 0.15s ease, opacity 0.15s ease;
     -webkit-tap-highlight-color: transparent;
 }
-.cd-header-btn::before{
-    content: "";
-    position: absolute;
-    inset: -7px;
-    border-radius: 999px;
-    background:
-        radial-gradient(circle at 30% 30%, rgba(56,135,176,0.45) 0%, rgba(56,135,176,0.00) 60%),
-        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.00) 55%);
-    opacity: 0;
-    transition: opacity 0.18s ease;
-    pointer-events: none;
-}
 .cd-header-btn:hover{
-    transform: translateY(-50%) scale(1.08);
-    filter: drop-shadow(0 6px 12px rgba(56,135,176,0.55));
+    transform: translateY(-50%) scale(1.06);
+    opacity: 1;
     color: #fff;
 }
-.cd-header-btn:hover::before{ opacity: 1; }
 .cd-header-btn:active{
     transform: translateY(-50%) scale(0.98);
 }
@@ -665,113 +652,141 @@ select.cd-input{
 .cd-multi.open{ z-index: 2000; }
 
 
+/* === THEME:DARK:BEGIN === */
 /* =========================================================
-   Candidate Directory — UI Refresh v2（與主站一致）
-   - 僅改外觀：維持你的欄位/多選/卡片/Modal 互動
-   - 加強下拉層級與點擊命中（避免卡住/點不到）
+   Kelvin / SNW  現代艦橋風（Candidate Directory）
    ========================================================= */
 
-:root{
-  --cd-primary: var(--primary, #38bdf8);
-  --cd-secondary: var(--secondary, #0b1320);
-  --cd-bg: var(--bg, #070b14);
-  --cd-card-bg: var(--card-bg, rgba(15,23,42,0.92));
-  --cd-text: var(--text-main, #e5e7eb);
-  --cd-sub: var(--text-sub, #94a3b8);
-  --cd-border: var(--border, rgba(148,163,184,0.18));
+:root[data-theme="dark"]{
+  --cd-primary: var(--primary, #2DE2E6);
+  --cd-secondary: var(--secondary, #0B1220);
+  --cd-bg: var(--bg, #060A12);
+  --cd-card-bg: var(--card-bg, rgba(255,255,255,0.06));
+  --cd-text: var(--text-main, rgba(255,255,255,0.92));
+  --cd-sub: var(--text-sub, rgba(255,255,255,0.68));
+  --cd-border: var(--border, rgba(255,255,255,0.12));
+
+  --cd-glass: rgba(255,255,255,0.06);
+  --cd-glass-strong: rgba(255,255,255,0.10);
+  --cd-glass-border: rgba(255,255,255,0.14);
 }
 
-/* 檢索面板：深色資訊面板 */
-.cd-panel.card{
-  background: rgba(15,23,42,0.78);
-  border: 1px solid rgba(148,163,184,0.16);
+/* Header icon button: neon hover */
+html[data-theme="dark"] .cd-header-btn{
+  color: rgba(255,255,255,0.88);
+}
+
+/* Panel */
+html[data-theme="dark"] .cd-panel.card{
+  background: var(--cd-glass);
+  border: 1px solid var(--cd-glass-border);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
   border-radius: 18px;
-  box-shadow: 0 14px 30px rgba(0,0,0,0.28);
+}
+html[data-theme="dark"] .cd-title{
+  color: rgba(255,255,255,0.92);
+  border-left-color: rgba(45,226,230,0.75);
+}
+html[data-theme="dark"] .cd-count{ color: var(--cd-sub); }
+html[data-theme="dark"] .cd-field label{ color: rgba(255,255,255,0.68); }
+
+/* Controls */
+html[data-theme="dark"] .cd-input, html[data-theme="dark"] .cd-select-like{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92);
+}
+html[data-theme="dark"] .cd-input::placeholder{ color: rgba(255,255,255,0.45); }
+html[data-theme="dark"] select.cd-input{
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5' fill='none' stroke='%23B9C6D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+  padding-right: 38px;
+}
+html[data-theme="dark"] .cd-input:focus, html[data-theme="dark"] .cd-select-like:focus-within{
+  border-color: rgba(45,226,230,0.40);
+  box-shadow: 0 0 0 3px rgba(45,226,230,0.16);
+}
+html[data-theme="dark"] .cd-select-like .cd-placeholder{ color: rgba(255,255,255,0.48); }
+html[data-theme="dark"] .cd-select-like .cd-caret{
+  border-top-color: rgba(255,255,255,0.60);
 }
 
-/* 標題列 */
-.cd-title{
-  color: rgba(226,232,240,0.95);
-  border-left-color: rgba(56,189,248,0.85);
+/* Dropdown */
+html[data-theme="dark"] .cd-dropdown{
+  background: rgba(15,22,36,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 22px 44px rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
 }
-.cd-count{ color: rgba(148,163,184,0.95); }
-
-/* 欄位 */
-.cd-field label{ color: rgba(148,163,184,0.95); }
-.cd-input, .cd-select-like{
-  background: rgba(2,6,23,0.35);
-  border: 1px solid rgba(148,163,184,0.18);
-  color: rgba(226,232,240,0.95);
-}
-.cd-input::placeholder{ color: rgba(148,163,184,0.70); }
-
-.cd-input:focus, .cd-select-like:focus-within{
-  border-color: rgba(56,189,248,0.45);
-  box-shadow: 0 0 0 3px rgba(56,189,248,0.14);
+html[data-theme="dark"] .cd-opt:hover{ background: rgba(45,226,230,0.10); }
+html[data-theme="dark"] .cd-opt .cd-opt-name{ color: rgba(255,255,255,0.92); }
+html[data-theme="dark"] .cd-opt .cd-opt-meta{ color: rgba(255,255,255,0.62); }
+html[data-theme="dark"] .cd-opt-all{
+  border-bottom-color: rgba(255,255,255,0.10);
 }
 
-/* 原生 select 的箭頭（深色版） */
-select.cd-input{
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5' fill='none' stroke='%23a3b1c6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+/* Reset button */
+html[data-theme="dark"] .cd-reset-btn{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.86);
+}
+html[data-theme="dark"] .cd-reset-btn:hover{
+  border-color: rgba(45,226,230,0.34);
+  box-shadow: 0 18px 34px rgba(0,0,0,0.50), 0 0 22px rgba(45,226,230,0.12);
 }
 
-/* 多選下拉：提高層級、確保不吃不到點擊 */
-.cd-multi{ position: relative; }
-.cd-multi.open{ z-index: 6000; }
-.cd-dropdown{
-  background: rgba(15,23,42,0.98);
-  border: 1px solid rgba(148,163,184,0.20);
-  box-shadow: 0 24px 54px rgba(0,0,0,0.45);
-}
-.cd-opt:hover{ background: rgba(56,189,248,0.10); }
-.cd-opt .cd-opt-name{ color: rgba(226,232,240,0.95); }
-.cd-opt .cd-opt-meta{ color: rgba(148,163,184,0.95); }
-.cd-year{ background: rgba(226,232,240,0.10); color: rgba(226,232,240,0.85); }
-.cd-history-item{ background: rgba(226,232,240,0.04); }
-.cd-win{ color: rgba(251,113,133,0.95); }
-
-/* 清除條件：看起來像控制列的一部分 */
-.cd-reset-btn, .cd-reset-btn.cd-reset-ingrid{
-  background: rgba(226,232,240,0.06);
-  border: 1px solid rgba(148,163,184,0.18);
-  color: rgba(226,232,240,0.92);
-}
-.cd-reset-btn:hover, .cd-reset-btn.cd-reset-ingrid:hover{
-  border-color: rgba(56,189,248,0.40);
-  box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
-}
-
-/* 結果卡：改成「票根卡」視覺 */
-.cd-result-card.card{
-  background:
-    radial-gradient(600px 220px at 10% 10%, rgba(56,189,248,0.14) 0%, rgba(56,189,248,0.00) 60%),
-    rgba(15,23,42,0.90);
-  border: 1px solid rgba(148,163,184,0.16);
+/* Results cards */
+html[data-theme="dark"] .cd-result-card.card{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 18px;
-  box-shadow: 0 16px 34px rgba(0,0,0,0.32);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
 }
-.cd-result-card.card:hover{
-  border-color: rgba(56,189,248,0.30);
-  box-shadow: 0 22px 44px rgba(0,0,0,0.40);
-}
-
-/* 候選人名稱與資訊 */
-.cd-name{ color: rgba(226,232,240,0.95); }
-.cd-meta{ color: rgba(148,163,184,0.95); }
-.cd-pill{
-  background: rgba(56,189,248,0.10);
-  border-color: rgba(56,189,248,0.18);
-  color: rgba(226,232,240,0.92);
-}
-.cd-photo{
-  border-color: rgba(148,163,184,0.18);
-  background: rgba(226,232,240,0.06);
+html[data-theme="dark"] .cd-result-card.card:hover{
+  border-color: rgba(45,226,230,0.30);
+  box-shadow: 0 16px 44px rgba(0,0,0,0.55), 0 0 22px rgba(45,226,230,0.12);
 }
 
-/* 手機：避免重陰影造成卡頓 */
+html[data-theme="dark"] .cd-name, html[data-theme="dark"] .cd-result-card .profile-info h2{ color: rgba(255,255,255,0.92); }
+html[data-theme="dark"] .cd-meta, html[data-theme="dark"] .cd-result-card .profile-detail{ color: rgba(255,255,255,0.66); }
+
+html[data-theme="dark"] .cd-photo{
+  border-color: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+}
+html[data-theme="dark"] .cd-pill{
+  border-color: rgba(255,255,255,0.14);
+  background: rgba(45,226,230,0.10);
+  color: rgba(255,255,255,0.88);
+}
+
+html[data-theme="dark"] .cd-history{
+  border-top-color: rgba(255,255,255,0.12);
+}
+html[data-theme="dark"] .cd-history-item{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+html[data-theme="dark"] .cd-year{
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.80);
+}
+html[data-theme="dark"] .cd-party{
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.88);
+}
+html[data-theme="dark"] .cd-win{ color: #FF4A8D; }
+html[data-theme="dark"] .cd-lose{ color: rgba(255,255,255,0.62); }
+
+html[data-theme="dark"] .cd-empty{ color: rgba(255,255,255,0.68); }
+
+/* Mobile: keep readability */
 @media (max-width: 520px){
-  .cd-panel.card,
-  .cd-result-card.card{
-    box-shadow: 0 10px 20px rgba(0,0,0,0.28);
-  }
+  html[data-theme="dark"] .cd-input{ background: rgba(255,255,255,0.07); }
 }
+/* === THEME:DARK:END === */

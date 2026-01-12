@@ -22,7 +22,9 @@
         {file: "elections/B/B1998.csv",year: "1998",type: "區域立委",uiName: "1998年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1995.csv",year: "1995",type: "區域立委",uiName: "1995年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1992.csv",year: "1992",type: "區域立委",uiName: "1992年 立法委員選舉",summaryData: null},
-        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 增額立委選舉（福建省選舉區）",summaryData: null},
+        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 第六次增額立委選舉（福建省選舉區）",summaryData: null},
+        {file: "elections/B/B1975.csv",year: "1975",type: "區域立委",uiName: "1975年 第二次增額立委選舉（福建省選舉區）",summaryData: null},
+        {file: "elections/B/B1972.csv",year: "1972",type: "區域立委",uiName: "1972年 第一次增額立委選舉（福建省選舉區）",summaryData: null},
 
         {file: "elections/C/C2024.csv",year: "2024",type: "不分區立委",uiName: "2024年 不分區立委選舉",summaryData: null},
         {file: "elections/C/C2020.csv",year: "2020",type: "不分區立委",uiName: "2020年 不分區立委選舉",summaryData: null},
@@ -219,6 +221,43 @@
         {file: "elections/I/I2014A-6.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮金水里長選舉",summaryData: null},
         {file: "elections/I/I2014A-7.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮古城里長選舉",summaryData: null},
         {file: "elections/I/I2014A-8.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮珠沙里長選舉",summaryData: null},
+        {file: "elections/I/I2014B-1.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉古寧村長選舉",summaryData: null},
+        {file: "elections/I/I2014B-2.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉安美村長選舉",summaryData: null},
+        {file: "elections/I/I2014B-3.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉湖埔村長選舉",summaryData: null},
+        {file: "elections/I/I2014B-4.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉榜林村長選舉",summaryData: null},
+        {file: "elections/I/I2014B-5.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉盤山村長選舉",summaryData: null},
+        {file: "elections/I/I2014B-6.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉后盤村長選舉",summaryData: null},
+        {file: "elections/I/I2014C-1.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮新市里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-2.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮山外里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-3.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮溪湖里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-4.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮蓮庵里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-5.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮料羅里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-6.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮新湖里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-7.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮正義里長選舉",summaryData: null},
+        {file: "elections/I/I2014C-8.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮瓊林里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-1.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮汶沙里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-2.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮何斗里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-3.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮浦山里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-4.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮西園里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-5.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮官嶼里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-6.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮三山里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-7.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮大洋里長選舉",summaryData: null},
+        {file: "elections/I/I2014D-8.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮光前里長選舉",summaryData: null},
+        {file: "elections/I/I2014E-1.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉林湖村長選舉",summaryData: null},
+        {file: "elections/I/I2014E-2.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉黃埔村長選舉",summaryData: null},
+        {file: "elections/I/I2014E-3.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉西口村長選舉",summaryData: null},
+        {file: "elections/I/I2014E-4.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉上林村長選舉",summaryData: null},
+        {file: "elections/I/I2014E-5.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉上岐村長選舉",summaryData: null},
+        {file: "elections/I/I2014F-1.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉大坵村長選舉",summaryData: null},
+        {file: "elections/I/I2014F-2.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉小坵村長選舉",summaryData: null},
+        {file: "elections/I/I2010A-1.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮東門里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-2.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮南門里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-3.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮西門里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-4.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮北門里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-5.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮賢庵里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-6.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮金水里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-7.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮古城里長選舉",summaryData: null},
+        {file: "elections/I/I2010A-8.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮珠沙里長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
@@ -618,6 +657,123 @@ default:
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
+
+    // ================= 首次載入：票軌數據載入進度（CSV 計數） =================
+    let bootTotalCsv = 0;
+    let bootLoadedCsv = 0;
+
+    function renderBootLoadingUI(total) {
+        if (!dom.content) return;
+        bootTotalCsv = Math.max(0, parseInt(total, 10) || 0);
+        bootLoadedCsv = 0;
+        dom.content.innerHTML = `
+          <div class="loading-state">
+            <div class="loading-title">正在載入票軌數據</div>
+            <div class="loading-progress" aria-hidden="true">
+              <div class="loading-progress-bar" id="loading-progress-bar"></div>
+            </div>
+            <div class="loading-count" id="loading-count">0/${bootTotalCsv || 0}</div>
+          </div>
+        `;
+        updateBootProgress(0, bootTotalCsv);
+    }
+
+    function updateBootProgress(loaded, total) {
+        const bar = document.getElementById('loading-progress-bar');
+        const txt = document.getElementById('loading-count');
+        const t = Math.max(1, parseInt(total, 10) || 1);
+        const l = Math.max(0, parseInt(loaded, 10) || 0);
+        const pct = Math.min(100, Math.round((l / t) * 100));
+        if (bar) bar.style.width = pct + '%';
+        if (txt) txt.textContent = `${l}/${t}`;
+    }
+
+    function bootStep() {
+        bootLoadedCsv += 1;
+        updateBootProgress(bootLoadedCsv, bootTotalCsv);
+    }
+
+    // ================= 顯示模式切換（一般 / 暗色） =================
+    const THEME_KEY = 'kmTheme'; // localStorage key（與 index.html 內的預載入一致）
+
+    function getSystemTheme() {
+        try {
+            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        } catch (e) {
+            return 'light';
+        }
+    }
+
+    function setTheme(theme, persist = false) {
+        const t = (theme === 'dark') ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+
+        if (persist) {
+            try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+        }
+
+        // 同步更新按鈕 icon/提示
+        const btn = document.getElementById('theme-toggle-btn');
+        if (btn) {
+            const isDark = (t === 'dark');
+            btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
+            btn.setAttribute('aria-label', btn.title);
+
+            // 螢幕 + 太陽/月亮（簡化、置中；stroke 使用 currentColor）
+            // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
+            // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
+            btn.innerHTML = isDark
+                ? `
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 7.6V8.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 15.3V16.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M7.6 12H8.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M15.3 12H16.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8.6 8.6L9.4 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M14.6 14.6L15.4 15.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M15.4 8.6L14.6 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M9.4 14.6L8.6 15.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  `
+                : `
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
+                        <path d="M15.9 14.9A4.7 4.7 0 0 1 9.1 8.1a3.8 3.8 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                  `;
+        }
+    }
+
+    function initThemeToggle() {
+        const btn = document.getElementById('theme-toggle-btn');
+        // 沒有按鈕也沒關係：仍維持 data-theme（index.html 已先預載入）
+        let saved = null;
+        try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
+
+        // 如果 index.html 已經套用 data-theme，仍以 saved 優先（避免不同步）
+        const initial = (saved === 'dark' || saved === 'light') ? saved : (document.documentElement.getAttribute('data-theme') || getSystemTheme());
+        setTheme(initial, false);
+
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                const next = (current === 'dark') ? 'light' : 'dark';
+                setTheme(next, true);
+            });
+        }
+
+        // 如果使用者沒手動指定（沒有 saved），就跟著系統深淺色自動切換
+        try {
+            const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            if (mq && typeof mq.addEventListener === 'function' && !(saved === 'dark' || saved === 'light')) {
+                mq.addEventListener('change', (e) => setTheme(e.matches ? 'dark' : 'light', false));
+            }
+        } catch (e) {}
+    }
+
+
     
     // ================= 歷史記錄 API 輔助函式 =================
     
@@ -691,6 +847,9 @@ function normalizeText(str) {
             }
         } catch (e) {
             console.warn("載入候選人資料失敗或檔案不存在", e);
+        } finally {
+            // 首次載入進度：candidates.csv 也算一個 CSV
+            if (bootTotalCsv > 0) bootStep();
         }
     }
     
@@ -1183,6 +1342,10 @@ function extractCountySummary(text) {
             } catch (error) {
                 console.error(`載入 ${e.file} 摘要失敗:`, error.message);
                 e.summaryData = null;}
+            finally {
+                // 更新首次載入進度（不論成功/失敗都算讀取完成）
+                if (bootTotalCsv > 0) bootStep();
+            }
             return e;
         });
 
@@ -2659,7 +2822,9 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
-        dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
+        initThemeToggle();
+        // 首次載入：票軌數據（所有選舉 CSV + candidates.csv）
+        renderBootLoadingUI((availableElections?.length || 0) + 1);
         
         Promise.all([
             loadAllElectionSummaries(availableElections),
