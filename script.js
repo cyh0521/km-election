@@ -255,6 +255,8 @@
         {file: "elections/I/I2014E-5.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉上岐村長選舉",summaryData: null},
         {file: "elections/I/I2014F-1.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2014F-2.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉小坵村長選舉",summaryData: null},
+//        {file: "elections/I/I2012D-8.csv",year: "2012",type: "村里長",uiName: "2012年 金沙鎮光前里長補選",summaryData: null},
+//        {file: "elections/I/I2012A-3.csv",year: "2012",type: "村里長",uiName: "2012年 金城鎮西門里長補選",summaryData: null},
         {file: "elections/I/I2010A-1.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2010A-2.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2010A-3.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮西門里長選舉",summaryData: null},
