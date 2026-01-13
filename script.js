@@ -285,6 +285,12 @@
         {file: "elections/I/I2010D-8.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮光前里長選舉",summaryData: null},
         {file: "elections/I/I2010F-1.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2010F-2.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉小坵村長選舉",summaryData: null},
+        {file: "elections/I/I2010E-1.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉林湖村長選舉",summaryData: null},
+        {file: "elections/I/I2010E-2.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉黃埔村長選舉",summaryData: null},
+        {file: "elections/I/I2010E-3.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉西口村長選舉",summaryData: null},
+        {file: "elections/I/I2010E-4.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉上林村長選舉",summaryData: null},
+        {file: "elections/I/I2010E-5.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉上岐村長選舉",summaryData: null},
+
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
