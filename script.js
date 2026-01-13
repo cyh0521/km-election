@@ -23,9 +23,9 @@
         {file: "elections/B/B1995.csv",year: "1995",type: "區域立委",uiName: "1995年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1992.csv",year: "1992",type: "區域立委",uiName: "1992年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 第六次增額立委選舉",summaryData: null},
-        //{file: "elections/B/B1986.csv",year: "1986",type: "區域立委",uiName: "1986年 第五次增額立委選舉",summaryData: null},
-        //{file: "elections/B/B1983.csv",year: "1983",type: "區域立委",uiName: "1983年 第四次增額立委選舉",summaryData: null},
-        //{file: "elections/B/B1980.csv",year: "1980",type: "區域立委",uiName: "1980年 第三次增額立委選舉",summaryData: null},
+        {file: "elections/B/B1986.csv",year: "1986",type: "區域立委",uiName: "1986年 第五次增額立委選舉",summaryData: null},
+        {file: "elections/B/B1983.csv",year: "1983",type: "區域立委",uiName: "1983年 第四次增額立委選舉",summaryData: null},
+        {file: "elections/B/B1980.csv",year: "1980",type: "區域立委",uiName: "1980年 第三次增額立委選舉",summaryData: null},
         {file: "elections/B/B1975.csv",year: "1975",type: "區域立委",uiName: "1975年 第二次增額立委選舉",summaryData: null},
         {file: "elections/B/B1972.csv",year: "1972",type: "區域立委",uiName: "1972年 第一次增額立委選舉",summaryData: null},
 
