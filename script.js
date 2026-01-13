@@ -22,9 +22,12 @@
         {file: "elections/B/B1998.csv",year: "1998",type: "區域立委",uiName: "1998年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1995.csv",year: "1995",type: "區域立委",uiName: "1995年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1992.csv",year: "1992",type: "區域立委",uiName: "1992年 立法委員選舉",summaryData: null},
-        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 第六次增額立委選舉（福建省選舉區）",summaryData: null},
-        {file: "elections/B/B1975.csv",year: "1975",type: "區域立委",uiName: "1975年 第二次增額立委選舉（福建省選舉區）",summaryData: null},
-        {file: "elections/B/B1972.csv",year: "1972",type: "區域立委",uiName: "1972年 第一次增額立委選舉（福建省選舉區）",summaryData: null},
+        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 第六次增額立委選舉",summaryData: null},
+        //{file: "elections/B/B1986.csv",year: "1986",type: "區域立委",uiName: "1986年 第五次增額立委選舉",summaryData: null},
+        //{file: "elections/B/B1983.csv",year: "1983",type: "區域立委",uiName: "1983年 第四次增額立委選舉",summaryData: null},
+        //{file: "elections/B/B1980.csv",year: "1980",type: "區域立委",uiName: "1980年 第三次增額立委選舉",summaryData: null},
+        {file: "elections/B/B1975.csv",year: "1975",type: "區域立委",uiName: "1975年 第二次增額立委選舉",summaryData: null},
+        {file: "elections/B/B1972.csv",year: "1972",type: "區域立委",uiName: "1972年 第一次增額立委選舉",summaryData: null},
 
         {file: "elections/C/C2024.csv",year: "2024",type: "不分區立委",uiName: "2024年 不分區立委選舉",summaryData: null},
         {file: "elections/C/C2020.csv",year: "2020",type: "不分區立委",uiName: "2020年 不分區立委選舉",summaryData: null},
@@ -258,6 +261,30 @@
         {file: "elections/I/I2010A-6.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮金水里長選舉",summaryData: null},
         {file: "elections/I/I2010A-7.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮古城里長選舉",summaryData: null},
         {file: "elections/I/I2010A-8.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮珠沙里長選舉",summaryData: null},
+        {file: "elections/I/I2010B-1.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉古寧村長選舉",summaryData: null},
+        {file: "elections/I/I2010B-2.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉安美村長選舉",summaryData: null},
+        {file: "elections/I/I2010B-3.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉湖埔村長選舉",summaryData: null},
+        {file: "elections/I/I2010B-4.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉榜林村長選舉",summaryData: null},
+        {file: "elections/I/I2010B-5.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉盤山村長選舉",summaryData: null},
+        {file: "elections/I/I2010B-6.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉后盤村長選舉",summaryData: null},
+        {file: "elections/I/I2010C-1.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮新市里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-2.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮山外里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-3.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮溪湖里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-4.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮蓮庵里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-5.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮料羅里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-6.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮新湖里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-7.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮正義里長選舉",summaryData: null},
+        {file: "elections/I/I2010C-8.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮瓊林里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-1.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮汶沙里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-2.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮何斗里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-3.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮浦山里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-4.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮西園里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-5.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮官嶼里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-6.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮三山里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-7.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮大洋里長選舉",summaryData: null},
+        {file: "elections/I/I2010D-8.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮光前里長選舉",summaryData: null},
+        {file: "elections/I/I2010F-1.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉大坵村長選舉",summaryData: null},
+        {file: "elections/I/I2010F-2.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉小坵村長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
@@ -658,7 +685,7 @@ default:
         header: document.querySelector('header')
     };
 
-    // ================= 首次載入：票軌數據載入進度（CSV 計數） =================
+    // ================= 首次載入：票匭數據載入進度（CSV 計數） =================
     let bootTotalCsv = 0;
     let bootLoadedCsv = 0;
 
@@ -668,7 +695,7 @@ default:
         bootLoadedCsv = 0;
         dom.content.innerHTML = `
           <div class="loading-state">
-            <div class="loading-title">正在載入票軌數據</div>
+            <div class="loading-title">正在載入選票數據</div>
             <div class="loading-progress" aria-hidden="true">
               <div class="loading-progress-bar" id="loading-progress-bar"></div>
             </div>
