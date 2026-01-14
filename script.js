@@ -144,6 +144,9 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
+        {file: "elections/I/I2024D-7.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮大洋里長補選",summaryData: null},
+        {file: "elections/I/I2024D-8.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮光前里長補選",summaryData: null},
+        {file: "elections/I/I2023F-1.csv",year: "2023",type: "村里長",uiName: "2023年 烏坵鄉大坵村長補選",summaryData: null},
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
@@ -764,26 +767,18 @@ default:
             // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
             // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
             btn.innerHTML = isDark
-                ? `
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="2"/>
-                        <path d="M12 7.6V8.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 15.3V16.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7.6 12H8.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M15.3 12H16.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8.6 8.6L9.4 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M14.6 14.6L15.4 15.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M15.4 8.6L14.6 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M9.4 14.6L8.6 15.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  `
-                : `
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
-                        <path d="M15.9 14.9A4.7 4.7 0 0 1 9.1 8.1a3.8 3.8 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
-                  `;
+                 ? `
+                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="2"/>
+                       <path d="M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                       <path d="M6.3 6.3l1.6 1.6M16.1 16.1l1.6 1.6M17.7 6.3l-1.6 1.6M7.9 16.1l-1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                     </svg>
+`
+                 : `
+                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                     </svg>
+`;
         }
     }
 
@@ -1509,7 +1504,7 @@ function extractCountySummary(text) {
     /**
      * 生成表格內容 HTML (帶有動畫屬性)
      */
-    function generateTableBodyHTML(candidates, validVotes, animate, currentElectionYear, isPartyList) {
+    function generateTableBodyHTML(candidates, validVotes, animate, currentElectionYear, isPartyList, enableCandidateModal = true) {
         return candidates.map(c => {
             const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
             const partyColorHex = getPartyColor(c.party);
@@ -1530,8 +1525,9 @@ function extractCountySummary(text) {
             const bracketBadge = c.bracketText ? `<div class="bracket-label-badge">${c.bracketText}</div>` : '';
 
             const incumbentBadge = c.isIncumbent    ? '<span class="incumbent-badge">現</span>'    : '';
-            const nameClickAction = isPartyList ? 'event.stopPropagation()' : `event.stopPropagation(); showCandidateModal('${c.name}', '${currentElectionYear || ''}')`;
-            const nameLinkClass = isPartyList ? 'candidate-name' : 'candidate-name candidate-link';
+            const modalEnabled = !!enableCandidateModal;
+            const nameClickAction = (isPartyList || !modalEnabled) ? 'event.stopPropagation()' : `event.stopPropagation(); showCandidateModal('${c.name}', '${currentElectionYear || ''}')`;
+            const nameLinkClass = (isPartyList || !modalEnabled) ? 'candidate-name' : 'candidate-name candidate-link';
             const partyCellClass = isPartyList ? 'col-party hidden-party' : 'party-cell col-party';
             const partyCellHtml = `
                 <td class="${partyCellClass}">
@@ -1565,7 +1561,9 @@ function extractCountySummary(text) {
     function updateTableContent(cardId, candidates, validVotes, triggerAnimation = false, currentElectionYear, isPartyList = false) {
         const mainTableBody = document.querySelector(`#card-${cardId} table tbody`); 
         if (mainTableBody) {
-            mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList);
+            // 依目前選舉名稱判斷是否為總統選舉（總統不開候選人資訊小卡）
+            const enableCandidateModal = !(/總統/.test(appState.electionName || ''));
+            mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
         }
     }
     
@@ -1877,6 +1875,7 @@ function extractCountySummary(text) {
         appState.chartInstances = [];
 
         // 解析 uiName：例「2022年 金城鎮東門里長選舉」「2022年 金寧鄉古寧村長選舉」
+        // 也要支援補選：例「2024年 金沙鎮大洋里長補選」「2023年 烏坵鄉大坵村長補選」
         const villageSet = new Set();
         availableElections
             .filter(e => e.type === type && (e.uiName || '').includes(townName))
@@ -1886,11 +1885,11 @@ function extractCountySummary(text) {
                 const afterTownClean = (afterTown || '').replace(/\s+/g,'').trim();
 
                 let v = '';
-                const m = afterTownClean.match(/^(.+?)(里|村)長選舉$/);
+                const m = afterTownClean.match(/^(.+?)(里|村)長(?:選舉|補選)$/);
                 if (m) {
                     v = `${m[1]}${m[2]}`; // ✅ 保留「里/村」字尾：例如「東門里」「古寧村」
                 } else {
-                    v = afterTownClean.replace(/(里長|村長)\s*選舉\s*$/,'').trim();
+                    v = afterTownClean.replace(/(里長|村長)\s*(?:選舉|補選)\s*$/,'').trim();
                     // 保底：若解析後沒有「里/村」字尾，依原字串補回
                     if (v && !/[村里]$/.test(v)) {
                         if (afterTownClean.includes('村長')) v += '村';
@@ -2185,7 +2184,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             }
         } else if (shouldRenderTowns) {
             html += `<div class="main-section">
-                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
+                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span></div>
                 <div class="sub-area-grid">`;
            appState.data.townOrder.forEach(town => {
                 const townData = appState.data.towns[town];
@@ -2629,6 +2628,10 @@ dom.breadcrumb.innerHTML = html;
         // 公投/複決：雖然沿用「不顯示政黨欄」的規則，但名稱欄應顯示「選項」而非「政黨」
         const isReferendum = isReferendumElection(title) || isReferendumElection(appState.electionName);
 
+        // 總統選舉：點候選人姓名不開候選人資訊小卡
+        const isPresidential = /總統/.test(title) || /總統/.test(appState.electionName || '');
+        const enableCandidateModal = !isPresidential;
+
         function renderTableHeader(title, sortKey, style = '', className = '') {
            const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2649,7 +2652,7 @@ dom.breadcrumb.innerHTML = html;
            return `<th style="${style}" class="${headerClass}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
         }
         
-        const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList);
+        const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
         
         let footerHTML = '';
         if (seatsCount) {
