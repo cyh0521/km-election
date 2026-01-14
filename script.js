@@ -73,7 +73,6 @@
         {file: "elections/F/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金寧鄉",summaryData: null},
         {file: "elections/F/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金城鎮",summaryData: null},
 
-        {file: "elections/G/G2023F.csv",year: "2023",type: "鄉鎮長",uiName: "2023年 烏坵鄉長補選",summaryData: null},
         {file: "elections/G/G2022F.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G/G2022E.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烈嶼鄉長選舉",summaryData: null},
         {file: "elections/G/G2022D.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 金沙鎮長選舉",summaryData: null},
@@ -118,7 +117,6 @@
         {file: "elections/G/G1998B.csv",year: "1998",type: "鄉鎮長",uiName: "1998年 金寧鄉長選舉",summaryData: null},
         {file: "elections/G/G1998A.csv",year: "1998",type: "鄉鎮長",uiName: "1998年 金城鎮長選舉",summaryData: null},
 
-        {file: "elections/H/H2006E.csv",year: "2006",type: "鄉鎮民代表",uiName: "2006年 烈嶼鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2010F.csv",year: "2010",type: "鄉鎮民代表",uiName: "2010年 烏坵鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2010E.csv",year: "2010",type: "鄉鎮民代表",uiName: "2010年 烈嶼鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2010D.csv",year: "2010",type: "鄉鎮民代表",uiName: "2010年 金沙鎮民代表選舉",summaryData: null},
@@ -294,11 +292,6 @@
         {file: "elections/I/I2010E-5.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉上岐村長選舉",summaryData: null},
         {file: "elections/I/I2010F-1.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2010F-2.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉小坵村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-1.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉林湖村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-2.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉黃埔村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-3.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉西口村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-4.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉上林村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-5.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉上岐村長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
