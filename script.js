@@ -144,9 +144,6 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
-        {file: "elections/I/I2024D-7.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮大洋里長補選",summaryData: null},
-        {file: "elections/I/I2024D-8.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮光前里長補選",summaryData: null},
-        {file: "elections/I/I2023F-1.csv",year: "2023",type: "村里長",uiName: "2023年 烏坵鄉大坵村長補選",summaryData: null},
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
@@ -1278,47 +1275,32 @@ function loadData(file, uiName, pushState = true) {
 }
 
 function extractCountySummary(text) {
-        // 手機效能優化：避免建立龐大的 2D rows 陣列，改用逐行解析降低記憶體/GC 停頓
-        const lines = String(text || '').split('\n');
-        const trim = (s) => (s == null ? '' : String(s).trim());
+        const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
 
-        // 取前三行（忽略空白行）
-        let idx = 0;
-        const nextNonEmpty = () => {
-            while (idx < lines.length && !trim(lines[idx])) idx++;
-            return (idx < lines.length) ? lines[idx] : null;
-        };
+        if (rows.length < 4) return null;
 
-        const l0 = nextNonEmpty(); if (!l0) return null; idx++;
-        const l1 = nextNonEmpty(); if (!l1) return null; idx++;
-        const l2 = nextNonEmpty(); if (!l2) return null; idx++;
-
-        const r0 = trim(l0).split(',');
-        const r1 = trim(l1).split(',');
-        const r2 = trim(l2).split(',');
-
-        // 找出候選人欄位範圍（從第 2 欄起，直到遇到空白）
-        const headerRowIndices = [];
+        const headerRowIndices = []; 
         let currentIdx = 2;
-        while (r0[currentIdx] && r1[currentIdx]) {
+        while(rows[0][currentIdx] && rows[1][currentIdx]) {
             headerRowIndices.push(currentIdx);
             currentIdx++;
         }
-
-        const seatsCount = r1 && r1[0] ? trim(r1[0]) : "";
-
-        const VOTES_COL = currentIdx;
+        
+        const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
+        
+        const VOTES_COL = currentIdx; 
         const INVALID_COL = currentIdx + 1;
         const ELIGIBLE_COL = currentIdx + 2;
 
         const candInfo = [];
         let independentCounter = 1;
-
+        
         headerRowIndices.forEach(colIndex => {
-            const number = r0[colIndex] ? trim(r0[colIndex]) : '';
-            let name = r1[colIndex] ? trim(r1[colIndex]) : '';
-            let party = r2[colIndex] ? trim(r2[colIndex]) : '';
-
+            const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
+            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
+            let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
+           
+            // *** 修改：處理 [] 中的文字 ***
             const bracketMatch = name.match(/\[(.*?)\]/);
             const bracketText = bracketMatch ? bracketMatch[1] : null;
 
@@ -1330,144 +1312,78 @@ function extractCountySummary(text) {
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
-                if (party === '無黨籍') {
+                 if (party === '無黨籍') {
                     if (!partyColors[`無黨籍-${independentCounter}`] && independentCounter <= 4) {
-                        partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍'];
-                    }
+                       partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍'];        }
                     party = `無黨籍-${independentCounter}`;
                     independentCounter++;
                 }
-
-                candInfo.push({
-                    number: String(number),
-                    name,
-                    party,
-                    colIndex,
-                    isWinner,
-                    isWomenQuota,
-                    isIncumbent,
-                    bracketText
-                });
-            }
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent, bracketText });}
         });
+        
+        const candidates = {}; 
+        let globalValidVotes = 0; 
+        let globalInvalidVotes = 0; 
+        let globalEligibleVoters = 0; 
+        
+        for (let i = 3; i < rows.length; i++) {
+            const row = rows[i];
+           if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
 
-        // colIndex -> candidate name 對照（加速每行累加）
-        const colToName = {};
-        candInfo.forEach(c => { colToName[c.colIndex] = c.name; });
+            const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
-        const candidates = {};
-        candInfo.forEach(c => {
-            candidates[c.name] = {
-                number: c.number,
-                name: c.name,
-                party: c.party,
-                isWinner: c.isWinner,
-                isWomenQuota: c.isWomenQuota,
-                isIncumbent: c.isIncumbent,
-                bracketText: c.bracketText,
-                votes: 0
-            };
-        });
-
-        let globalValidVotes = 0;
-        let globalInvalidVotes = 0;
-        let globalEligibleVoters = 0;
-
-        const parseNum = (val) => {
-            // 原本程式會處理逗號/空白/雜訊，這邊用更快的方式清掉非數字
-            const n = parseInt(String(val ?? '').replace(/[^0-9\-]/g, ''), 10);
-            return isNaN(n) ? 0 : n;
-        };
-
-        // 逐行處理剩下的資料列（不保留 rows，降低記憶體）
-        for (; idx < lines.length; idx++) {
-            const line = trim(lines[idx]);
-            if (!line) continue;
-            const row = line.split(',');
-
-            if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
-
-            globalInvalidVotes += parseNum(row[INVALID_COL]);
-            globalEligibleVoters += parseNum(row[ELIGIBLE_COL]);
-
-            headerRowIndices.forEach(colIndex => {
-                const nm = colToName[colIndex];
-                if (!nm || !candidates[nm]) return;
-                const v = parseNum(row[colIndex]);
-                candidates[nm].votes += v;
-                globalValidVotes += v;
+            const validVotes = parseNum(row[VOTES_COL]);const invalidVotes = parseNum(row[INVALID_COL]);const eligibleVoters = parseNum(row[ELIGIBLE_COL]);
+            globalValidVotes += validVotes;
+            globalInvalidVotes += invalidVotes;
+            globalEligibleVoters += eligibleVoters;
+           candInfo.forEach(c => {
+                const votes = parseNum(row[c.colIndex]);
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent, bracketText: c.bracketText };    candidates[c.name].votes += votes;
             });
         }
-
-        const allCandidates = Object.values(candidates);
-
+        
+        let allCandidatesList = Object.keys(candidates).map(key => ({ name: key, ...candidates[key] }));
+        
         return {
-            allCandidates,
+            allCandidates: allCandidatesList,
             metadata: {
-                seatsCount,
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
-                eligibleVoters: globalEligibleVoters
-            }
+                eligibleVoters: globalEligibleVoters,
+                seatsCount: seatsCount}
         };
     }
-
-    async function loadAllElectionSummaries(elections) {
-        // 手機效能優化：限制同時 fetch/解析的數量，避免 300+ 檔案時主執行緒/記憶體被打爆
-        const isMobile = (() => {
-            try { return window.matchMedia && window.matchMedia('(max-width: 860px)').matches; } catch (e) { return false; }
-        })();
-        const CONCURRENCY = isMobile ? 6 : 12;
-
-        // 進度更新節流：同一個 repaint 最多更新一次，避免大量完成時狂刷 DOM
-        let scheduled = false;
-        const bootStepThrottled = () => {
-            if (scheduled) return;
-            scheduled = true;
-            requestAnimationFrame(() => {
-                scheduled = false;
-                if (bootTotalCsv > 0) bootStep();
-            });
-        };
-
-        let cursor = 0;
-
-        async function worker() {
-            while (cursor < elections.length) {
-                const e = elections[cursor++];
-                try {
-                    const response = await fetch(e.file, { cache: 'no-store' });
-                    if (!response.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
-                    const csvText = await response.text();
-                    const summary = extractCountySummary(csvText);
-
-                    if (summary) {
-                        const initialSortConfig = { key: 'number', direction: 'asc' };
-                        const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, initialSortConfig);
-                        e.summaryData = {
-                            allCandidates: sortedAllCands,
-                            metadata: summary.metadata,
-                            topCandidates: sortedAllCands.slice(0, 3),
-                            sortConfig: initialSortConfig
-                        };
-                    } else {
-                        e.summaryData = null;
-                    }
-                } catch (error) {
-                    console.error(`載入 ${e.file} 摘要失敗:`, error.message);
-                    e.summaryData = null;
-                } finally {
-                    bootStepThrottled();
-                }
-            }
-        }
-
-        const workers = [];
-        for (let i = 0; i < Math.min(CONCURRENCY, elections.length); i++) workers.push(worker());
-        await Promise.all(workers);
-    }
-
     
+    async function loadAllElectionSummaries(elections) {
+        const summaryPromises = elections.map(async e => {
+            try {
+                const response = await fetch(e.file);
+                if (!response.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
+                const csvText = await response.text();
+                   const summary = extractCountySummary(csvText);
+                   if (summary) {
+                    const initialSortConfig = { key: 'number', direction: 'asc' };
+                    const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, initialSortConfig);
+                           e.summaryData = {
+                        allCandidates: sortedAllCands,
+                        metadata: summary.metadata,
+                        topCandidates: sortedAllCands.slice(0, 3),
+                        sortConfig: initialSortConfig        };
+                       } else {
+                    e.summaryData = null;
+                }
+            } catch (error) {
+                console.error(`載入 ${e.file} 摘要失敗:`, error.message);
+                e.summaryData = null;}
+            finally {
+                // 更新首次載入進度（不論成功/失敗都算讀取完成）
+                if (bootTotalCsv > 0) bootStep();
+            }
+            return e;
+        });
+
+        await Promise.all(summaryPromises);
+    }
 
     // ================= 排序與更新邏輯 =================
     
