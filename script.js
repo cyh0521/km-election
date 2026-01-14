@@ -144,6 +144,9 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
+        {file: "elections/I/I2024D-7.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮大洋里長補選",summaryData: null},
+        {file: "elections/I/I2024D-8.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮光前里長補選",summaryData: null},
+        {file: "elections/I/I2023F-1.csv",year: "2023",type: "村里長",uiName: "2023年 烏坵鄉大坵村長補選",summaryData: null},
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
@@ -764,26 +767,18 @@ default:
             // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
             // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
             btn.innerHTML = isDark
-                ? `
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="2"/>
-                        <path d="M12 7.6V8.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 15.3V16.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7.6 12H8.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M15.3 12H16.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8.6 8.6L9.4 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M14.6 14.6L15.4 15.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M15.4 8.6L14.6 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M9.4 14.6L8.6 15.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  `
-                : `
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
-                        <path d="M15.9 14.9A4.7 4.7 0 0 1 9.1 8.1a3.8 3.8 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
-                  `;
+                 ? `
+                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="2"/>
+                       <path d="M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                       <path d="M6.3 6.3l1.6 1.6M16.1 16.1l1.6 1.6M17.7 6.3l-1.6 1.6M7.9 16.1l-1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                     </svg>
+`
+                 : `
+                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                     </svg>
+`;
         }
     }
 
@@ -1283,32 +1278,47 @@ function loadData(file, uiName, pushState = true) {
 }
 
 function extractCountySummary(text) {
-        const rows = text.split('\n').map(r => r.trim()).filter(r => r).map(r => r.split(','));
+        // 手機效能優化：避免建立龐大的 2D rows 陣列，改用逐行解析降低記憶體/GC 停頓
+        const lines = String(text || '').split('\n');
+        const trim = (s) => (s == null ? '' : String(s).trim());
 
-        if (rows.length < 4) return null;
+        // 取前三行（忽略空白行）
+        let idx = 0;
+        const nextNonEmpty = () => {
+            while (idx < lines.length && !trim(lines[idx])) idx++;
+            return (idx < lines.length) ? lines[idx] : null;
+        };
 
-        const headerRowIndices = []; 
+        const l0 = nextNonEmpty(); if (!l0) return null; idx++;
+        const l1 = nextNonEmpty(); if (!l1) return null; idx++;
+        const l2 = nextNonEmpty(); if (!l2) return null; idx++;
+
+        const r0 = trim(l0).split(',');
+        const r1 = trim(l1).split(',');
+        const r2 = trim(l2).split(',');
+
+        // 找出候選人欄位範圍（從第 2 欄起，直到遇到空白）
+        const headerRowIndices = [];
         let currentIdx = 2;
-        while(rows[0][currentIdx] && rows[1][currentIdx]) {
+        while (r0[currentIdx] && r1[currentIdx]) {
             headerRowIndices.push(currentIdx);
             currentIdx++;
         }
-        
-        const seatsCount = rows[1] && rows[1][0] ? rows[1][0].trim() : "";
-        
-        const VOTES_COL = currentIdx; 
+
+        const seatsCount = r1 && r1[0] ? trim(r1[0]) : "";
+
+        const VOTES_COL = currentIdx;
         const INVALID_COL = currentIdx + 1;
         const ELIGIBLE_COL = currentIdx + 2;
 
         const candInfo = [];
         let independentCounter = 1;
-        
+
         headerRowIndices.forEach(colIndex => {
-            const number = rows[0][colIndex] ? rows[0][colIndex].trim() : '';
-            let name = rows[1][colIndex] ? rows[1][colIndex].trim() : '';
-            let party = rows[2][colIndex] ? rows[2][colIndex].trim() : '';
-           
-            // *** 修改：處理 [] 中的文字 ***
+            const number = r0[colIndex] ? trim(r0[colIndex]) : '';
+            let name = r1[colIndex] ? trim(r1[colIndex]) : '';
+            let party = r2[colIndex] ? trim(r2[colIndex]) : '';
+
             const bracketMatch = name.match(/\[(.*?)\]/);
             const bracketText = bracketMatch ? bracketMatch[1] : null;
 
@@ -1320,78 +1330,144 @@ function extractCountySummary(text) {
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
-                 if (party === '無黨籍') {
+                if (party === '無黨籍') {
                     if (!partyColors[`無黨籍-${independentCounter}`] && independentCounter <= 4) {
-                       partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍'];        }
+                        partyColors[`無黨籍-${independentCounter}`] = partyColors['無黨籍'];
+                    }
                     party = `無黨籍-${independentCounter}`;
                     independentCounter++;
                 }
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent, bracketText });}
+
+                candInfo.push({
+                    number: String(number),
+                    name,
+                    party,
+                    colIndex,
+                    isWinner,
+                    isWomenQuota,
+                    isIncumbent,
+                    bracketText
+                });
+            }
         });
-        
-        const candidates = {}; 
-        let globalValidVotes = 0; 
-        let globalInvalidVotes = 0; 
-        let globalEligibleVoters = 0; 
-        
-        for (let i = 3; i < rows.length; i++) {
-            const row = rows[i];
-           if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
 
-            const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
+        // colIndex -> candidate name 對照（加速每行累加）
+        const colToName = {};
+        candInfo.forEach(c => { colToName[c.colIndex] = c.name; });
 
-            const validVotes = parseNum(row[VOTES_COL]);const invalidVotes = parseNum(row[INVALID_COL]);const eligibleVoters = parseNum(row[ELIGIBLE_COL]);
-            globalValidVotes += validVotes;
-            globalInvalidVotes += invalidVotes;
-            globalEligibleVoters += eligibleVoters;
-           candInfo.forEach(c => {
-                const votes = parseNum(row[c.colIndex]);
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent, bracketText: c.bracketText };    candidates[c.name].votes += votes;
+        const candidates = {};
+        candInfo.forEach(c => {
+            candidates[c.name] = {
+                number: c.number,
+                name: c.name,
+                party: c.party,
+                isWinner: c.isWinner,
+                isWomenQuota: c.isWomenQuota,
+                isIncumbent: c.isIncumbent,
+                bracketText: c.bracketText,
+                votes: 0
+            };
+        });
+
+        let globalValidVotes = 0;
+        let globalInvalidVotes = 0;
+        let globalEligibleVoters = 0;
+
+        const parseNum = (val) => {
+            // 原本程式會處理逗號/空白/雜訊，這邊用更快的方式清掉非數字
+            const n = parseInt(String(val ?? '').replace(/[^0-9\-]/g, ''), 10);
+            return isNaN(n) ? 0 : n;
+        };
+
+        // 逐行處理剩下的資料列（不保留 rows，降低記憶體）
+        for (; idx < lines.length; idx++) {
+            const line = trim(lines[idx]);
+            if (!line) continue;
+            const row = line.split(',');
+
+            if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
+
+            globalInvalidVotes += parseNum(row[INVALID_COL]);
+            globalEligibleVoters += parseNum(row[ELIGIBLE_COL]);
+
+            headerRowIndices.forEach(colIndex => {
+                const nm = colToName[colIndex];
+                if (!nm || !candidates[nm]) return;
+                const v = parseNum(row[colIndex]);
+                candidates[nm].votes += v;
+                globalValidVotes += v;
             });
         }
-        
-        let allCandidatesList = Object.keys(candidates).map(key => ({ name: key, ...candidates[key] }));
-        
+
+        const allCandidates = Object.values(candidates);
+
         return {
-            allCandidates: allCandidatesList,
+            allCandidates,
             metadata: {
+                seatsCount,
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
-                eligibleVoters: globalEligibleVoters,
-                seatsCount: seatsCount}
+                eligibleVoters: globalEligibleVoters
+            }
         };
     }
-    
-    async function loadAllElectionSummaries(elections) {
-        const summaryPromises = elections.map(async e => {
-            try {
-                const response = await fetch(e.file);
-                if (!response.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
-                const csvText = await response.text();
-                   const summary = extractCountySummary(csvText);
-                   if (summary) {
-                    const initialSortConfig = { key: 'number', direction: 'asc' };
-                    const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, initialSortConfig);
-                           e.summaryData = {
-                        allCandidates: sortedAllCands,
-                        metadata: summary.metadata,
-                        topCandidates: sortedAllCands.slice(0, 3),
-                        sortConfig: initialSortConfig        };
-                       } else {
-                    e.summaryData = null;
-                }
-            } catch (error) {
-                console.error(`載入 ${e.file} 摘要失敗:`, error.message);
-                e.summaryData = null;}
-            finally {
-                // 更新首次載入進度（不論成功/失敗都算讀取完成）
-                if (bootTotalCsv > 0) bootStep();
-            }
-            return e;
-        });
 
-        await Promise.all(summaryPromises);
+    async function loadAllElectionSummaries(elections) {
+        // 手機效能優化：限制同時 fetch/解析的數量，避免 300+ 檔案時主執行緒/記憶體被打爆
+        const isMobile = (() => {
+            try { return window.matchMedia && window.matchMedia('(max-width: 860px)').matches; } catch (e) { return false; }
+        })();
+        const CONCURRENCY = isMobile ? 6 : 12;
+
+        // 進度更新節流：同一個 repaint 最多更新一次，避免大量完成時狂刷 DOM
+        let scheduled = false;
+        const bootStepThrottled = () => {
+            if (scheduled) return;
+            scheduled = true;
+            requestAnimationFrame(() => {
+                scheduled = false;
+                if (bootTotalCsv > 0) bootStep();
+            });
+        };
+
+        let cursor = 0;
+
+        async function worker() {
+            while (cursor < elections.length) {
+                const e = elections[cursor++];
+                try {
+                    const response = await fetch(e.file, { cache: 'no-store' });
+                    if (!response.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
+                    const csvText = await response.text();
+                    const summary = extractCountySummary(csvText);
+
+                    if (summary) {
+                        const initialSortConfig = { key: 'number', direction: 'asc' };
+                        const sortedAllCands = getSortedCandidatesFromList(summary.allCandidates, initialSortConfig);
+                        e.summaryData = {
+                            allCandidates: sortedAllCands,
+                            metadata: summary.metadata,
+                            topCandidates: sortedAllCands.slice(0, 3),
+                            sortConfig: initialSortConfig
+                        };
+                    } else {
+                        e.summaryData = null;
+                    }
+                } catch (error) {
+                    console.error(`載入 ${e.file} 摘要失敗:`, error.message);
+                    e.summaryData = null;
+                } finally {
+                    bootStepThrottled();
+                }
+            }
+        }
+
+        const workers = [];
+        for (let i = 0; i < Math.min(CONCURRENCY, elections.length); i++) workers.push(worker());
+        await Promise.all(workers);
     }
+
+    
 
     // ================= 排序與更新邏輯 =================
     
@@ -1509,7 +1585,7 @@ function extractCountySummary(text) {
     /**
      * 生成表格內容 HTML (帶有動畫屬性)
      */
-    function generateTableBodyHTML(candidates, validVotes, animate, currentElectionYear, isPartyList) {
+    function generateTableBodyHTML(candidates, validVotes, animate, currentElectionYear, isPartyList, enableCandidateModal = true) {
         return candidates.map(c => {
             const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
             const partyColorHex = getPartyColor(c.party);
@@ -1530,8 +1606,9 @@ function extractCountySummary(text) {
             const bracketBadge = c.bracketText ? `<div class="bracket-label-badge">${c.bracketText}</div>` : '';
 
             const incumbentBadge = c.isIncumbent    ? '<span class="incumbent-badge">現</span>'    : '';
-            const nameClickAction = isPartyList ? 'event.stopPropagation()' : `event.stopPropagation(); showCandidateModal('${c.name}', '${currentElectionYear || ''}')`;
-            const nameLinkClass = isPartyList ? 'candidate-name' : 'candidate-name candidate-link';
+            const modalEnabled = !!enableCandidateModal;
+            const nameClickAction = (isPartyList || !modalEnabled) ? 'event.stopPropagation()' : `event.stopPropagation(); showCandidateModal('${c.name}', '${currentElectionYear || ''}')`;
+            const nameLinkClass = (isPartyList || !modalEnabled) ? 'candidate-name' : 'candidate-name candidate-link';
             const partyCellClass = isPartyList ? 'col-party hidden-party' : 'party-cell col-party';
             const partyCellHtml = `
                 <td class="${partyCellClass}">
@@ -1565,7 +1642,9 @@ function extractCountySummary(text) {
     function updateTableContent(cardId, candidates, validVotes, triggerAnimation = false, currentElectionYear, isPartyList = false) {
         const mainTableBody = document.querySelector(`#card-${cardId} table tbody`); 
         if (mainTableBody) {
-            mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList);
+            // 依目前選舉名稱判斷是否為總統選舉（總統不開候選人資訊小卡）
+            const enableCandidateModal = !(/總統/.test(appState.electionName || ''));
+            mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
         }
     }
     
@@ -2185,7 +2264,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             }
         } else if (shouldRenderTowns) {
             html += `<div class="main-section">
-                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
+                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span></div>
                 <div class="sub-area-grid">`;
            appState.data.townOrder.forEach(town => {
                 const townData = appState.data.towns[town];
@@ -2629,6 +2708,10 @@ dom.breadcrumb.innerHTML = html;
         // 公投/複決：雖然沿用「不顯示政黨欄」的規則，但名稱欄應顯示「選項」而非「政黨」
         const isReferendum = isReferendumElection(title) || isReferendumElection(appState.electionName);
 
+        // 總統選舉：點候選人姓名不開候選人資訊小卡
+        const isPresidential = /總統/.test(title) || /總統/.test(appState.electionName || '');
+        const enableCandidateModal = !isPresidential;
+
         function renderTableHeader(title, sortKey, style = '', className = '') {
            const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2649,7 +2732,7 @@ dom.breadcrumb.innerHTML = html;
            return `<th style="${style}" class="${headerClass}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
         }
         
-        const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList);
+        const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
         
         let footerHTML = '';
         if (seatsCount) {
