@@ -99,6 +99,7 @@
         {file: "elections/G/G2009B.csv",year: "2009",type: "鄉鎮長",uiName: "2009年 金寧鄉長選舉",summaryData: null},
         {file: "elections/G/G2009A.csv",year: "2009",type: "鄉鎮長",uiName: "2009年 金城鎮長選舉",summaryData: null},
         {file: "elections/G/G2006F.csv",year: "2006",type: "鄉鎮長",uiName: "2006年 烏坵鄉長補選",summaryData: null},
+        {file: "elections/G/G2003C.csv",year: "2003",type: "鄉鎮長",uiName: "2003年 金湖鎮長補選",summaryData: null},
         {file: "elections/G/G2002F.csv",year: "2002",type: "鄉鎮長",uiName: "2002年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G/G2002E.csv",year: "2002",type: "鄉鎮長",uiName: "2002年 烈嶼鄉長選舉",summaryData: null},
         {file: "elections/G/G2002D.csv",year: "2002",type: "鄉鎮長",uiName: "2002年 金沙鎮長選舉",summaryData: null},
@@ -144,6 +145,9 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
+        {file: "elections/I/I2024D-7.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮大洋里長補選",summaryData: null},
+        {file: "elections/I/I2024D-8.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮光前里長補選",summaryData: null},
+        {file: "elections/I/I2023F-1.csv",year: "2023",type: "村里長",uiName: "2023年 烏坵鄉大坵村長補選",summaryData: null},
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
@@ -1872,6 +1876,7 @@ function extractCountySummary(text) {
         appState.chartInstances = [];
 
         // 解析 uiName：例「2022年 金城鎮東門里長選舉」「2022年 金寧鄉古寧村長選舉」
+        // 也要支援補選：例「2024年 金沙鎮大洋里長補選」「2023年 烏坵鄉大坵村長補選」
         const villageSet = new Set();
         availableElections
             .filter(e => e.type === type && (e.uiName || '').includes(townName))
@@ -1881,11 +1886,11 @@ function extractCountySummary(text) {
                 const afterTownClean = (afterTown || '').replace(/\s+/g,'').trim();
 
                 let v = '';
-                const m = afterTownClean.match(/^(.+?)(里|村)長選舉$/);
+                const m = afterTownClean.match(/^(.+?)(里|村)長(?:選舉|補選)$/);
                 if (m) {
                     v = `${m[1]}${m[2]}`; // ✅ 保留「里/村」字尾：例如「東門里」「古寧村」
                 } else {
-                    v = afterTownClean.replace(/(里長|村長)\s*選舉\s*$/,'').trim();
+                    v = afterTownClean.replace(/(里長|村長)\s*(?:選舉|補選)\s*$/,'').trim();
                     // 保底：若解析後沒有「里/村」字尾，依原字串補回
                     if (v && !/[村里]$/.test(v)) {
                         if (afterTownClean.includes('村長')) v += '村';
