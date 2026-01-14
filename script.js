@@ -771,6 +771,7 @@ default:
             // 螢幕 + 太陽/月亮（簡化、置中；stroke 使用 currentColor）
             // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
             // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
+            btn.dataset.icon = isDark ? 'sun' : 'moon';
             btn.innerHTML = isDark
                  ? `
                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
