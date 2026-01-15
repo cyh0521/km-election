@@ -798,3 +798,7 @@ html[data-theme="dark"] .cd-empty{ color: rgba(255,255,255,0.68); }
   html[data-theme="dark"] .cd-input{ background: rgba(255,255,255,0.07); }
 }
 /* === THEME:DARK:END === */
+
+
+/* Light mode：確保 header icon SVG 以 currentColor 顯示（避免白色看不到） */
+html[data-theme="light"] .cd-header-btn svg{ fill: currentColor; stroke: currentColor; }
