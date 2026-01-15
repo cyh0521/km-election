@@ -1093,25 +1093,57 @@ html[data-theme="light"] .section-badge{
 
 /* ---- Main menu buttons: light bridge panels ---- */
 html[data-theme="light"] .menu-button{
-  background: rgba(255,255,255,0.78);
-  border: 1px solid var(--glass-border);
-  color: rgba(11,18,32,0.90);
-  box-shadow: var(--shadow-1);
+  /* A｜Light HUD（白天艦橋）
+     - 不再是一塊白色卡片：改成「霧面玻璃 + HUD 細節」
+     - 透過極淡斜紋與左側短色條，讓按鈕有辨識度但不花
+  */
+  background:
+    /* 上亮下暗：霧面玻璃層 */
+    linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.64) 100%),
+    /* 左側短色條：像儀表面板的狀態燈 */
+    linear-gradient(90deg, rgba(26,166,181,0.82) 0 6px, rgba(0,0,0,0) 6px),
+    /* 極淡斜紋：避免「一片白」的單調感 */
+    repeating-linear-gradient(135deg, rgba(11,18,32,0.030) 0 1px, rgba(0,0,0,0) 1px 11px);
+
+  border: 1px solid rgba(11,18,32,0.10);
+  color: rgba(11,18,32,0.92);
   border-radius: var(--radius-xl);
-  backdrop-filter: blur(8px) saturate(140%);
-  -webkit-backdrop-filter: blur(8px) saturate(140%);
+
+  /* 外陰影 + 內描邊：讓面板邊緣更像「設備」而不是紙片 */
+  box-shadow:
+    0 10px 26px rgba(11,18,32,0.10),
+    inset 0 0 0 1px rgba(255,255,255,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.40);
+
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
 }
 html[data-theme="light"] .menu-button::before{
+  /* Hover 才出現的 HUD 掃描線 + 柔光 */
   background:
-    radial-gradient(circle at 18% 18%, rgba(26,166,181,0.18) 0%, rgba(26,166,181,0.00) 55%),
-    radial-gradient(circle at 86% 92%, rgba(120,92,255,0.12) 0%, rgba(120,92,255,0.00) 60%);
+    /* 上方 2px 掃描線（不會像光暈那樣刺眼） */
+    linear-gradient(90deg,
+      rgba(26,166,181,0.00) 0%,
+      rgba(26,166,181,0.34) 22%,
+      rgba(120,92,255,0.26) 55%,
+      rgba(255,74,141,0.20) 78%,
+      rgba(255,74,141,0.00) 100%),
+    radial-gradient(circle at 18% 18%, rgba(26,166,181,0.16) 0%, rgba(26,166,181,0.00) 55%),
+    radial-gradient(circle at 86% 92%, rgba(120,92,255,0.10) 0%, rgba(120,92,255,0.00) 60%);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: 100% 2px, auto, auto;
+  background-position: 0 0, 0 0, 0 0;
 }
-html[data-theme="light"] .menu-icon{ color: rgba(11,18,32,0.86); }
+/* Icon：吃主色，讓按鈕「看起來有系統」而不是灰灰的 */
+html[data-theme="light"] .menu-icon{ color: var(--primary); }
 html[data-theme="light"] .menu-button:hover{
-  border-color: rgba(26,166,181,0.40);
-  box-shadow: var(--shadow-2), var(--glow);
+  border-color: rgba(26,166,181,0.46);
+  box-shadow:
+    var(--shadow-2),
+    var(--glow),
+    inset 0 0 0 1px rgba(255,255,255,0.60);
 }
-html[data-theme="light"] .menu-button:focus-visible{ outline: 3px solid rgba(26,166,181,0.22); }
+html[data-theme="light"] .menu-button:focus-visible{ outline: 3px solid rgba(26,166,181,0.24); }
 
 /* ---- Cards: glass ---- */
 html[data-theme="light"] .card,
