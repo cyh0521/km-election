@@ -768,27 +768,22 @@ default:
             btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
             btn.setAttribute('aria-label', btn.title);
 
-            // 太陽 / 月亮（無外框；使用 currentColor）
+            // 螢幕 + 太陽/月亮（簡化、置中；stroke 使用 currentColor）
             // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
             // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
-            btn.dataset.icon = isDark ? 'sun' : 'moon';
             btn.innerHTML = isDark
-                 ? `                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="2.2"/>
-                       <path d="M12 5.2v2.0M12 16.8v2.0M5.2 12h2.0M16.8 12h2.0
-                                M7.3 7.3l1.4 1.4M15.3 15.3l1.4 1.4
-                                M16.7 7.3l-1.4 1.4M7.3 16.7l1.4-1.4"
-                             stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                 ? `
+                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="2"/>
+                       <path d="M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                       <path d="M6.3 6.3l1.6 1.6M16.1 16.1l1.6 1.6M17.7 6.3l-1.6 1.6M7.9 16.1l-1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                      </svg>
 `
-                 : `                     <svg viewBox="0 0 24 24" aria-hidden="true">
-                       <!-- filled crescent (thicker) -->
-                       <path d="M21 15.2A8.1 8.1 0 0 1 8.8 3.0
-                                a6.6 6.6 0 1 0 12.2 12.2Z"
-                             fill="currentColor" opacity="0.92"/>
+                 : `
+                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                      </svg>
-                     `
-;
+`;
         }
     }
 

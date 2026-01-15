@@ -48,6 +48,14 @@ header{
 }
 .cd-header-btn svg{ width: 20px; height: 20px; opacity: 0.95; }
 
+/* Light mode：Header icon 需跟著亮色文字（candidate-directory.css 在 style.css 之後載入，需在此補覆蓋） */
+html[data-theme="light"] .cd-header-btn{
+    color: rgba(11,18,32,0.82);
+}
+html[data-theme="light"] .cd-header-btn:focus-visible{
+    outline: 3px solid rgba(26,166,181,0.28);
+}
+
 /* === Candidate Directory 主畫面 === */
 .cd-wrap{
     max-width: 1200px;

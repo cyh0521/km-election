@@ -1,31 +1,17 @@
 :root {
     --primary: #3887B0;
     --secondary: #2c3e50; 
-    --bg: #eef3f6;
+    --bg: #f4f7f6;
     --card-bg: #ffffff;
     --text-main: #2c3e50;
     --text-sub: #7f8c8d;
     --border: #e1e4e8;
-    /* 視覺 token（淺色也做一點「艦橋面板」感，避免太蒼白） */
-    --glass: rgba(255,255,255,0.86);
-    --glass-strong: rgba(255,255,255,0.94);
-    --glass-border: rgba(44, 62, 80, 0.10);
-    --shadow-1: 0 10px 26px rgba(44, 62, 80, 0.10);
-    --shadow-2: 0 16px 40px rgba(44, 62, 80, 0.14);
-    --glow: 0 0 0 1px rgba(56, 135, 176, 0.16), 0 0 18px rgba(56, 135, 176, 0.10);
-    --radius-xl: 16px;
-
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body { 
     font-family:'Noto Sans TC', sans-serif; 
-    background-color: var(--bg);
-    background-image:
-        url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='120'%20height='120'%20viewBox='0%200%20120%20120'%3E%3Cpath%20d='M0%200H120V120H0Z'%20fill='none'/%3E%3Cpath%20d='M0%200.5H120M0%2024.5H120M0%2048.5H120M0%2072.5H120M0%2096.5H120'%20stroke='rgba(44,62,80,0.07)'%20stroke-width='1'/%3E%3Cpath%20d='M0.5%200V120M24.5%200V120M48.5%200V120M72.5%200V120M96.5%200V120'%20stroke='rgba(44,62,80,0.05)'%20stroke-width='1'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%20viewBox='0%200%20180%20180'%3E%3Cg%20fill='rgba(56,135,176,0.10)'%3E%3Ccircle%20cx='22'%20cy='26'%20r='1'/%3E%3Ccircle%20cx='74'%20cy='44'%20r='1'/%3E%3Ccircle%20cx='142'%20cy='38'%20r='1'/%3E%3Ccircle%20cx='118'%20cy='92'%20r='1'/%3E%3Ccircle%20cx='40'%20cy='118'%20r='1'/%3E%3Ccircle%20cx='156'%20cy='142'%20r='1'/%3E%3Ccircle%20cx='92'%20cy='158'%20r='1'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 120px 120px, 180px 180px;
-    background-repeat: repeat, repeat;
+    background:var(--bg); 
     color:var(--text-main); 
     line-height:1.6; 
     padding-bottom: 20px; 
@@ -33,16 +19,12 @@ body {
 }
 
 /* 置頂標題列樣式 */
-
 header { 
-    background: rgba(255,255,255,0.72);
-    border-bottom: 1px solid rgba(44,62,80,0.12);
-    color: var(--text-main); 
-    padding: 6px 20px; 
+    background: var(--secondary); 
+    color: white; 
+    padding: 5px 20px; 
     text-align: center; 
-    box-shadow: 0 10px 26px rgba(44,62,80,0.10);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
     position: fixed; 
     top: 0;
     left: 0;
@@ -50,16 +32,6 @@ header {
     z-index: 1000; 
 }
 
-
-/* 淺色模式：玻璃標題列下緣線（不使用漸層） */
-header::after{
-    content:"";
-    position:absolute;
-    left:0; right:0; bottom:-1px;
-    height: 2px;
-    background: rgba(56,135,176,0.28);
-    pointer-events:none;
-}
 h1 { font-size: 20px; font-weight: 700; margin: 0; }
 h1 span { cursor: pointer; } 
 
@@ -74,7 +46,7 @@ h1 span { cursor: pointer; }
 /* Header：顯示模式切換（暗色 / 一般） */
 .theme-toggle-btn{
     position: absolute;
-    right: 50px; /* 候選人檢索按鈕左側（間距略縮、與右側 icon 同尺寸） */
+    right: 52px; /* 候選人檢索按鈕左側（間距略縮、與右側 icon 同尺寸） */
     top: 50%;
     transform: translateY(-50%);
     width: 34px;
@@ -91,7 +63,6 @@ h1 span { cursor: pointer; }
     transition: transform 0.15s ease, opacity 0.15s ease;
 }
 .theme-toggle-btn svg{ width: 20px; height: 20px; display:block; }
-.theme-toggle-btn[data-icon="moon"] svg{ width: 23px; height: 23px; }
 .theme-toggle-btn:hover{ opacity: 1; transform: translateY(-50%) scale(1.06); }
 .theme-toggle-btn:active{ transform: translateY(-50%) scale(0.96); }
 .theme-toggle-btn:focus-visible{
@@ -147,14 +118,12 @@ h1 span { cursor: pointer; }
     width: 100%;
     aspect-ratio: auto;           /* ✅ 不再強制方形 */
 
-    background:
-        radial-gradient(120px 120px at 14% 50%, rgba(56,135,176,0.12) 0%, rgba(56,135,176,0.00) 65%),
-        linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.06) 100%);
-    border: 1px solid rgba(44,62,80,0.10);
+    background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.04) 100%);
+    border: 1px solid rgba(225, 228, 232, 0.95);
     border-radius: 14px;
 
     color: var(--secondary);
-    box-shadow: var(--shadow-1);
+    box-shadow: 0 2px 10px rgba(44, 62, 80, 0.05);
 
     cursor: pointer;
     user-select: none;
@@ -287,7 +256,7 @@ h1 span { cursor: pointer; }
 }
 
 /* --- 麵包屑 --- */
-.breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 12px; background: rgba(255,255,255,0.75); border: 1px solid rgba(44,62,80,0.10); border-radius: 14px; box-shadow: 0 10px 26px rgba(44,62,80,0.10); }
+.breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 0; }
 #breadcrumb-bottom { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
 .breadcrumb span { cursor: pointer; color: var(--primary); font-weight: 500; }
 .breadcrumb span:hover { text-decoration: underline; }
@@ -299,29 +268,7 @@ h1 span { cursor: pointer; }
 .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
 
 /* 卡片主體 */
-.card{
-    background:
-        linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(56,135,176,0.12) 100%);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 14px 34px rgba(44,62,80,0.12);
-    position: relative;
-    padding: 20px;
-    overflow: hidden;
-    border: 1px solid rgba(44,62,80,0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    margin-bottom: 0;
-}
-.card::before{
-    content:"";
-    position:absolute;
-    left:14px; right:14px; top:10px;
-    height: 2px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(56,135,176,0.00) 0%, rgba(56,135,176,0.42) 35%, rgba(56,135,176,0.00) 70%);
-    opacity: 0.9;
-    pointer-events:none;
-}
-
+.card { background: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; overflow: hidden; border: 1px solid transparent; transition: all 0.2s; margin-bottom: 0; }
 .card.clickable:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 15px rgba(56, 135, 176, 0.15); }
 
 .card-header { 
@@ -535,13 +482,8 @@ html[data-theme="dark"] .loading-state .loading-progress{
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px; align-items: start;
 }
 
-.summary-panel{
-    background:
-        linear-gradient(180deg, var(--glass-strong) 0%, rgba(56,135,176,0.02) 100%);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-1);
-    padding: 20px;
-    border: 1px solid rgba(44,62,80,0.08);
+.summary-panel {
+    background: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; border: 1px solid var(--border);
 }
 .summary-panel h3 {
     font-size: 18px; font-weight: 700; color: var(--secondary); border-left: 4px solid var(--primary); padding-left: 10px; line-height: 1.2; margin-bottom: 15px;
@@ -841,8 +783,6 @@ html[data-theme="dark"] body{
 
 /* ---- Header: glass bridge bar + neon scanline ---- */
 html[data-theme="dark"] header{
-  color: rgba(255,255,255,0.92);
-
   background: rgba(11,18,32,0.72);
   border-bottom: 1px solid rgba(255,255,255,0.10);
   box-shadow: var(--shadow-1);
@@ -1060,3 +1000,246 @@ html[data-theme="dark"] footer{
   }
 }
 /* === THEME:DARK:END === */
+
+/* === THEME:LIGHT:BEGIN === */
+/* =========================================================
+   Light mode redesign (match Dark “modern bridge / glass”)
+   - 保留亮色可讀性，但把「艦橋 HUD / 玻璃」語彙帶回來
+   ========================================================= */
+
+:root[data-theme="light"]{
+  /* 主色：偏青藍（延續暗色 neon cyan 的語言，但更克制） */
+  --primary: #1AA6B5;
+  --secondary: #0B1220;
+  --bg: #F4F7FB;
+  --card-bg: rgba(255,255,255,0.70);
+  --text-main: rgba(11,18,32,0.92);
+  --text-sub: rgba(11,18,32,0.62);
+  --border: rgba(11,18,32,0.14);
+
+  /* 額外 token（只做視覺，與 dark 對齊命名） */
+  --glass: rgba(255,255,255,0.70);
+  --glass-strong: rgba(255,255,255,0.84);
+  --glass-border: rgba(11,18,32,0.12);
+  --shadow-1: 0 10px 26px rgba(11,18,32,0.08);
+  --shadow-2: 0 18px 44px rgba(11,18,32,0.12);
+  --glow: 0 0 0 1px rgba(26,166,181,0.14), 0 0 22px rgba(26,166,181,0.10);
+  --radius-xl: 18px;
+}
+
+/* ---- Background: subtle “daytime nebula” ---- */
+html[data-theme="light"], html[data-theme="light"] body{ height: 100%; }
+html[data-theme="light"] body{
+  background:
+    radial-gradient(880px 520px at 88% 14%, rgba(120,92,255,0.10) 0%, rgba(120,92,255,0.00) 62%),
+    radial-gradient(900px 700px at 52% 108%, rgba(255,74,141,0.07) 0%, rgba(255,74,141,0.00) 60%),
+    repeating-linear-gradient(90deg, rgba(11,18,32,0.035) 0, rgba(11,18,32,0.035) 1px, rgba(0,0,0,0.00) 1px, rgba(0,0,0,0.00) 56px),
+    radial-gradient(circle at 50% 55%, rgba(11,18,32,0.03) 0%, rgba(0,0,0,0.00) 55%),
+    var(--bg);
+  color: var(--text-main);
+}
+
+/* ---- Header: glass bridge bar + soft scanline ---- */
+html[data-theme="light"] header{
+  background: rgba(255,255,255,0.72);
+  border-bottom: 1px solid rgba(11,18,32,0.10);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  color: var(--text-main);
+}
+html[data-theme="light"] header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-1px;
+  height: 2px;
+  background: linear-gradient(90deg,
+    rgba(26,166,181,0.00) 0%,
+    rgba(26,166,181,0.45) 22%,
+    rgba(120,92,255,0.32) 55%,
+    rgba(255,74,141,0.30) 78%,
+    rgba(255,74,141,0.00) 100%);
+  filter: blur(0.2px);
+  pointer-events:none;
+}
+html[data-theme="light"] h1{ color: var(--text-main); }
+html[data-theme="light"] .site-logo{ color: rgba(11,18,32,0.92); }
+
+/* Header icons（顯示模式 / 候選人檢索） */
+html[data-theme="light"] .theme-toggle-btn,
+html[data-theme="light"] .cd-header-btn{
+  color: rgba(11,18,32,0.82);
+}
+html[data-theme="light"] .theme-toggle-btn:focus-visible,
+html[data-theme="light"] .cd-header-btn:focus-visible{
+  outline: 3px solid rgba(26,166,181,0.28);
+}
+
+/* ---- Sections ---- */
+html[data-theme="light"] .menu-section-title,
+html[data-theme="light"] .section-title{ color: var(--text-main); }
+html[data-theme="light"] .section-header{ border-bottom: 1px solid rgba(11,18,32,0.12); }
+html[data-theme="light"] .section-badge{
+  background: rgba(26,166,181,0.14);
+  color: rgba(11,18,32,0.88);
+  border: 1px solid rgba(26,166,181,0.18);
+  box-shadow: var(--glow);
+}
+
+/* ---- Main menu buttons: light bridge panels ---- */
+html[data-theme="light"] .menu-button{
+  background:
+    radial-gradient(120px 120px at 14% 50%, rgba(26,166,181,0.14) 0%, rgba(26,166,181,0.00) 65%),
+    linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(255,255,255,0.62) 100%);
+  border: 1px solid var(--glass-border);
+  color: rgba(11,18,32,0.90);
+  box-shadow: var(--shadow-1);
+  border-radius: var(--radius-xl);
+}
+html[data-theme="light"] .menu-button::before{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(26,166,181,0.18) 0%, rgba(26,166,181,0.00) 55%),
+    radial-gradient(circle at 86% 92%, rgba(120,92,255,0.12) 0%, rgba(120,92,255,0.00) 60%);
+}
+html[data-theme="light"] .menu-icon{ color: rgba(11,18,32,0.86); }
+html[data-theme="light"] .menu-button:hover{
+  border-color: rgba(26,166,181,0.40);
+  box-shadow: var(--shadow-2), var(--glow);
+}
+html[data-theme="light"] .menu-button:focus-visible{ outline: 3px solid rgba(26,166,181,0.22); }
+
+/* ---- Cards: glass ---- */
+html[data-theme="light"] .card,
+html[data-theme="light"] .summary-panel{
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-1);
+  border-radius: var(--radius-xl);
+}
+html[data-theme="light"] .card.clickable:hover{
+  border-color: rgba(26,166,181,0.40);
+  box-shadow: var(--shadow-2), var(--glow);
+}
+html[data-theme="light"] .card-title{
+  color: var(--text-main);
+  border-left-color: rgba(26,166,181,0.72);
+}
+html[data-theme="light"] .summary-panel h3{ color: var(--text-main); }
+html[data-theme="light"] .card-stats,
+html[data-theme="light"] .card-footer-info{ color: var(--text-sub); }
+
+/* ---- Breadcrumb: chips ---- */
+html[data-theme="light"] .breadcrumb{ padding: 10px 0; color: var(--text-sub); }
+html[data-theme="light"] .breadcrumb span{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  margin: 0 6px 6px 0;
+  border: 1px solid rgba(11,18,32,0.10);
+  background: rgba(255,255,255,0.55);
+  color: rgba(26,166,181,0.92);
+  text-decoration: none !important;
+}
+html[data-theme="light"] .breadcrumb span:hover{
+  border-color: rgba(26,166,181,0.28);
+  box-shadow: 0 12px 22px rgba(11,18,32,0.10);
+}
+html[data-theme="light"] .breadcrumb span.active{
+  color: var(--text-main);
+  background: rgba(255,255,255,0.72);
+  border-color: rgba(11,18,32,0.14);
+}
+
+/* ---- Tables: bridge console (light) ---- */
+html[data-theme="light"] .table-responsive{
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(11,18,32,0.10);
+  background: rgba(255,255,255,0.55);
+  box-shadow: var(--shadow-1);
+}
+html[data-theme="light"] table{ color: var(--text-main); }
+html[data-theme="light"] th{
+  background: rgba(255,255,255,0.80);
+  color: rgba(11,18,32,0.64);
+  border-bottom: 1px solid rgba(11,18,32,0.10);
+}
+html[data-theme="light"] th:hover{ background: rgba(255,255,255,0.92); }
+html[data-theme="light"] td{ border-bottom: 1px solid rgba(11,18,32,0.08); }
+html[data-theme="light"] tr:hover{ background-color: rgba(11,18,32,0.03); }
+html[data-theme="light"] .sort-icon.asc{ border-bottom-color: rgba(11,18,32,0.74); }
+html[data-theme="light"] .sort-icon.desc{ border-top-color: rgba(11,18,32,0.74); }
+
+html[data-theme="light"] .number-badge{
+  background: rgba(11,18,32,0.06);
+  color: rgba(11,18,32,0.74);
+  border: 2px solid rgba(255,255,255,0.95);
+  box-shadow: 0 0 0 1px rgba(11,18,32,0.08);
+}
+html[data-theme="light"] .number-badge.is-winner{
+  border-color: rgba(255,74,141,0.55);
+  color: #D01867;
+  background: rgba(255,74,141,0.10);
+  box-shadow: 0 0 0 1px rgba(255,74,141,0.14);
+}
+
+/* ---- Modal ---- */
+html[data-theme="light"] .modal-overlay{
+  display: flex !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: rgba(11,18,32,0.55);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  z-index: 9999;
+}
+html[data-theme="light"] .modal-overlay.active{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+html[data-theme="light"] .modal-card{
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(11,18,32,0.12);
+  border-radius: calc(var(--radius-xl) + 2px);
+  box-shadow: var(--shadow-2);
+  color: var(--text-main);
+}
+html[data-theme="light"] .modal-close-btn{
+  background: rgba(255,255,255,0.82);
+  color: rgba(11,18,32,0.62);
+  border: 1px solid rgba(11,18,32,0.10);
+}
+html[data-theme="light"] .modal-close-btn:hover{
+  background: rgba(255,255,255,0.92);
+  color: rgba(11,18,32,0.82);
+}
+html[data-theme="light"] .profile-header{ border-bottom-color: rgba(11,18,32,0.10); }
+html[data-theme="light"] .profile-photo{ border-color: rgba(11,18,32,0.12); background: rgba(11,18,32,0.03); }
+html[data-theme="light"] .profile-info h2{ color: rgba(11,18,32,0.92); }
+html[data-theme="light"] .profile-detail{ color: var(--text-sub); }
+html[data-theme="light"] .history-title{ color: rgba(11,18,32,0.92); border-left-color: rgba(26,166,181,0.62); }
+html[data-theme="light"] .history-item{ border-bottom-color: rgba(11,18,32,0.08); }
+html[data-theme="light"] .history-year-tag{ background: rgba(11,18,32,0.06); color: rgba(11,18,32,0.66); }
+
+/* ---- Footer ---- */
+html[data-theme="light"] footer{
+  background: rgba(255,255,255,0.40);
+  border-top: 1px solid rgba(11,18,32,0.10);
+  color: rgba(11,18,32,0.55);
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce){
+  html[data-theme="light"] header,
+  html[data-theme="light"] .menu-button,
+  html[data-theme="light"] .card,
+  html[data-theme="light"] .modal-card{
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* === THEME:LIGHT:END === */
