@@ -2870,8 +2870,147 @@ dom.breadcrumb.innerHTML = html;
 
     // ================= 初始化 =================
 
-    (function init() {
+    
+
+    // ================= Hamburger Menu =================
+    function kmToggleTheme(persist = true){
+        const current = document.documentElement.getAttribute('data-theme') || getSystemTheme();
+        const next = (current === 'dark') ? 'light' : 'dark';
+        setTheme(next, !!persist);
+        return next;
+    }
+    // 對外提供（給 Hamburger Menu 使用）
+    window.kmToggleTheme = function(){ return kmToggleTheme(true); };
+    window.kmGetTheme = function(){ return document.documentElement.getAttribute('data-theme') || 'light'; };
+
+    function initHamburgerMenu(){
+        const btn = document.getElementById('hamburger-btn');
+        const overlay = document.getElementById('hm-overlay');
+        const drawer = document.getElementById('hm-drawer');
+        const closeBtn = document.getElementById('hm-close');
+        const links = document.getElementById('hm-links');
+
+        if (!btn || !overlay || !drawer || !closeBtn || !links) return;
+
+        function refreshThemeMeta(){
+            const meta = document.getElementById('hm-theme-meta');
+            if (!meta) return;
+            meta.textContent = (window.kmGetTheme() === 'dark') ? '暗色' : '淺色';
+        }
+
+        function openMenu(){
+            overlay.classList.add('active');
+            overlay.setAttribute('aria-hidden', 'false');
+            refreshThemeMeta();
+        }
+        function closeMenu(){
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function navigateCategory(type){
+            if (type === '公民投票' && window.renderReferendumSubMenu) return window.renderReferendumSubMenu(true);
+            if (type === '立法委員'   && window.renderLegislatorSubMenu) return window.renderLegislatorSubMenu(true);
+            if ((type === '鄉鎮長' || type === '鄉鎮民代表') && window.renderTownshipSubMenu) return window.renderTownshipSubMenu(type, true);
+            if (type === '村里長' && window.renderVillageChiefTownSubMenu) return window.renderVillageChiefTownSubMenu(true);
+            if (window.renderElectionList) return window.renderElectionList(type, true);
+        }
+
+        function buildLinks(){
+            const homeSvg = `
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 11.5l8-7 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6.5 10.5V20h11V10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>`;
+            const searchSvg = `
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/>
+                <path d="M16.2 16.2L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>`;
+            const slidersSvg = `
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18 6h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 6a2 2 0 1 0 0.01 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M10 12h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M8 12a2 2 0 1 0 0.01 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M14 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 18a2 2 0 1 0 0.01 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>`;
+
+            let html = '';
+            html += `
+              <button class="hm-item" type="button" data-action="home">
+                <span class="hm-ico">${homeSvg}</span>
+                <span class="hm-text">首頁</span>
+              </button>
+              <div class="hm-divider"></div>
+              <div class="hm-subtitle">首頁按鈕</div>
+            `;
+
+            electionCategories.forEach(cat => {
+                html += `
+                  <button class="hm-item" type="button" data-action="category" data-type="${cat.type}">
+                    <span class="hm-ico">${getMenuIconSvg(cat.iconKey)}</span>
+                    <span class="hm-text">${cat.type}</span>
+                  </button>
+                `;
+            });
+
+            html += `
+              <div class="hm-divider"></div>
+              <button class="hm-item" type="button" data-action="candidate">
+                <span class="hm-ico">${searchSvg}</span>
+                <span class="hm-text">候選人檢索</span>
+              </button>
+
+              <button class="hm-item" type="button" data-action="toggle-theme">
+                <span class="hm-ico">${slidersSvg}</span>
+                <span class="hm-text">淺色／深色模式</span>
+                <span id="hm-theme-meta" class="hm-meta"></span>
+              </button>
+            `;
+
+            links.innerHTML = html;
+            refreshThemeMeta();
+        }
+
+        // Build menu
+        buildLinks();
+
+        // events
+        btn.addEventListener('click', () => {
+            if (overlay.classList.contains('active')) closeMenu();
+            else openMenu();
+        });
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) closeMenu();
+        });
+
+        links.addEventListener('click', (e) => {
+            const item = e.target.closest('.hm-item');
+            if (!item) return;
+            const action = item.dataset.action;
+
+            if (action === 'home' && window.renderMainMenu) window.renderMainMenu(true);
+            else if (action === 'category') navigateCategory(item.dataset.type);
+            else if (action === 'candidate' && window.renderCandidateDirectory) window.renderCandidateDirectory(true);
+            else if (action === 'toggle-theme') {
+                window.kmToggleTheme();
+                refreshThemeMeta();
+            }
+
+            closeMenu();
+        });
+    }
+
+(function init() {
         initThemeToggle();
+        initHamburgerMenu();
         // 首次載入：票軌數據（所有選舉 CSV + candidates.csv）
         renderBootLoadingUI((availableElections?.length || 0) + 1);
         

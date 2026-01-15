@@ -25,6 +25,13 @@
 <body>
 
 <header>
+  <button id="hamburger-btn" class="hamburger-btn" type="button" title="選單" aria-label="開啟選單">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 6h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 12h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </button>
     <h1>
         <span class="site-title" onclick="renderMainMenu()">
             <span class="site-logo" aria-hidden="true">
@@ -39,14 +46,18 @@
             金門選舉資料庫
         </span>
     </h1>
-    <button id="theme-toggle-btn" class="theme-toggle-btn" type="button" title="切換暗色模式" aria-label="切換暗色模式">
-        <!-- 顯示模式 icon（由 JS 依模式切換） -->
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                     </svg>
-    </button>
-
 </header>
+
+<!-- Hamburger Menu -->
+<div id="hm-overlay" class="hm-overlay" aria-hidden="true">
+    <nav id="hm-drawer" class="hm-drawer" aria-label="網站導覽" onclick="event.stopPropagation()">
+        <div class="hm-top">
+            <div class="hm-title">選單</div>
+            <button id="hm-close" class="hm-close" type="button" aria-label="關閉選單">&times;</button>
+        </div>
+        <div id="hm-links" class="hm-links"></div>
+    </nav>
+</div>
 
 <div class="container">
     <div id="breadcrumb" class="breadcrumb" style="display:none;"></div>
