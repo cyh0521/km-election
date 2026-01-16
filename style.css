@@ -1,6 +1,5 @@
 :root {
     --primary: #3887B0;
-    --tab-teal: #1AA39A;
     --secondary: #2c3e50; 
     --bg: #f4f7f6;
     --card-bg: #ffffff;
@@ -239,51 +238,6 @@ h1 span { cursor: pointer; }
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
-}
-
-/* === 首頁：近期（Tab） === */
-.recent-tabs{
-    display: inline-flex;
-    gap: 8px;
-    padding: 6px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.45);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.recent-tab-btn{
-    appearance: none;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--text-sub);
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.recent-tab-btn:hover{ transform: translateY(-1px); }
-.recent-tab-btn:active{ transform: translateY(0) scale(0.99); }
-.recent-tab-btn:focus-visible{
-    outline: 2px solid rgba(26,163,154,0.45);
-    outline-offset: 2px;
-}
-
-.recent-tab-btn.is-active{
-    background: var(--tab-teal);
-    color: #fff;
-    box-shadow: 0 10px 22px rgba(26,163,154,0.18);
-}
-
-.recent-tab-panels{ margin-top: 14px; }
-
-@media (max-width: 768px){
-    .recent-tabs{ width: 100%; justify-content: center; }
-    .recent-tab-btn{ flex: 1; text-align: center; }
 }
 
 /* --- 選舉列表 / 摘要卡片樣式 --- */
@@ -785,6 +739,98 @@ footer {
 }
 
 
+/* =========================================================
+   首頁：近期（資料夾頁籤 Tab）
+   - tab 坐在分隔線上、啟用時與內容框連成一體（資料夾頁籤感）
+   ========================================================= */
+
+.home-recent{ margin-top: 10px; }
+
+.recent-tabs{
+  position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  padding-left: 6px;
+  margin: 2px 0 0 0;
+}
+
+/* 分隔線 */
+.recent-tabs::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.recent-tab-btn{
+  position: relative;
+  z-index: 1; /* 蓋住分隔線 */
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: transparent;
+  color: var(--text-sub);
+  padding: 10px 14px 9px;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+}
+
+.recent-tab-btn:hover{ transform: translateY(-1px); }
+.recent-tab-btn:active{ transform: translateY(0); }
+
+/* 資料夾頁籤：active tab 與內容框相連 */
+.recent-tab-btn.is-active{
+  background: var(--tab-accent);
+  color: var(--tab-accent-contrast);
+  border-color: color-mix(in srgb, var(--tab-accent) 86%, var(--border));
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
+}
+
+/* 兩側小斜角（像資料夾頁籤） */
+.recent-tab-btn.is-active::before,
+.recent-tab-btn.is-active::after{
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: 12px;
+  height: 12px;
+  background: var(--tab-accent);
+}
+.recent-tab-btn.is-active::before{
+  left: -6px;
+  transform: skewX(-30deg);
+  border-left: 1px solid color-mix(in srgb, var(--tab-accent) 86%, var(--border));
+}
+.recent-tab-btn.is-active::after{
+  right: -6px;
+  transform: skewX(30deg);
+  border-right: 1px solid color-mix(in srgb, var(--tab-accent) 86%, var(--border));
+}
+
+.recent-tab-panels{
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 16px 16px 16px;
+  background: var(--card-bg);
+  padding: 16px 14px 4px;
+  margin-top: -1px; /* 與 tab 無縫 */
+}
+
+.recent-tab-panel .election-list-grid{ margin-bottom: 0; }
+
+@media (max-width: 520px){
+  .recent-tabs{ gap: 8px; padding-left: 2px; }
+  .recent-tab-btn{ padding: 9px 11px 8px; font-size: 13px; }
+}
+
 /* === THEME:DARK:BEGIN === */
 /* =========================================================
    Kelvin / SNW  現代艦橋風（CSS-only 視覺翻新）
@@ -796,7 +842,6 @@ footer {
 :root[data-theme="dark"]{
   /* 主要色：偏青藍霓虹（艦橋 HUD 感） */
   --primary: #2DE2E6;            /* neon cyan */
-  --tab-teal: var(--primary);
   --secondary: #0B1220;          /* deep bridge */
   --bg: #060A12;                 /* space black */
   --card-bg: rgba(255,255,255,0.06);
@@ -1055,7 +1100,6 @@ html[data-theme="dark"] footer{
 :root[data-theme="light"]{
   /* 主色：偏青藍（延續暗色 neon cyan 的語言，但更克制） */
   --primary: #1AA6B5;
-  --tab-teal: #1AA39A;
   --secondary: #0B1220;
   --bg: #F4F7FB;
   --card-bg: rgba(255,255,255,0.70);
