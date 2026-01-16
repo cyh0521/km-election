@@ -1,4 +1,17 @@
 // ================= 數據與設定區 =================
+
+    // ================= 首頁：近期選舉/公投（可手動指定 uiName） =================
+    // 你可以在這裡指定「首頁 Tab」要顯示哪些項目（填 uiName 全名）。
+    // - 有填：依你的清單顯示（維持你填寫的順序）
+    // - 沒填：自動從資料中帶入近三年（含今年）
+    const HOME_RECENT_IMPORTANT_UI_NAMES = [
+        // 範例："2024年 總統副總統選舉",
+        // 範例："2024年 立法委員選舉",
+    ];
+
+    const HOME_RECENT_REFERENDUM_UI_NAMES = [
+        // 範例："2022年 全國性公民投票",
+    ];
     
     const availableElections = [
 
@@ -1668,26 +1681,119 @@ function extractCountySummary(text) {
 
         html += `</div></div>`;
 
-        const recentElections = [...availableElections].sort((a, b) => {
-            const yearA = parseInt(a.year);
-            const yearB = parseInt(b.year);
-            if (yearA !== yearB) {
-                return yearB - yearA;}
-            return a.uiName.localeCompare(b.uiName, 'zh-TW');
+        // ================= 首頁：近期重要選舉 / 近期公投（Tab） =================
+        const isReferendumElection = (e) => {
+            const t = (e?.type || '').toString();
+            const n = (e?.uiName || '').toString();
+            return t.includes('公民投票') || /公投|複決/.test(n);
+        };
 
-        }).slice(0, 8); 
+        const normalizeUiName = (s) => (s || '').toString().trim();
 
-        if (recentElections.length > 0) {
-            html += `<div class="main-section">
-                <div class="menu-section-title">近期選舉</div>
-                <div class="election-list-grid">`;
-           recentElections.forEach(e => {
-                html += generateSummaryCardHTML(e);
+        const pickByUiNames = (uiNames) => {
+            const set = new Map();
+            // 依清單順序放入，且去重
+            uiNames.map(normalizeUiName).filter(Boolean).forEach(name => {
+                const found = availableElections.find(e => normalizeUiName(e.uiName) === name);
+                if (found) set.set(found.uniqueId || found.file || name, found);
             });
-            html += `</div></div>`;
+            return [...set.values()];
+        };
+
+        const autoPickRecent3Years = (predicateFn) => {
+            const currentYear = new Date().getFullYear();
+            const minYear = currentYear - 2;
+            return [...availableElections]
+                .filter(e => {
+                    const y = parseInt(e.year);
+                    return Number.isFinite(y) && y >= minYear && y <= currentYear && predicateFn(e);
+                })
+                .sort((a, b) => {
+                    const yearA = parseInt(a.year);
+                    const yearB = parseInt(b.year);
+                    if (yearA !== yearB) return yearB - yearA;
+                    return a.uiName.localeCompare(b.uiName, 'zh-TW');
+                });
+        };
+
+        let recentImportant = [];
+        let recentReferendum = [];
+
+        // 先看你有沒有手動指定
+        const manualImportant = pickByUiNames(HOME_RECENT_IMPORTANT_UI_NAMES);
+        const manualReferendum = pickByUiNames(HOME_RECENT_REFERENDUM_UI_NAMES);
+
+        // 若某一欄沒指定，就用近三年自動帶入
+        recentImportant = manualImportant.length > 0
+            ? manualImportant
+            : autoPickRecent3Years(e => !isReferendumElection(e));
+
+        recentReferendum = manualReferendum.length > 0
+            ? manualReferendum
+            : autoPickRecent3Years(e => isReferendumElection(e));
+
+        // 若太多，首頁先顯示最多 10 筆（你也可以自己改）
+        recentImportant = recentImportant.slice(0, 10);
+        recentReferendum = recentReferendum.slice(0, 10);
+
+        // 如果兩邊都完全沒資料，就不渲染（避免空白區塊）
+        if (recentImportant.length > 0 || recentReferendum.length > 0) {
+            const importantCards = recentImportant.length > 0
+                ? recentImportant.map(e => generateSummaryCardHTML(e)).join('')
+                : `<div class="home-tab-empty">（這一欄目前沒有可顯示的資料）</div>`;
+
+            const referendumCards = recentReferendum.length > 0
+                ? recentReferendum.map(e => generateSummaryCardHTML(e)).join('')
+                : `<div class="home-tab-empty">（這一欄目前沒有可顯示的資料）</div>`;
+
+            // 注意：依你的要求，這裡不再使用原本的標題與橫線（menu-section-title）
+            html += `
+            <div class="main-section">
+                <div class="home-folder-tabs">
+                    <div class="home-tabs" role="tablist" aria-label="近期選舉與公投">
+                        <button class="home-tab-btn is-active" type="button" role="tab" aria-selected="true" data-tab="important">近期重要選舉</button>
+                        <button class="home-tab-btn" type="button" role="tab" aria-selected="false" data-tab="referendum">近期公投</button>
+                    </div>
+
+                    <div class="home-tab-surface" aria-label="近期選舉內容">
+                        <div class="home-tab-panel is-active" role="tabpanel" data-panel="important">
+                            <div class="election-list-grid">${importantCards}</div>
+                        </div>
+
+                        <div class="home-tab-panel" role="tabpanel" data-panel="referendum" hidden>
+                            <div class="election-list-grid">${referendumCards}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
         }
 
         dom.content.innerHTML = html;
+
+        // ================= 首頁 Tab 互動（僅影響首頁） =================
+        const tabBtns = dom.content.querySelectorAll('.home-tab-btn');
+        if (tabBtns && tabBtns.length) {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-tab');
+                    if (!target) return;
+
+                    tabBtns.forEach(b => {
+                        const isActive = b === btn;
+                        b.classList.toggle('is-active', isActive);
+                        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                    });
+
+                    const panels = dom.content.querySelectorAll('.home-tab-panel');
+                    panels.forEach(p => {
+                        const match = p.getAttribute('data-panel') === target;
+                        p.classList.toggle('is-active', match);
+                        if (match) p.removeAttribute('hidden');
+                        else p.setAttribute('hidden', '');
+                    });
+                });
+            });
+        }
     };
 
     window.renderReferendumSubMenu = function(pushState = true) {
