@@ -1,6 +1,5 @@
 :root {
     --primary: #3887B0;
-    --tab-teal: #1AA39A;
     --secondary: #2c3e50; 
     --bg: #f4f7f6;
     --card-bg: #ffffff;
@@ -241,50 +240,54 @@ h1 span { cursor: pointer; }
     border-bottom: 2px solid var(--border);
 }
 
-/* === 首頁：近期（Tab） === */
-.recent-tabs{
-    display: inline-flex;
-    gap: 8px;
-    padding: 6px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.45);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+/* =========================
+   首頁：近期（Tab）
+   ========================= */
+
+/* 文字移除、保留底線：作為上方類別按鈕與下方內容的間隔 */
+.home-recent-divider{
+    border-bottom: 2px solid var(--border);
+    margin: -18px 0 22px; /* 上移一些，縮短與上方按鈕區塊的距離 */
 }
 
-.recent-tab-btn{
+.home-recent-tabs{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.home-recent-tab{
     appearance: none;
-    border: 1px solid transparent;
+    border: 1px solid var(--border);
     background: transparent;
-    color: var(--text-sub);
+    color: var(--text-main);
     padding: 10px 14px;
     border-radius: 12px;
-    font-weight: 700;
     font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
     cursor: pointer;
-    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.recent-tab-btn:hover{ transform: translateY(-1px); }
-.recent-tab-btn:active{ transform: translateY(0) scale(0.99); }
-.recent-tab-btn:focus-visible{
-    outline: 2px solid rgba(26,163,154,0.45);
+.home-recent-tab:hover{ transform: translateY(-1px); }
+.home-recent-tab:active{ transform: translateY(0px) scale(0.98); }
+.home-recent-tab:focus-visible{
+    outline: 3px solid rgba(56, 135, 176, 0.25);
     outline-offset: 2px;
 }
 
-.recent-tab-btn.is-active{
+.home-recent-tab.is-active{
     background: var(--tab-teal);
+    border-color: rgba(0,0,0,0.05);
     color: #fff;
-    box-shadow: 0 10px 22px rgba(26,163,154,0.18);
 }
 
-.recent-tab-panels{ margin-top: 14px; }
-
-@media (max-width: 768px){
-    .recent-tabs{ width: 100%; justify-content: center; }
-    .recent-tab-btn{ flex: 1; text-align: center; }
-}
+.home-recent-panel{ display: none; }
+.home-recent-panel.is-active{ display: block; }
 
 /* --- 選舉列表 / 摘要卡片樣式 --- */
 .election-list-grid {
@@ -796,7 +799,6 @@ footer {
 :root[data-theme="dark"]{
   /* 主要色：偏青藍霓虹（艦橋 HUD 感） */
   --primary: #2DE2E6;            /* neon cyan */
-  --tab-teal: var(--primary);
   --secondary: #0B1220;          /* deep bridge */
   --bg: #060A12;                 /* space black */
   --card-bg: rgba(255,255,255,0.06);
@@ -812,6 +814,9 @@ footer {
   --shadow-2: 0 16px 44px rgba(0,0,0,0.55);
   --glow: 0 0 0 1px rgba(45,226,230,0.18), 0 0 22px rgba(45,226,230,0.14);
   --radius-xl: 18px;
+
+  /* 首頁 Tab：深色模式用較沈穩的青綠（避免過亮） */
+  --tab-teal: #0F8E86;
 }
 
 /* ---- Background: subtle nebula + grid ---- */
@@ -853,6 +858,32 @@ html[data-theme="dark"] .site-logo{ color: rgba(255,255,255,0.95); }
 
 /* ---- Sections ---- */
 html[data-theme="dark"] .menu-section-title, html[data-theme="dark"] .section-title{ color: var(--text-main); }
+
+/* 首頁：近期（Tab）深色模式微調（避免過亮、避免灰底塊感） */
+html[data-theme="dark"] .home-recent-divider{
+  border-bottom-color: rgba(255,255,255,0.10);
+}
+html[data-theme="dark"] .home-recent-tab{
+  border-color: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.02);
+  color: var(--text-main);
+}
+html[data-theme="dark"] .home-recent-tab:hover{
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.18);
+}
+html[data-theme="dark"] .home-recent-tab:focus-visible{
+  outline-color: rgba(45,226,230,0.25);
+}
+html[data-theme="dark"] .home-recent-tab.is-active{
+  border-color: rgba(15,142,134,0.85);
+  box-shadow: 0 0 0 1px rgba(15,142,134,0.35);
+}
+html[data-theme="dark"] .home-recent-tab.is-active{
+  background: linear-gradient(180deg, rgba(15,142,134,0.92) 0%, rgba(15,142,134,0.76) 100%);
+  border-color: rgba(15,142,134,0.55);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+}
 html[data-theme="dark"] .section-header{
   border-bottom: 1px solid rgba(255,255,255,0.10);
 }
@@ -1055,7 +1086,6 @@ html[data-theme="dark"] footer{
 :root[data-theme="light"]{
   /* 主色：偏青藍（延續暗色 neon cyan 的語言，但更克制） */
   --primary: #1AA6B5;
-  --tab-teal: #1AA39A;
   --secondary: #0B1220;
   --bg: #F4F7FB;
   --card-bg: rgba(255,255,255,0.70);
