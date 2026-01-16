@@ -1,5 +1,6 @@
 :root {
     --primary: #3887B0;
+    --tab-teal: #1AA39A;
     --secondary: #2c3e50; 
     --bg: #f4f7f6;
     --card-bg: #ffffff;
@@ -238,6 +239,51 @@ h1 span { cursor: pointer; }
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
+}
+
+/* === 首頁：近期（Tab） === */
+.recent-tabs{
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.recent-tab-btn{
+    appearance: none;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-sub);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.recent-tab-btn:hover{ transform: translateY(-1px); }
+.recent-tab-btn:active{ transform: translateY(0) scale(0.99); }
+.recent-tab-btn:focus-visible{
+    outline: 2px solid rgba(26,163,154,0.45);
+    outline-offset: 2px;
+}
+
+.recent-tab-btn.is-active{
+    background: var(--tab-teal);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(26,163,154,0.18);
+}
+
+.recent-tab-panels{ margin-top: 14px; }
+
+@media (max-width: 768px){
+    .recent-tabs{ width: 100%; justify-content: center; }
+    .recent-tab-btn{ flex: 1; text-align: center; }
 }
 
 /* --- 選舉列表 / 摘要卡片樣式 --- */
@@ -662,85 +708,6 @@ footer {
     line-height: 1.6;
 }
 
-/* =========================
-   首頁：近期重要選舉 / 近期公投（Tab）
-   - 不沿用 menu-section-title（避免標題+橫線）
-   - Tab 主色：使用 var(--primary)（青綠系）
-   ========================= */
-
-.home-tabs{
-    display: flex;
-    gap: 8px;
-    align-items: stretch;
-    padding: 6px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-    margin: 8px 0 14px 0;
-}
-
-.home-tab-btn{
-    flex: 1;
-    border: none;
-    border-radius: 12px;
-    padding: 11px 12px;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: .5px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    color: rgba(255,255,255,0.96);
-
-    /* 非啟用：同色系但更淡，仍維持白字（符合你的「青綠+白字」要求） */
-    background: color-mix(in srgb, var(--primary) 55%, transparent);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
-    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, background .15s ease;
-    position: relative;
-}
-
-.home-tab-btn:hover{
-    transform: translateY(-1px);
-    filter: brightness(1.06);
-}
-
-.home-tab-btn:active{
-    transform: translateY(0);
-    filter: brightness(0.98);
-}
-
-.home-tab-btn:focus-visible{
-    outline: 2px solid color-mix(in srgb, var(--primary) 70%, white);
-    outline-offset: 2px;
-}
-
-.home-tab-btn.is-active{
-    background: var(--primary);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.14);
-}
-
-/* 啟用狀態的小「亮條」：有 Tab 的存在感但不會太花 */
-.home-tab-btn.is-active::after{
-    content: "";
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 7px;
-    height: 3px;
-    border-radius: 99px;
-    background: rgba(255,255,255,0.85);
-}
-
-.home-tab-panel[hidden]{
-    display: none;
-}
-
-.home-tab-empty{
-    padding: 14px 10px;
-    color: var(--text-sub);
-    font-size: 14px;
-}
-
 @media (min-width: 769px) {
     #footer-source { display: inline; }
 }
@@ -829,6 +796,7 @@ footer {
 :root[data-theme="dark"]{
   /* 主要色：偏青藍霓虹（艦橋 HUD 感） */
   --primary: #2DE2E6;            /* neon cyan */
+  --tab-teal: var(--primary);
   --secondary: #0B1220;          /* deep bridge */
   --bg: #060A12;                 /* space black */
   --card-bg: rgba(255,255,255,0.06);
@@ -1087,6 +1055,7 @@ html[data-theme="dark"] footer{
 :root[data-theme="light"]{
   /* 主色：偏青藍（延續暗色 neon cyan 的語言，但更克制） */
   --primary: #1AA6B5;
+  --tab-teal: #1AA39A;
   --secondary: #0B1220;
   --bg: #F4F7FB;
   --card-bg: rgba(255,255,255,0.70);
