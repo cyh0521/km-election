@@ -662,6 +662,85 @@ footer {
     line-height: 1.6;
 }
 
+/* =========================
+   首頁：近期重要選舉 / 近期公投（Tab）
+   - 不沿用 menu-section-title（避免標題+橫線）
+   - Tab 主色：使用 var(--primary)（青綠系）
+   ========================= */
+
+.home-tabs{
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    padding: 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    margin: 8px 0 14px 0;
+}
+
+.home-tab-btn{
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    color: rgba(255,255,255,0.96);
+
+    /* 非啟用：同色系但更淡，仍維持白字（符合你的「青綠+白字」要求） */
+    background: color-mix(in srgb, var(--primary) 55%, transparent);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, background .15s ease;
+    position: relative;
+}
+
+.home-tab-btn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+}
+
+.home-tab-btn:active{
+    transform: translateY(0);
+    filter: brightness(0.98);
+}
+
+.home-tab-btn:focus-visible{
+    outline: 2px solid color-mix(in srgb, var(--primary) 70%, white);
+    outline-offset: 2px;
+}
+
+.home-tab-btn.is-active{
+    background: var(--primary);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+}
+
+/* 啟用狀態的小「亮條」：有 Tab 的存在感但不會太花 */
+.home-tab-btn.is-active::after{
+    content: "";
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 7px;
+    height: 3px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.85);
+}
+
+.home-tab-panel[hidden]{
+    display: none;
+}
+
+.home-tab-empty{
+    padding: 14px 10px;
+    color: var(--text-sub);
+    font-size: 14px;
+}
+
 @media (min-width: 769px) {
     #footer-source { display: inline; }
 }
@@ -738,98 +817,6 @@ footer {
     }
 }
 
-
-/* =========================================================
-   首頁：近期（資料夾頁籤 Tab）
-   - tab 坐在分隔線上、啟用時與內容框連成一體（資料夾頁籤感）
-   ========================================================= */
-
-.home-recent{ margin-top: 10px; }
-
-.recent-tabs{
-  position: relative;
-  display: flex;
-  gap: 10px;
-  align-items: flex-end;
-  padding-left: 6px;
-  margin: 2px 0 0 0;
-}
-
-/* 分隔線 */
-.recent-tabs::after{
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: var(--border);
-}
-
-.recent-tab-btn{
-  position: relative;
-  z-index: 1; /* 蓋住分隔線 */
-  border: 1px solid var(--border);
-  border-bottom: none;
-  background: transparent;
-  color: var(--text-sub);
-  padding: 10px 14px 9px;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
-}
-
-.recent-tab-btn:hover{ transform: translateY(-1px); }
-.recent-tab-btn:active{ transform: translateY(0); }
-
-/* 資料夾頁籤：active tab 與內容框相連 */
-.recent-tab-btn.is-active{
-  background: var(--tab-accent);
-  color: var(--tab-accent-contrast);
-  border-color: color-mix(in srgb, var(--tab-accent) 86%, var(--border));
-  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
-}
-
-/* 兩側小斜角（像資料夾頁籤） */
-.recent-tab-btn.is-active::before,
-.recent-tab-btn.is-active::after{
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  width: 12px;
-  height: 12px;
-  background: var(--tab-accent);
-}
-.recent-tab-btn.is-active::before{
-  left: -6px;
-  transform: skewX(-30deg);
-  border-left: 1px solid color-mix(in srgb, var(--tab-accent) 86%, var(--border));
-}
-.recent-tab-btn.is-active::after{
-  right: -6px;
-  transform: skewX(30deg);
-  border-right: 1px solid color-mix(in srgb, var(--tab-accent) 86%, var(--border));
-}
-
-.recent-tab-panels{
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 16px 16px 16px;
-  background: var(--card-bg);
-  padding: 16px 14px 4px;
-  margin-top: -1px; /* 與 tab 無縫 */
-}
-
-.recent-tab-panel .election-list-grid{ margin-bottom: 0; }
-
-@media (max-width: 520px){
-  .recent-tabs{ gap: 8px; padding-left: 2px; }
-  .recent-tab-btn{ padding: 9px 11px 8px; font-size: 13px; }
-}
 
 /* === THEME:DARK:BEGIN === */
 /* =========================================================
