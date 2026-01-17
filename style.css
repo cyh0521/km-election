@@ -6,7 +6,6 @@
     --text-main: #2c3e50;
     --text-sub: #7f8c8d;
     --border: #e1e4e8;
-    --tab-teal: #0F8E86; /* 首頁近期Tab主題青綠 */
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -174,7 +173,7 @@ h1 span { cursor: pointer; }
 .menu-text{
     display: block;
     text-align: left;
-    font-size: clamp(15px, 1.2vw, 18px);
+    font-size: clamp(14px, 1.1vw, 17px);
     font-weight: 800;
     letter-spacing: 0.2px;
     line-height: 1.2;
@@ -220,7 +219,7 @@ h1 span { cursor: pointer; }
     .menu-svg{ width: 22px; height: 22px; }
 
     .menu-text{
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1.2;
     }
 }
@@ -239,91 +238,6 @@ h1 span { cursor: pointer; }
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
-}
-
-/* =========================
-   首頁：近期（Tab）
-   - 文字標題已移除，改以分隔線作為按鈕區與內容區間隔
-   ========================= */
-
-.home-recent-divider{
-    border-bottom: 2px solid var(--border);
-    margin: -18px 0 22px; /* 上移一些，縮短與上方按鈕區塊的距離 */
-}
-
-.home-recent-tabs{
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 14px;
-}
-
-.home-recent-tab{
-    appearance: none;
-    border: 1px solid rgba(225, 228, 232, 0.95);
-    background: linear-gradient(180deg, #ffffff 0%, rgba(56, 135, 176, 0.04) 100%);
-    color: var(--secondary);
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.2px;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(44, 62, 80, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.home-recent-tab:hover{
-    transform: translateY(-3px);
-    border-color: rgba(56, 135, 176, 0.55);
-    box-shadow: 0 12px 24px rgba(56, 135, 176, 0.16);
-}
-.home-recent-tab:active{ transform: translateY(0px) scale(0.98); }
-.home-recent-tab:focus-visible{
-    outline: 3px solid rgba(15, 142, 134, 0.25);
-    outline-offset: 2px;
-}
-
-.home-recent-tab.is-active{
-    background: var(--tab-teal);
-    border-color: rgba(0,0,0,0.05);
-    color: #fff;
-    box-shadow: 0 10px 20px rgba(15, 142, 134, 0.18);
-}
-
-.home-recent-panel{ display: none; }
-.home-recent-panel.is-active{ display: block; }
-
-/* ---- Dark mode: Tabs 回到玻璃感；hover 效果比照選舉小卡 ---- */
-html[data-theme="dark"] .home-recent-divider{
-    border-bottom-color: rgba(255,255,255,0.10);
-}
-html[data-theme="dark"] .home-recent-tab{
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.90);
-    box-shadow: var(--shadow-1);
-}
-html[data-theme="dark"] .home-recent-tab:hover{
-    /* 跟 .card.clickable:hover 一樣：不平移、只強化邊框與陰影 */
-    transform: none;
-    border-color: rgba(45,226,230,0.36);
-    box-shadow: var(--shadow-2), var(--glow);
-    background: rgba(255,255,255,0.06);
-}
-html[data-theme="dark"] .home-recent-tab:active{
-    transform: none;
-}
-html[data-theme="dark"] .home-recent-tab:focus-visible{
-    outline: 3px solid rgba(45,226,230,0.25);
-}
-html[data-theme="dark"] .home-recent-tab.is-active{
-    background: rgba(45,226,230,0.18);
-    border-color: rgba(45,226,230,0.26);
-    color: rgba(255,255,255,0.95);
-    box-shadow: var(--shadow-1);
 }
 
 /* --- 選舉列表 / 摘要卡片樣式 --- */
@@ -414,6 +328,23 @@ html[data-theme="dark"] .home-recent-tab.is-active{
     margin-top: 5px; padding-top: 0px; font-size: 12px; color: var(--text-sub); text-align: left; font-weight: 500;
 }
 
+/* 首頁：近期公投小卡（表格下方顯示 CSV A1 的公投主文） */
+.referendum-maintext{
+    margin-top: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-main);
+    background: rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+}
+html[data-theme="dark"] .referendum-maintext{
+    color: var(--text-main);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+}
+
 .sub-area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 15px; }
 
 .table-responsive { overflow-x: auto; }
@@ -462,22 +393,8 @@ td.number-cell { text-align: center; }
 .sort-icon.desc { border-top: 4px solid #333; opacity: 1; }
 
 .number-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    line-height: normal;
-    background: #ffffff;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 13px;
-    color: #d9534f;
-    vertical-align: middle;
-    border: 2px solid rgba(217, 83, 79, 0.35);
-    box-shadow: 0 0 0 1px rgba(217, 83, 79, 0.10);
+    display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; line-height: normal; background: #eee; border-radius: 50%; font-weight: 700; font-size: 13px; color: #555; vertical-align: middle; border: 2px solid #ffffff; box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
 }
-
 
 .number-badge.is-winner { border: 2px solid currentColor; background: #ffffff; color: #d9534f; box-shadow: 0 0 0 1px rgba(217, 83, 79, 0.2); }
 
@@ -639,7 +556,7 @@ html[data-theme="dark"] .loading-state .loading-progress{
 }
 .modal-close-btn:hover {
     color: #333;
-    background: #ffffff;
+    background: #eee;
 }
 .modal-body {
     padding: 25px;
@@ -657,7 +574,7 @@ html[data-theme="dark"] .loading-state .loading-progress{
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    background: #ffffff;
+    background: #eee;
     border: 2px solid var(--border);
     flex-shrink: 0;
 }
@@ -697,8 +614,8 @@ html[data-theme="dark"] .loading-state .loading-progress{
 }
 .history-item:last-child { border-bottom: none; }
 .history-year-tag {
-    background: #ffffff;
-    color: #d9534f;
+    background: #eee;
+    color: #555;
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 12px;
@@ -728,7 +645,7 @@ html[data-theme="dark"] .loading-state .loading-progress{
     table.large-table td { padding: 8px 8px; }
     table.large-table .party-badge { font-size: 11px; }
     td.number-cell { text-align: center; line-height: 22px; }
-    .number-badge { width: 22px; height: 22px; line-height: normal; font-size: 12px; vertical-align: middle; border: 2px solid rgba(217, 83, 79, 0.35); }
+    .number-badge { width: 22px; height: 22px; line-height: normal; font-size: 12px; vertical-align: middle; border: 2px solid #ffffff; }
     .number-badge.is-winner { border: 2px solid #d9534f; color: #d9534f; }
     .col-party .party-title-desktop { display: none; }
     .col-party .party-title-mobile { display: inline; }
@@ -1277,16 +1194,18 @@ html[data-theme="light"] .sort-icon.asc{ border-bottom-color: rgba(11,18,32,0.74
 html[data-theme="light"] .sort-icon.desc{ border-top-color: rgba(11,18,32,0.74); }
 
 html[data-theme="light"] .number-badge{
-  background: rgba(11,18,32,0.06);
-  color: rgba(11,18,32,0.74);
-  border: 2px solid rgba(255,255,255,0.95);
-  box-shadow: 0 0 0 1px rgba(11,18,32,0.08);
+  /* 淺色模式：候選人號次與圓圈使用指定紅色（#D95551） */
+  background: #ffffff;
+  color: #D95551;
+  border: 2px solid #D95551;
+  box-shadow: 0 0 0 1px rgba(217, 85, 81, 0.20);
 }
 html[data-theme="light"] .number-badge.is-winner{
-  color: #D01867;
+  /* 當選：維持同色系，僅加強底色提示 */
+  color: #D95551;
   border-color: currentColor;
-  background: rgba(255,74,141,0.10);
-  box-shadow: 0 0 0 1px rgba(255,74,141,0.14);
+  background: rgba(217, 85, 81, 0.10);
+  box-shadow: 0 0 0 1px rgba(217, 85, 81, 0.18);
 }
 
 /* ---- Modal ---- */
