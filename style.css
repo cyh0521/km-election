@@ -6,9 +6,6 @@
     --text-main: #2c3e50;
     --text-sub: #7f8c8d;
     --border: #e1e4e8;
-
-    /* 首頁 Tab：淺色模式也用青綠色（避免看不清楚） */
-    --tab-teal: #0F8E86;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -243,6 +240,82 @@ h1 span { cursor: pointer; }
     border-bottom: 2px solid var(--border);
 }
 
+/* =========================
+   首頁：近期（Tab）
+   - 移除標題文字（由 JS 不再輸出），保留上移的底線做分隔
+   ========================= */
+
+.home-recent-divider{
+    border-bottom: 2px solid var(--border);
+    margin: -18px 0 18px; /* 上移：貼近上方類別按鈕 */
+}
+
+.home-recent-tabs{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.home-recent-tab{
+    appearance: none;
+    border: 1px solid rgba(15, 142, 134, 0.55); /* ✅ 與選舉小卡 hover 線條同寬：1px */
+    border-width: 1px;
+    background: transparent;
+    color: var(--tab-teal);
+    padding: 9px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.home-recent-tab:hover{
+    transform: translateY(-1px);
+    border-color: rgba(15, 142, 134, 0.95); /* ✅ hover 也維持 1px 線條 */
+    box-shadow: 0 8px 18px rgba(15, 142, 134, 0.16);
+}
+
+.home-recent-tab:active{ transform: translateY(0px) scale(0.98); }
+
+.home-recent-tab:focus-visible{
+    outline: 3px solid rgba(15, 142, 134, 0.22);
+    outline-offset: 2px;
+}
+
+.home-recent-tab.is-active{
+    background: var(--tab-teal);
+    border-color: rgba(15, 142, 134, 0.95);
+    color: #fff;
+}
+
+.home-recent-panel{ display: none; }
+.home-recent-panel.is-active{ display: block; }
+
+/* Dark：未選取青綠外框、選取青綠按鈕（但不刺眼） */
+html[data-theme="dark"] .home-recent-divider{
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+html[data-theme="dark"] .home-recent-tab{
+    border: 1px solid rgba(45,226,230,0.32); /* ✅ 1px */
+    background: rgba(255,255,255,0.03);
+    color: rgba(45,226,230,0.95);
+}
+html[data-theme="dark"] .home-recent-tab:hover{
+    border-color: rgba(45,226,230,0.46);
+    box-shadow: var(--glow);
+}
+html[data-theme="dark"] .home-recent-tab.is-active{
+    background: rgba(45,226,230,0.20);
+    border-color: rgba(45,226,230,0.62);
+    color: rgba(255,255,255,0.96);
+    box-shadow: var(--glow);
+}
+
 /* --- 選舉列表 / 摘要卡片樣式 --- */
 .election-list-grid {
         column-count: 2; 
@@ -266,48 +339,6 @@ h1 span { cursor: pointer; }
 .breadcrumb span.active { color: var(--text-main); cursor: default; text-decoration: none; }
 
 .main-section { margin-bottom: 40px; }
-
-/* =========================
-   首頁：近期（Tab）
-   - 文字標題移除，改用分隔線 + 標籤
-   ========================= */
-.home-recent-divider{
-    width: 100%;
-    border-top: 1px solid var(--border);
-    margin: 6px 0 14px; /* 上移：更像分隔線而不是段落標題 */
-}
-
-.home-recent-tabs{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
-
-.home-tab-btn{
-    appearance: none;
-    border: 1px solid rgba(15,142,134,0.55);
-    background: #fff;
-    color: var(--tab-teal);
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-.home-tab-btn:hover{ transform: translateY(-1px); border-color: rgba(15,142,134,0.75); }
-.home-tab-btn:active{ transform: translateY(0px) scale(0.98); }
-.home-tab-btn:focus-visible{ outline: 3px solid rgba(15,142,134,0.22); outline-offset: 2px; }
-
-.home-tab-btn.is-active,
-.home-tab-btn[aria-selected="true"]{
-    background: var(--tab-teal);
-    border-color: var(--tab-teal);
-    color: #fff;
-}
 .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
 .section-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
 .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
@@ -861,32 +892,13 @@ html[data-theme="dark"] .section-badge{
   box-shadow: var(--glow);
 }
 
-/* ---- Home recent tabs (dark): active 用沈穩青綠、未選取用青綠外框 ---- */
-html[data-theme="dark"] .home-recent-divider{
-  border-top-color: rgba(255,255,255,0.12);
-  margin: 6px 0 14px;
-}
-
-html[data-theme="dark"] .home-tab-btn{
-  border-color: rgba(15,142,134,0.60);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.86);
-}
-html[data-theme="dark"] .home-tab-btn:hover{ border-color: rgba(15,142,134,0.85); }
-html[data-theme="dark"] .home-tab-btn.is-active,
-html[data-theme="dark"] .home-tab-btn[aria-selected="true"]{
-  background: #0F8E86;
-  border-color: #0F8E86;
-  color: #fff;
-}
-
 /* ---- Main menu buttons: modern bridge panels ---- */
 html[data-theme="dark"] .menu-button{
   background:
     radial-gradient(120px 120px at 14% 50%, rgba(45,226,230,0.16) 0%, rgba(45,226,230,0.00) 65%),
     linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
-  /* 沒選到（預設）也用青綠外框，與 Tab 一致 */
-  border: 1px solid rgba(15,142,134,0.55);
+  /* ✅ 未選取就有青綠外框（線條同選舉小卡 hover：1px） */
+  border: 1px solid rgba(45,226,230,0.30);
   color: rgba(255,255,255,0.92);
   box-shadow: var(--shadow-1);
   border-radius: var(--radius-xl);
@@ -898,7 +910,8 @@ html[data-theme="dark"] .menu-button::before{
 }
 html[data-theme="dark"] .menu-icon{ color: var(--primary); }
 html[data-theme="dark"] .menu-button:hover{
-  border-color: rgba(15,142,134,0.85);
+  /* ✅ hover 也維持 1px 線條，不加粗 */
+  border-color: rgba(45,226,230,0.36);
   box-shadow: var(--shadow-2), var(--glow);
 }
 html[data-theme="dark"] .menu-button:focus-visible{

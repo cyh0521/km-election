@@ -463,6 +463,14 @@ function isCountyPseudoTownName(name) {
     { type: "公民投票",   iconKey: "referendum" }
 ];
 
+    // ================= 首頁：近期（可手動指定清單） =================
+    // 若你想自行決定首頁「近期重要選舉 / 近期公投」要列出哪些項目，
+    // 直接在下面兩個陣列填入對應的 uiName（完整名稱需與 availableElections 一致）。
+    // - 留空：會依規則自動挑選（重要選舉＝最近一次總統/區域立委/縣長/縣議員；公投＝最近10次且同年補齊）
+    // - 不留空：將完全以你指定的 uiName 為準
+    window.HOME_RECENT_IMPORTANT_UI_NAMES = window.HOME_RECENT_IMPORTANT_UI_NAMES || [];
+    window.HOME_RECENT_REFERENDUM_UI_NAMES = window.HOME_RECENT_REFERENDUM_UI_NAMES || [];
+
 /**
  * 首頁按鈕 Icon（SVG，不再用文字塞在 menu-icon 裡）
  * - 使用 currentColor：可直接用 CSS 改色
@@ -1669,91 +1677,124 @@ function extractCountySummary(text) {
         html += `</div></div>`;
 
         // ================= 首頁：近期（Tab） =================
-        // 你可以在這裡手動指定要出現的項目（填 uiName）。
-        // 只要該欄有填，就以你填的為主；沒填就自動抓近三年資料當預設。
-        const HOME_RECENT_YEARS = 3;
-        const HOME_RECENT_IMPORTANT_UI_NAMES = window.HOME_RECENT_IMPORTANT_UI_NAMES || [];
-        const HOME_RECENT_REFERENDUM_UI_NAMES = window.HOME_RECENT_REFERENDUM_UI_NAMES || [];
+        // 你可以手動指定 uiName（優先於自動規則）
+        // - 重要選舉：總統／區域立委／縣長／縣議員
+        // - 公投：全國性＋地方性
+        const HOME_RECENT_IMPORTANT_UI_NAMES = (window.HOME_RECENT_IMPORTANT_UI_NAMES || []);
+        const HOME_RECENT_REFERENDUM_UI_NAMES = (window.HOME_RECENT_REFERENDUM_UI_NAMES || []);
 
-        const nowYear = new Date().getFullYear();
-        const minYear = nowYear - (HOME_RECENT_YEARS - 1);
+        function pickLatestByType(type){
+            const list = availableElections.filter(e => e.type === type);
+            if (!list.length) return null;
+            return list.reduce((max, e) => (parseInt(e.year) > parseInt(max.year) ? e : max), list[0]);
+        }
 
-        const isReferendumByUiName = (name) => /(公民投票|公投|複決)/.test(name || '');
+        function buildRecentImportant(){
+            // 若使用者有手動指定，直接依 uiName 取回
+            if (Array.isArray(HOME_RECENT_IMPORTANT_UI_NAMES) && HOME_RECENT_IMPORTANT_UI_NAMES.length){
+                const set = new Set(HOME_RECENT_IMPORTANT_UI_NAMES);
+                return availableElections.filter(e => set.has(e.uiName));
+            }
 
-        const sortByYearThenName = (a, b) => {
-            const yearA = parseInt(a.year);
-            const yearB = parseInt(b.year);
-            if (yearA !== yearB) return yearB - yearA;
-            return (a.uiName || '').localeCompare((b.uiName || ''), 'zh-TW');
-        };
+            // 自動規則：最近一次的 總統 / 區域立委 / 縣長 / 縣議員
+            const latestPresident = pickLatestByType('總統副總統');
+            const latestLeg = pickLatestByType('區域立委');
+            const latestMag = pickLatestByType('縣長');
+            const latestCouncil = pickLatestByType('縣議員');
 
-        const electionsInRecentYears = [...availableElections]
-            .filter(e => parseInt(e.year) >= minYear)
-            .sort(sortByYearThenName);
+            const picked = [];
+            if (latestPresident) picked.push(...availableElections.filter(e => e.type === '總統副總統' && e.year === latestPresident.year));
+            if (latestLeg) picked.push(...availableElections.filter(e => e.type === '區域立委' && e.year === latestLeg.year));
+            if (latestMag) picked.push(...availableElections.filter(e => e.type === '縣長' && e.year === latestMag.year));
+            if (latestCouncil) picked.push(...availableElections.filter(e => e.type === '縣議員' && e.year === latestCouncil.year));
 
-        const buildListByUiNames = (uiNames) => {
-            const set = new Set(uiNames);
-            return [...availableElections]
-                .filter(e => set.has(e.uiName))
-                .sort(sortByYearThenName);
-        };
+            // 去重（避免同檔重複）
+            const seen = new Set();
+            const uniq = [];
+            picked.forEach(e => {
+                const k = e.file || e.uiName;
+                if (seen.has(k)) return;
+                seen.add(k);
+                uniq.push(e);
+            });
 
-        const importantList = (HOME_RECENT_IMPORTANT_UI_NAMES.length > 0)
-            ? buildListByUiNames(HOME_RECENT_IMPORTANT_UI_NAMES)
-            : electionsInRecentYears.filter(e => !isReferendumByUiName(e.uiName));
+            // 排序：年分新到舊，同年依 uiName
+            return uniq.sort((a,b) => {
+                const ya = parseInt(a.year), yb = parseInt(b.year);
+                if (ya !== yb) return yb - ya;
+                return a.uiName.localeCompare(b.uiName, 'zh-TW');
+            });
+        }
 
-        const referendumList = (HOME_RECENT_REFERENDUM_UI_NAMES.length > 0)
-            ? buildListByUiNames(HOME_RECENT_REFERENDUM_UI_NAMES)
-            : electionsInRecentYears.filter(e => isReferendumByUiName(e.uiName));
+        function buildRecentReferendums(){
+            // 若使用者有手動指定，直接依 uiName 取回
+            if (Array.isArray(HOME_RECENT_REFERENDUM_UI_NAMES) && HOME_RECENT_REFERENDUM_UI_NAMES.length){
+                const set = new Set(HOME_RECENT_REFERENDUM_UI_NAMES);
+                return availableElections.filter(e => set.has(e.uiName));
+            }
 
-        const hasAnyRecent = (importantList.length + referendumList.length) > 0;
+            // 自動規則：最近十次全國及地方性公投；若第11個與第10個同年份，則該年份列完
+            const allRefs = availableElections
+                .filter(e => (e.type && (e.type.includes('公民投票') || e.type.includes('公投'))) || isReferendumElection(e.uiName))
+                .sort((a,b) => {
+                    const ya = parseInt(a.year), yb = parseInt(b.year);
+                    if (ya !== yb) return yb - ya;
+                    return a.uiName.localeCompare(b.uiName, 'zh-TW');
+                });
 
-        if (hasAnyRecent) {
-            const defaultTab = (importantList.length > 0) ? 'important' : 'referendum';
-            html += `
-              <div class="main-section home-recent">
+            if (allRefs.length <= 10) return allRefs;
+
+            const base = allRefs.slice(0, 10);
+            const cutoffYear = base[base.length - 1]?.year;
+            const extraSameYear = allRefs.slice(10).filter(e => e.year === cutoffYear);
+            return base.concat(extraSameYear);
+        }
+
+        const recentImportant = buildRecentImportant();
+        const recentReferendums = buildRecentReferendums();
+
+        if (recentImportant.length || recentReferendums.length) {
+            html += `<div class="main-section home-recent">
                 <div class="home-recent-divider" aria-hidden="true"></div>
-
-                <div class="home-recent-tabs" role="tablist" aria-label="近期">
-                  <button class="home-tab-btn ${defaultTab === 'important' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'important'}" data-tab="important" onclick="switchHomeRecentTab('important')">近期重要選舉</button>
-                  <button class="home-tab-btn ${defaultTab === 'referendum' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'referendum'}" data-tab="referendum" onclick="switchHomeRecentTab('referendum')">近期公投</button>
+                <div class="home-recent-tabs" role="tablist" aria-label="近期選舉與公投">
+                    <button class="home-recent-tab is-active" type="button" role="tab" aria-selected="true" data-tab="important">近期重要選舉</button>
+                    <button class="home-recent-tab" type="button" role="tab" aria-selected="false" data-tab="referendum">近期公投</button>
                 </div>
-
-                <div class="home-recent-panels">
-                  <div class="home-recent-panel" role="tabpanel" data-panel="important" ${defaultTab === 'important' ? '' : 'hidden'}>
-                    <div class="election-list-grid">
-                      ${importantList.map(e => generateSummaryCardHTML(e)).join('')}
-                    </div>
-                  </div>
-
-                  <div class="home-recent-panel" role="tabpanel" data-panel="referendum" ${defaultTab === 'referendum' ? '' : 'hidden'}>
-                    <div class="election-list-grid">
-                      ${referendumList.map(e => generateSummaryCardHTML(e)).join('')}
-                    </div>
-                  </div>
+                <div class="home-recent-panel is-active" role="tabpanel" data-panel="important">
+                    <div class="election-list-grid">`;
+            recentImportant.forEach(e => { html += generateSummaryCardHTML(e); });
+            html += `</div>
                 </div>
-              </div>
-            `;
+                <div class="home-recent-panel" role="tabpanel" data-panel="referendum">
+                    <div class="election-list-grid">`;
+            recentReferendums.forEach(e => { html += generateSummaryCardHTML(e); });
+            html += `</div>
+                </div>
+            </div>`;
         }
 
         dom.content.innerHTML = html;
-    };
 
-    // 首頁 Tab 切換
-    window.switchHomeRecentTab = function(tabKey){
-        const tabButtons = document.querySelectorAll('.home-recent-tabs .home-tab-btn');
-        const panels = document.querySelectorAll('.home-recent-panel');
-
-        tabButtons.forEach(btn => {
-            const isActive = btn.getAttribute('data-tab') === tabKey;
-            btn.setAttribute('aria-selected', String(isActive));
-            btn.classList.toggle('is-active', isActive);
-        });
-        panels.forEach(p => {
-            const isTarget = p.getAttribute('data-panel') === tabKey;
-            if (isTarget) p.removeAttribute('hidden');
-            else p.setAttribute('hidden', '');
-        });
+        // Tab 行為（只在首頁存在）
+        try{
+            const tabs = dom.content.querySelectorAll('.home-recent-tab');
+            const panels = dom.content.querySelectorAll('.home-recent-panel');
+            if (tabs.length && panels.length){
+                tabs.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const key = btn.getAttribute('data-tab');
+                        tabs.forEach(t => {
+                            const active = (t === btn);
+                            t.classList.toggle('is-active', active);
+                            t.setAttribute('aria-selected', active ? 'true' : 'false');
+                        });
+                        panels.forEach(p => {
+                            p.classList.toggle('is-active', p.getAttribute('data-panel') === key);
+                        });
+                    }, { passive: true });
+                });
+            }
+        }catch(e){}
     };
 
     window.renderReferendumSubMenu = function(pushState = true) {
