@@ -242,12 +242,12 @@ h1 span { cursor: pointer; }
 
 /* =========================
    首頁：近期（Tab）
-   - 移除標題文字（由 JS 不再輸出），保留上移的底線做分隔
+   - 文字標題已移除，改以分隔線作為按鈕區與內容區間隔
    ========================= */
 
 .home-recent-divider{
     border-bottom: 2px solid var(--border);
-    margin: -18px 0 18px; /* 上移：貼近上方類別按鈕 */
+    margin: -18px 0 22px; /* 上移一些，縮短與上方按鈕區塊的距離 */
 }
 
 .home-recent-tabs{
@@ -255,65 +255,69 @@ h1 span { cursor: pointer; }
     gap: 10px;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 
 .home-recent-tab{
     appearance: none;
-    border: 1px solid rgba(15, 142, 134, 0.55); /* ✅ 與選舉小卡 hover 線條同寬：1px */
-    border-width: 1px;
-    background: transparent;
+    border: 1px solid rgba(15, 142, 134, 0.65);
+    background: #fff;
     color: var(--tab-teal);
-    padding: 9px 14px;
+    padding: 10px 14px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: 800;
     letter-spacing: 0.2px;
     cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
     -webkit-tap-highlight-color: transparent;
-    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.home-recent-tab:hover{
-    transform: translateY(-1px);
-    border-color: rgba(15, 142, 134, 0.95); /* ✅ hover 也維持 1px 線條 */
-    box-shadow: 0 8px 18px rgba(15, 142, 134, 0.16);
-}
-
+.home-recent-tab:hover{ transform: translateY(-1px); }
 .home-recent-tab:active{ transform: translateY(0px) scale(0.98); }
-
 .home-recent-tab:focus-visible{
-    outline: 3px solid rgba(15, 142, 134, 0.22);
+    outline: 3px solid rgba(15, 142, 134, 0.25);
     outline-offset: 2px;
 }
 
 .home-recent-tab.is-active{
     background: var(--tab-teal);
-    border-color: rgba(15, 142, 134, 0.95);
+    border-color: rgba(0,0,0,0.05);
     color: #fff;
+    box-shadow: 0 10px 20px rgba(15, 142, 134, 0.18);
 }
 
 .home-recent-panel{ display: none; }
 .home-recent-panel.is-active{ display: block; }
 
-/* Dark：未選取青綠外框、選取青綠按鈕（但不刺眼） */
+/* ---- Dark mode: Tabs 回到玻璃感；hover 效果比照選舉小卡 ---- */
 html[data-theme="dark"] .home-recent-divider{
-    border-bottom: 1px solid rgba(255,255,255,0.10);
+    border-bottom-color: rgba(255,255,255,0.10);
 }
 html[data-theme="dark"] .home-recent-tab{
-    border: 1px solid rgba(45,226,230,0.32); /* ✅ 1px */
-    background: rgba(255,255,255,0.03);
-    color: rgba(45,226,230,0.95);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.90);
+    box-shadow: var(--shadow-1);
 }
 html[data-theme="dark"] .home-recent-tab:hover{
-    border-color: rgba(45,226,230,0.46);
-    box-shadow: var(--glow);
+    /* 跟 .card.clickable:hover 一樣：不平移、只強化邊框與陰影 */
+    transform: none;
+    border-color: rgba(45,226,230,0.36);
+    box-shadow: var(--shadow-2), var(--glow);
+    background: rgba(255,255,255,0.06);
+}
+html[data-theme="dark"] .home-recent-tab:active{
+    transform: none;
+}
+html[data-theme="dark"] .home-recent-tab:focus-visible{
+    outline: 3px solid rgba(45,226,230,0.25);
 }
 html[data-theme="dark"] .home-recent-tab.is-active{
-    background: rgba(45,226,230,0.20);
-    border-color: rgba(45,226,230,0.62);
-    color: rgba(255,255,255,0.96);
-    box-shadow: var(--glow);
+    background: rgba(45,226,230,0.18);
+    border-color: rgba(45,226,230,0.26);
+    color: rgba(255,255,255,0.95);
+    box-shadow: var(--shadow-1);
 }
 
 /* --- 選舉列表 / 摘要卡片樣式 --- */
@@ -897,8 +901,7 @@ html[data-theme="dark"] .menu-button{
   background:
     radial-gradient(120px 120px at 14% 50%, rgba(45,226,230,0.16) 0%, rgba(45,226,230,0.00) 65%),
     linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
-  /* ✅ 未選取就有青綠外框（線條同選舉小卡 hover：1px） */
-  border: 1px solid rgba(45,226,230,0.30);
+  border: 1px solid var(--glass-border);
   color: rgba(255,255,255,0.92);
   box-shadow: var(--shadow-1);
   border-radius: var(--radius-xl);
@@ -910,7 +913,6 @@ html[data-theme="dark"] .menu-button::before{
 }
 html[data-theme="dark"] .menu-icon{ color: var(--primary); }
 html[data-theme="dark"] .menu-button:hover{
-  /* ✅ hover 也維持 1px 線條，不加粗 */
   border-color: rgba(45,226,230,0.36);
   box-shadow: var(--shadow-2), var(--glow);
 }
