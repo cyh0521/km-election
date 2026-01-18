@@ -1,4 +1,6 @@
 :root {
+    --teal-accent: #0F8E86;
+
     --primary: #3887B0;
     --secondary: #2c3e50; 
     --bg: #f4f7f6;
@@ -173,7 +175,7 @@ h1 span { cursor: pointer; }
 .menu-text{
     display: block;
     text-align: left;
-    font-size: clamp(14px, 1.1vw, 17px);
+    font-size: clamp(16px, 1.2vw, 18px);
     font-weight: 800;
     letter-spacing: 0.2px;
     line-height: 1.2;
@@ -219,7 +221,7 @@ h1 span { cursor: pointer; }
     .menu-svg{ width: 22px; height: 22px; }
 
     .menu-text{
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1.2;
     }
 }
@@ -238,6 +240,104 @@ h1 span { cursor: pointer; }
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
+}
+
+
+
+/* =========================
+   首頁：近期（Tab）區塊
+   - 不顯示標題文字，僅保留分隔線
+   ========================= */
+:root{
+    --home-teal: #0F8E86;
+}
+
+.home-recent-divider{
+    border-top: 2px solid var(--border);
+    margin: 18px 0 10px;
+}
+
+.home-recent-tabs{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.home-recent-tab{
+    appearance: none;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.75);
+    color: var(--text-main);
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+/* 淺色：未選取 Tab 的手感要跟選舉類型按鈕一致（乾淨、立體一點） */
+.home-recent-tab:not(.is-active){
+    background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,250,252,0.92) 100%);
+    border-color: rgba(56,135,176,0.18);
+    box-shadow: 0 6px 14px rgba(56,135,176,0.10);
+}
+.home-recent-tab:not(.is-active):hover{
+    transform: translateY(-2px);
+    border-color: rgba(56,135,176,0.38);
+    box-shadow: 0 12px 24px rgba(56,135,176,0.14);
+}
+
+/* 淺色：選取狀態＝青綠底＋白字 */
+.home-recent-tab.is-active{
+    background: var(--home-teal);
+    border-color: var(--home-teal);
+    color: #ffffff;
+    box-shadow: 0 10px 22px rgba(15,142,134,0.25);
+}
+
+.home-recent-panel{ display: none; }
+.home-recent-panel.is-active{ display: block; }
+
+/* 近期公投：公投主文（CSV A1） */
+.referendum-maintext{
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-main);
+    background: rgba(56,135,176,0.06);
+    border: 1px solid rgba(56,135,176,0.10);
+}
+
+@media (max-width: 768px){
+    .home-recent-tabs{ width: 100%; }
+    .home-recent-tab{ flex: 1; text-align: center; }
+}
+
+/* 深色：Tabs 回到上一版的玻璃黑樣式；hover 跟選舉小卡一致 */
+html[data-theme="dark"] .home-recent-tab{
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.86);
+    box-shadow: none;
+}
+html[data-theme="dark"] .home-recent-tab.is-active{
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(45,226,230,0.22);
+    color: rgba(255,255,255,0.92);
+    box-shadow: var(--glow);
+}
+html[data-theme="dark"] .home-recent-tab:hover{
+    border-color: var(--primary);
+    box-shadow: 0 8px 15px rgba(56,135,176,0.15), var(--glow);
+}
+html[data-theme="dark"] .referendum-maintext{
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.82);
 }
 
 /* --- 選舉列表 / 摘要卡片樣式 --- */
@@ -328,23 +428,6 @@ h1 span { cursor: pointer; }
     margin-top: 5px; padding-top: 0px; font-size: 12px; color: var(--text-sub); text-align: left; font-weight: 500;
 }
 
-/* 首頁：近期公投小卡（表格下方顯示 CSV A1 的公投主文） */
-.referendum-maintext{
-    margin-top: 10px;
-    padding: 10px 12px;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--text-main);
-    background: rgba(0,0,0,0.02);
-    border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 12px;
-}
-html[data-theme="dark"] .referendum-maintext{
-    color: var(--text-main);
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.10);
-}
-
 .sub-area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 15px; }
 
 .table-responsive { overflow-x: auto; }
@@ -396,7 +479,7 @@ td.number-cell { text-align: center; }
     display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; line-height: normal; background: #eee; border-radius: 50%; font-weight: 700; font-size: 13px; color: #555; vertical-align: middle; border: 2px solid #ffffff; box-shadow: 0 0 0 1px rgba(0,0,0,0.05); 
 }
 
-.number-badge.is-winner { border: 2px solid currentColor; background: #ffffff; color: #d9534f; box-shadow: 0 0 0 1px rgba(217, 83, 79, 0.2); }
+.number-badge.is-winner { border: 2px solid currentColor; background: #ffffff; color: #D95551; box-shadow: 0 0 0 1px rgba(217, 85, 81, 0.2); }
 
 .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
 
@@ -646,7 +729,7 @@ html[data-theme="dark"] .loading-state .loading-progress{
     table.large-table .party-badge { font-size: 11px; }
     td.number-cell { text-align: center; line-height: 22px; }
     .number-badge { width: 22px; height: 22px; line-height: normal; font-size: 12px; vertical-align: middle; border: 2px solid #ffffff; }
-    .number-badge.is-winner { border: 2px solid #d9534f; color: #d9534f; }
+    .number-badge.is-winner { border: 2px solid #D95551; color: #D95551; }
     .col-party .party-title-desktop { display: none; }
     .col-party .party-title-mobile { display: inline; }
     .top-summary-grid { grid-template-columns: 1fr; }
@@ -1194,18 +1277,16 @@ html[data-theme="light"] .sort-icon.asc{ border-bottom-color: rgba(11,18,32,0.74
 html[data-theme="light"] .sort-icon.desc{ border-top-color: rgba(11,18,32,0.74); }
 
 html[data-theme="light"] .number-badge{
-  /* 淺色模式：候選人號次與圓圈使用指定紅色（#D95551） */
-  background: #ffffff;
-  color: #D95551;
-  border: 2px solid #D95551;
-  box-shadow: 0 0 0 1px rgba(217, 85, 81, 0.20);
+  background: rgba(11,18,32,0.06);
+  color: rgba(11,18,32,0.74);
+  border: 2px solid rgba(255,255,255,0.95);
+  box-shadow: 0 0 0 1px rgba(11,18,32,0.08);
 }
 html[data-theme="light"] .number-badge.is-winner{
-  /* 當選：維持同色系，僅加強底色提示 */
-  color: #D95551;
+  color: #D01867;
   border-color: currentColor;
-  background: rgba(217, 85, 81, 0.10);
-  box-shadow: 0 0 0 1px rgba(217, 85, 81, 0.18);
+  background: rgba(255,74,141,0.10);
+  box-shadow: 0 0 0 1px rgba(255,74,141,0.14);
 }
 
 /* ---- Modal ---- */
