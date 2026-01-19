@@ -7,6 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <script>
+    (function(){
+        try{
+            const key = 'kmTheme';
+            const saved = localStorage.getItem(key);
+            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved || (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        }catch(e){}
+    })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <!-- 候選人名鑑（獨立模組樣式） -->
     <link rel="stylesheet" href="candidate-directory.css">
@@ -28,6 +39,13 @@
             金門選舉資料庫
         </span>
     </h1>
+    <button id="theme-toggle-btn" class="theme-toggle-btn" type="button" title="切換暗色模式" aria-label="切換暗色模式">
+        <!-- 顯示模式 icon（由 JS 依模式切換） -->
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                     </svg>
+    </button>
+
 </header>
 
 <div class="container">
