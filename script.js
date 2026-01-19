@@ -22,12 +22,7 @@
         {file: "elections/B/B1998.csv",year: "1998",type: "區域立委",uiName: "1998年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1995.csv",year: "1995",type: "區域立委",uiName: "1995年 立法委員選舉",summaryData: null},
         {file: "elections/B/B1992.csv",year: "1992",type: "區域立委",uiName: "1992年 立法委員選舉",summaryData: null},
-        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 第6次增額立委選舉",summaryData: null},
-        {file: "elections/B/B1986.csv",year: "1986",type: "區域立委",uiName: "1986年 第5次增額立委選舉",summaryData: null},
-        {file: "elections/B/B1983.csv",year: "1983",type: "區域立委",uiName: "1983年 第4次增額立委選舉",summaryData: null},
-        {file: "elections/B/B1980.csv",year: "1980",type: "區域立委",uiName: "1980年 第3次增額立委選舉",summaryData: null},
-        {file: "elections/B/B1975.csv",year: "1975",type: "區域立委",uiName: "1975年 第2次增額立委選舉",summaryData: null},
-        {file: "elections/B/B1972.csv",year: "1972",type: "區域立委",uiName: "1972年 第1次增額立委選舉",summaryData: null},
+        {file: "elections/B/B1989.csv",year: "1989",type: "區域立委",uiName: "1989年 增額立委選舉（福建省選舉區）",summaryData: null},
 
         {file: "elections/C/C2024.csv",year: "2024",type: "不分區立委",uiName: "2024年 不分區立委選舉",summaryData: null},
         {file: "elections/C/C2020.csv",year: "2020",type: "不分區立委",uiName: "2020年 不分區立委選舉",summaryData: null},
@@ -73,7 +68,6 @@
         {file: "elections/F/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金寧鄉",summaryData: null},
         {file: "elections/F/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金城鎮",summaryData: null},
 
-        {file: "elections/G/G2023F.csv",year: "2023",type: "鄉鎮長",uiName: "2023年 烏坵鄉長補選",summaryData: null},
         {file: "elections/G/G2022F.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G/G2022E.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烈嶼鄉長選舉",summaryData: null},
         {file: "elections/G/G2022D.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 金沙鎮長選舉",summaryData: null},
@@ -99,7 +93,6 @@
         {file: "elections/G/G2009B.csv",year: "2009",type: "鄉鎮長",uiName: "2009年 金寧鄉長選舉",summaryData: null},
         {file: "elections/G/G2009A.csv",year: "2009",type: "鄉鎮長",uiName: "2009年 金城鎮長選舉",summaryData: null},
         {file: "elections/G/G2006F.csv",year: "2006",type: "鄉鎮長",uiName: "2006年 烏坵鄉長補選",summaryData: null},
-        {file: "elections/G/G2003C.csv",year: "2003",type: "鄉鎮長",uiName: "2003年 金湖鎮長補選",summaryData: null},
         {file: "elections/G/G2002F.csv",year: "2002",type: "鄉鎮長",uiName: "2002年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G/G2002E.csv",year: "2002",type: "鄉鎮長",uiName: "2002年 烈嶼鄉長選舉",summaryData: null},
         {file: "elections/G/G2002D.csv",year: "2002",type: "鄉鎮長",uiName: "2002年 金沙鎮長選舉",summaryData: null},
@@ -119,7 +112,6 @@
         {file: "elections/G/G1998B.csv",year: "1998",type: "鄉鎮長",uiName: "1998年 金寧鄉長選舉",summaryData: null},
         {file: "elections/G/G1998A.csv",year: "1998",type: "鄉鎮長",uiName: "1998年 金城鎮長選舉",summaryData: null},
 
-        {file: "elections/H/H2006E.csv",year: "2006",type: "鄉鎮民代表",uiName: "2006年 烈嶼鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2010F.csv",year: "2010",type: "鄉鎮民代表",uiName: "2010年 烏坵鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2010E.csv",year: "2010",type: "鄉鎮民代表",uiName: "2010年 烈嶼鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2010D.csv",year: "2010",type: "鄉鎮民代表",uiName: "2010年 金沙鎮民代表選舉",summaryData: null},
@@ -145,9 +137,6 @@
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
 
-        {file: "elections/I/I2024D-7.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮大洋里長補選",summaryData: null},
-        {file: "elections/I/I2024D-8.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮光前里長補選",summaryData: null},
-        {file: "elections/I/I2023F-1.csv",year: "2023",type: "村里長",uiName: "2023年 烏坵鄉大坵村長補選",summaryData: null},
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
@@ -230,86 +219,9 @@
         {file: "elections/I/I2014A-6.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮金水里長選舉",summaryData: null},
         {file: "elections/I/I2014A-7.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮古城里長選舉",summaryData: null},
         {file: "elections/I/I2014A-8.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮珠沙里長選舉",summaryData: null},
-        {file: "elections/I/I2014B-1.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉古寧村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-2.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉安美村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-3.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉湖埔村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-4.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉榜林村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-5.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉盤山村長選舉",summaryData: null},
-        {file: "elections/I/I2014B-6.csv",year: "2014",type: "村里長",uiName: "2014年 金寧鄉后盤村長選舉",summaryData: null},
-        {file: "elections/I/I2014C-1.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮新市里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-2.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮山外里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-3.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮溪湖里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-4.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮蓮庵里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-5.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮料羅里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-6.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮新湖里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-7.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮正義里長選舉",summaryData: null},
-        {file: "elections/I/I2014C-8.csv",year: "2014",type: "村里長",uiName: "2014年 金湖鎮瓊林里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-1.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮汶沙里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-2.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮何斗里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-3.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮浦山里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-4.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮西園里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-5.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮官嶼里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-6.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮三山里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-7.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮大洋里長選舉",summaryData: null},
-        {file: "elections/I/I2014D-8.csv",year: "2014",type: "村里長",uiName: "2014年 金沙鎮光前里長選舉",summaryData: null},
-        {file: "elections/I/I2014E-1.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉林湖村長選舉",summaryData: null},
-        {file: "elections/I/I2014E-2.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉黃埔村長選舉",summaryData: null},
-        {file: "elections/I/I2014E-3.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉西口村長選舉",summaryData: null},
-        {file: "elections/I/I2014E-4.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉上林村長選舉",summaryData: null},
-        {file: "elections/I/I2014E-5.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉上岐村長選舉",summaryData: null},
-        {file: "elections/I/I2014F-1.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉大坵村長選舉",summaryData: null},
-        {file: "elections/I/I2014F-2.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉小坵村長選舉",summaryData: null},
-        {file: "elections/I/I2012D-8.csv",year: "2012",type: "村里長",uiName: "2012年 金沙鎮光前里長補選",summaryData: null},
-        {file: "elections/I/I2012A-3.csv",year: "2012",type: "村里長",uiName: "2012年 金城鎮西門里長補選",summaryData: null},
-        {file: "elections/I/I2010A-1.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮東門里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-2.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮南門里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-3.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮西門里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-4.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮北門里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-5.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮賢庵里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-6.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮金水里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-7.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮古城里長選舉",summaryData: null},
-        {file: "elections/I/I2010A-8.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮珠沙里長選舉",summaryData: null},
-        {file: "elections/I/I2010B-1.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉古寧村長選舉",summaryData: null},
-        {file: "elections/I/I2010B-2.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉安美村長選舉",summaryData: null},
-        {file: "elections/I/I2010B-3.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉湖埔村長選舉",summaryData: null},
-        {file: "elections/I/I2010B-4.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉榜林村長選舉",summaryData: null},
-        {file: "elections/I/I2010B-5.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉盤山村長選舉",summaryData: null},
-        {file: "elections/I/I2010B-6.csv",year: "2010",type: "村里長",uiName: "2010年 金寧鄉后盤村長選舉",summaryData: null},
-        {file: "elections/I/I2010C-1.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮新市里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-2.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮山外里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-3.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮溪湖里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-4.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮蓮庵里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-5.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮料羅里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-6.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮新湖里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-7.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮正義里長選舉",summaryData: null},
-        {file: "elections/I/I2010C-8.csv",year: "2010",type: "村里長",uiName: "2010年 金湖鎮瓊林里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-1.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮汶沙里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-2.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮何斗里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-3.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮浦山里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-4.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮西園里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-5.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮官嶼里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-6.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮三山里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-7.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮大洋里長選舉",summaryData: null},
-        {file: "elections/I/I2010D-8.csv",year: "2010",type: "村里長",uiName: "2010年 金沙鎮光前里長選舉",summaryData: null},
-        {file: "elections/I/I2010E-1.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉林湖村長選舉",summaryData: null},
-        {file: "elections/I/I2010E-2.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉黃埔村長選舉",summaryData: null},
-        {file: "elections/I/I2010E-3.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉西口村長選舉",summaryData: null},
-        {file: "elections/I/I2010E-4.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉上林村長選舉",summaryData: null},
-        {file: "elections/I/I2010E-5.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉上岐村長選舉",summaryData: null},
-        {file: "elections/I/I2010F-1.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉大坵村長選舉",summaryData: null},
-        {file: "elections/I/I2010F-2.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉小坵村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-1.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉林湖村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-2.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉黃埔村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-3.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉西口村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-4.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉上林村長選舉",summaryData: null},
-        {file: "elections/I/I2006E-5.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉上岐村長選舉",summaryData: null},
 
         {file: "elections/J/J2025-A21.csv", year: "2025", type: "全國性公民投票", uiName: "2025年 全國性公投第21案（核三延役）",summaryData: null},
         {file: "elections/J/J2022-B01.csv", year: "2022", type: "全國性公民投票", uiName: "2022年 修憲複決第1案（18歲公民權）",summaryData: null},
-        {file: "elections/J/J2021-A20.csv", year: "2021", type: "全國性公民投票", uiName: "2021年 全國性公投第20案（天然氣接收站遷離藻礁海岸）",summaryData: null},
-        {file: "elections/J/J2021-A19.csv", year: "2021", type: "全國性公民投票", uiName: "2021年 全國性公投第19案（公投綁大選）",summaryData: null},
-        {file: "elections/J/J2021-A18.csv", year: "2021", type: "全國性公民投票", uiName: "2021年 全國性公投第18案（反萊豬進口）",summaryData: null},
-        {file: "elections/J/J2021-A17.csv", year: "2021", type: "全國性公民投票", uiName: "2021年 全國性公投第17案（核四商轉）",summaryData: null},
         {file: "elections/J/J2018-A16.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第16案（廢止電業法非核家園條文）",summaryData: null},
         {file: "elections/J/J2018-A15.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第15案（國中小性平教育明定入法）",summaryData: null},
         {file: "elections/J/J2018-A14.csv", year: "2018", type: "全國性公民投票", uiName: "2018年 全國性公投第14案（以民法保障同性婚姻）",summaryData: null},
@@ -706,115 +618,6 @@ default:
         breadcrumbBottom: document.getElementById("breadcrumb-bottom"),
         header: document.querySelector('header')
     };
-
-    // ================= 首次載入：票匭數據載入進度（CSV 計數） =================
-    let bootTotalCsv = 0;
-    let bootLoadedCsv = 0;
-
-    function renderBootLoadingUI(total) {
-        if (!dom.content) return;
-        bootTotalCsv = Math.max(0, parseInt(total, 10) || 0);
-        bootLoadedCsv = 0;
-        dom.content.innerHTML = `
-          <div class="loading-state">
-            <div class="loading-title">正在載入選票數據</div>
-            <div class="loading-progress" aria-hidden="true">
-              <div class="loading-progress-bar" id="loading-progress-bar"></div>
-            </div>
-            <div class="loading-count" id="loading-count">0/${bootTotalCsv || 0}</div>
-          </div>
-        `;
-        updateBootProgress(0, bootTotalCsv);
-    }
-
-    function updateBootProgress(loaded, total) {
-        const bar = document.getElementById('loading-progress-bar');
-        const txt = document.getElementById('loading-count');
-        const t = Math.max(1, parseInt(total, 10) || 1);
-        const l = Math.max(0, parseInt(loaded, 10) || 0);
-        const pct = Math.min(100, Math.round((l / t) * 100));
-        if (bar) bar.style.width = pct + '%';
-        if (txt) txt.textContent = `${l}/${t}`;
-    }
-
-    function bootStep() {
-        bootLoadedCsv += 1;
-        updateBootProgress(bootLoadedCsv, bootTotalCsv);
-    }
-
-    // ================= 顯示模式切換（一般 / 暗色） =================
-    const THEME_KEY = 'kmTheme'; // localStorage key（與 index.html 內的預載入一致）
-
-    function getSystemTheme() {
-        try {
-            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        } catch (e) {
-            return 'light';
-        }
-    }
-
-    function setTheme(theme, persist = false) {
-        const t = (theme === 'dark') ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', t);
-
-        if (persist) {
-            try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
-        }
-
-        // 同步更新按鈕 icon/提示
-        const btn = document.getElementById('theme-toggle-btn');
-        if (btn) {
-            const isDark = (t === 'dark');
-            btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
-            btn.setAttribute('aria-label', btn.title);
-
-            // 螢幕 + 太陽/月亮（簡化、置中；stroke 使用 currentColor）
-            // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
-            // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
-            btn.innerHTML = isDark
-                 ? `
-                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="2"/>
-                       <path d="M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                       <path d="M6.3 6.3l1.6 1.6M16.1 16.1l1.6 1.6M17.7 6.3l-1.6 1.6M7.9 16.1l-1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                     </svg>
-`
-                 : `
-                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                     </svg>
-`;
-        }
-    }
-
-    function initThemeToggle() {
-        const btn = document.getElementById('theme-toggle-btn');
-        // 沒有按鈕也沒關係：仍維持 data-theme（index.html 已先預載入）
-        let saved = null;
-        try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
-
-        // 如果 index.html 已經套用 data-theme，仍以 saved 優先（避免不同步）
-        const initial = (saved === 'dark' || saved === 'light') ? saved : (document.documentElement.getAttribute('data-theme') || getSystemTheme());
-        setTheme(initial, false);
-
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-                const next = (current === 'dark') ? 'light' : 'dark';
-                setTheme(next, true);
-            });
-        }
-
-        // 如果使用者沒手動指定（沒有 saved），就跟著系統深淺色自動切換
-        try {
-            const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-            if (mq && typeof mq.addEventListener === 'function' && !(saved === 'dark' || saved === 'light')) {
-                mq.addEventListener('change', (e) => setTheme(e.matches ? 'dark' : 'light', false));
-            }
-        } catch (e) {}
-    }
-
-
     
     // ================= 歷史記錄 API 輔助函式 =================
     
@@ -888,9 +691,6 @@ function normalizeText(str) {
             }
         } catch (e) {
             console.warn("載入候選人資料失敗或檔案不存在", e);
-        } finally {
-            // 首次載入進度：candidates.csv 也算一個 CSV
-            if (bootTotalCsv > 0) bootStep();
         }
     }
     
@@ -1383,10 +1183,6 @@ function extractCountySummary(text) {
             } catch (error) {
                 console.error(`載入 ${e.file} 摘要失敗:`, error.message);
                 e.summaryData = null;}
-            finally {
-                // 更新首次載入進度（不論成功/失敗都算讀取完成）
-                if (bootTotalCsv > 0) bootStep();
-            }
             return e;
         });
 
@@ -1509,7 +1305,7 @@ function extractCountySummary(text) {
     /**
      * 生成表格內容 HTML (帶有動畫屬性)
      */
-    function generateTableBodyHTML(candidates, validVotes, animate, currentElectionYear, isPartyList, enableCandidateModal = true) {
+    function generateTableBodyHTML(candidates, validVotes, animate, currentElectionYear, isPartyList) {
         return candidates.map(c => {
             const rate = validVotes > 0 ? (c.votes / validVotes * 100).toFixed(2) : 0;
             const partyColorHex = getPartyColor(c.party);
@@ -1530,9 +1326,8 @@ function extractCountySummary(text) {
             const bracketBadge = c.bracketText ? `<div class="bracket-label-badge">${c.bracketText}</div>` : '';
 
             const incumbentBadge = c.isIncumbent    ? '<span class="incumbent-badge">現</span>'    : '';
-            const modalEnabled = !!enableCandidateModal;
-            const nameClickAction = (isPartyList || !modalEnabled) ? 'event.stopPropagation()' : `event.stopPropagation(); showCandidateModal('${c.name}', '${currentElectionYear || ''}')`;
-            const nameLinkClass = (isPartyList || !modalEnabled) ? 'candidate-name' : 'candidate-name candidate-link';
+            const nameClickAction = isPartyList ? 'event.stopPropagation()' : `event.stopPropagation(); showCandidateModal('${c.name}', '${currentElectionYear || ''}')`;
+            const nameLinkClass = isPartyList ? 'candidate-name' : 'candidate-name candidate-link';
             const partyCellClass = isPartyList ? 'col-party hidden-party' : 'party-cell col-party';
             const partyCellHtml = `
                 <td class="${partyCellClass}">
@@ -1566,9 +1361,7 @@ function extractCountySummary(text) {
     function updateTableContent(cardId, candidates, validVotes, triggerAnimation = false, currentElectionYear, isPartyList = false) {
         const mainTableBody = document.querySelector(`#card-${cardId} table tbody`); 
         if (mainTableBody) {
-            // 依目前選舉名稱判斷是否為總統選舉（總統不開候選人資訊小卡）
-            const enableCandidateModal = !(/總統/.test(appState.electionName || ''));
-            mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
+            mainTableBody.innerHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList);
         }
     }
     
@@ -1641,9 +1434,7 @@ function extractCountySummary(text) {
         let html = '';
 
         html += `<div class="main-section">
-	            <div class="home-recent-tabs home-browse-title" role="presentation">
-	                <div class="home-recent-tab is-static is-active">依選舉及公投類別瀏覽</div>
-	            </div>
+            <div class="menu-section-title">依選舉及公投類別瀏覽</div>
             <div class="main-menu-grid">`;
         
     electionCategories.forEach(cat => {
@@ -1670,144 +1461,26 @@ function extractCountySummary(text) {
 
         html += `</div></div>`;
 
-        // =========================
-        // 首頁：近期（Tab）
-        // - 重要選舉：最近一次的「總統 / 區域立委 / 縣長 / 縣議員」(各取 1 場)
-        // - 近期公投：最近 5 次全國/地方性公投；若第 6 次與第 5 次同年份，則同年份公投列完再結束
-        // - 可由 window.HOME_RECENT_IMPORTANT_UI_NAMES / window.HOME_RECENT_REFERENDUM_UI_NAMES 指定 uiName 清單覆蓋
-        // =========================
+        const recentElections = [...availableElections].sort((a, b) => {
+            const yearA = parseInt(a.year);
+            const yearB = parseInt(b.year);
+            if (yearA !== yearB) {
+                return yearB - yearA;}
+            return a.uiName.localeCompare(b.uiName, 'zh-TW');
 
-        const HOME_RECENT_IMPORTANT_UI_NAMES = window.HOME_RECENT_IMPORTANT_UI_NAMES || [];
-        const HOME_RECENT_REFERENDUM_UI_NAMES = window.HOME_RECENT_REFERENDUM_UI_NAMES || [];
+        }).slice(0, 8); 
 
-        const isReferendumElection = (e) => {
-            const t = String(e.type || '');
-            const n = String(e.uiName || '');
-            return t.includes('公民投票') || t.includes('公投') || t.includes('複決') ||
-                   n.includes('公民投票') || n.includes('公投') || n.includes('複決');
-        };
-
-        const sortByNewest = (list) => {
-            return [...list].sort((a, b) => {
-                const yearA = parseInt(a.year);
-                const yearB = parseInt(b.year);
-                if (yearA !== yearB) return yearB - yearA;
-                return String(a.uiName || '').localeCompare(String(b.uiName || ''), 'zh-TW');
+        if (recentElections.length > 0) {
+            html += `<div class="main-section">
+                <div class="menu-section-title">近期選舉</div>
+                <div class="election-list-grid">`;
+           recentElections.forEach(e => {
+                html += generateSummaryCardHTML(e);
             });
-        };
-
-        const pickByUiNameList = (uiNames) => {
-            const wanted = new Set(uiNames);
-            return sortByNewest(availableElections.filter(e => wanted.has(e.uiName)));
-        };
-
-        // ---- 近期重要選舉（預設規則） ----
-        const pickLatestByKind = (matchFn) => {
-            const list = sortByNewest(availableElections.filter(e => matchFn(e)));
-            return list.length ? list[0] : null;
-        };
-
-        const matchPresident = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('總統');
-        const matchCountyMagistrate = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣長');
-        const matchCountyCouncilor = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣議員');
-        const matchDistrictLegislator = (e) => {
-            if (isReferendumElection(e)) return false;
-            const n = String(e.uiName || '');
-            const t = String(e.type || '');
-            // 以 uiName 優先（你資料命名多半會寫「區域立委」），否則退回用 type+關鍵字判斷
-            return n.includes('區域立委') || (t.includes('立法委員') && (n.includes('區域') || n.includes('區域選舉')));
-        };
-
-        let importantList = [];
-        if (HOME_RECENT_IMPORTANT_UI_NAMES.length > 0) {
-            importantList = pickByUiNameList(HOME_RECENT_IMPORTANT_UI_NAMES);
-        } else {
-            const picked = [
-                pickLatestByKind(matchPresident),
-                pickLatestByKind(matchDistrictLegislator),
-                pickLatestByKind(matchCountyMagistrate),
-                pickLatestByKind(matchCountyCouncilor)
-            ].filter(Boolean);
-
-            // 去重（避免同場被重複收錄）
-            const seen = new Set();
-            importantList = sortByNewest(picked.filter(e => {
-                if (seen.has(e.uiName)) return false;
-                seen.add(e.uiName);
-                return true;
-            }));
-        }
-
-        // ---- 近期公投（預設規則） ----
-        let referendumList = [];
-        if (HOME_RECENT_REFERENDUM_UI_NAMES.length > 0) {
-            referendumList = pickByUiNameList(HOME_RECENT_REFERENDUM_UI_NAMES);
-        } else {
-            const allRefs = sortByNewest(availableElections.filter(e => isReferendumElection(e)));
-            referendumList = allRefs.slice(0, 5);
-
-            // 若第 6 次與第 5 次同年份，則把該年份公投列完
-            if (referendumList.length === 5) {
-                const lastYear = parseInt(referendumList[4].year);
-                let i = 5;
-                while (i < allRefs.length) {
-                    const y = parseInt(allRefs[i].year);
-                    if (!Number.isNaN(lastYear) && y === lastYear) {
-                        referendumList.push(allRefs[i]);
-                        i += 1;
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        const hasAnyRecent = (importantList.length + referendumList.length) > 0;
-        if (hasAnyRecent) {
-            // 文字已移除；保留分隔線作為「類別按鈕」與「近期內容」間隔
-            html += `<div class="home-recent-divider" aria-hidden="true"></div>`;
-
-            const defaultTab = (importantList.length > 0) ? 'important' : 'referendum';
-
-            html += `<div class="main-section home-recent" data-default-tab="${defaultTab}">
-                <div class="home-recent-tabs" role="tablist" aria-label="近期">
-                    <button class="home-recent-tab ${defaultTab === 'important' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'important'}" data-tab="important" type="button">近期重要選舉</button>
-                    <button class="home-recent-tab ${defaultTab === 'referendum' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'referendum'}" data-tab="referendum" type="button">近期公投</button>
-                </div>
-                <div class="home-recent-panels">
-                    <div class="home-recent-panel ${defaultTab === 'important' ? 'is-active' : ''}" role="tabpanel" data-panel="important">
-                        <div class="election-list-grid">${importantList.map(e => generateSummaryCardHTML(e)).join('')}</div>
-                    </div>
-                    <div class="home-recent-panel ${defaultTab === 'referendum' ? 'is-active' : ''}" role="tabpanel" data-panel="referendum">
-                        <div class="election-list-grid">${referendumList.map(e => generateSummaryCardHTML(e)).join('')}</div>
-                    </div>
-                </div>
-            </div>`;
+            html += `</div></div>`;
         }
 
         dom.content.innerHTML = html;
-
-        // Tab interactions（首頁限定）
-        try {
-            const root = dom.content.querySelector('.home-recent');
-            if (root) {
-                const tabs = Array.from(root.querySelectorAll('.home-recent-tab'));
-                const panels = Array.from(root.querySelectorAll('.home-recent-panel'));
-                const activate = (key) => {
-                    tabs.forEach(btn => {
-                        const active = btn.dataset.tab === key;
-                        btn.classList.toggle('is-active', active);
-                        btn.setAttribute('aria-selected', active ? 'true' : 'false');
-                    });
-                    panels.forEach(p => {
-                        const active = p.dataset.panel === key;
-                        p.classList.toggle('is-active', active);
-                    });
-                };
-
-                tabs.forEach(btn => btn.addEventListener('click', () => activate(btn.dataset.tab)));
-            }
-        } catch (e) { /* no-op */ }
     };
 
     window.renderReferendumSubMenu = function(pushState = true) {
@@ -2000,7 +1673,6 @@ function extractCountySummary(text) {
         appState.chartInstances = [];
 
         // 解析 uiName：例「2022年 金城鎮東門里長選舉」「2022年 金寧鄉古寧村長選舉」
-        // 也要支援補選：例「2024年 金沙鎮大洋里長補選」「2023年 烏坵鄉大坵村長補選」
         const villageSet = new Set();
         availableElections
             .filter(e => e.type === type && (e.uiName || '').includes(townName))
@@ -2010,11 +1682,11 @@ function extractCountySummary(text) {
                 const afterTownClean = (afterTown || '').replace(/\s+/g,'').trim();
 
                 let v = '';
-                const m = afterTownClean.match(/^(.+?)(里|村)長(?:選舉|補選)$/);
+                const m = afterTownClean.match(/^(.+?)(里|村)長選舉$/);
                 if (m) {
                     v = `${m[1]}${m[2]}`; // ✅ 保留「里/村」字尾：例如「東門里」「古寧村」
                 } else {
-                    v = afterTownClean.replace(/(里長|村長)\s*(?:選舉|補選)\s*$/,'').trim();
+                    v = afterTownClean.replace(/(里長|村長)\s*選舉\s*$/,'').trim();
                     // 保底：若解析後沒有「里/村」字尾，依原字串補回
                     if (v && !/[村里]$/.test(v)) {
                         if (afterTownClean.includes('村長')) v += '村';
@@ -2309,7 +1981,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             }
         } else if (shouldRenderTowns) {
             html += `<div class="main-section">
-                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span></div>
+                <div class="section-header"><span class="section-title">各鄉鎮開票結果</span><span class="section-badge">點擊卡片看細節</span></div>
                 <div class="sub-area-grid">`;
            appState.data.townOrder.forEach(town => {
                 const townData = appState.data.towns[town];
@@ -2753,10 +2425,6 @@ dom.breadcrumb.innerHTML = html;
         // 公投/複決：雖然沿用「不顯示政黨欄」的規則，但名稱欄應顯示「選項」而非「政黨」
         const isReferendum = isReferendumElection(title) || isReferendumElection(appState.electionName);
 
-        // 總統選舉：點候選人姓名不開候選人資訊小卡
-        const isPresidential = /總統/.test(title) || /總統/.test(appState.electionName || '');
-        const enableCandidateModal = !isPresidential;
-
         function renderTableHeader(title, sortKey, style = '', className = '') {
            const isCurrentKey = currentSortKey === sortKey;
             const iconClass = isCurrentKey ? currentSortDirection : '';
@@ -2777,22 +2445,7 @@ dom.breadcrumb.innerHTML = html;
            return `<th style="${style}" class="${headerClass}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
         }
         
-        const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
-
-        // ✅ 公投：在「投票數據表格下方」顯示 CSV A1（公投主文）
-        // A1 已由 parseCSV / extractCountySummary 存到 metadata.electionNameFromCSV
-        const escapeHtml = (s) => String(s ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-
-        const isReferendumCard = /公投|公民投票|複決/.test(String(title || ''));
-        const referendumTopic = (metadata && metadata.electionNameFromCSV) ? String(metadata.electionNameFromCSV).trim() : '';
-        const referendumTopicHTML = (isReferendumCard && referendumTopic)
-            ? `<div class="referendum-topic">${escapeHtml(referendumTopic)}</div>`
-            : '';
+        const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList);
         
         let footerHTML = '';
         if (seatsCount) {
@@ -2823,7 +2476,6 @@ dom.breadcrumb.innerHTML = html;
                         ${tableBodyHTML}
                     </tbody>
                 </table>
-                ${referendumTopicHTML}
             </div>
             ${footerHTML}
         </div>`;
@@ -3007,9 +2659,7 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
-        initThemeToggle();
-        // 首次載入：票軌數據（所有選舉 CSV + candidates.csv）
-        renderBootLoadingUI((availableElections?.length || 0) + 1);
+        dom.content.innerHTML = `<div class="loading-state">正在載入選舉數據...請稍候。</div>`;
         
         Promise.all([
             loadAllElectionSummaries(availableElections),
