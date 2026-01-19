@@ -1287,10 +1287,6 @@ function extractCountySummary(text) {
 
         if (rows.length < 4) return null;
 
-        // 讀取 A1 (選舉名稱) 和 B1 (投票日期) —— 讓首頁/Tab 小卡也能使用（例如公投主文）
-        const electionNameFromCSV = rows[0][0] ? rows[0][0].trim() : '';
-        const electionDateFromCSV = rows[0][1] ? rows[0][1].trim() : '';
-
         const headerRowIndices = []; 
         let currentIdx = 2;
         while(rows[0][currentIdx] && rows[1][currentIdx]) {
@@ -1362,10 +1358,7 @@ function extractCountySummary(text) {
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
                 eligibleVoters: globalEligibleVoters,
-                seatsCount: seatsCount,
-                electionNameFromCSV: electionNameFromCSV,
-                electionDateFromCSV: electionDateFromCSV
-            }
+                seatsCount: seatsCount}
         };
     }
     
@@ -1648,9 +1641,9 @@ function extractCountySummary(text) {
         let html = '';
 
         html += `<div class="main-section">
-            <div class="home-recent-tabs home-browse-title" role="presentation">
-                <div class="home-recent-tab is-static">依選舉及公投類別瀏覽</div>
-            </div>
+	            <div class="home-recent-tabs home-browse-title" role="presentation">
+	                <div class="home-recent-tab is-static is-active">依選舉及公投類別瀏覽</div>
+	            </div>
             <div class="main-menu-grid">`;
         
     electionCategories.forEach(cat => {
@@ -1717,29 +1710,23 @@ function extractCountySummary(text) {
         const matchPresident = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('總統');
         const matchCountyMagistrate = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣長');
         const matchCountyCouncilor = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣議員');
-        // ✅ 區域立委：明確抓「type === '區域立委'」的最近一次
-        // （避免 uiName 命名差異導致誤抓/漏抓）
         const matchDistrictLegislator = (e) => {
             if (isReferendumElection(e)) return false;
-            return String(e.type || '') === '區域立委';
+            const n = String(e.uiName || '');
+            const t = String(e.type || '');
+            // 以 uiName 優先（你資料命名多半會寫「區域立委」），否則退回用 type+關鍵字判斷
+            return n.includes('區域立委') || (t.includes('立法委員') && (n.includes('區域') || n.includes('區域選舉')));
         };
 
         let importantList = [];
         if (HOME_RECENT_IMPORTANT_UI_NAMES.length > 0) {
             importantList = pickByUiNameList(HOME_RECENT_IMPORTANT_UI_NAMES);
         } else {
-            // ✅ 縣議員：收錄「最近一次」的 *全部選區*（同年份的縣議員選舉全列）
-            const latestCouncilor = pickLatestByKind(matchCountyCouncilor);
-            const latestCouncilorYear = latestCouncilor ? String(latestCouncilor.year || '') : '';
-            const councilorSameYear = latestCouncilorYear
-                ? sortByNewest(availableElections.filter(e => matchCountyCouncilor(e) && String(e.year || '') === latestCouncilorYear))
-                : [];
-
             const picked = [
                 pickLatestByKind(matchPresident),
                 pickLatestByKind(matchDistrictLegislator),
                 pickLatestByKind(matchCountyMagistrate),
-                ...councilorSameYear
+                pickLatestByKind(matchCountyCouncilor)
             ].filter(Boolean);
 
             // 去重（避免同場被重複收錄）
@@ -2791,7 +2778,9 @@ dom.breadcrumb.innerHTML = html;
         }
         
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
-        
+
+        // ✅ 公投：在「投票數據表格下方」顯示 CSV A1（公投主文）
+        // A1 已由 parseCSV / extractCountySummary 存到 metadata.electionNameFromCSV
         const escapeHtml = (s) => String(s ?? '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -2799,14 +2788,12 @@ dom.breadcrumb.innerHTML = html;
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
 
-        // ✅ 公投：在「投票數據表格下方」顯示 CSV A1（公投主文）
-        // 目前 parseCSV 已把 A1 存到 metadata.electionNameFromCSV
         const isReferendumCard = /公投|公民投票|複決/.test(String(title || ''));
         const referendumTopic = (metadata && metadata.electionNameFromCSV) ? String(metadata.electionNameFromCSV).trim() : '';
         const referendumTopicHTML = (isReferendumCard && referendumTopic)
             ? `<div class="referendum-topic">${escapeHtml(referendumTopic)}</div>`
             : '';
-
+        
         let footerHTML = '';
         if (seatsCount) {
              const displayStat = isNaN(Number(seatsCount)) ? seatsCount : `應選 ${seatsCount} 席`;
@@ -2836,8 +2823,8 @@ dom.breadcrumb.innerHTML = html;
                         ${tableBodyHTML}
                     </tbody>
                 </table>
+                ${referendumTopicHTML}
             </div>
-            ${referendumTopicHTML}
             ${footerHTML}
         </div>`;
     }

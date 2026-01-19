@@ -1292,28 +1292,30 @@ html[data-theme="light"] .sort-icon.asc{ border-bottom-color: rgba(11,18,32,0.74
 html[data-theme="light"] .sort-icon.desc{ border-top-color: rgba(11,18,32,0.74); }
 
 html[data-theme="light"] .number-badge{
-  /* ✅ 淺色模式：落選者（白框黑字灰底） */
-  background: rgba(11,18,32,0.08);
-  color: rgba(11,18,32,0.92);
-  border: 2px solid rgba(255,255,255,0.95);
+  /* ✅ 淺色模式：未當選維持灰色，不要泛光 */
+  background: rgba(255,255,255,0.92);
+  color: rgba(11,18,32,0.62);
+  border: 2px solid rgba(11,18,32,0.18);
   box-shadow: none;
 }
 html[data-theme="light"] .number-badge.is-winner{
-  /* ✅ 淺色模式：當選者（紅框紅字白底） */
   color: #D95551;
   border-color: currentColor;
-  background: #ffffff;
+  background: rgba(217,85,81,0.10);
   box-shadow: none;
 }
 
 /* 公投主文（CSV A1）顯示在投票表格下方 */
 .referendum-topic{
-  margin: 10px 12px 0;
-  padding: 10px 12px;
+  /* 與票數表格同寬：本區塊放在 .table-area 內，直接吃滿容器寬度 */
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0 0;
+  padding: 12px 14px;
   border-radius: 12px;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 1.45;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.6;
   border: 1px solid rgba(11,18,32,0.10);
   background: rgba(255,255,255,0.62);
   color: var(--text-main);
