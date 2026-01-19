@@ -1287,11 +1287,6 @@ function extractCountySummary(text) {
 
         if (rows.length < 4) return null;
 
-        // 讀取 A1 (選舉名稱) 和 B1 (投票日期)
-        // - 供首頁「近期公投」/選舉小卡在投票數據表格下方顯示（例如：公投主文）
-        const electionNameFromCSV = rows[0] && rows[0][0] ? String(rows[0][0]).trim() : '';
-        const electionDateFromCSV = rows[0] && rows[0][1] ? String(rows[0][1]).trim() : '';
-
         const headerRowIndices = []; 
         let currentIdx = 2;
         while(rows[0][currentIdx] && rows[1][currentIdx]) {
@@ -1363,10 +1358,7 @@ function extractCountySummary(text) {
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
                 eligibleVoters: globalEligibleVoters,
-                seatsCount: seatsCount,
-                electionNameFromCSV,
-                electionDateFromCSV
-            }
+                seatsCount: seatsCount}
         };
     }
     
@@ -1719,17 +1711,11 @@ function extractCountySummary(text) {
         const matchCountyMagistrate = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣長');
         const matchCountyCouncilor = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣議員');
         const matchDistrictLegislator = (e) => {
-            // ✅ 依你的資料規則：直接用 type === "區域立委" 判斷最近一次即可
             if (isReferendumElection(e)) return false;
-            return String(e.type || '') === '區域立委';
-        };
-
-        // 「縣議員」要收錄最近一次的「全部選區」：找出最新年度後，把該年度縣議員的所有檔案都列出
-        const pickAllLatestYearByKind = (matchFn) => {
-            const list = sortByNewest(availableElections.filter(e => matchFn(e)));
-            if (!list.length) return [];
-            const latestYear = parseInt(list[0].year);
-            return list.filter(e => parseInt(e.year) === latestYear);
+            const n = String(e.uiName || '');
+            const t = String(e.type || '');
+            // 以 uiName 優先（你資料命名多半會寫「區域立委」），否則退回用 type+關鍵字判斷
+            return n.includes('區域立委') || (t.includes('立法委員') && (n.includes('區域') || n.includes('區域選舉')));
         };
 
         let importantList = [];
@@ -1740,7 +1726,7 @@ function extractCountySummary(text) {
                 pickLatestByKind(matchPresident),
                 pickLatestByKind(matchDistrictLegislator),
                 pickLatestByKind(matchCountyMagistrate),
-                ...pickAllLatestYearByKind(matchCountyCouncilor)
+                pickLatestByKind(matchCountyCouncilor)
             ].filter(Boolean);
 
             // 去重（避免同場被重複收錄）
