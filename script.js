@@ -474,10 +474,10 @@ function getMenuIconSvg(key) {
     const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
     switch (key) {
         case "president":
+            // 總統副總統：國旗輪廓（無圖案）
             return `<svg ${common}>
-                <path d="M6 21V4"/>
-                <path d="M6 4h12l-2.2 3 2.2 3H6"/>
-                <path d="M14.8 6.2l.5 1 1.1.2-.8.7.2 1.1-1-.5-1 .5.2-1.1-.8-.7 1.1-.2.5-1z"/>
+                <path d="M5 4v16"/>
+                <path d="M5 4c5 0 6 3 11 3v6c-5 0-6-3-11-3z"/>
             </svg>`;
 
         case "legislator":
@@ -488,17 +488,22 @@ function getMenuIconSvg(key) {
             </svg>`;
 
         case "assembly":
+            // 國大代表：陽明山中山樓（簡化輪廓）
             return `<svg ${common}>
-                <path d="M8 3h7l3 3v15H8z"/>
-                <path d="M15 3v4h4"/>
-                <path d="M10 11h8"/><path d="M10 14h8"/><path d="M10 17h6"/>
+                <path d="M5 10c3-4 11-4 14 0"/>
+                <path d="M7 10V8h10v2"/>
+                <path d="M6 20h12"/>
+                <path d="M8 20V10"/>
+                <path d="M10 20V10"/>
+                <path d="M12 20V10"/>
+                <path d="M14 20V10"/>
+                <path d="M6 20v-2h12v2"/>
             </svg>`;
 
         case "magistrate":
             return `<svg ${common}>
                 <circle cx="12" cy="9.8" r="3.8"/>
                 <path d="M10 13.2l-2 7 4-2 4 2-2-7"/>
-                <path d="M12 7.7l.6 1.1 1.2.2-.9.8.2 1.2-1.1-.6-1.1.6.2-1.2-.9-.8 1.2-.2.6-1.1z"/>
             </svg>`;
 
         case "council":
@@ -527,18 +532,24 @@ function getMenuIconSvg(key) {
             </svg>`;
 
         case "village":
+            // 村里長：台灣門牌（含號碼示意）
             return `<svg ${common}>
-                <path d="M4 11l8-6 8 6"/>
-                <path d="M6 11v9h12v-9"/>
-                <path d="M10 20v-5h4v5"/>
+                <rect x="5" y="5" width="14" height="16" rx="2"/>
+                <circle cx="8" cy="8" r="0.7"/>
+                <circle cx="16" cy="8" r="0.7"/>
+                <!-- number: 12 -->
+                <path d="M10 12v6"/>
+                <path d="M13 12h3"/>
+                <path d="M16 12v2l-3 3h3"/>
             </svg>`;
 
         case "referendum":
+            // 公民投票：票卡 + 票匭（避免房子造型）
             return `<svg ${common}>
-                <path d="M7 10l5-4 5 4"/>
-                <path d="M6 10v9h12v-9"/>
-                <path d="M11 6.5v4.2"/>
-                <path d="M9.5 15l1.6 1.6 3.6-3.6"/>
+                <path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/>
+                <path d="M4 10h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10Z"/>
+                <path d="M7 13h10"/>
+                <path d="M9.2 6.4l1.3 1.3L13.8 4.4"/>
             </svg>`;
 
         case "nation":
@@ -567,12 +578,6 @@ function getMenuIconSvg(key) {
                 <path d="M4 7h.01"/><path d="M4 12h.01"/><path d="M4 17h.01"/>
             </svg>`;
 
-        
-        case 'village':
-            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-                <path fill="currentColor" d="M12 2 3 9v11a2 2 0 0 0 2 2h4v-7h6v7h4a2 2 0 0 0 2-2V9l-9-7zm3 19v-6H9v6H5V10l7-5 7 5v11h-4z"/>
-                <path fill="currentColor" d="M7.8 11.8h2.2v2.2H7.8zM14 11.8h2.2v2.2H14z"/>
-            </svg>`;
 default:
             return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
     }
@@ -1287,6 +1292,10 @@ function extractCountySummary(text) {
 
         if (rows.length < 4) return null;
 
+        // 讀取 A1 (選舉名稱/公投主文) 與 B1 (投票日期)
+        const electionNameFromCSV = rows[0] && rows[0][0] ? rows[0][0].trim() : '';
+        const electionDateFromCSV = rows[0] && rows[0][1] ? rows[0][1].trim() : '';
+
         const headerRowIndices = []; 
         let currentIdx = 2;
         while(rows[0][currentIdx] && rows[1][currentIdx]) {
@@ -1358,7 +1367,9 @@ function extractCountySummary(text) {
                 validVotes: globalValidVotes,
                 invalidVotes: globalInvalidVotes,
                 eligibleVoters: globalEligibleVoters,
-                seatsCount: seatsCount}
+                seatsCount: seatsCount,
+                electionNameFromCSV: electionNameFromCSV,
+                electionDateFromCSV: electionDateFromCSV}
         };
     }
     
@@ -1644,7 +1655,7 @@ function extractCountySummary(text) {
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
 	                <div class="home-recent-tab is-static is-active">依選舉及公投類別瀏覽</div>
 	            </div>
-            <div class="main-menu-grid">`;
+            <div class="main-menu-grid is-home">`;
         
     electionCategories.forEach(cat => {
         // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu
@@ -1708,14 +1719,29 @@ function extractCountySummary(text) {
         };
 
         const matchPresident = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('總統');
-        const matchCountyMagistrate = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣長');
-        const matchCountyCouncilor = (e) => !isReferendumElection(e) && String(e.uiName || '').includes('縣議員');
+        const matchCountyMagistrate = (e) => !isReferendumElection(e) && (String(e.type || '') === '縣長' || String(e.uiName || '').includes('縣長'));
+
+        // 縣議員：要收錄「最近一次」的「全部選區」→ 先找最新年份，再把該年份同類型全收進來
+        const matchCountyCouncilor = (e) => {
+            if (isReferendumElection(e)) return false;
+            const t = String(e.type || '');
+            const n = String(e.uiName || '');
+            return t === '縣議員' || n.includes('縣議員');
+        };
+
+        // 區域立委：依你的要求，直接抓最近一次 type ===「區域立委」
         const matchDistrictLegislator = (e) => {
             if (isReferendumElection(e)) return false;
-            const n = String(e.uiName || '');
             const t = String(e.type || '');
-            // 以 uiName 優先（你資料命名多半會寫「區域立委」），否則退回用 type+關鍵字判斷
-            return n.includes('區域立委') || (t.includes('立法委員') && (n.includes('區域') || n.includes('區域選舉')));
+            const n = String(e.uiName || '');
+            return t === '區域立委' || n.includes('區域立委');
+        };
+
+        const pickAllLatestByKind = (matchFn) => {
+            const list = sortByNewest(availableElections.filter(e => matchFn(e)));
+            if (!list.length) return [];
+            const maxYear = parseInt(list[0].year);
+            return list.filter(e => parseInt(e.year) === maxYear);
         };
 
         let importantList = [];
@@ -1726,7 +1752,7 @@ function extractCountySummary(text) {
                 pickLatestByKind(matchPresident),
                 pickLatestByKind(matchDistrictLegislator),
                 pickLatestByKind(matchCountyMagistrate),
-                pickLatestByKind(matchCountyCouncilor)
+                ...pickAllLatestByKind(matchCountyCouncilor)
             ].filter(Boolean);
 
             // 去重（避免同場被重複收錄）
@@ -2823,8 +2849,8 @@ dom.breadcrumb.innerHTML = html;
                         ${tableBodyHTML}
                     </tbody>
                 </table>
-                ${referendumTopicHTML}
             </div>
+            ${referendumTopicHTML}
             ${footerHTML}
         </div>`;
     }
