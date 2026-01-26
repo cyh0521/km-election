@@ -474,18 +474,16 @@ function getMenuIconSvg(key) {
     const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
     switch (key) {
         case "president":
-    // 總統副總統：雙人半身（前後層次，代表正副）
-    // 再修正：把「頭—身體」銜接距離拉近（肩線更貼近頭部；參考縣議員的比例）
-    return `<svg ${common}>
-        <!-- back person (副) -->
-        <circle cx="8.7" cy="9.2" r="2.2"/>
-        <path d="M4.4 20c0-3.1 2.4-5.2 4.3-5.2 1.5 0 2.8.7 3.6 1.8"/>
-        <!-- front person (正) -->
-        <circle cx="15.4" cy="9.6" r="2.7"/>
-        <path d="M10.2 20c0-3.6 2.9-6.8 5.2-6.8s5.2 3.2 5.2 6.8"/>
-    </svg>`;
-
-        case "legislator":
+            // 總統副總統：雙人並列（人物比例/大小沿用「縣議員」人像）
+            return `<svg ${common}>
+                <!-- left person -->
+                <circle cx="7" cy="9" r="3"/>
+                <path d="M1.5 20c0-3.6 2.7-6 5.5-6s5.5 2.4 5.5 6"/>
+                <!-- right person -->
+                <circle cx="17" cy="9" r="3"/>
+                <path d="M11.5 20c0-3.6 2.7-6 5.5-6s5.5 2.4 5.5 6"/>
+            </svg>`;
+case "legislator":
             return `<svg ${common}>
                 <path d="M4 10l8-4 8 4"/>
                 <path d="M6 10v9"/><path d="M10 10v9"/><path d="M14 10v9"/><path d="M18 10v9"/>
