@@ -1037,7 +1037,7 @@ html[data-theme="dark"] .number-badge{
 html[data-theme="dark"] .number-badge.is-winner{
   color: #FF4A8D;
   border-color: currentColor;
-  background: rgba(255,74,141,0.10);
+  background: rgba(255,255,255,0.08); /* ✅ 當選者圓圈內部維持與未當選一致 */
   box-shadow: none; /* 不要光暈 */
 }
 html[data-theme="dark"] .party-badge{
@@ -1187,13 +1187,16 @@ html[data-theme="light"] header .cd-header-btn{
 }
 html[data-theme="light"] header .theme-toggle-btn svg,
 html[data-theme="light"] header .cd-header-btn svg{
-  fill: currentColor;
-  stroke: currentColor;
+  fill: none;              /* ✅ 淺色模式：不要整塊塗黑 */
+  stroke: currentColor;    /* 只保留線條 */
 }
 html[data-theme="light"] header .theme-toggle-btn:focus-visible,
 html[data-theme="light"] header .cd-header-btn:focus-visible{
   outline: 3px solid rgba(26,166,181,0.28);
 }
+
+/* 淺色模式：月亮/太陽 icon 稍微加大一點 */
+html[data-theme="light"] header .theme-toggle-btn svg{ width: 24px; height: 24px; }
 
 
 
@@ -1296,7 +1299,7 @@ html[data-theme="light"] .number-badge{
 html[data-theme="light"] .number-badge.is-winner{
   color: #D95551;
   border-color: currentColor;
-  background: rgba(217,85,81,0.10);
+  background: rgba(255,255,255,0.92); /* ✅ 當選者圓圈內部維持與未當選一致 */
   box-shadow: none;
 }
 
