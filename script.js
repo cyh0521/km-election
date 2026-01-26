@@ -474,11 +474,16 @@ function getMenuIconSvg(key) {
     const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
     switch (key) {
         case "president":
-            // 總統副總統：國旗輪廓（無圖案）
-            return `<svg ${common}>
-                <path d="M5 4v16"/>
-                <path d="M5 4c5 0 6 3 11 3v6c-5 0-6-3-11-3z"/>
-            </svg>`;
+    // 總統副總統：雙人半身（前後層次，代表正副）
+    // 再修正：把「頭—身體」銜接距離拉近（肩線更貼近頭部；參考縣議員的比例）
+    return `<svg ${common}>
+        <!-- back person (副) -->
+        <circle cx="8.7" cy="9.2" r="2.2"/>
+        <path d="M4.4 20c0-3.1 2.4-5.2 4.3-5.2 1.5 0 2.8.7 3.6 1.8"/>
+        <!-- front person (正) -->
+        <circle cx="15.4" cy="9.6" r="2.7"/>
+        <path d="M10.2 20c0-3.6 2.9-6.8 5.2-6.8s5.2 3.2 5.2 6.8"/>
+    </svg>`;
 
         case "legislator":
             return `<svg ${common}>
@@ -532,16 +537,16 @@ function getMenuIconSvg(key) {
             </svg>`;
 
         case "village":
-            // 村里長：台灣門牌（含號碼示意）
-            return `<svg ${common}>
-                <rect x="5" y="5" width="14" height="16" rx="2"/>
-                <circle cx="8" cy="8" r="0.7"/>
-                <circle cx="16" cy="8" r="0.7"/>
-                <!-- number: 12 -->
-                <path d="M10 12v6"/>
-                <path d="M13 12h3"/>
-                <path d="M16 12v2l-3 3h3"/>
-            </svg>`;
+    // 村里長：擴音器（大聲公）+ 音波
+    return `<svg ${common}>
+        <!-- megaphone body -->
+        <path d="M4 11v2a2 2 0 0 0 2 2h2l9 4V5l-9 4H6a2 2 0 0 0-2 2z"/>
+        <!-- handle -->
+        <path d="M8 15l2 6"/>
+        <!-- sound waves -->
+        <path d="M18.5 10.2c1 .9 1.6 2.1 1.6 3.3s-.6 2.4-1.6 3.3"/>
+        <path d="M20.8 8c1.6 1.6 2.5 3.4 2.5 5.5s-.9 3.9-2.5 5.5"/>
+    </svg>`;
 
         case "referendum":
             // 公民投票：票卡 + 票匭（避免房子造型）
