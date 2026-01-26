@@ -488,16 +488,12 @@ function getMenuIconSvg(key) {
             </svg>`;
 
         case "assembly":
-            // 國大代表：陽明山中山樓（簡化輪廓）
+            // 國大代表：沿用原「縣議員」圖示（筆/簽字意象）
             return `<svg ${common}>
-                <path d="M5 10c3-4 11-4 14 0"/>
-                <path d="M7 10V8h10v2"/>
-                <path d="M6 20h12"/>
-                <path d="M8 20V10"/>
-                <path d="M10 20V10"/>
-                <path d="M12 20V10"/>
-                <path d="M14 20V10"/>
-                <path d="M6 20v-2h12v2"/>
+                <path d="M14 7l3 3"/>
+                <path d="M7 14l7-7 3 3-7 7H7z"/>
+                <path d="M6 18h6"/>
+                <path d="M5 20h8"/>
             </svg>`;
 
         case "magistrate":
@@ -507,11 +503,15 @@ function getMenuIconSvg(key) {
             </svg>`;
 
         case "council":
+            // 縣議員：人頭發言（議會問政/表態）
             return `<svg ${common}>
-                <path d="M14 7l3 3"/>
-                <path d="M7 14l7-7 3 3-7 7H7z"/>
-                <path d="M6 18h6"/>
-                <path d="M5 20h8"/>
+                <!-- head -->
+                <circle cx="9" cy="9" r="3"/>
+                <!-- shoulders -->
+                <path d="M3.5 20c0-3.6 2.7-6 5.5-6s5.5 2.4 5.5 6"/>
+                <!-- voice waves -->
+                <path d="M16 10c1.1 0 2 .9 2 2s-.9 2-2 2"/>
+                <path d="M16 7c2.8 0 5 2.2 5 5s-2.2 5-5 5"/>
             </svg>`;
 
         case "mayor":

@@ -834,6 +834,9 @@ footer {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+/* 讓鄉鎮子選單維持「圖示在上、文字在下」 */
+.township-submenu .menu-text{ order: 1; }
+
 .township-submenu .menu-button:hover::after{
     transform: translateY(-1px) scale(1.04);
     opacity: 1;
