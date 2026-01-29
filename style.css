@@ -1366,3 +1366,13 @@ html[data-theme="light"] footer{
 }
 
 /* === THEME:LIGHT:END === */
+
+
+@media (min-width: 1024px){
+  .main-menu-grid.is-small-set{
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 960px;
+    margin-left: 0;      /* 向左對齊，與其他子分類一致 */
+    margin-right: auto;
+  }
+}
