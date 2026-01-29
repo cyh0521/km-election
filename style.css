@@ -1376,20 +1376,3 @@ html[data-theme="light"] footer{
     margin-right: auto;
   }
 }
-
-/* =========================
-   修正：手機版鄉鎮地圖 icon 過小
-   實際作用於 background-image
-   ========================= */
-@media (max-width: 768px){
-
-  /* 放大圖示容器本身 */
-  .menu-icon{
-    height: 68%;
-  }
-
-  /* 鄉鎮地圖：背景圖補償放大 */
-  .menu-icon{
-    background-size: 95% auto;
-  }
-}
