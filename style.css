@@ -1378,19 +1378,18 @@ html[data-theme="light"] footer{
 }
 
 /* =========================
-   修正：手機版鄉鎮地圖 icon 偏小問題
-   - 僅限 mobile
-   - 僅限地圖型 SVG
+   修正：手機版鄉鎮地圖 icon 過小
+   實際作用於 background-image
    ========================= */
 @media (max-width: 768px){
 
-  /* 鄉鎮子分類：圖示區高度加大 */
+  /* 放大圖示容器本身 */
   .menu-icon{
-    height: 62%; /* 原本 52%，手機版補償放大 */
+    height: 64%; /* 原本 52%，實際撐大地圖顯示空間 */
   }
 
-  /* 地圖 SVG：解除過度限制 */
-  .menu-svg{
-    max-width: 80%;   /* 原本 60%，地圖需要更大可視面積 */
+  /* 鄉鎮地圖：背景圖補償放大 */
+  .menu-icon{
+    background-size: 90% auto;
   }
 }
