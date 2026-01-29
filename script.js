@@ -1,4 +1,5 @@
 // ================= 數據與設定區 =================
+const APP_VERSION = "260129-4";
     
     const availableElections = [
 
@@ -864,7 +865,7 @@ function normalizeText(str) {
     
     async function loadCandidateData() {
         try {
-            const response = await fetch('candidates.csv');
+            const response = await fetch(`candidates.csv?v=${APP_VERSION}`);
             if (!response.ok) throw new Error('無法讀取 candidates.csv');
             const text = await response.text();
 
@@ -1239,7 +1240,7 @@ function loadData(file, uiName, pushState = true) {
         if (currentEle && (currentEle.type === '鄉鎮長' || currentEle.type === '鄉鎮民代表')) {
             appState.currentTownshipType = currentEle.type;
             // appState.currentTownshipName 會在 renderElectionListByTown() 由使用者選擇鄉鎮時設定
-        }        fetch(file)
+        }        fetch(`${file}?v=${APP_VERSION}`)
             .then(r => {
                 if (!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
                 return r.text();
@@ -1379,7 +1380,7 @@ function extractCountySummary(text) {
     async function loadAllElectionSummaries(elections) {
         const summaryPromises = elections.map(async e => {
             try {
-                const response = await fetch(e.file);
+                const response = await fetch(`${e.file}?v=${APP_VERSION}`);
                 if (!response.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
                 const csvText = await response.text();
                    const summary = extractCountySummary(csvText);
@@ -2962,7 +2963,7 @@ dom.breadcrumb.innerHTML = html;
         dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName})...</div>`;
         appState.electionName = uiName;
 
-        fetch(file)
+        fetch(`${file}?v=${APP_VERSION}`)
             .then(r => { if (!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。"); return r.text(); })
             .then(csvText => {
                 parseCSV(csvText);
@@ -3000,7 +3001,7 @@ dom.breadcrumb.innerHTML = html;
         dom.content.innerHTML = `<div class="loading-state">正在載入 ${uiName} 完整數據 (回溯到 ${townName} / ${villageName})...</div>`;
         appState.electionName = uiName;
 
-        fetch(file)
+        fetch(`${file}?v=${APP_VERSION}`)
             .then(r => { if (!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。"); return r.text(); })
             .then(csvText => {
                 parseCSV(csvText);
