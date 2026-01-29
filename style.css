@@ -1385,11 +1385,11 @@ html[data-theme="light"] footer{
 
   /* 放大圖示容器本身 */
   .menu-icon{
-    height: 64%; /* 原本 52%，實際撐大地圖顯示空間 */
+    height: 68%;
   }
 
   /* 鄉鎮地圖：背景圖補償放大 */
   .menu-icon{
-    background-size: 90% auto;
+    background-size: 95% auto;
   }
 }
