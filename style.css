@@ -1388,19 +1388,25 @@ html[data-theme="light"] footer{
     border: none;
     background: transparent;
     padding: 0;
+
+    /* 預設（深色模式）：白色 icon */
     color: rgba(255,255,255,0.92);
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: transform 0.15s ease, opacity 0.15s ease;
+    transition: transform 0.15s ease, opacity 0.15s ease, color 0.15s ease;
 }
+
 .home-btn svg{
     width: 20px;
     height: 20px;
     display: block;
 }
+
+/* Hover / Active */
 .home-btn:hover{
     opacity: 1;
     transform: translateY(-50%) scale(1.06);
@@ -1409,10 +1415,17 @@ html[data-theme="light"] footer{
     transform: translateY(-50%) scale(0.96);
 }
 .home-btn:focus-visible{
-    outline: 2px solid rgba(255,255,255,0.75);
+    outline: 2px solid currentColor;
     outline-offset: 2px;
     border-radius: 10px;
 }
+
+/* === 淺色模式修正：icon 改為深色 === */
+html[data-theme="light"] .home-btn{
+    color: #2c3e50; /* secondary 主色，確保可見 */
+}
+
+/* 標題純文字（不可點） */
 .site-title{
     cursor: default;
 }
