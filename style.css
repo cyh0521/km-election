@@ -1376,3 +1376,43 @@ html[data-theme="light"] footer{
     margin-right: auto;
   }
 }
+
+/* Header：返回首頁按鈕 */
+.home-btn{
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: rgba(255,255,255,0.92);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.home-btn svg{
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+.home-btn:hover{
+    opacity: 1;
+    transform: translateY(-50%) scale(1.06);
+}
+.home-btn:active{
+    transform: translateY(-50%) scale(0.96);
+}
+.home-btn:focus-visible{
+    outline: 2px solid rgba(255,255,255,0.75);
+    outline-offset: 2px;
+    border-radius: 10px;
+}
+.site-title{
+    cursor: default;
+}
