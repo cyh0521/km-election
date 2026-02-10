@@ -1376,3 +1376,8 @@ html[data-theme="light"] footer{
     margin-right: auto;
   }
 }
+
+footer a {
+    color: inherit;
+    text-decoration: underline;
+}
