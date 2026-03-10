@@ -1,5 +1,5 @@
 // ================= 數據與設定區 =================
-const APP_VERSION = "260210-2";
+const APP_VERSION = "260310-1";
     
     const availableElections = [
 
@@ -465,7 +465,23 @@ function isCountyPseudoTownName(name) {
 ];
 
 /**
- * 首頁按鈕 Icon（SVG，不再用文字塞在 menu-icon 裡）
+ * padMenuGrid(count, cols)
+ * 在清單末尾補上空白佔位格，使總格數為 cols 的倍數。
+ * 空白格有邊框（視覺對稱），但不可點擊、不可聚焦。
+ */
+function padMenuGrid(count, cols) {
+    const rem = count % cols;
+    if (rem === 0) return '';
+    const needed = cols - rem;
+    let html = '';
+    for (let i = 0; i < needed; i++) {
+        html += `<div class="menu-button menu-button--ghost" aria-hidden="true" tabindex="-1"></div>`;
+    }
+    return html;
+}
+
+/**
+ * 首頁按鈕 Icon（SVG）
  * - 使用 currentColor：可直接用 CSS 改色
  * - 僅作為視覺符號，真正的名稱仍由 menu-text 提供
  */
@@ -1683,6 +1699,7 @@ function extractCountySummary(text) {
         </div>`;
     });
 
+        html += padMenuGrid(electionCategories.length, 3);
         html += `</div></div>`;
 
         // =========================
@@ -1876,7 +1893,7 @@ function extractCountySummary(text) {
                     <span class="menu-text">地方性公投</span>
                     <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
-
+                ${padMenuGrid(2, 3)}
             </div>
         </div>`;
 
@@ -1919,7 +1936,7 @@ function extractCountySummary(text) {
                     <span class="menu-text">不分區立委</span>
                     <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
-
+                ${padMenuGrid(2, 3)}
             </div>
         </div>`;
 
@@ -1957,11 +1974,14 @@ function extractCountySummary(text) {
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
-            html += `<div class="menu-button" data-town="${t}" onclick="renderElectionListByTown('${type}', '${t}', true)">
-<span class="menu-text">${t}</span>
+            html += `<div class="menu-button" role="button" tabindex="0" data-town="${t}" onclick="renderElectionListByTown('${type}', '${t}', true)">
+                <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('mayor')}</span>
+                <span class="menu-text">${t}</span>
+                <span class="menu-chevron" aria-hidden="true">›</span>
             </div>`;
         });
 
+        html += padMenuGrid(towns.length, 3);
         html += `</div></div>`;
         dom.content.innerHTML = html;
     };
@@ -1997,11 +2017,14 @@ function extractCountySummary(text) {
             <div class="main-menu-grid township-submenu">`;
 
         towns.forEach(t => {
-            html += `<div class="menu-button" data-town="${t}" onclick="renderVillageChiefVillageSubMenu('${t}', true)">
-<span class="menu-text">${t}</span>
+            html += `<div class="menu-button" role="button" tabindex="0" data-town="${t}" onclick="renderVillageChiefVillageSubMenu('${t}', true)">
+                <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('village')}</span>
+                <span class="menu-text">${t}</span>
+                <span class="menu-chevron" aria-hidden="true">›</span>
             </div>`;
         });
 
+        html += padMenuGrid(towns.length, 3);
         html += `</div></div>`;
         dom.content.innerHTML = html;
     };
@@ -2066,8 +2089,10 @@ function extractCountySummary(text) {
                             onclick="renderElectionListByVillage('${type}', '${townName}', '${v}', true)">
                             <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('village')}</span>
                             <span class="menu-text">${v}</span>
+                            <span class="menu-chevron" aria-hidden="true">›</span>
                          </div>`;
             });
+            html += padMenuGrid(villages.length, 3);
         } else {
             html += `<div class="loading-state" style="padding:40px;">該鄉鎮目前無村里長選舉資料。</div>`;
         }
