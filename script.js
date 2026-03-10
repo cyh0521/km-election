@@ -1,5 +1,5 @@
 // ================= 數據與設定區 =================
-const APP_VERSION = "260310-1";
+const APP_VERSION = "260310-4";
     
     const availableElections = [
 
@@ -465,18 +465,28 @@ function isCountyPseudoTownName(name) {
 ];
 
 /**
- * padMenuGrid(count, cols)
- * 在清單末尾補上空白佔位格，使總格數為 cols 的倍數。
- * 空白格有邊框（視覺對稱），但不可點擊、不可聚焦。
+ * padMenuGrid(count)
+ * 同時補足桌機3欄與手機2欄所需的空白佔位格。
+ * - ghost-desktop：僅在桌機（3欄）顯示，補足到3的倍數
+ * - ghost-mobile：僅在手機（2欄）顯示，補足到2的倍數
+ * 兩組格子各自用 CSS display:none 控制顯示時機。
  */
-function padMenuGrid(count, cols) {
-    const rem = count % cols;
-    if (rem === 0) return '';
-    const needed = cols - rem;
+function padMenuGrid(count) {
     let html = '';
-    for (let i = 0; i < needed; i++) {
-        html += `<div class="menu-button menu-button--ghost" aria-hidden="true" tabindex="-1"></div>`;
+
+    const remDesktop = count % 3;
+    if (remDesktop !== 0) {
+        const needed = 3 - remDesktop;
+        for (let i = 0; i < needed; i++) {
+            html += `<div class="menu-button menu-button--ghost menu-button--ghost-desktop" aria-hidden="true" tabindex="-1"></div>`;
+        }
     }
+
+    const remMobile = count % 2;
+    if (remMobile !== 0) {
+        html += `<div class="menu-button menu-button--ghost menu-button--ghost-mobile" aria-hidden="true" tabindex="-1"></div>`;
+    }
+
     return html;
 }
 
@@ -1699,7 +1709,7 @@ function extractCountySummary(text) {
         </div>`;
     });
 
-        html += padMenuGrid(electionCategories.length, 3);
+        html += padMenuGrid(electionCategories.length);
         html += `</div></div>`;
 
         // =========================
@@ -1893,7 +1903,7 @@ function extractCountySummary(text) {
                     <span class="menu-text">地方性公投</span>
                     <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
-                ${padMenuGrid(2, 3)}
+                ${padMenuGrid(2)}
             </div>
         </div>`;
 
@@ -1936,7 +1946,7 @@ function extractCountySummary(text) {
                     <span class="menu-text">不分區立委</span>
                     <span class="menu-chevron" aria-hidden="true">›</span>
                 </div>
-                ${padMenuGrid(2, 3)}
+                ${padMenuGrid(2)}
             </div>
         </div>`;
 
@@ -1981,7 +1991,7 @@ function extractCountySummary(text) {
             </div>`;
         });
 
-        html += padMenuGrid(towns.length, 3);
+        html += padMenuGrid(towns.length);
         html += `</div></div>`;
         dom.content.innerHTML = html;
     };
@@ -2024,7 +2034,7 @@ function extractCountySummary(text) {
             </div>`;
         });
 
-        html += padMenuGrid(towns.length, 3);
+        html += padMenuGrid(towns.length);
         html += `</div></div>`;
         dom.content.innerHTML = html;
     };
@@ -2092,7 +2102,7 @@ function extractCountySummary(text) {
                             <span class="menu-chevron" aria-hidden="true">›</span>
                          </div>`;
             });
-            html += padMenuGrid(villages.length, 3);
+            html += padMenuGrid(villages.length);
         } else {
             html += `<div class="loading-state" style="padding:40px;">該鄉鎮目前無村里長選舉資料。</div>`;
         }

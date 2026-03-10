@@ -62,7 +62,7 @@ header::after {
     position: absolute;
     left: 0; right: 0; bottom: -6px;
     height: 3px;
-    background: linear-gradient(90deg, transparent 0%, var(--primary) 15%, var(--primary) 85%, transparent 100%);
+    background: var(--primary);
     opacity: 0.55;
     pointer-events: none;
 }
@@ -213,13 +213,12 @@ h1 span { cursor: pointer; }
     flex-direction: column;
     gap: 2px;
     font-family: 'Noto Sans TC', sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.05em;
     line-height: 1.2;
     color: var(--text-main);
-    /* 覆蓋 clamp 字型 */
-    font-size: 15px !important;
+    font-size: 16px !important;
 }
 
 .menu-chevron {
@@ -240,9 +239,14 @@ h1 span { cursor: pointer; }
 .menu-button:focus-visible { outline: 2px solid rgba(139,26,26,0.4); outline-offset: -2px; z-index: 1; }
 .menu-button:active { background: rgba(139,26,26,0.09); }
 
+/* is-small-set：桌機固定 3 欄，手機版在 media query 中覆蓋為 2 欄 */
+.main-menu-grid.is-small-set { grid-template-columns: repeat(3, 1fr); }
+
 @media (max-width: 768px) {
     .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
-    /* 重設桌機規則 */
+    /* is-small-set 手機版也強制 2 欄（specificity 需要明確覆蓋） */
+    .main-menu-grid.is-small-set { grid-template-columns: repeat(2, 1fr); }
+    /* 重設桌機 3 欄規則 */
     .menu-button:nth-child(3n) { border-right: 1px solid var(--border-light); }
     .menu-button:nth-last-child(1):nth-child(3n+1),
     .menu-button:nth-last-child(1):nth-child(3n+2),
@@ -253,18 +257,24 @@ h1 span { cursor: pointer; }
     .menu-button:nth-last-child(3):nth-child(3n+1),
     .menu-button:nth-last-child(3):nth-child(3n+2),
     .menu-button:nth-last-child(3):nth-child(3n) { border-bottom: 1px solid var(--border-light); }
-    /* 2欄規則 */
+    /* 2 欄邊框規則 */
     .menu-button:nth-child(2n) { border-right: none; }
-    /* 2欄末行：1 或 2 個 */
+    /* 2 欄末行去底邊框（最後 1 或 2 格） */
     .menu-button:nth-last-child(1):nth-child(2n+1),
     .menu-button:nth-last-child(1):nth-child(2n),
     .menu-button:nth-last-child(2):nth-child(2n+1),
     .menu-button:nth-last-child(2):nth-child(2n) { border-bottom: none; }
-    .menu-button { padding: 15px 14px; gap: 12px; }
-    .menu-icon { width: 36px !important; height: 36px !important; }
-    .menu-svg { width: 18px; height: 18px; }
-    .menu-text { font-size: 13px !important; }
-    .menu-chevron { font-size: 15px; }
+    /* 手機版：欄位緊湊、防止文字換行直排 */
+    .menu-button {
+        padding: 14px 10px;
+        gap: 8px;
+        min-height: 58px;
+        flex-wrap: nowrap;
+    }
+    .menu-icon { width: 32px !important; height: 32px !important; flex-shrink: 0; }
+    .menu-svg { width: 16px; height: 16px; }
+    .menu-text { font-size: 14px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .menu-chevron { font-size: 14px; flex-shrink: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -309,7 +319,7 @@ h1 span { cursor: pointer; }
     color: var(--primary);
     padding: 10px 18px 9px;
     font-family: 'Noto Sans TC', sans-serif;
-    font-size: 14px; font-weight: 700; letter-spacing: 0.05em;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.05em;
     cursor: default; pointer-events: none;
     position: relative;
     bottom: -1.5px; /* 蓋過容器 border-bottom */
@@ -333,7 +343,7 @@ h1 span { cursor: pointer; }
     background: transparent;
     color: var(--text-sub);
     padding: 10px 20px 9px;
-    font-size: 13px; font-weight: 600; letter-spacing: 0.03em;
+    font-size: 15px; font-weight: 600; letter-spacing: 0.03em;
     cursor: pointer;
     position: relative;
     bottom: -1.5px; /* 蓋過容器 border-bottom */
@@ -755,21 +765,15 @@ footer a { color: inherit; text-decoration: underline; }
 @media (min-width: 769px) { #footer-source { display: inline; } }
 
 /* ============================================================
-   is-small-set（固定 3 欄；JS 會補足到 3 的倍數；全寬不限縮）
-   ============================================================ */
-.main-menu-grid.is-small-set {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-/* is-small-set 繼承一般 3 欄的 nth-child 規則，不需要額外覆蓋 */
-
 /* ============================================================
    Ghost / 佔位空白格（padMenuGrid 補出）
    ============================================================ */
+/* ── Ghost 格共用樣式 ── */
 .menu-button--ghost {
     pointer-events: none !important;
     cursor: default !important;
-    /* 細斜線紋路：低調填充、保留外框結構 */
+    border-right: 1px solid var(--border-light) !important;
+    border-bottom: 1px solid var(--border-light) !important;
     background: repeating-linear-gradient(
         -45deg,
         transparent,
@@ -781,6 +785,20 @@ footer a { color: inherit; text-decoration: underline; }
 .menu-button--ghost::before,
 .menu-button--ghost::after { display: none !important; }
 
+/* 桌機：ghost-mobile 隱藏，ghost-desktop 顯示；第3欄不要右邊框 */
+.menu-button--ghost-mobile { display: none !important; }
+.menu-button--ghost-desktop { display: flex !important; }
+.menu-button--ghost:nth-child(3n) { border-right: none !important; }
+
+/* 手機版：ghost-desktop 隱藏，ghost-mobile 顯示；第2欄不要右邊框 */
+@media (max-width: 768px) {
+    .menu-button--ghost-desktop { display: none !important; }
+    .menu-button--ghost-mobile  { display: flex !important; }
+    .menu-button--ghost:nth-child(3n) { border-right: 1px solid var(--border-light) !important; }
+    .menu-button--ghost:nth-child(2n) { border-right: none !important; }
+    .menu-button--ghost { height: 58px !important; min-height: 0 !important; }
+}
+
 html[data-theme="dark"] .menu-button--ghost {
     background: repeating-linear-gradient(
         -45deg,
@@ -790,8 +808,6 @@ html[data-theme="dark"] .menu-button--ghost {
         rgba(200,180,155,0.05) 8px
     ) !important;
 }
-
-
 
 
 
