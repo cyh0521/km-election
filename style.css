@@ -239,9 +239,6 @@ h1 span { cursor: pointer; }
 .menu-button:focus-visible { outline: 2px solid rgba(139,26,26,0.4); outline-offset: -2px; z-index: 1; }
 .menu-button:active { background: rgba(139,26,26,0.09); }
 
-/* is-small-set：桌機固定 3 欄，手機版在 media query 中覆蓋為 2 欄 */
-.main-menu-grid.is-small-set { grid-template-columns: repeat(3, 1fr); }
-
 @media (max-width: 768px) {
     .main-menu-grid { grid-template-columns: repeat(2, 1fr); }
     /* is-small-set 手機版也強制 2 欄（specificity 需要明確覆蓋） */
@@ -765,6 +762,14 @@ footer a { color: inherit; text-decoration: underline; }
 @media (min-width: 769px) { #footer-source { display: inline; } }
 
 /* ============================================================
+   is-small-set（固定 3 欄；JS 會補足到 3 的倍數；全寬不限縮）
+   ============================================================ */
+.main-menu-grid.is-small-set {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* is-small-set 繼承一般 3 欄的 nth-child 規則，不需要額外覆蓋 */
+
 /* ============================================================
    Ghost / 佔位空白格（padMenuGrid 補出）
    ============================================================ */
