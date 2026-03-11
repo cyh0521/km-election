@@ -454,16 +454,13 @@ h1 span { cursor: pointer; }
     border: 1px solid var(--border-light);
 }
 
-/* 卡片內的表格容器：去掉自己的邊框/圓角/陰影，融入卡片背景 */
+/* 卡片內的表格容器：去掉自己的邊框/圓角/陰影，融入卡片背景
+   保留左右 padding 讓表格與卡片邊緣之間有呼吸距離 */
 .card .table-responsive {
     border: none;
     border-radius: 0;
     box-shadow: none;
     background: transparent;
-    /* 讓表格往卡片左右延伸，消除 card padding 留白 */
-    margin-left: -20px;
-    margin-right: -20px;
-    width: calc(100% + 40px);
 }
 
 table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: auto; }
@@ -729,8 +726,8 @@ footer a { color: inherit; text-decoration: underline; }
    RWD — Mobile
    ============================================================ */
 @media (max-width: 768px) {
-    /* 容器左右縮小，多出空間給表格 */
-    .container { padding: 0 8px; }
+    /* 圖卡與螢幕左右邊距 */
+    .container { padding: 0 14px; }
 
     .election-list-grid { column-count: 1; }
     .layout-compact { flex-direction: column; align-items: center; }
@@ -740,12 +737,12 @@ footer a { color: inherit; text-decoration: underline; }
     .party-cell .party-long { display: none; }
     .party-cell .party-short { display: inline-block; }
 
-    /* 卡片內縮，並修正 table-responsive 負 margin */
-    .card { padding: 14px 10px; }
+    /* 卡片內縮，表格保留邊距 */
+    .card { padding: 14px 12px; }
     .card .table-responsive {
-        margin-left: -10px;
-        margin-right: -10px;
-        width: calc(100% + 20px);
+        border: none;
+        box-shadow: none;
+        background: transparent;
     }
 
     /* 表頭與欄位緊湊化 */
