@@ -1683,7 +1683,7 @@ function extractCountySummary(text) {
 
         html += `<div class="main-section">
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
-	                <div class="home-recent-tab is-static is-active">依選舉及公投類別瀏覽</div>
+	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
 	            </div>
             <div class="main-menu-grid is-home">`;
         
