@@ -1,5 +1,5 @@
 // ================= 數據與設定區 =================
-const APP_VERSION = "260311-3";
+const APP_VERSION = "260313-1";
     
     const availableElections = [
 
