@@ -1,5 +1,28 @@
 // ================= 數據與設定區 =================
-const APP_VERSION = "260313-1";
+const APP_VERSION = "260317-1";
+
+// ================= SEO：動態更新頁面 Meta =================
+function updatePageMeta(title, description) {
+    const siteName = '金門選舉資料庫';
+
+    // <title>
+    document.title = title ? `${title} | ${siteName}` : siteName;
+
+    // <meta name="description">
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        metaDesc.setAttribute('content', description ||
+            '金門縣選舉歷史資料庫，收錄1972年至今各類選舉完整得票數據。');
+    }
+
+    // Open Graph
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDesc  = document.querySelector('meta[property="og:description"]');
+    const ogUrl   = document.querySelector('meta[property="og:url"]');
+    if (ogTitle) ogTitle.setAttribute('content', title ? `${title} | ${siteName}` : siteName);
+    if (ogDesc && description) ogDesc.setAttribute('content', description);
+    if (ogUrl)  ogUrl.setAttribute('content', window.location.href);
+}
     
     const availableElections = [
 
@@ -934,6 +957,15 @@ function normalizeText(str) {
         // 如果是政黨票選舉，則不顯示 Modal
         if (isPartyListElection(appState.electionName)) return;
 
+        // ★ GA4 事件追蹤：記錄候選人小卡被查看
+        if (typeof gtag === 'function') {
+            gtag('event', 'view_candidate', {
+                candidate_name: getDisplayName(name),
+                election_name: appState.electionName,
+                election_year: currentElectionYear || ''
+            });
+        }
+
         const modal = document.getElementById('candidate-modal');
         const modalBody = document.getElementById('modal-body');
         
@@ -1663,6 +1695,10 @@ function extractCountySummary(text) {
         const url = `?view=main`;
         const state = { view: 'main' };
         updateUrl(state, "金門選舉資料庫 - 首頁", url, pushState); 
+        updatePageMeta(
+            null,
+            '金門縣選舉歷史資料庫，收錄1972年至今總統、立委、縣長、縣議員、鄉鎮長、鄉鎮民代表、村里長等各類選舉完整得票數據。'
+        );
 
         appState.currentLevel = 'mainMenu';
         
@@ -1872,6 +1908,7 @@ function extractCountySummary(text) {
         const url = `?view=referendumMenu`;
         const state = { view: 'referendumMenu' };
         updateUrl(state, "金門選舉資料庫 - 公民投票類別", url, pushState); 
+        updatePageMeta('公民投票', '金門縣公民投票歷年結果，包含全國性公投與地方性公投在金門的投票數據。');
 
         appState.currentLevel = 'referendumMenu'; 
         
@@ -1915,6 +1952,7 @@ function extractCountySummary(text) {
         const url = `?view=legislatorMenu`;
         const state = { view: 'legislatorMenu' };
         updateUrl(state, "金門選舉資料庫 - 立法委員類別", url, pushState); 
+        updatePageMeta('立法委員選舉', '金門縣歷屆立法委員選舉結果，包含區域立委與不分區立委得票數據。');
 
         appState.currentLevel = 'legislatorMenu'; 
         
@@ -1960,6 +1998,7 @@ function extractCountySummary(text) {
         const url = `?view=townshipMenu&type=${encodeURIComponent(type)}`;
         const state = { view: 'townshipMenu', type: type };
         updateUrl(state, `金門選舉資料庫 - ${type}（依鄉鎮）`, url, pushState);
+        updatePageMeta(`${type}`, `金門縣${type}歷屆選舉結果，請選擇鄉鎮查看詳細得票數據。`);
 
         appState.currentLevel = 'townshipMenu';
         appState.currentTownshipType = type;
@@ -2003,6 +2042,7 @@ function extractCountySummary(text) {
         const url = `?view=villageChiefTownMenu&type=${encodeURIComponent(type)}`;
         const state = { view: 'villageChiefTownMenu', type: type };
         updateUrl(state, `金門選舉資料庫 - ${type}（依鄉鎮 / 村里）`, url, pushState);
+        updatePageMeta('村里長選舉', '金門縣村里長歷屆選舉結果，請選擇鄉鎮與村里查看得票數據。');
 
         appState.currentLevel = 'villageChiefTownMenu';
         appState.currentVillageChiefTown = null;
@@ -2045,6 +2085,7 @@ function extractCountySummary(text) {
         const url = `?view=villageChiefVillageMenu&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}`;
         const state = { view: 'villageChiefVillageMenu', type: type, town: townName };
         updateUrl(state, `金門選舉資料庫 - ${type}（${townName}）`, url, pushState);
+        updatePageMeta(`村里長（${townName}）`, `金門縣${townName}村里長歷屆選舉結果，請選擇村里查看詳細得票數據。`);
 
         appState.currentLevel = 'villageChiefVillageMenu';
         appState.currentVillageChiefTown = townName;
@@ -2116,6 +2157,7 @@ function extractCountySummary(text) {
         const url = `?view=villageChiefList&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}&village=${encodeURIComponent(villageName)}`;
         const state = { view: 'villageChiefList', type: type, town: townName, village: villageName };
         updateUrl(state, `金門選舉資料庫 - ${type}（${townName}${villageName}）`, url, pushState);
+        updatePageMeta(`村里長（${townName}${villageName}）`, `金門縣${townName}${villageName}村里長歷屆選舉結果與得票數據。`);
 
         appState.currentLevel = 'villageChiefList';
         appState.currentVillageChiefTown = townName;
@@ -2163,6 +2205,7 @@ function extractCountySummary(text) {
         const url = `?view=townshipList&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}`;
         const state = { view: 'townshipList', type: type, town: townName };
         updateUrl(state, `金門選舉資料庫 - ${type}（${townName}）`, url, pushState);
+        updatePageMeta(`${type}（${townName}）`, `金門縣${townName}${type}歷屆選舉結果，各年度完整得票數據。`);
 
         appState.currentLevel = 'townshipList';
         appState.currentTownshipType = type;
@@ -2211,6 +2254,7 @@ window.renderElectionList = function(type, pushState = true) {
         const url = `?view=list&type=${encodeURIComponent(type)}`;
         const state = { view: 'list', type: type };
         updateUrl(state, `金門選舉資料庫 - ${type} 列表`, url, pushState); 
+        updatePageMeta(`${type}選舉`, `金門縣${type}歷屆選舉結果列表，包含各年度完整得票數據。`);
 
         appState.currentLevel = 'electionList';
         appState.currentTown = type; 
@@ -2308,6 +2352,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             const url = `?view=county&election=${encodeURIComponent(appState.electionName)}`;
             const state = { view: 'county', election: appState.electionName };
             updateUrl(state, `金門選舉資料庫 - ${appState.electionName}`, url, pushState);
+            updatePageMeta(appState.electionName, `${appState.electionName}金門縣完整得票數據，包含各鄉鎮開票結果。`);
         }
         
         appState.currentLevel = 'county';
@@ -2435,6 +2480,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             const url = `?view=town&election=${encodeURIComponent(appState.electionName)}&town=${encodeURIComponent(townName)}`;
             const state = { view: 'town', election: appState.electionName, town: townName };
             updateUrl(state, `金門選舉資料庫 - ${appState.electionName} (${townName})`, url, pushState);
+            updatePageMeta(`${appState.electionName}・${townName}`, `${appState.electionName}${townName}開票結果與各村里得票數據。`);
         }
         
         appState.currentLevel = 'town';
@@ -2517,6 +2563,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             const url = `?view=village&election=${encodeURIComponent(appState.electionName)}&town=${encodeURIComponent(townName)}&village=${encodeURIComponent(villageName)}`;
             const state = { view: 'village', election: appState.electionName, town: townName, village: villageName };
             updateUrl(state, `金門選舉資料庫 - ${appState.electionName} (${townName} / ${villageName})`, url, pushState);
+            updatePageMeta(`${appState.electionName}・${townName}${villageName}`, `${appState.electionName}${townName}${villageName}開票結果與得票數據。`);
         }
 
         appState.currentLevel = 'village';
