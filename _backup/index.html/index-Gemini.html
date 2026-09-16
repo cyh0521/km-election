@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金門縣選舉資料庫 3.4 - 自動載入與數據增強版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #3887B0;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --border: #e1e4e8;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Noto Sans TC', sans-serif; background:var(--bg); color:var(--text-main); line-height:1.6; padding-bottom: 60px; }
+        
+        header { background: #2c3e50; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+        
+        .control-panel { background: white; padding: 15px; display: flex; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+        select { padding: 8px 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; min-width: 200px; background-color: #fff; cursor: pointer; }
+        
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        
+        /* 麵包屑 */
+        .breadcrumb { margin-bottom: 20px; font-size: 16px; color: var(--text-sub); padding: 10px 0; }
+        #breadcrumb-bottom { margin-top: 40px; border-top: 1px solid #e1e4e8; padding-top: 20px; }
+        .breadcrumb span { cursor: pointer; color: var(--primary); font-weight: 500; }
+        .breadcrumb span:hover { text-decoration: underline; }
+        .breadcrumb span.active { color: var(--text-main); cursor: default; text-decoration: none; }
+        
+        /* 區塊樣式 */
+        .main-section { margin-bottom: 40px; }
+        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e1e4e8; }
+        .section-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
+        .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+
+        /* 卡片樣式 */
+        .card { background: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; overflow: hidden; border: 1px solid transparent; transition: all 0.2s; margin-bottom: 0; }
+        .card.clickable { cursor: pointer; }
+        .card.clickable:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 15px rgba(56, 135, 176, 0.15); }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .card-header-left { display: flex; flex-direction: column; }
+        
+        .card-title { font-size: 18px; font-weight: 700; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; line-height: 1.2; }
+        
+        /* 新增：卡片副標題 (顯示總票數與佔比) */
+        .card-stats { font-size: 13px; color: #666; margin-top: 5px; margin-left: 14px; font-weight: 500; }
+        
+        .card-action { font-size: 14px; color: var(--primary); font-weight: 500; white-space: nowrap; margin-left: 10px; }
+
+        /* Layout Systems */
+        .layout-full { display: grid; grid-template-columns: 300px 1fr; gap: 25px; align-items: start; }
+        .layout-full .chart-area { height: 250px; width: 100%; position: relative; }
+
+        .sub-area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 15px; }
+        
+        .layout-compact { display: flex; align-items: flex-start; gap: 20px; }
+        .layout-compact .chart-area { flex: 0 0 140px; width: 140px; height: 140px; position: relative; margin-top: 10px; }
+        .layout-compact .table-area { flex: 1; min-width: 0; }
+
+        /* Table Styling */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #f8f9fa; color: #666; font-weight: 600; text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); white-space: nowrap; font-size: 13px; }
+        td { padding: 8px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        .number-badge { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: #eee; border-radius: 50%; font-weight: bold; font-size: 12px; color: #555; }
+        
+        .party-badge { font-size: 11px; padding: 2px 6px; border-radius: 8px; color: white; background: #999; white-space: nowrap; }
+        
+        .vote-cell-content { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+        .bar-container { height: 5px; background: #f0f0f0; border-radius: 3px; overflow: hidden; width: 100%; max-width: 80px; }
+        .bar-fill { height: 100%; border-radius: 3px; }
+        
+        .loading-state { text-align: center; padding: 60px; color: var(--text-sub); font-size: 18px; }
+
+        @media (max-width: 768px) {
+            .layout-full { grid-template-columns: 1fr; }
+            .sub-area-grid { grid-template-columns: 1fr; }
+            .layout-compact { flex-direction: column; align-items: center; }
+            .layout-compact .chart-area { width: 100%; height: 200px; flex: none; margin-bottom: 15px; }
+            .layout-compact .table-area { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏛️ 金門縣歷年選舉資料庫</h1>
+</header>
+
+<div class="control-panel">
+    <select id="typeSelect"></select>
+    <select id="yearSelect"></select>
+</div>
+
+<div class="container">
+    <div id="breadcrumb" class="breadcrumb" style="display:none;"></div>
+    
+    <div id="content">
+        <div class="loading-state">資料載入中...</div>
+    </div>
+
+    <div id="breadcrumb-bottom" class="breadcrumb" style="display:none;"></div>
+</div>
+
+<script>
+    // ================= 設定區 =================
+    // 請確保檔案名稱格式正確：YYYY_類型.csv
+    const availableElections = [
+        "2024_立法委員.csv",
+        "2024_總統副總統.csv"
+    ];
+
+    const partyColors = {
+        "中國國民黨": "#3887B0",
+        "民主進步黨": "#C0D65A",
+        "台灣民眾黨": "#28C8C8",
+        "親民黨": "#F27C00",
+        "新黨": "#F0C800",
+        "無黨籍": "#606060",
+        "default": "#7f8c8d"
+    };
+
+    function getPartyColor(party) {
+        return partyColors[party] || partyColors['default'];
+    }
+
+    const dom = {
+        typeSelect: document.getElementById("typeSelect"),
+        yearSelect: document.getElementById("yearSelect"),
+        content: document.getElementById("content"),
+        breadcrumb: document.getElementById("breadcrumb"),
+        breadcrumbBottom: document.getElementById("breadcrumb-bottom")
+    };
+
+    let appState = {
+        data: {},
+        currentLevel: 'county',
+        currentTown: null,
+        currentVillage: null,
+        electionName: '',
+        chartInstances: [],
+        sortConfig: { key: 'number', direction: 'asc' },
+        globalTotalVotes: 0 // 新增：儲存全縣總票數，用於計算所有層級的佔比
+    };
+
+    // ================= 初始化邏輯 (自動選擇最新) =================
+    
+    // 1. 整理所有不重複的選舉類型
+    const electionTypes = [...new Set(availableElections.map(f => f.split('_')[1].replace('.csv', '')))];
+    
+    // 2. 填入類型選單
+    dom.typeSelect.innerHTML = electionTypes.map(t => `<option value="${t}">${t}選舉</option>`).join('');
+
+    // 3. 定義切換類型時的行為
+    dom.typeSelect.onchange = function() {
+        const type = this.value;
+        dom.yearSelect.innerHTML = ''; // 清空年份
+
+        const matchingFiles = availableElections.filter(file => file.includes(`_${type}.csv`));
+        // 排序：年份大到小
+        matchingFiles.sort().reverse(); 
+
+        matchingFiles.forEach(file => {
+            const year = file.split('_')[0];
+            dom.yearSelect.innerHTML += `<option value="${file}">${year}年 ${type}選舉</option>`;
+        });
+
+        // 選好類型後，自動載入該類型最新的年份
+        if (matchingFiles.length > 0) {
+            dom.yearSelect.value = matchingFiles[0];
+            loadData(matchingFiles[0]);
+        }
+    };
+
+    // 4. 定義切換年份時的行為
+    dom.yearSelect.onchange = function() {
+        if (this.value) loadData(this.value);
+    };
+
+    // 5. 程式啟動時，自動觸發一次「最新選舉」的載入
+    (function init() {
+        // 找到所有檔案中最新的年份與類型
+        availableElections.sort().reverse(); // 字串排序剛好年份會由大到小 (例如 2024 > 2022)
+        if (availableElections.length > 0) {
+            const latestFile = availableElections[0];
+            const [year, typeCsv] = latestFile.split('_');
+            const type = typeCsv.replace('.csv', '');
+
+            // 設定選單值
+            dom.typeSelect.value = type;
+            // 手動觸發 onchange 來填入年份並載入
+            dom.typeSelect.onchange(); 
+        }
+    })();
+
+
+    // ================= 資料處理 =================
+    function loadData(file) {
+        dom.content.innerHTML = `<div class="loading-state">資料載入中...</div>`;
+        appState.electionName = dom.yearSelect.selectedOptions[0].text;
+        
+        fetch(file)
+            .then(r => { if(!r.ok) throw Error(); return r.text(); })
+            .then(csvText => {
+                parseCSV(csvText);
+                appState.sortConfig = { key: 'number', direction: 'asc' };
+                renderCounty();
+            })
+            .catch(() => dom.content.innerHTML = `<div class="loading-state" style="color:red">讀取失敗</div>`);
+    }
+
+    function parseCSV(text) {
+        const rows = text.split('\n').map(r => r.trim().split(','));
+        const candidates = {}; 
+        const towns = {};
+        const townOrder = [];
+        let globalTotal = 0; // 計算全縣總票數
+
+        rows.forEach((row, index) => {
+            if (index === 0 || row.length < 6) return;
+            const [town, village, candName, candNum, rawParty, votesStr] = [
+                row[0].trim(), row[1].trim(), row[2].trim(), row[3].trim(), row[4].trim(), row[5]
+            ];
+            if (town.includes("鄉鎮")) return;
+
+            const votes = parseInt(votesStr) || 0;
+            let party = rawParty === '無' ? '無黨籍' : rawParty;
+
+            globalTotal += votes; // 累加全縣總票數
+
+            if (!towns[town]) {
+                towns[town] = { villages: {}, totalVotes: 0, candidates: {} };
+                townOrder.push(town);
+            }
+            if (!towns[town].candidates[candName]) towns[town].candidates[candName] = { number: candNum, party, votes: 0 };
+            towns[town].candidates[candName].votes += votes;
+            towns[town].totalVotes += votes;
+
+            if (!towns[town].villages[village]) towns[town].villages[village] = { totalVotes: 0, candidates: {} };
+            if (!towns[town].villages[village].candidates[candName]) towns[town].villages[village].candidates[candName] = { number: candNum, party, votes: 0 };
+            towns[town].villages[village].candidates[candName].votes += votes;
+            towns[town].villages[village].totalVotes += votes;
+
+            if (!candidates[candName]) candidates[candName] = { number: candNum, party, votes: 0 };
+            candidates[candName].votes += votes;
+        });
+
+        appState.data = { county: candidates, towns: towns, townOrder: [...new Set(townOrder)] };
+        appState.globalTotalVotes = globalTotal; // 存入全域狀態
+    }
+
+    function getSortedCandidates(candObj) {
+        let list = Object.keys(candObj).map(key => ({ name: key, ...candObj[key] }));
+        const { key, direction } = appState.sortConfig;
+        list.sort((a, b) => {
+            let valA = a[key], valB = b[key];
+            if (key === 'number') { valA = parseInt(valA)||0; valB = parseInt(valB)||0; }
+            if (valA < valB) return direction === 'asc' ? -1 : 1;
+            if (valA > valB) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return list;
+    }
+
+    function destroyAllCharts() {
+        appState.chartInstances.forEach(c => c.destroy());
+        appState.chartInstances = [];
+    }
+
+    function updateBreadcrumb() {
+        const { currentLevel, currentTown, currentVillage, electionName } = appState;
+        let html = `<span onclick="renderCounty()">🏠 ${electionName}</span>`;
+        if (currentLevel !== 'county') html += ` &gt; <span onclick="renderTown('${currentTown}')" class="${currentLevel === 'town' ? 'active' : ''}">${currentTown}</span>`;
+        if (currentLevel === 'village') html += ` &gt; <span class="active">${currentVillage}</span>`;
+        
+        dom.breadcrumb.style.display = 'block';
+        dom.breadcrumb.innerHTML = html;
+        dom.breadcrumbBottom.style.display = 'block';
+        dom.breadcrumbBottom.innerHTML = html;
+    }
+
+    // ================= 渲染邏輯 =================
+
+    window.renderCounty = function() {
+        destroyAllCharts();
+        appState.currentLevel = 'county';
+        appState.currentTown = null;
+        window.scrollTo(0,0);
+        updateBreadcrumb();
+
+        const candidates = getSortedCandidates(appState.data.county);
+        // 全縣視圖使用 globalTotalVotes 
+        const totalVotes = appState.globalTotalVotes;
+
+        let html = `<div class="main-section">
+            <div class="section-header"><span class="section-title">全縣總計</span></div>
+            ${generateCardHTML('county-main', '全縣總結果', candidates, totalVotes, false, false)}
+        </div>`;
+
+        html += `<div class="main-section">
+            <div class="section-header"><span class="section-title">各鄉鎮結果</span><span class="section-badge">點擊卡片看細節</span></div>
+            <div class="sub-area-grid">`;
+        
+        appState.data.townOrder.forEach(town => {
+            const townData = appState.data.towns[town];
+            const townCands = getSortedCandidates(townData.candidates);
+            html += generateCardHTML(`town-${town}`, town, townCands, townData.totalVotes, true, `renderTown('${town}')`, true);
+        });
+        html += `</div></div>`;
+
+        dom.content.innerHTML = html;
+        drawCharts(candidates, totalVotes, appState.data.townOrder, 'towns');
+    };
+
+    window.renderTown = function(townName) {
+        destroyAllCharts();
+        appState.currentLevel = 'town';
+        appState.currentTown = townName;
+        window.scrollTo(0,0);
+        updateBreadcrumb();
+
+        const townData = appState.data.towns[townName];
+        const candidates = getSortedCandidates(townData.candidates);
+        const villageList = Object.keys(townData.villages);
+
+        let html = `<div class="main-section">
+            <div class="section-header"><span class="section-title">${townName} 總計</span></div>
+            ${generateCardHTML('town-main', `${townName}總結果`, candidates, townData.totalVotes, false, false)}
+        </div>`;
+
+        html += `<div class="main-section">
+            <div class="section-header"><span class="section-title">各村里結果</span></div>
+            <div class="sub-area-grid">`;
+        
+        villageList.forEach(village => {
+            const vData = townData.villages[village];
+            const vCands = getSortedCandidates(vData.candidates);
+            html += generateCardHTML(`village-${village}`, village, vCands, vData.totalVotes, false, null, true);
+        });
+        html += `</div></div>`;
+
+        dom.content.innerHTML = html;
+        drawCharts(candidates, townData.totalVotes, villageList, 'villages', townData);
+    };
+
+    // 輔助：批次繪圖函式
+    function drawCharts(mainCands, mainTotal, subList, subType, townData = null) {
+        // 1. Main Chart
+        const mainId = subType === 'towns' ? 'chart-county-main' : 'chart-town-main';
+        drawChart(mainId, mainCands, mainTotal, false);
+
+        // 2. Sub Charts
+        subList.forEach(key => {
+            let data, id;
+            if (subType === 'towns') {
+                data = appState.data.towns[key];
+                id = `chart-town-${key}`;
+            } else {
+                data = townData.villages[key];
+                id = `chart-village-${key}`;
+            }
+            const cands = getSortedCandidates(data.candidates);
+            drawChart(id, cands, data.totalVotes, true);
+        });
+    }
+
+    function generateCardHTML(id, title, candidates, areaTotalVotes, isClickable, onClickAction, isCompact = false) {
+        const clickClass = isClickable ? 'clickable' : '';
+        const clickAttr = isClickable ? `onclick="${onClickAction}"` : '';
+        const actionText = isClickable ? `<span class="card-action">查看詳情 ➜</span>` : '';
+        const layoutClass = isCompact ? 'layout-compact' : 'layout-full';
+        
+        // 新增：計算佔全縣比例
+        const globalRatio = appState.globalTotalVotes > 0 
+            ? (areaTotalVotes / appState.globalTotalVotes * 100).toFixed(2) 
+            : "0.00";
+
+        return `
+        <div class="card ${clickClass}" ${clickAttr}>
+            <div class="card-header">
+                <div class="card-header-left">
+                    <div class="card-title">${title}</div>
+                    <div class="card-stats">總票數: ${areaTotalVotes.toLocaleString()} | 佔全縣: ${globalRatio}%</div>
+                </div>
+                ${actionText}
+            </div>
+            <div class="${layoutClass}">
+                <div class="chart-area">
+                    <canvas id="chart-${id}"></canvas>
+                </div>
+                <div class="table-area table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:40px; text-align:center;">#</th>
+                                <th>候選人</th>
+                                <th>政黨</th>
+                                <th style="text-align:right">得票</th>
+                                <th style="text-align:right; width:50px">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${candidates.map(c => {
+                                const rate = areaTotalVotes > 0 ? (c.votes / areaTotalVotes * 100).toFixed(2) : 0;
+                                const color = getPartyColor(c.party);
+                                return `
+                                    <tr>
+                                        <td style="text-align:center;"><span class="number-badge">${c.number}</span></td>
+                                        <td style="font-weight:700">${c.name}</td>
+                                        <td><span class="party-badge" style="background:${color}">${c.party}</span></td>
+                                        <td style="text-align:right">
+                                            <div class="vote-cell-content">
+                                                <span>${c.votes.toLocaleString()}</span>
+                                                <div class="bar-container"><div class="bar-fill" style="width:${rate}%; background:${color}"></div></div>
+                                            </div>
+                                        </td>
+                                        <td style="text-align:right; font-weight:bold; color:${color}">${rate}%</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    function drawChart(canvasId, candidates, totalVotes, hideLegend = false) {
+        const ctx = document.getElementById(canvasId);
+        if(!ctx) return;
+
+        const labels = candidates.map(c => c.name);
+        const data = candidates.map(c => c.votes);
+        const colors = candidates.map(c => getPartyColor(c.party));
+        const chartType = candidates.length > 5 ? 'bar' : 'doughnut';
+
+        const chart = new Chart(ctx.getContext('2d'), {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: !hideLegend, 
+                        position: 'bottom',
+                        labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                const percentage = totalVotes > 0 ? (value / totalVotes * 100).toFixed(2) : 0;
+                                return `${context.label}: ${value.toLocaleString()}票 (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                layout: { padding: 0 }
+            }
+        });
+        appState.chartInstances.push(chart);
+    }
+</script>
+</body>
+</html>

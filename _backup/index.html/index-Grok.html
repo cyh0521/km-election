@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金門縣歷年選舉資料庫</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Noto Sans TC', "Microsoft JhengHei", sans-serif; background:#f0f8ff; color:#333; padding:15px; line-height:1.5; }
+        header { text-align:center; margin-bottom:12px; }
+        h1 { color:#2575b8; font-size:28px; font-weight:700; margin:0; }
+        .control { text-align:center; margin:8px 0 15px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }
+        select { font-size:16px; padding:9px 22px; border:2px solid #2575b8; border-radius:6px; background:white; color:#2575b8; font-weight:500; cursor:pointer; min-width:260px; }
+        .container { max-width:1100px; margin:0 auto; }
+        .card { background:white; border:2px solid #a0d0ff; border-radius:10px; margin-bottom:20px; overflow:hidden; }
+        table { width:100%; border-collapse:collapse; }
+        th { background:#cfe8ff; color:#2575b8; padding:12px; font-size:16px; font-weight:500; }
+        td { padding:12px; border-bottom:1px solid #e6f3ff; }
+        td.number-cell { text-align:center; }
+        th.cand, td.cand { text-align:left; padding-left:20px; }
+        th.party, td.party { text-align:left; padding-left:20px; }
+        th.votes, th.rate, td.votes, td.rate { text-align:right; padding-right:30px; }
+        .town-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:15px; }
+        .town-item { background:#e6f3ff; padding:20px; text-align:center; font-weight:700; font-size:18px; cursor:pointer; border-radius:8px; transition:0.2s; }
+        .town-item:hover { background:#b8dcff; transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+        .village-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px; }
+        .village-item { background:#f5fbff; padding:20px; text-align:center; font-weight:600; font-size:17px; cursor:pointer; border-radius:8px; transition:0.2s; }
+        .village-item:hover { background:#d0eaff; transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+        .back-btn { display:block; margin:30px auto; padding:12px 50px; font-size:16px; background:#2575b8; color:white; border:none; border-radius:6px; cursor:pointer; }
+        .back-btn:hover { background:#1e63a0; }
+        .loading { text-align:center; padding:60px; font-size:18px; color:#2575b8; }
+        .number-circle { display:inline-block; width:34px; height:34px; line-height:34px; border-radius:50%; background:#2575b8; color:white; font-weight:bold; font-size:15px; }
+        .area-title { background:#2575b8; color:white; font-size:20px; font-weight:700; padding:16px; text-align:center; }
+        .total-row td { background:#2575b8; color:white; font-weight:bold; font-size:17px; text-align:center; }
+        footer { text-align:center; margin-top:40px; color:#888; font-size:13px; }
+        @media (max-width:900px) { .village-grid { grid-template-columns:repeat(3,1fr); } }
+        @media (max-width:650px) { .village-grid { grid-template-columns:repeat(2,1fr); } }
+        @media (max-width:480px) { .town-grid, .village-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>金門縣歷年選舉資料庫</h1>
+    </header>
+    
+    <div class="control">
+        <select id="typeSelect">
+            <option value="">請選擇選舉類型</option>
+            <option value="總統副總統">總統副總統選舉</option>
+            <option value="縣長">縣長選舉</option>
+            <option value="立法委員">立法委員選舉</option>
+        </select>
+        <select id="yearSelect" disabled>
+            <option>請先選擇選舉類型</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div id="content" class="loading">請選擇選舉類型與年份...</div>
+    </div>
+
+    <footer>金門縣歷年選舉資料庫 © 2025 ｜ 資料來源：中央選舉委員會</footer>
+
+    <script>
+        // 所有 CSV 檔案（檔名格式：年份_類型.csv）
+        const availableElections = [
+            "2024_立法委員.csv",
+            "2024_總統副總統.csv"
+            // 未來加新檔直接加在這裡
+        ];
+
+        const typeSelect = document.getElementById("typeSelect");
+        const yearSelect = document.getElementById("yearSelect");
+
+        // 自動產生年份選單，並顯示完整名稱
+        typeSelect.onchange = function() {
+            const type = this.value;
+            yearSelect.innerHTML = '<option>請選擇年份</option>';
+            yearSelect.disabled = true;
+
+            if (!type) return;
+
+            const matchingFiles = availableElections.filter(file => file.includes(`_${type}.csv`));
+
+            matchingFiles.sort().reverse().forEach(file => {
+                const year = file.split('_')[0];
+                const fullName = year + "年 " + type + "選舉";  // ← 完整名稱
+                yearSelect.innerHTML += `<option value="${file}">${fullName}</option>`;
+            });
+
+            if (matchingFiles.length > 0) yearSelect.disabled = false;
+        };
+
+        // 選擇年份後載入資料
+        yearSelect.onchange = function() {
+            const file = this.value;
+            if (file) loadElection(file);
+        };
+
+        let currentData = {};
+        let originalOrder = [];
+        let villageOrder = {};
+
+        function loadElection(file) {
+            document.getElementById("content").innerHTML = `<div class="loading">載入中...</div>`;
+            const electionName = yearSelect.selectedOptions[0].text;  // 直接抓完整名稱
+
+            fetch(file)
+                .then(r => r.text())
+                .then(text => {
+                    const rows = text.split('\n').map(r => r.trim().split(','));
+                    const candidates = {};
+                    const towns = {};
+                    const villages = {};
+                    originalOrder = [];
+                    villageOrder = {};
+
+                    rows.forEach(row => {
+                        if (row.length < 6 || row[0].includes("鄉鎮")) return;
+                        const town = row[0].trim();
+                        const village = row[1].trim();
+                        const cand = row[2].trim();
+                        const number = row[3].trim();
+                        const party = row[4].trim();
+                        const votes = parseInt(row[5]) || 0;
+
+                        if (!originalOrder.includes(town)) originalOrder.push(town);
+                        const key = town + village;
+                        if (!villageOrder[town]) villageOrder[town] = [];
+                        if (!villageOrder[town].includes(key)) villageOrder[town].push(key);
+
+                        if (!candidates[cand]) candidates[cand] = {number, party, votes:0};
+                        candidates[cand].votes += votes;
+
+                        if (!towns[town]) towns[town] = {};
+                        if (!towns[town][cand]) towns[town][cand] = {number, party, votes:0};
+                        towns[town][cand].votes += votes;
+
+                        if (!villages[key]) villages[key] = {town, village, data:{}};
+                        villages[key].data[cand] = {number, party, votes};
+                    });
+
+                    currentData = {candidates, towns, villages, electionName};
+                    showCountySummary();
+                })
+                .catch(() => {
+                    document.getElementById("content").innerHTML = `<p style="color:red;text-align:center;">載入失敗，請確認檔案存在</p>`;
+                });
+        }
+
+        function showCountySummary() {
+            const {candidates, electionName} = currentData;
+            let total = Object.values(candidates).reduce((s,c)=>s+c.votes,0);
+
+            let html = `<div class="card"><table>
+                <tr><td class="area-title" colspan="5">${electionName} - 全縣總得票</td></tr>
+                <tr><th>號次</th><th class="cand">候選人</th><th class="party">推薦政黨</th><th class="votes">得票數</th><th class="rate">得票率</th></tr>`;
+            
+            Object.keys(candidates).sort((a,b) => candidates[a].number - candidates[b].number).forEach(cand => {
+                const c = candidates[cand];
+                const rate = (c.votes/total*100).toFixed(2);
+                html += `<tr>
+                    <td class="number-cell"><span class="number-circle">${c.number}</span></td>
+                    <td class="cand">${cand}</td>
+                    <td class="party">${c.party}</td>
+                    <td class="votes">${c.votes.toLocaleString()}</td>
+                    <td class="rate">${rate}%</td>
+                </tr>`;
+            });
+            html += `<tr class="total-row"><td colspan="5">總有效票 ${total.toLocaleString()} 票</td></tr></table></div>`;
+
+            html += `<div class="card"><div class="town-grid">`;
+            originalOrder.forEach(town => {
+                html += `<div class="town-item" onclick="showTown('${town}')">${town}</div>`;
+            });
+            html += `</div></div>`;
+            document.getElementById("content").innerHTML = html;
+        }
+
+        function showTown(town) {
+            const townData = currentData.towns[town];
+            const total = Object.values(townData).reduce((s,c)=>s+c.votes,0);
+            let html = `<div class="card"><table>
+                <tr><td class="area-title" colspan="5">${town}</td></tr>
+                <tr><th>號次</th><th class="cand">候選人</th><th class="party">推薦政黨</th><th class="votes">得票數</th><th class="rate">得票率</th></tr>`;
+            
+            Object.keys(townData).sort((a,b) => townData[a].number - townData[b].number).forEach(cand => {
+                const c = townData[cand];
+                const rate = (c.votes/total*100).toFixed(2);
+                html += `<tr>
+                    <td class="number-cell"><span class="number-circle">${c.number}</span></td>
+                    <td class="cand">${cand}</td>
+                    <td class="party">${c.party}</td>
+                    <td class="votes">${c.votes.toLocaleString()}</td>
+                    <td class="rate">${rate}%</td>
+                </tr>`;
+            });
+            html += `<tr class="total-row"><td colspan="5">總有效票 ${total.toLocaleString()} 票</td></tr></table></div>`;
+
+            html += `<div class="card"><div class="village-grid">`;
+            (villageOrder[town] || []).forEach(key => {
+                const v = currentData.villages[key];
+                if (v) html += `<div class="village-item" onclick="showVillage('${key}')">${v.village}</div>`;
+            });
+            html += `</div></div>`;
+            html += `<button class="back-btn" onclick="showCountySummary()">← 回到全縣總覽</button>`;
+            document.getElementById("content").innerHTML = html;
+        }
+
+        window.showVillage = function(key) {
+            const v = currentData.villages[key];
+            const total = Object.values(v.data).reduce((s,c)=>s+c.votes,0);
+            let html = `<div class="card"><table>
+                <tr><td class="area-title" colspan="5">${v.town}${v.village}</td></tr>
+                <tr><th>號次</th><th class="cand">候選人</th><th class="party">推薦政黨</th><th class="votes">得票數</th><th class="rate">得票率</th></tr>`;
+            Object.keys(v.data).sort((a,b) => v.data[a].number - v.data[b].number).forEach(cand => {
+                const c = v.data[cand];
+                const rate = total > 0 ? (c.votes/total*100).toFixed(2) : "0.00";
+                html += `<tr>
+                    <td class="number-cell"><span class="number-circle">${c.number}</span></td>
+                    <td class="cand">${cand}</td>
+                    <td class="party">${c.party}</td>
+                    <td class="votes">${c.votes}</td>
+                    <td class="rate">${rate}%</td>
+                </tr>`;
+            });
+            html += `<tr class="total-row"><td colspan="5">總有效票 ${total} 票</td></tr></table></div>`;
+            html += `<button class="back-btn" onclick="showTown('${v.town}')">← 回到${v.town}</button>`;
+            document.getElementById("content").innerHTML = html;
+        }
+    </script>
+</body>
+</html>
