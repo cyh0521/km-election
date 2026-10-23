@@ -1738,14 +1738,12 @@ function extractCountySummary(text) {
              clickAction = `renderElectionList('${cat.type}', true)`;
         }
 
-        html += `<div class=\"menu-button\" role=\"button\" tabindex=\"0\" onclick=\"${clickAction}\">
-            <span class=\"menu-icon\" aria-hidden=\"true\">${getMenuIconSvg(cat.iconKey)}</span>
+        html += `<button class=\"menu-button\" type=\"button\" onclick=\"${clickAction}\">
+            <img class=\"menu-art\" src=\"images/election-categories/${cat.iconKey}.png?v=ui-redesign-2\" alt=\"\" width=\"144\" height=\"144\" loading=\"lazy\" decoding=\"async\">
             <span class=\"menu-text\">${cat.type}</span>
-            <span class=\"menu-chevron\" aria-hidden=\"true\">›</span>
-        </div>`;
+        </button>`;
     });
 
-        html += padMenuGrid(electionCategories.length);
         html += `</div></div>`;
 
         // =========================
