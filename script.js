@@ -3,7 +3,7 @@ const APP_VERSION = "260317-1";
 
 // ================= SEO：動態更新頁面 Meta =================
 function updatePageMeta(title, description) {
-    const siteName = '金門選舉資料庫';
+    const siteName = '金門政治山';
 
     // <title>
     document.title = title ? `${title} | ${siteName}` : siteName;
@@ -800,80 +800,6 @@ default:
         updateBootProgress(bootLoadedCsv, bootTotalCsv);
     }
 
-    // ================= 顯示模式切換（一般 / 暗色） =================
-    const THEME_KEY = 'kmTheme'; // localStorage key（與 index.html 內的預載入一致）
-
-    function getSystemTheme() {
-        try {
-            return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        } catch (e) {
-            return 'light';
-        }
-    }
-
-    function setTheme(theme, persist = false) {
-        const t = (theme === 'dark') ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', t);
-
-        if (persist) {
-            try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
-        }
-
-        // 同步更新按鈕 icon/提示
-        const btn = document.getElementById('theme-toggle-btn');
-        if (btn) {
-            const isDark = (t === 'dark');
-            btn.title = isDark ? '切換為一般模式' : '切換為暗色模式';
-            btn.setAttribute('aria-label', btn.title);
-
-            // 螢幕 + 太陽/月亮（簡化、置中；stroke 使用 currentColor）
-            // - 目前是暗色 => 顯示「螢幕+太陽」(提示可切回一般)
-            // - 目前是一般 => 顯示「螢幕+月亮」(提示可切到暗色)
-            btn.innerHTML = isDark
-                 ? `
-                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="2"/>
-                       <path d="M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                       <path d="M6.3 6.3l1.6 1.6M16.1 16.1l1.6 1.6M17.7 6.3l-1.6 1.6M7.9 16.1l-1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                     </svg>
-`
-                 : `
-                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                     </svg>
-`;
-        }
-    }
-
-    function initThemeToggle() {
-        const btn = document.getElementById('theme-toggle-btn');
-        // 沒有按鈕也沒關係：仍維持 data-theme（index.html 已先預載入）
-        let saved = null;
-        try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
-
-        // 如果 index.html 已經套用 data-theme，仍以 saved 優先（避免不同步）
-        const initial = (saved === 'dark' || saved === 'light') ? saved : (document.documentElement.getAttribute('data-theme') || getSystemTheme());
-        setTheme(initial, false);
-
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-                const next = (current === 'dark') ? 'light' : 'dark';
-                setTheme(next, true);
-            });
-        }
-
-        // 如果使用者沒手動指定（沒有 saved），就跟著系統深淺色自動切換
-        try {
-            const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-            if (mq && typeof mq.addEventListener === 'function' && !(saved === 'dark' || saved === 'light')) {
-                mq.addEventListener('change', (e) => setTheme(e.matches ? 'dark' : 'light', false));
-            }
-        } catch (e) {}
-    }
-
-
-    
     // ================= 歷史記錄 API 輔助函式 =================
     
     function getCurrentUrlParams() {
@@ -1694,7 +1620,7 @@ function extractCountySummary(text) {
         
         const url = `?view=main`;
         const state = { view: 'main' };
-        updateUrl(state, "金門選舉資料庫 - 首頁", url, pushState); 
+        updateUrl(state, "金門政治山 - 首頁", url, pushState);
         updatePageMeta(
             null,
             '金門縣選舉歷史資料庫，收錄1972年至今總統、立委、縣長、縣議員、鄉鎮長、鄉鎮民代表、村里長等各類選舉完整得票數據。'
@@ -1718,8 +1644,17 @@ function extractCountySummary(text) {
         let html = '';
 
         html += `<div class="main-section">
+	            <section class="home-welcome" aria-labelledby="home-welcome-title">
+	                <div class="home-welcome-copy">
+	                    <span class="home-welcome-kicker">金門選舉資料庫 / KINMEN ELECTIONS</span>
+	                    <h2 id="home-welcome-title">金門政治山</h2>
+	                    <p>記錄每一張選票，<span class="home-welcome-line-2">看見島上的政治風景。</span></p>
+	                </div>
+	                <img class="home-welcome-art" src="images/illustrations/political-mountain-taiwu.png?v=3" alt="" width="1940" height="600" decoding="async">
+	            </section>
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
 	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
+	                <span class="home-browse-hint">選擇類別，探索歷年選舉結果</span>
 	            </div>
             <div class="main-menu-grid is-home is-tile-menu">`;
         
@@ -1739,7 +1674,7 @@ function extractCountySummary(text) {
         }
 
         html += `<button class=\"menu-button\" type=\"button\" onclick=\"${clickAction}\">
-            <span class=\"menu-art-frame\"><img class=\"menu-art\" src=\"images/election-categories/${cat.iconKey}.png?v=ui-redesign-36\" alt=\"\" width=\"256\" height=\"256\" loading=\"lazy\" decoding=\"async\"></span>
+            <span class=\"menu-art-frame\"><img class=\"menu-art\" src=\"images/election-categories/${cat.iconKey}.png?v=ui-redesign-40\" alt=\"\" width=\"256\" height=\"256\" loading=\"lazy\" decoding=\"async\"></span>
             <span class=\"menu-text\">${cat.type}</span>
         </button>`;
     });
@@ -1905,7 +1840,7 @@ function extractCountySummary(text) {
         
         const url = `?view=referendumMenu`;
         const state = { view: 'referendumMenu' };
-        updateUrl(state, "金門選舉資料庫 - 公民投票類別", url, pushState); 
+        updateUrl(state, "金門政治山 - 公民投票類別", url, pushState);
         updatePageMeta('公民投票', '金門縣公民投票歷年結果，包含全國性公投與地方性公投在金門的投票數據。');
 
         appState.currentLevel = 'referendumMenu'; 
@@ -1928,12 +1863,12 @@ function extractCountySummary(text) {
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid is-tile-menu">
                 <button class="menu-button" type="button" onclick="renderElectionList('全國性公投', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-national.png?v=ui-redesign-32" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-national.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">全國性公投</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('地方性公投', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-local.png?v=ui-redesign-33" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-local.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">地方性公投</span>
                 </button>
             </div>
@@ -1946,7 +1881,7 @@ function extractCountySummary(text) {
         
         const url = `?view=legislatorMenu`;
         const state = { view: 'legislatorMenu' };
-        updateUrl(state, "金門選舉資料庫 - 立法委員類別", url, pushState); 
+        updateUrl(state, "金門政治山 - 立法委員類別", url, pushState);
         updatePageMeta('立法委員選舉', '金門縣歷屆立法委員選舉結果，包含區域立委與不分區立委得票數據。');
 
         appState.currentLevel = 'legislatorMenu'; 
@@ -1969,12 +1904,12 @@ function extractCountySummary(text) {
             <div class="menu-section-title">請選擇立委類別</div>
             <div class="main-menu-grid is-tile-menu">
                 <button class="menu-button" type="button" onclick="renderElectionList('區域立委', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/district.png?v=ui-redesign-30" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/district.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">區域立委</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('不分區立委', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/party-list.png?v=ui-redesign-29" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/party-list.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">不分區立委</span>
                 </button>
             </div>
@@ -1989,7 +1924,7 @@ function extractCountySummary(text) {
     window.renderTownshipSubMenu = function(type, pushState = true) {
         const url = `?view=townshipMenu&type=${encodeURIComponent(type)}`;
         const state = { view: 'townshipMenu', type: type };
-        updateUrl(state, `金門選舉資料庫 - ${type}（依鄉鎮）`, url, pushState);
+        updateUrl(state, `金門政治山 - ${type}（依鄉鎮）`, url, pushState);
         updatePageMeta(`${type}`, `金門縣${type}歷屆選舉結果，請選擇鄉鎮查看詳細得票數據。`);
 
         appState.currentLevel = 'townshipMenu';
@@ -2033,7 +1968,7 @@ function extractCountySummary(text) {
         const type = '村里長';
         const url = `?view=villageChiefTownMenu&type=${encodeURIComponent(type)}`;
         const state = { view: 'villageChiefTownMenu', type: type };
-        updateUrl(state, `金門選舉資料庫 - ${type}（依鄉鎮 / 村里）`, url, pushState);
+        updateUrl(state, `金門政治山 - ${type}（依鄉鎮 / 村里）`, url, pushState);
         updatePageMeta('村里長選舉', '金門縣村里長歷屆選舉結果，請選擇鄉鎮與村里查看得票數據。');
 
         appState.currentLevel = 'villageChiefTownMenu';
@@ -2076,7 +2011,7 @@ function extractCountySummary(text) {
         const type = '村里長';
         const url = `?view=villageChiefVillageMenu&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}`;
         const state = { view: 'villageChiefVillageMenu', type: type, town: townName };
-        updateUrl(state, `金門選舉資料庫 - ${type}（${townName}）`, url, pushState);
+        updateUrl(state, `金門政治山 - ${type}（${townName}）`, url, pushState);
         updatePageMeta(`村里長（${townName}）`, `金門縣${townName}村里長歷屆選舉結果，請選擇村里查看詳細得票數據。`);
 
         appState.currentLevel = 'villageChiefVillageMenu';
@@ -2148,7 +2083,7 @@ function extractCountySummary(text) {
     window.renderElectionListByVillage = function(type, townName, villageName, pushState = true) {
         const url = `?view=villageChiefList&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}&village=${encodeURIComponent(villageName)}`;
         const state = { view: 'villageChiefList', type: type, town: townName, village: villageName };
-        updateUrl(state, `金門選舉資料庫 - ${type}（${townName}${villageName}）`, url, pushState);
+        updateUrl(state, `金門政治山 - ${type}（${townName}${villageName}）`, url, pushState);
         updatePageMeta(`村里長（${townName}${villageName}）`, `金門縣${townName}${villageName}村里長歷屆選舉結果與得票數據。`);
 
         appState.currentLevel = 'villageChiefList';
@@ -2196,7 +2131,7 @@ function extractCountySummary(text) {
 
         const url = `?view=townshipList&type=${encodeURIComponent(type)}&town=${encodeURIComponent(townName)}`;
         const state = { view: 'townshipList', type: type, town: townName };
-        updateUrl(state, `金門選舉資料庫 - ${type}（${townName}）`, url, pushState);
+        updateUrl(state, `金門政治山 - ${type}（${townName}）`, url, pushState);
         updatePageMeta(`${type}（${townName}）`, `金門縣${townName}${type}歷屆選舉結果，各年度完整得票數據。`);
 
         appState.currentLevel = 'townshipList';
@@ -2245,7 +2180,7 @@ window.renderElectionList = function(type, pushState = true) {
         
         const url = `?view=list&type=${encodeURIComponent(type)}`;
         const state = { view: 'list', type: type };
-        updateUrl(state, `金門選舉資料庫 - ${type} 列表`, url, pushState); 
+        updateUrl(state, `金門政治山 - ${type} 列表`, url, pushState);
         updatePageMeta(`${type}選舉`, `金門縣${type}歷屆選舉結果列表，包含各年度完整得票數據。`);
 
         appState.currentLevel = 'electionList';
@@ -2343,7 +2278,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         if (pushState) {
             const url = `?view=county&election=${encodeURIComponent(appState.electionName)}`;
             const state = { view: 'county', election: appState.electionName };
-            updateUrl(state, `金門選舉資料庫 - ${appState.electionName}`, url, pushState);
+            updateUrl(state, `金門政治山 - ${appState.electionName}`, url, pushState);
             updatePageMeta(appState.electionName, `${appState.electionName}金門縣完整得票數據，包含各鄉鎮開票結果。`);
         }
         
@@ -2471,7 +2406,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         if (pushState) {
             const url = `?view=town&election=${encodeURIComponent(appState.electionName)}&town=${encodeURIComponent(townName)}`;
             const state = { view: 'town', election: appState.electionName, town: townName };
-            updateUrl(state, `金門選舉資料庫 - ${appState.electionName} (${townName})`, url, pushState);
+            updateUrl(state, `金門政治山 - ${appState.electionName} (${townName})`, url, pushState);
             updatePageMeta(`${appState.electionName}・${townName}`, `${appState.electionName}${townName}開票結果與各村里得票數據。`);
         }
         
@@ -2554,7 +2489,7 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         if (pushState) {
             const url = `?view=village&election=${encodeURIComponent(appState.electionName)}&town=${encodeURIComponent(townName)}&village=${encodeURIComponent(villageName)}`;
             const state = { view: 'village', election: appState.electionName, town: townName, village: villageName };
-            updateUrl(state, `金門選舉資料庫 - ${appState.electionName} (${townName} / ${villageName})`, url, pushState);
+            updateUrl(state, `金門政治山 - ${appState.electionName} (${townName} / ${villageName})`, url, pushState);
             updatePageMeta(`${appState.electionName}・${townName}${villageName}`, `${appState.electionName}${townName}${villageName}開票結果與得票數據。`);
         }
 
@@ -3111,7 +3046,6 @@ dom.breadcrumb.innerHTML = html;
     // ================= 初始化 =================
 
     (function init() {
-        initThemeToggle();
         // 首次載入：票軌數據（所有選舉 CSV + candidates.csv）
         renderBootLoadingUI((availableElections?.length || 0) + 1);
         
@@ -3123,6 +3057,6 @@ dom.breadcrumb.innerHTML = html;
            if (params.view && params.view !== 'main') {
                  checkUrlAndRender(params, false);} else {
                  const state = { view: 'main' };
-                 updateUrl(state, "金門選舉資料庫 - 首頁", "?view=main", false);     renderMainMenu(false);}
+                 updateUrl(state, "金門政治山 - 首頁", "?view=main", false);     renderMainMenu(false);}
         });
     })();

@@ -19,30 +19,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="iuzfuxFaIYfi6yps0bZw5Fj6dDk0LvZ9xpHDqF_-VYU" />
-    <meta name="description" content="金門選舉資料庫，收錄1972年至今金門地區的各項選舉及公投結果，包含總統副總統、立法委員、縣長、縣議員、鄉鎮長、鄉鎮民代表、村里長等各層級選舉的完整得票數據，並收錄候選人參選經歷，完整保存金門選舉紀錄與地方政治生態的演進。">
+    <meta name="description" content="金門政治山｜金門選舉資料庫，收錄1972年至今金門地區的各項選舉及公投結果，包含總統副總統、立法委員、縣長、縣議員、鄉鎮長、鄉鎮民代表、村里長等各層級選舉的完整得票數據，並收錄候選人參選經歷，完整保存金門選舉紀錄與地方政治生態的演進。">
 
-    <meta property="og:title" content="金門選舉資料庫">
+    <meta property="og:title" content="金門政治山｜金門選舉資料庫">
     <meta property="og:description" content="金門縣選舉歷史資料庫，收錄1972年至今各類選舉完整得票數據">
     <meta property="og:url" content="https://km-election.pages.dev/">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_TW">
 
-    <title>金門選舉資料庫</title>
+    <title>金門政治山｜金門選舉資料庫</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <script>
-    (function(){
-        try{
-            const key = 'kmTheme';
-            const saved = localStorage.getItem(key);
-            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = saved || (systemDark ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        }catch(e){}
-    })();
-    </script>
-    <link rel="stylesheet" href="style.css?v=ui-redesign-23">
+    <link rel="stylesheet" href="style.css?v=ui-redesign-29">
     <!-- 候選人名鑑（獨立模組樣式） -->
     <link rel="stylesheet" href="candidate-directory.css">
 </head>
@@ -50,15 +39,8 @@
 
 <header>
     <h1>
-        <span class="site-title" onclick="renderMainMenu()">金門選舉資料庫</span>
+        <span class="site-title" onclick="renderMainMenu()"><span class="site-mark" aria-hidden="true"></span>金門政治山</span>
     </h1>
-    <button id="theme-toggle-btn" class="theme-toggle-btn" type="button" title="切換暗色模式" aria-label="切換暗色模式">
-        <!-- 顯示模式 icon（由 JS 依模式切換） -->
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                       <path d="M15.9 14.9A6 6 0 0 1 9.1 8.1a5 5 0 1 0 6.8 6.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                     </svg>
-    </button>
-
 </header>
 
 <div class="container">
@@ -66,7 +48,7 @@
     
     <div id="content">
       <noscript>
-        <h2>金門選舉資料庫</h2>
+        <h2>金門政治山｜金門選舉資料庫</h2>
         <p>收錄金門縣1972年至2024年各類選舉完整數據，包含：</p>
         <ul>
           <li>總統副總統選舉（1996年起）</li>
@@ -101,7 +83,7 @@
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="script.js?v=ui-redesign-30"></script>
 <!-- 候選人名鑑（獨立模組） -->
 <script src="candidate-directory.js"></script>
 
