@@ -1721,7 +1721,7 @@ function extractCountySummary(text) {
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
 	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
 	            </div>
-            <div class="main-menu-grid is-home">`;
+            <div class="main-menu-grid is-home is-tile-menu">`;
         
     electionCategories.forEach(cat => {
         // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu
@@ -1739,7 +1739,7 @@ function extractCountySummary(text) {
         }
 
         html += `<button class=\"menu-button\" type=\"button\" onclick=\"${clickAction}\">
-            <img class=\"menu-art\" src=\"images/election-categories/${cat.iconKey}.png?v=ui-redesign-2\" alt=\"\" width=\"144\" height=\"144\" loading=\"lazy\" decoding=\"async\">
+            <span class=\"menu-art-frame\"><img class=\"menu-art\" src=\"images/election-categories/${cat.iconKey}.png?v=ui-redesign-36\" alt=\"\" width=\"256\" height=\"256\" loading=\"lazy\" decoding=\"async\"></span>
             <span class=\"menu-text\">${cat.type}</span>
         </button>`;
     });
@@ -1926,19 +1926,16 @@ function extractCountySummary(text) {
 
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇公投類別</div>
-            <div class="main-menu-grid is-small-set">
-                   <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('全國性公投', true)">
-                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('nation')}</span>
+            <div class="main-menu-grid is-tile-menu">
+                <button class="menu-button" type="button" onclick="renderElectionList('全國性公投', true)">
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-national.png?v=ui-redesign-32" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">全國性公投</span>
-                    <span class="menu-chevron" aria-hidden="true">›</span>
-                </div>
+                </button>
 
-                <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('地方性公投', true)">
-                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('local')}</span>
+                <button class="menu-button" type="button" onclick="renderElectionList('地方性公投', true)">
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-local.png?v=ui-redesign-33" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">地方性公投</span>
-                    <span class="menu-chevron" aria-hidden="true">›</span>
-                </div>
-                ${padMenuGrid(2)}
+                </button>
             </div>
         </div>`;
 
@@ -1970,19 +1967,16 @@ function extractCountySummary(text) {
 
 	html += `<div class="main-section">
             <div class="menu-section-title">請選擇立委類別</div>
-            <div class="main-menu-grid is-small-set">
-                   <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('區域立委', true)">
-                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('district')}</span>
+            <div class="main-menu-grid is-tile-menu">
+                <button class="menu-button" type="button" onclick="renderElectionList('區域立委', true)">
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/district.png?v=ui-redesign-30" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">區域立委</span>
-                    <span class="menu-chevron" aria-hidden="true">›</span>
-                </div>
+                </button>
 
-                <div class="menu-button" role="button" tabindex="0" onclick="renderElectionList('不分區立委', true)">
-                    <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('party')}</span>
+                <button class="menu-button" type="button" onclick="renderElectionList('不分區立委', true)">
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/party-list.png?v=ui-redesign-29" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">不分區立委</span>
-                    <span class="menu-chevron" aria-hidden="true">›</span>
-                </div>
-                ${padMenuGrid(2)}
+                </button>
             </div>
         </div>`;
 
