@@ -970,7 +970,7 @@ html footer { background: var(--bg-warm); border-top-color: var(--border); color
 }
 @media (max-width: 700px) {
     .home-welcome { min-height: 240px; padding: 26px 28px; margin-bottom: 28px; }
-    .home-welcome-copy { width: 55%; }
+    .home-welcome-copy { width: 64%; }
     .home-welcome h2 { font-size: clamp(32px, 5.5vw, 41px); }
     .home-welcome p { font-size: clamp(22px, 3.5vw, 26px); }
     .home-welcome-art { width: 77%; }
@@ -1135,12 +1135,6 @@ html .home-browse-title .home-recent-tab.is-static {
     border-radius: 4px;
     background: var(--primary);
 }
-.home-browse-hint {
-    margin-left: auto;
-    color: var(--text-sub);
-    font-size: 13px;
-}
-
 .main-menu-grid.is-home.is-tile-menu .menu-button {
     background: #fff;
     border-color: #e2eae7;
@@ -1163,5 +1157,4 @@ html .home-browse-title .home-recent-tab.is-static {
     .site-title { font-size: 18px; gap: 8px; }
     .site-mark { width: 30px; height: 30px; }
     .home-browse-title .home-recent-tab.is-static { font-size: 18px; }
-    .home-browse-hint { display: none; }
 }

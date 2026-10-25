@@ -1648,13 +1648,12 @@ function extractCountySummary(text) {
 	                <div class="home-welcome-copy">
 	                    <span class="home-welcome-kicker">金門選舉資料庫 / KINMEN ELECTIONS</span>
 	                    <h2 id="home-welcome-title">金門政治山</h2>
-	                    <p>記錄每一張選票，<span class="home-welcome-line-2">看見島上的政治風景。</span></p>
+	                    <p>紀錄每一張選票，<span class="home-welcome-line-2">看見島上的政治起伏與脈絡。</span></p>
 	                </div>
 	                <img class="home-welcome-art" src="images/illustrations/political-mountain-taiwu.png?v=3" alt="" width="1940" height="600" decoding="async">
 	            </section>
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
 	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
-	                <span class="home-browse-hint">選擇類別，探索歷年選舉結果</span>
 	            </div>
             <div class="main-menu-grid is-home is-tile-menu">`;
         
