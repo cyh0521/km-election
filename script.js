@@ -1650,14 +1650,14 @@ function extractCountySummary(text) {
 	                    <h2 id="home-welcome-title">金門政治山</h2>
 	                    <p>紀錄每一張選票，<span class="home-welcome-line-2">看見島上的政治起伏與脈絡。</span></p>
 	                </div>
-	                <img class="home-welcome-art" src="images/illustrations/political-mountain-taiwu.png?v=3" alt="" width="1940" height="600" decoding="async">
+	                <img class="home-welcome-art" src="images/illustrations/political-mountain-a.png?v=2" alt="" width="1940" height="600" decoding="async">
 	            </section>
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
 	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
 	            </div>
             <div class="main-menu-grid is-home is-tile-menu">`;
         
-    electionCategories.forEach(cat => {
+    electionCategories.forEach((cat, index) => {
         // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu
         let clickAction;
         if (cat.type === '公民投票') {
@@ -1673,7 +1673,7 @@ function extractCountySummary(text) {
         }
 
         html += `<button class=\"menu-button\" type=\"button\" onclick=\"${clickAction}\">
-            <span class=\"menu-art-frame\"><img class=\"menu-art\" src=\"images/election-categories/${cat.iconKey}.png?v=ui-redesign-40\" alt=\"\" width=\"256\" height=\"256\" loading=\"lazy\" decoding=\"async\"></span>
+            <span class=\"menu-art-frame\" aria-hidden=\"true\"><span class=\"menu-art menu-art--a2\" style=\"--icon-x:${(index % 3) * 50}%;--icon-y:${Math.floor(index / 3) * 50}%\"></span></span>
             <span class=\"menu-text\">${cat.type}</span>
         </button>`;
     });
@@ -1862,12 +1862,12 @@ function extractCountySummary(text) {
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid is-tile-menu">
                 <button class="menu-button" type="button" onclick="renderElectionList('全國性公投', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-national.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/referendum-national.png?v=1" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">全國性公投</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('地方性公投', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/referendum-local.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/referendum-local.png?v=1" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">地方性公投</span>
                 </button>
             </div>
@@ -1903,12 +1903,12 @@ function extractCountySummary(text) {
             <div class="menu-section-title">請選擇立委類別</div>
             <div class="main-menu-grid is-tile-menu">
                 <button class="menu-button" type="button" onclick="renderElectionList('區域立委', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/district.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/district.png?v=1" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">區域立委</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('不分區立委', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/party-list.png?v=ui-redesign-40" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/party-list.png?v=1" alt="" width="256" height="256" decoding="async"></span>
                     <span class="menu-text">不分區立委</span>
                 </button>
             </div>
@@ -2750,7 +2750,8 @@ dom.breadcrumb.innerHTML = html;
 	const actionText = isClickable
 	    ? `<span class="card-action"
   	          onclick="event.stopPropagation(); ${onClickAction}">
-  	          查看詳情 ➜
+                  <span class="card-action-icon" aria-hidden="true"></span>
+                  <span>詳細票數</span>
   	     </span>`
  	   : '';
         const summaryClass = isSummary ? 'is-summary' : '';
