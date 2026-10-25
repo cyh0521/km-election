@@ -2730,7 +2730,7 @@ dom.breadcrumb.innerHTML = html;
             <h3>投票概況 (${title})</h3>
             ${subtitleHtml} <ul class="summary-list">
                 ${extraRows}
-                <li><span>投票率</span><span class="stat-value" style="color:#d9534f;">${turnoutRate}%</span></li>
+                <li><span>投票率</span><span class="stat-value" style="color:var(--brand-red);">${turnoutRate}%</span></li>
                 <li><span>有效票數</span><span class="stat-value">${validVotes.toLocaleString()} 票</span></li>
                 <li><span>無效票數</span><span class="stat-value">${invalidVotes.toLocaleString()} 票</span></li>
                 <li><span>選舉人數</span><span class="stat-value">${eligibleVoters.toLocaleString()} 人</span></li>
