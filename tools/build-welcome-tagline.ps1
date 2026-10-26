@@ -1,0 +1,20 @@
+Add-Type -AssemblyName System.Drawing
+$projectRoot = Split-Path $PSScriptRoot -Parent
+$fonts = [System.Drawing.Text.PrivateFontCollection]::new()
+$fonts.AddFontFile((Join-Path $projectRoot 'assets/fonts/ChenYuluoyan-2.0-Thin.ttf'))
+$font = [System.Drawing.Font]::new($fonts.Families[0], 140, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
+$bitmap = [System.Drawing.Bitmap]::new(1760, 348)
+$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+$graphics.Clear([System.Drawing.Color]::Transparent)
+$graphics.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
+$brush = [System.Drawing.SolidBrush]::new([System.Drawing.ColorTranslator]::FromHtml('#24312B'))
+$format = [System.Drawing.StringFormat]::GenericTypographic.Clone()
+$graphics.DrawString('記錄每一張選票，', $font, $brush, [single]0, [single]0, $format)
+$graphics.DrawString('看見島上的政治起伏與脈絡。', $font, $brush, [single]84, [single]174, $format)
+$bitmap.Save((Join-Path $projectRoot 'images/illustrations/welcome-tagline.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+$format.Dispose()
+$brush.Dispose()
+$graphics.Dispose()
+$bitmap.Dispose()
+$font.Dispose()
+$fonts.Dispose()

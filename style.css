@@ -1948,6 +1948,14 @@ header h1 {
     letter-spacing: .02em;
 }
 
+.home-welcome-tagline {
+    display: block;
+    width: clamp(339px, 37.7vw, 440px);
+    max-width: 100%;
+    height: auto;
+    margin-top: 12px;
+}
+
 .home-welcome-line-2 {
     display: block;
     padding-inline-start: .6em;
@@ -2172,6 +2180,10 @@ html footer {
         max-width: none;
         font-size: clamp(18px, 5.7vw, 24px);
         line-height: 1.2;
+    }
+
+    .home-welcome-tagline {
+        width: clamp(226px, 71.7vw, 302px);
     }
 
     .home-welcome-art {
@@ -2698,7 +2710,22 @@ body:has(.modal-overlay.active) .page-scroll {
 
 @media (max-width: 600px) {
     .page-scroll {
-        top: 56px;
+        top: 0;
+        padding-top: 56px;
+    }
+
+    html header {
+        transition: transform .2s ease;
+    }
+
+    html header.is-scroll-hidden {
+        transform: translateY(-100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html header {
+        transition: none;
     }
 }
 

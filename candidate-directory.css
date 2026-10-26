@@ -31,7 +31,7 @@
 }
 .cd-header-btn:hover {
     color: var(--primary);
-    background: var(--bg-warm);
+    background: transparent;
 }
 .cd-header-btn:focus-visible {
     outline: 2px solid var(--primary);
@@ -41,9 +41,43 @@
     width: 22px;
     height: 22px;
     fill: none;
+    transform: translateY(8px);
+}
+
+.cd-header-label {
+    display: none;
+}
+
+@media (min-width: 769px) {
+    header h1 {
+        padding-right: 140px;
+    }
+
+    .cd-header-btn {
+        width: auto;
+        gap: 6px;
+    }
+
+    .cd-header-label {
+        display: inline-block;
+        font-family: 'Noto Sans TC', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 22px;
+        white-space: nowrap;
+        transform: translateY(8px);
+    }
 }
 @media (max-width: 700px) {
     .cd-header-btn { right: 18px; }
+}
+
+@media (max-width: 600px) {
+    .cd-header-btn svg { transform: translateY(4.5px); }
+}
+
+@media (max-width: 360px) {
+    .cd-header-btn svg { transform: translateY(3.5px); }
 }
 
 /* === Candidate Directory 主畫面 === */

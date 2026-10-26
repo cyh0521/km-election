@@ -12,6 +12,41 @@ function scrollPageTo(y) {
     else window.scrollTo(0, y);
 }
 
+// Mobile header follows scroll direction without reacting to tiny movements.
+(function setupMobileHeader() {
+    const page = document.getElementById('page-scroll');
+    const header = document.querySelector('header');
+    if (!page || !header) return;
+    const mobile = window.matchMedia('(max-width: 600px)');
+    let previousY = 0;
+    let direction = 0;
+    let distance = 0;
+    const reset = () => {
+        header.classList.remove('is-scroll-hidden');
+        previousY = Math.max(0, page.scrollTop);
+        direction = 0;
+        distance = 0;
+    };
+    mobile.addEventListener('change', reset);
+    header.addEventListener('focusin', reset);
+    page.addEventListener('scroll', () => {
+        if (!mobile.matches) return;
+        const y = Math.max(0, Math.min(page.scrollTop, page.scrollHeight - page.clientHeight));
+        const delta = y - previousY;
+        previousY = y;
+        if (y <= 56) { reset(); return; }
+        const nextDirection = Math.sign(delta);
+        if (!nextDirection) return;
+        if (nextDirection !== direction) distance = 0;
+        direction = nextDirection;
+        distance += Math.abs(delta);
+        if (distance >= 12) {
+            header.classList.toggle('is-scroll-hidden', direction > 0);
+            distance = 0;
+        }
+    }, {passive: true});
+})();
+
 // ================= SEO：動態更新頁面 Meta =================
 function updatePageMeta(title, description) {
     const siteName = '金門政治山';
@@ -1570,7 +1605,7 @@ function extractCountySummary(text) {
 	            <section class="home-welcome" aria-label="選舉紀錄與島嶼政治">
 	                <div class="home-welcome-copy">
 	                    <span class="home-welcome-kicker">島嶼政治 × 選舉資料庫</span>
-	                    <p>記錄每一張選票，<span class="home-welcome-line-2">看見島上的政治起伏與脈絡。</span></p>
+	                    <img class="home-welcome-tagline" src="images/illustrations/welcome-tagline.png?v=1" alt="記錄每一張選票，看見島上的政治起伏與脈絡。" width="440" height="87" decoding="async">
 	                </div>
 	                <img class="home-welcome-art" src="images/illustrations/taiwu-editorial.svg?v=2" alt="太武山稜線與轉播塔的幾何插畫" width="1200" height="220" decoding="async">
 	            </section>
