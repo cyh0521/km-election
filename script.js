@@ -47,6 +47,21 @@ function scrollPageTo(y) {
     }, {passive: true});
 })();
 
+// Align the header action with the actual content edge, including scrollbar width.
+(function alignHeaderAction() {
+    const container = document.querySelector('.page-scroll > .container');
+    const header = document.querySelector('header');
+    if (!container || !header) return;
+    const update = () => {
+        const bounds = container.getBoundingClientRect();
+        const padding = parseFloat(getComputedStyle(container).paddingRight) || 0;
+        header.style.setProperty('--content-right-edge', `${window.innerWidth - bounds.right + padding}px`);
+    };
+    new ResizeObserver(update).observe(container);
+    window.addEventListener('resize', update, {passive: true});
+    update();
+})();
+
 // ================= SEO：動態更新頁面 Meta =================
 function updatePageMeta(title, description) {
     const siteName = '金門政治山';
