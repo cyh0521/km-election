@@ -1,6 +1,17 @@
 // ================= 數據與設定區 =================
 const APP_VERSION = "260317-1";
 
+function getPageScrollY() {
+    const page = document.getElementById('page-scroll');
+    return page ? page.scrollTop : window.scrollY;
+}
+
+function scrollPageTo(y) {
+    const page = document.getElementById('page-scroll');
+    if (page) page.scrollTop = y;
+    else window.scrollTo(0, y);
+}
+
 // ================= SEO：動態更新頁面 Meta =================
 function updatePageMeta(title, description) {
     const siteName = '金門政治山';
@@ -487,155 +498,22 @@ function isCountyPseudoTownName(name) {
     { type: "公民投票",   iconKey: "referendum" }
 ];
 
-/**
- * padMenuGrid(count)
- * 同時補足桌機3欄與手機2欄所需的空白佔位格。
- * - ghost-desktop：僅在桌機（3欄）顯示，補足到3的倍數
- * - ghost-mobile：僅在手機（2欄）顯示，補足到2的倍數
- * 兩組格子各自用 CSS display:none 控制顯示時機。
- */
-function padMenuGrid(count) {
-    let html = '';
+// 首頁類別圖示：以職務、議事與投票行為區分九種選舉資料。
+const homeCategoryIcons = {
+    president: "<path d=\"M12 5h40v54H12zM20 49h24\"/><circle cx=\"24\" cy=\"22\" r=\"4\"/><circle cx=\"40\" cy=\"22\" r=\"4\"/><path d=\"M17 38v-3c0-5 3-8 7-8s7 3 7 8v3m2 0v-3c0-5 3-8 7-8s7 3 7 8v3\"/><circle class=\"category-icon-accent\" cx=\"32\" cy=\"12\" r=\"2\"/><path class=\"category-icon-accent\" d=\"M20 42h24\"/>",
+    legislator: "<path d=\"M10 6h30l8 8v24M40 6v10h8M17 35h18M17 42h11M10 6v51h21\"/><text x=\"17\" y=\"29\">法</text><circle class=\"category-icon-accent\" cx=\"45\" cy=\"47\" r=\"12\"/><path class=\"category-icon-accent\" d=\"m39 47 4 4 8-9\"/>",
+    assembly: "<path d=\"M32 15c-7-5-15-6-24-3v39c9-3 17-2 24 3 7-5 15-6 24-3V12c-9-3-17-2-24 3ZM32 15v39M13 47c5-1 10 0 14 2m10 0c4-2 9-3 14-2\"/><text x=\"13\" y=\"34\">憲</text><path class=\"category-icon-accent\" d=\"M39 24h10M39 31h10M39 38h7\"/>",
+    magistrate: "<path d=\"M7 51V13h34v17M13 13V7h22v6M14 21h4m9 0h4M14 29h4m9 0h4M14 37h4M5 53h20\"/><circle class=\"category-icon-accent\" cx=\"43\" cy=\"43\" r=\"16\"/><circle cx=\"43\" cy=\"38\" r=\"4\"/><path d=\"M34 51c0-5 3-8 9-8s9 3 9 8\"/>",
+    council: "<circle cx=\"15\" cy=\"17\" r=\"3\"/><circle cx=\"32\" cy=\"12\" r=\"3\"/><circle cx=\"49\" cy=\"17\" r=\"3\"/><path d=\"M8 29c3-4 11-4 14 0m3-6c3-4 11-4 14 0m3 6c3-4 11-4 14 0M6 35c13-6 39-6 52 0v14H6zM12 49v7m40-7v7\"/><path class=\"category-icon-accent\" d=\"M32 42V30l6-4m-1-2 3 4\"/>",
+    mayor: "<path d=\"m5 26 19-15 18 14M9 25v28h15M16 32h7M16 39h7M24 11V5m0 0h10v6H24\"/><circle class=\"category-icon-accent\" cx=\"43\" cy=\"43\" r=\"16\"/><circle cx=\"43\" cy=\"38\" r=\"4\"/><path d=\"M34 51c0-5 3-8 9-8s9 3 9 8\"/>",
+    representative: "<path d=\"M7 9h33v20H23l-9 7v-7H7z\"/><path class=\"category-icon-accent\" d=\"M15 17h17M15 23h10\"/><circle cx=\"19\" cy=\"43\" r=\"4\"/><circle cx=\"43\" cy=\"43\" r=\"4\"/><path d=\"M8 57c0-6 4-10 11-10s11 4 11 10m2 0c0-6 4-10 11-10s11 4 11 10\"/>",
+    village: "<path d=\"m4 22 13-11 13 11M8 20v20h15M13 40V29h8v11m11-22 12-10 16 14M35 20v13m20-13v20h-6M41 25h7\"/><circle class=\"category-icon-accent\" cx=\"33\" cy=\"40\" r=\"5\"/><path class=\"category-icon-accent\" d=\"M21 58v-4c0-5 4-9 12-9s12 4 12 9v4\"/>",
+    referendum: "<path d=\"M7 33h50v24H7zM15 39h34M19 7h26v29H19z\"/><circle class=\"category-icon-accent\" cx=\"27\" cy=\"17\" r=\"3\"/><path d=\"M35 17h5\"/><path class=\"category-icon-accent\" d=\"m24 25 6 6m0-6-6 6\"/><path d=\"M35 28h5\"/>"
+};
 
-    const remDesktop = count % 3;
-    if (remDesktop !== 0) {
-        const needed = 3 - remDesktop;
-        for (let i = 0; i < needed; i++) {
-            html += `<div class="menu-button menu-button--ghost menu-button--ghost-desktop" aria-hidden="true" tabindex="-1"></div>`;
-        }
-    }
-
-    const remMobile = count % 2;
-    if (remMobile !== 0) {
-        html += `<div class="menu-button menu-button--ghost menu-button--ghost-mobile" aria-hidden="true" tabindex="-1"></div>`;
-    }
-
-    return html;
+function homeCategoryIcon(iconKey) {
+    return `<svg class="category-icon" viewBox="0 0 64 64" fill="none" stroke="var(--primary)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${homeCategoryIcons[iconKey] || homeCategoryIcons.referendum}</svg>`;
 }
-
-/**
- * 首頁按鈕 Icon（SVG）
- * - 使用 currentColor：可直接用 CSS 改色
- * - 僅作為視覺符號，真正的名稱仍由 menu-text 提供
- */
-function getMenuIconSvg(key) {
-    // 統一圖示語言：24x24、線條風格一致（currentColor + 圓角端點/轉角）
-    // 目標：每一格 icon 不重複、語意更貼題、整體視覺一致
-    const common = 'class="menu-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
-    switch (key) {
-        case "president":
-            // 總統副總統：雙人並列（人物比例/大小沿用「縣議員」人像）
-            return `<svg ${common}>
-                <!-- left person -->
-                <circle cx="7" cy="9" r="3"/>
-                <path d="M1.5 20c0-3.6 2.7-6 5.5-6s5.5 2.4 5.5 6"/>
-                <!-- right person -->
-                <circle cx="17" cy="9" r="3"/>
-                <path d="M11.5 20c0-3.6 2.7-6 5.5-6s5.5 2.4 5.5 6"/>
-            </svg>`;
-case "legislator":
-            return `<svg ${common}>
-                <path d="M4 10l8-4 8 4"/>
-                <path d="M6 10v9"/><path d="M10 10v9"/><path d="M14 10v9"/><path d="M18 10v9"/>
-                <path d="M4 19h16"/>
-            </svg>`;
-
-        case "assembly":
-            // 國大代表：沿用原「縣議員」圖示（筆/簽字意象）
-            return `<svg ${common}>
-                <path d="M14 7l3 3"/>
-                <path d="M7 14l7-7 3 3-7 7H7z"/>
-                <path d="M6 18h6"/>
-                <path d="M5 20h8"/>
-            </svg>`;
-
-        case "magistrate":
-            return `<svg ${common}>
-                <circle cx="12" cy="9.8" r="3.8"/>
-                <path d="M10 13.2l-2 7 4-2 4 2-2-7"/>
-            </svg>`;
-
-        case "council":
-            // 縣議員：人頭發言（議會問政/表態）
-            return `<svg ${common}>
-                <!-- head -->
-                <circle cx="9" cy="9" r="3"/>
-                <!-- shoulders -->
-                <path d="M3.5 20c0-3.6 2.7-6 5.5-6s5.5 2.4 5.5 6"/>
-                <!-- voice waves -->
-                <path d="M16 10c1.1 0 2 .9 2 2s-.9 2-2 2"/>
-                <path d="M16 7c2.8 0 5 2.2 5 5s-2.2 5-5 5"/>
-            </svg>`;
-
-        case "mayor":
-            return `<svg ${common}>
-                <path d="M4 10l8-5 8 5"/>
-                <path d="M6 10v10h12V10"/>
-                <path d="M10 20v-6h4v6"/>
-                <path d="M8.5 13h2"/><path d="M13.5 13h2"/>
-            </svg>`;
-
-        case "representative":
-            return `<svg ${common}>
-                <path d="M6 12l2-2 4 4 4-4 2 2"/>
-                <path d="M8 13l2 2 2-2"/>
-                <path d="M10 15l2 2 2-2"/>
-                <path d="M5 14l3 3"/>
-                <path d="M19 14l-3 3"/>
-            </svg>`;
-
-        case "village":
-    // 村里長：擴音器（大聲公）+ 音波
-    return `<svg ${common}>
-        <!-- megaphone body -->
-        <path d="M4 11v2a2 2 0 0 0 2 2h2l9 4V5l-9 4H6a2 2 0 0 0-2 2z"/>
-        <!-- handle -->
-        <path d="M8 15l2 6"/>
-        <!-- sound waves -->
-        <path d="M18.5 10.2c1 .9 1.6 2.1 1.6 3.3s-.6 2.4-1.6 3.3"/>
-        <path d="M20.8 8c1.6 1.6 2.5 3.4 2.5 5.5s-.9 3.9-2.5 5.5"/>
-    </svg>`;
-
-        case "referendum":
-            // 公民投票：票卡 + 票匭（避免房子造型）
-            return `<svg ${common}>
-                <path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/>
-                <path d="M4 10h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10Z"/>
-                <path d="M7 13h10"/>
-                <path d="M9.2 6.4l1.3 1.3L13.8 4.4"/>
-            </svg>`;
-
-        case "nation":
-            return `<svg ${common}>
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M3 12h18"/>
-                <path d="M12 3a14 14 0 0 1 0 18"/>
-                <path d="M12 3a14 14 0 0 0 0 18"/>
-            </svg>`;
-
-        case "local":
-            return `<svg ${common}>
-                <path d="M12 21s6-5.2 6-11a6 6 0 0 0-12 0c0 5.8 6 11 6 11z"/>
-                <circle cx="12" cy="10" r="2"/>
-            </svg>`;
-
-        case "district":
-            return `<svg ${common}>
-                <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
-                <path d="M9 4v14"/><path d="M15 6v14"/>
-            </svg>`;
-
-        case "party":
-            return `<svg ${common}>
-                <path d="M8 7h12"/><path d="M8 12h12"/><path d="M8 17h12"/>
-                <path d="M4 7h.01"/><path d="M4 12h.01"/><path d="M4 17h.01"/>
-            </svg>`;
-
-default:
-            return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
-    }
-}
-
 
     const partyColors = {
         "中國國民黨": "#3887B0",
@@ -826,13 +704,13 @@ function normalizeText(str) {
         if (push) {
             // [新增] 在推入新歷史紀錄前，先把"當前"頁面的捲動位置存入當前的 state
             const currentState = history.state || {};
-            currentState.scrollY = window.scrollY;
+            currentState.scrollY = getPageScrollY();
             history.replaceState(currentState, document.title, window.location.href);
 
             // 推入新的歷史紀錄
             history.pushState(state, title, url);
         } else {
-            history.replaceState(state, title, url); 
+            history.replaceState({ ...state, scrollY: history.state?.scrollY ?? 0 }, title, url);
         }
     }
 
@@ -1224,7 +1102,8 @@ function loadData(file, uiName, pushState = true) {
         if (currentEle && (currentEle.type === '鄉鎮長' || currentEle.type === '鄉鎮民代表')) {
             appState.currentTownshipType = currentEle.type;
             // appState.currentTownshipName 會在 renderElectionListByTown() 由使用者選擇鄉鎮時設定
-        }        fetch(`${file}?v=${APP_VERSION}`)
+        }
+        fetch(`${file}?v=${APP_VERSION}`)
             .then(r => {
                 if (!r.ok) throw new Error("檔案讀取失敗，請檢查檔案名稱與路徑。");
                 return r.text();
@@ -1630,10 +1509,10 @@ function extractCountySummary(text) {
         
         // [修改] 捲動邏輯：如果是上一頁(pushState=false)，則恢復記憶的位置
         if (pushState) {
-            window.scrollTo(0, 0); 
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb(); 
@@ -1644,20 +1523,19 @@ function extractCountySummary(text) {
         let html = '';
 
         html += `<div class="main-section">
-	            <section class="home-welcome" aria-labelledby="home-welcome-title">
+	            <section class="home-welcome" aria-label="選舉紀錄與島嶼政治">
 	                <div class="home-welcome-copy">
-	                    <span class="home-welcome-kicker">金門選舉資料庫 / KINMEN ELECTIONS</span>
-	                    <h2 id="home-welcome-title">金門政治山</h2>
-	                    <p>紀錄每一張選票，<span class="home-welcome-line-2">看見島上的政治起伏與脈絡。</span></p>
+	                    <span class="home-welcome-kicker">島嶼政治 × 選舉資料庫</span>
+	                    <p>記錄每一張選票，<span class="home-welcome-line-2">看見島上的政治起伏與脈絡。</span></p>
 	                </div>
-	                <img class="home-welcome-art" src="images/illustrations/political-mountain-a.png?v=2" alt="" width="1940" height="600" decoding="async">
+	                <img class="home-welcome-art" src="images/illustrations/taiwu-editorial.svg?v=2" alt="太武山稜線與轉播塔的幾何插畫" width="1200" height="220" decoding="async">
 	            </section>
 	            <div class="home-recent-tabs home-browse-title" role="presentation">
 	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
 	            </div>
             <div class="main-menu-grid is-home is-tile-menu">`;
         
-    electionCategories.forEach((cat, index) => {
+    electionCategories.forEach((cat) => {
         // 判斷：如果是公民投票或立法委員，點擊時執行對應的 SubMenu
         let clickAction;
         if (cat.type === '公民投票') {
@@ -1672,9 +1550,10 @@ function extractCountySummary(text) {
              clickAction = `renderElectionList('${cat.type}', true)`;
         }
 
-        html += `<button class=\"menu-button\" type=\"button\" onclick=\"${clickAction}\">
-            <span class=\"menu-art-frame\" aria-hidden=\"true\"><span class=\"menu-art menu-art--a2\" style=\"--icon-x:${(index % 3) * 50}%;--icon-y:${Math.floor(index / 3) * 50}%\"></span></span>
-            <span class=\"menu-text\">${cat.type}</span>
+        html += `<button class="menu-button category-${cat.iconKey}" type="button" onclick="${clickAction}">
+            <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon(cat.iconKey)}</span>
+            <span class="menu-text">${cat.type}</span>
+            <span class="menu-arrow" aria-hidden="true">→</span>
         </button>`;
     });
 
@@ -1789,15 +1668,13 @@ function extractCountySummary(text) {
 
         const hasAnyRecent = (importantList.length + referendumList.length) > 0;
         if (hasAnyRecent) {
-            // 文字已移除；保留分隔線作為「類別按鈕」與「近期內容」間隔
-            html += `<div class="home-recent-divider" aria-hidden="true"></div>`;
-
             const defaultTab = (importantList.length > 0) ? 'important' : 'referendum';
 
             html += `<div class="main-section home-recent" data-default-tab="${defaultTab}">
-                <div class="home-recent-tabs" role="tablist" aria-label="近期">
-                    <button class="home-recent-tab ${defaultTab === 'important' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'important'}" data-tab="important" type="button">近期重要選舉</button>
-                    <button class="home-recent-tab ${defaultTab === 'referendum' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'referendum'}" data-tab="referendum" type="button">近期公投</button>
+                <h2 class="home-recent-title">近期選舉與公投</h2>
+                <div class="home-recent-tabs" role="tablist" aria-label="近期選舉與公投">
+                    <button class="home-recent-tab ${defaultTab === 'important' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'important'}" data-tab="important" type="button">重要選舉</button>
+                    <button class="home-recent-tab ${defaultTab === 'referendum' ? 'is-active' : ''}" role="tab" aria-selected="${defaultTab === 'referendum'}" data-tab="referendum" type="button">公投</button>
                 </div>
                 <div class="home-recent-panels">
                     <div class="home-recent-panel ${defaultTab === 'important' ? 'is-active' : ''}" role="tabpanel" data-panel="important">
@@ -1845,10 +1722,10 @@ function extractCountySummary(text) {
         appState.currentLevel = 'referendumMenu'; 
         
         if (pushState) {
-            window.scrollTo(0, 0); 
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb(); 
@@ -1862,13 +1739,15 @@ function extractCountySummary(text) {
             <div class="menu-section-title">請選擇公投類別</div>
             <div class="main-menu-grid is-tile-menu">
                 <button class="menu-button" type="button" onclick="renderElectionList('全國性公投', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/referendum-national.png?v=1" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('referendum')}</span>
                     <span class="menu-text">全國性公投</span>
+                    <span class="menu-arrow" aria-hidden="true">→</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('地方性公投', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/referendum-local.png?v=1" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('referendum')}</span>
                     <span class="menu-text">地方性公投</span>
+                    <span class="menu-arrow" aria-hidden="true">→</span>
                 </button>
             </div>
         </div>`;
@@ -1886,10 +1765,10 @@ function extractCountySummary(text) {
         appState.currentLevel = 'legislatorMenu'; 
         
         if (pushState) {
-            window.scrollTo(0, 0); 
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb(); 
@@ -1903,13 +1782,15 @@ function extractCountySummary(text) {
             <div class="menu-section-title">請選擇立委類別</div>
             <div class="main-menu-grid is-tile-menu">
                 <button class="menu-button" type="button" onclick="renderElectionList('區域立委', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/district.png?v=1" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('legislator')}</span>
                     <span class="menu-text">區域立委</span>
+                    <span class="menu-arrow" aria-hidden="true">→</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('不分區立委', true)">
-                    <span class="menu-art-frame"><img class="menu-art" src="images/election-categories/palette-v1/party-list.png?v=1" alt="" width="256" height="256" decoding="async"></span>
+                    <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('legislator')}</span>
                     <span class="menu-text">不分區立委</span>
+                    <span class="menu-arrow" aria-hidden="true">→</span>
                 </button>
             </div>
         </div>`;
@@ -1931,10 +1812,10 @@ function extractCountySummary(text) {
         appState.currentTownshipName = null;
 
         if (pushState) {
-            window.scrollTo(0, 0);
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -1950,13 +1831,12 @@ function extractCountySummary(text) {
 
         towns.forEach(t => {
             html += `<div class="menu-button" role="button" tabindex="0" data-town="${t}" onclick="renderElectionListByTown('${type}', '${t}', true)">
-                <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('mayor')}</span>
+                <span class="menu-icon" aria-hidden="true">${homeCategoryIcon('mayor')}</span>
                 <span class="menu-text">${t}</span>
                 <span class="menu-chevron" aria-hidden="true">›</span>
             </div>`;
         });
 
-        html += padMenuGrid(towns.length);
         html += `</div></div>`;
         dom.content.innerHTML = html;
     };
@@ -1975,10 +1855,10 @@ function extractCountySummary(text) {
         appState.currentVillageChiefName = null;
 
         if (pushState) {
-            window.scrollTo(0, 0);
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -1994,13 +1874,12 @@ function extractCountySummary(text) {
 
         towns.forEach(t => {
             html += `<div class="menu-button" role="button" tabindex="0" data-town="${t}" onclick="renderVillageChiefVillageSubMenu('${t}', true)">
-                <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('village')}</span>
+                <span class="menu-icon" aria-hidden="true">${homeCategoryIcon('village')}</span>
                 <span class="menu-text">${t}</span>
                 <span class="menu-chevron" aria-hidden="true">›</span>
             </div>`;
         });
 
-        html += padMenuGrid(towns.length);
         html += `</div></div>`;
         dom.content.innerHTML = html;
     };
@@ -2018,10 +1897,10 @@ function extractCountySummary(text) {
         appState.currentVillageChiefName = null;
 
         if (pushState) {
-            window.scrollTo(0, 0);
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -2064,12 +1943,11 @@ function extractCountySummary(text) {
             villages.forEach(v => {
                 html += `<div class="menu-button" role="button" tabindex="0"
                             onclick="renderElectionListByVillage('${type}', '${townName}', '${v}', true)">
-                            <span class="menu-icon" aria-hidden="true">${getMenuIconSvg('village')}</span>
+                            <span class="menu-icon" aria-hidden="true">${homeCategoryIcon('village')}</span>
                             <span class="menu-text">${v}</span>
                             <span class="menu-chevron" aria-hidden="true">›</span>
                          </div>`;
             });
-            html += padMenuGrid(villages.length);
         } else {
             html += `<div class="loading-state" style="padding:40px;">該鄉鎮目前無村里長選舉資料。</div>`;
         }
@@ -2090,10 +1968,10 @@ function extractCountySummary(text) {
         appState.currentVillageChiefName = villageName;
 
         if (pushState) {
-            window.scrollTo(0, 0);
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -2110,7 +1988,7 @@ function extractCountySummary(text) {
                 return (a.uiName || '').localeCompare((b.uiName || ''), 'zh-TW');
             });
 
-        let html = `<div class="main-section">
+        let html = `<div class="main-section election-list-heading">
             <div class="menu-section-title">${type}（${townName}${villageName}）選舉列表</div>
         </div>`;
 
@@ -2138,10 +2016,10 @@ function extractCountySummary(text) {
         appState.currentTownshipName = townName;
 
         if (pushState) {
-            window.scrollTo(0, 0);
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -2158,7 +2036,7 @@ function extractCountySummary(text) {
                 return a.uiName.localeCompare(b.uiName, 'zh-TW');
             });
 
-        let html = `<div class="main-section">
+        let html = `<div class="main-section election-list-heading">
             <div class="menu-section-title">${type}（${townName}）選舉列表</div>
         </div>`;
 
@@ -2186,10 +2064,10 @@ window.renderElectionList = function(type, pushState = true) {
         appState.currentTown = type; 
 
         if (pushState) {
-            window.scrollTo(0, 0); 
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb(); 
@@ -2206,7 +2084,7 @@ window.renderElectionList = function(type, pushState = true) {
              return a.uiName.localeCompare(b.uiName, 'zh-TW'); 
         });
 
-        let html = `<div class="main-section">
+        let html = `<div class="main-section election-list-heading">
             <div class="menu-section-title">${type} 選舉列表</div>
         </div>`;
         
@@ -2285,10 +2163,10 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         appState.currentTown = null;
         
         if (pushState) {
-            window.scrollTo(0, 0); 
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -2413,10 +2291,10 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         appState.currentTown = townName;
         
         if (pushState) {
-            window.scrollTo(0, 0); 
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
         
         updateBreadcrumb();
@@ -2497,10 +2375,10 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
         appState.currentVillage = villageName;
 
         if (pushState) {
-            window.scrollTo(0, 0);
+            scrollPageTo(0);
         } else {
             const savedY = (history.state && history.state.scrollY) ? history.state.scrollY : 0;
-            setTimeout(() => window.scrollTo(0, savedY), 0);
+            setTimeout(() => scrollPageTo(savedY), 0);
         }
 
         updateBreadcrumb();
@@ -2710,6 +2588,11 @@ dom.breadcrumb.innerHTML = html;
         dom.breadcrumbBottom.style.display = 'block';
     }
     
+    function formatElectionDate(date) {
+        const match = String(date || '').trim().match(/^(\d{4})\s*(?:年|[\/.-])\s*(\d{1,2})\s*(?:月|[\/.-])\s*(\d{1,2})\s*日?$/);
+        return match ? `${match[1]} 年 ${Number(match[2])} 月 ${Number(match[3])} 日` : date;
+    }
+
     function generateSummaryPanelHTML(candidates, metadata, title) {
         const { validVotes, invalidVotes, eligibleVoters, electionNameFromCSV, electionDateFromCSV } = metadata;
         const totalBallots = validVotes + invalidVotes;
@@ -2722,7 +2605,7 @@ dom.breadcrumb.innerHTML = html;
 
         let extraRows = '';
         if (electionDateFromCSV) {
-            extraRows += `<li><span>投票日期</span><span class="stat-value">${electionDateFromCSV}</span></li>`;
+            extraRows += `<li><span>投票日期</span><span class="stat-value">${formatElectionDate(electionDateFromCSV)}</span></li>`;
         }
         
         let html = `

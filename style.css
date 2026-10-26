@@ -1,6 +1,3 @@
-/* ---- Google Fonts ---- */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-
 /* ============================================================
    CSS 自訂屬性
    ============================================================ */
@@ -81,13 +78,6 @@ h1 span { cursor: pointer; }
     letter-spacing: 0.15em;
     font-weight: 400;
 }
-
-.site-logo {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px;
-    color: rgba(245,240,232,0.95);
-}
-.site-logo svg { width: 20px; height: 20px; display: block; }
 
 /* ============================================================
    Container
@@ -246,9 +236,6 @@ h1 span { cursor: pointer; }
 /* ============================================================
    首頁：書籤分頁式分隔線系統
    ============================================================ */
-
-/* 隱藏舊分隔線 */
-.home-recent-divider { display: none; }
 
 /* ── 主瀏覽區標題列 ── */
 .home-browse-title {
@@ -855,33 +842,7 @@ footer a { color: inherit; text-decoration: underline; }
     .modal-card .profile-photo { width: 82px; height: 82px; }
 }
 
-@media (min-width: 769px) { #footer-source { display: inline; } }
-
-/* ============================================================
-/* ============================================================
-   Ghost / 佔位空白格（padMenuGrid 補出）
-   ============================================================ */
-/* ── Ghost 格共用樣式 ── */
-/* Ghost 格：只需控制背景和互動，gap 自動處理分隔線 */
-.menu-button--ghost {
-    pointer-events: none !important;
-    cursor: default !important;
-    background: var(--card-bg) !important;
-}
-.menu-button--ghost::before,
-.menu-button--ghost::after { display: none !important; }
-
-/* 桌機顯示 ghost-desktop，隱藏 ghost-mobile */
-.menu-button--ghost-mobile { display: none !important; }
-.menu-button--ghost-desktop { display: flex !important; }
-
-/* 手機版：交換顯示 */
-@media (max-width: 768px) {
-    .menu-button--ghost-desktop { display: none !important; }
-    .menu-button--ghost-mobile  { display: flex !important; }
-    .menu-button--ghost { min-height: 58px !important; }
-}
-
+@media (min-width: 769px) { .footer-source { display: inline; } }
 
 /* ============================================================
    亮色版面配色補強
@@ -905,7 +866,6 @@ html header {
     backdrop-filter: none; -webkit-backdrop-filter: none; color: #F5F0E8;
 }
 html h1 { color: #F5F0E8; }
-html .site-logo { color: rgba(245,240,232,0.95); }
 
 html header .cd-header-btn { color: rgba(245,240,232,0.88); }
 html header .cd-header-btn svg { fill: none; stroke: currentColor; }
@@ -1021,300 +981,4 @@ html footer { background: var(--bg-warm); border-top-color: var(--border); color
     html header, html .menu-button, html .card, html .modal-card {
         transition: none !important; animation: none !important;
     }
-}
-
-@font-face {
-    font-family: 'Kinmen Welcome Handwriting';
-    src: url('assets/fonts/ChenYuluoyan-2.0-Thin.ttf') format('truetype');
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-}
-
-.home-welcome {
-    position: relative;
-    isolation: isolate;
-    display: flex;
-    align-items: center;
-    min-height: 200px;
-    margin: 0 0 26px;
-    padding: 22px 36px;
-    border-radius: var(--radius-xl);
-    background: linear-gradient(105deg, #E8F3EE 0%, #E2F1EA 50%, #D8EBE3 100%);
-    overflow: hidden;
-}
-.home-welcome-copy {
-    position: relative;
-    z-index: 2;
-    width: 60%;
-    min-width: 0;
-    padding-bottom: 0;
-}
-.home-welcome-kicker {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--primary);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .12em;
-}
-.home-welcome h2 {
-    font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
-}
-.home-welcome h2 {
-    margin: 0 0 4px;
-    color: #A24735;
-    font-size: clamp(36px, 4vw, 48px);
-    font-weight: 900;
-    line-height: 1.2;
-    letter-spacing: .06em;
-}
-.home-welcome p {
-    margin: 0;
-    font-family: 'Kinmen Welcome Handwriting', 'DFKai-SB', cursive;
-    color: #375b57;
-    font-size: clamp(23px, 2.2vw, 27px);
-    font-weight: 400;
-    line-height: 1.3;
-    letter-spacing: .03em;
-}
-.home-welcome-line-2 {
-    display: block;
-    padding-inline-start: 1em;
-}
-.home-welcome-art {
-    position: absolute;
-    z-index: 0;
-    right: 0;
-    bottom: 0;
-    display: block;
-    width: 58%;
-    max-width: 620px;
-    height: auto;
-    pointer-events: none;
-}
-@media (max-width: 700px) {
-    .home-welcome { min-height: 250px; padding: 22px 24px; margin-bottom: 24px; align-items: flex-start; }
-    .home-welcome-copy { width: 100%; }
-    .home-welcome h2 { font-size: 36px; }
-    .home-welcome p { font-size: clamp(22px, 3.5vw, 24px); }
-    .home-welcome-art { width: 72%; max-width: 500px; }
-}
-@media (max-width: 480px) {
-    .home-welcome { min-height: 245px; padding: 18px 20px; align-items: flex-start; }
-    .home-welcome-copy { width: 100%; padding-bottom: 0; }
-    .home-welcome-kicker { margin-bottom: 6px; font-size: 9px; }
-    .home-welcome h2 { font-size: 32px; }
-    .home-welcome p { font-size: clamp(20px, 5.5vw, 22px); }
-    .home-welcome-line-2 { padding-inline-start: .75em; }
-    .home-welcome-art { width: 100%; max-width: none; }
-}
-
-/* 首頁與類別子選單共用的方格圖卡。 */
-.main-menu-grid.is-tile-menu {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 14px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    overflow: visible;
-}
-
-.main-menu-grid.is-tile-menu .menu-button {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) auto;
-    justify-items: center;
-    align-items: center;
-    gap: 0;
-    min-width: 0;
-    min-height: 0;
-    aspect-ratio: 1;
-    padding: 8px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-1);
-    text-align: center;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
-}
-
-.main-menu-grid.is-tile-menu .menu-button::before { display: none; }
-.main-menu-grid.is-tile-menu .menu-button:hover {
-    transform: translateY(-3px);
-    border-color: var(--primary);
-    box-shadow: var(--shadow-2);
-}
-.main-menu-grid.is-tile-menu .menu-button:focus-visible {
-    outline: 3px solid var(--primary);
-    outline-offset: 3px;
-}
-.main-menu-grid.is-tile-menu .menu-art-frame {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-}
-.main-menu-grid.is-tile-menu .menu-art {
-    display: block;
-    width: 82%;
-    height: 82%;
-    max-width: 130px;
-    max-height: 130px;
-    min-width: 0;
-    min-height: 0;
-    margin: auto;
-    object-fit: contain;
-    object-position: center;
-}
-.main-menu-grid.is-tile-menu .menu-art--a2 {
-    width: auto;
-    height: min(100%, 150px);
-    max-width: 100%;
-    max-height: none;
-    aspect-ratio: 1;
-    background-image: url('images/election-categories/a2-atlas.png?v=1');
-    background-size: 300% 300%;
-    background-position: var(--icon-x) var(--icon-y);
-    background-repeat: no-repeat;
-}
-/* The atlas's first row has less bottom padding than the other two rows. */
-.main-menu-grid.is-home .menu-button:nth-child(-n+3) .menu-art--a2 {
-    transform: translateY(-8%);
-}
-.main-menu-grid.is-tile-menu .menu-text {
-    display: block;
-    transform: translateY(-10px);
-    max-width: 100%;
-    font-size: 17px !important;
-    line-height: 1.35;
-    white-space: normal;
-    overflow: visible;
-}
-
-@media (max-width: 960px) {
-    .main-menu-grid.is-tile-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (max-width: 600px) {
-    .main-menu-grid.is-tile-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-    .main-menu-grid.is-tile-menu .menu-button { aspect-ratio: 1; gap: 0; padding: 4px; }
-    .main-menu-grid.is-tile-menu .menu-text { font-size: clamp(12px, 3.4vw, 14px) !important; }
-    .main-menu-grid.is-home .menu-button:nth-child(-n+3) .menu-art--a2 { transform: translateY(-12%); }
-}
-@media (prefers-reduced-motion: reduce) {
-    .main-menu-grid.is-tile-menu .menu-button { transition: none; }
-    .main-menu-grid.is-tile-menu .menu-button:hover { transform: none; }
-}
-
-/* 政治山首頁配色：讓頁首、山景與圖卡共用清爽的色彩節奏。 */
-body { padding-top: 62px; }
-header,
-html header {
-    display: flex;
-    align-items: center;
-    min-height: 62px;
-    padding: 8px max(20px, calc((100vw - 1170px) / 2));
-    text-align: left;
-    background: #fff;
-    color: var(--brand-red);
-    border-bottom: 1px solid #e2eae7;
-    box-shadow: 0 2px 12px rgba(36,67,58,.05);
-}
-header::after { display: none; }
-header h1,
-html header h1 { color: var(--brand-red); }
-.site-title {
-    gap: 11px;
-    color: inherit;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: .06em;
-}
-.site-mark {
-    position: relative;
-    display: inline-block;
-    width: 34px;
-    height: 34px;
-    flex: none;
-    border-radius: var(--radius-md);
-    background: #FFF0D3;
-}
-.site-mark::before {
-    content: '';
-    position: absolute;
-    inset: 7px 5px 6px;
-    background: var(--primary);
-    clip-path: polygon(0 87%, 26% 77%, 57% 17%, 78% 57%, 100% 43%, 100% 58%, 74% 76%, 57% 43%, 33% 92%, 0 100%);
-}
-html header .cd-header-btn { color: #49706a; }
-
-.home-browse-title {
-    margin-bottom: 18px;
-    border-bottom: 0;
-}
-.home-browse-title .home-recent-tab.is-static,
-html .home-browse-title .home-recent-tab.is-static {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0;
-    border: 0;
-    bottom: 0;
-    color: var(--text-main);
-    font-size: 22px;
-    letter-spacing: 0;
-}
-.home-browse-title .home-recent-tab.is-static::before {
-    content: '';
-    width: 6px;
-    height: 26px;
-    border-radius: 4px;
-    background: var(--accent);
-}
-.main-menu-grid.is-home.is-tile-menu .menu-button {
-    background: #FFFDF9;
-    border-color: #D9E5DF;
-    border-radius: var(--radius-xl);
-    box-shadow: 0 6px 20px rgba(36,67,58,.06);
-}
-.main-menu-grid.is-home.is-tile-menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    max-width: none;
-    margin-right: 0;
-    margin-left: 0;
-}
-.main-menu-grid.is-home.is-tile-menu .menu-button {
-    flex: 0 0 calc((100% - 70px) / 6);
-}
-.main-menu-grid.is-home.is-tile-menu .menu-button:hover {
-    background: #EEF7F3;
-    border-color: var(--accent);
-    box-shadow: 0 10px 28px rgba(36,67,58,.13);
-}
-.main-menu-grid.is-home.is-tile-menu .menu-button:focus-visible {
-    background: #EEF7F3;
-    border-color: var(--primary);
-    outline-color: var(--accent);
-}
-@media (max-width: 1100px) {
-    .main-menu-grid.is-home.is-tile-menu .menu-button { flex-basis: calc((100% - 56px) / 5); }
-}
-@media (max-width: 850px) {
-    .main-menu-grid.is-home.is-tile-menu .menu-button { flex-basis: calc((100% - 42px) / 4); }
-}
-@media (max-width: 600px) {
-    .main-menu-grid.is-home.is-tile-menu { gap: 8px; }
-    .main-menu-grid.is-home.is-tile-menu .menu-button { flex-basis: calc((100% - 16px) / 3); }
-    body { padding-top: 56px; }
-    header, html header {
-        min-height: 56px;
-        padding: 7px 16px;
-    }
-    .site-title { font-size: 18px; gap: 8px; }
-    .site-mark { width: 30px; height: 30px; }
-    .home-browse-title .home-recent-tab.is-static { font-size: 18px; }
 }

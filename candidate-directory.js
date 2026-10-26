@@ -892,6 +892,7 @@ if (isReferendumType(s)) return true;
   function renderCandidateDirectory(pushState = true) {
     if (__rendering) return;
     __rendering = true;
+    const targetScrollY = pushState ? 0 : (history.state?.scrollY ?? 0);
 
     hideBreadcrumb();
     ensureHeaderButton();
@@ -903,6 +904,7 @@ if (isReferendumType(s)) return true;
 
     updateUrlSafe({ view: VIEW }, '金門選舉資料庫 - 候選人檢索', `?view=${VIEW}`, pushState);
     renderShell();
+    if (typeof scrollPageTo === 'function') scrollPageTo(0);
 
     waitForDataReady().then((ready) => {
       const countEl = document.getElementById('cd-count');
@@ -948,6 +950,9 @@ if (isReferendumType(s)) return true;
 
       attachEvents();
       renderResults();
+      if (typeof scrollPageTo === 'function') {
+        requestAnimationFrame(() => scrollPageTo(targetScrollY));
+      }
     }).finally(() => {
       __rendering = false;
     });

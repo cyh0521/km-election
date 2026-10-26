@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 220" role="img" aria-label="太武山稜線與轉播塔">
+  <circle cx="1001" cy="49" r="35" fill="none" stroke="#D6A442" stroke-width="12"/>
+  <path d="M0 205 C94 204 168 185 228 180 C302 174 365 169 420 171 C485 173 524 159 580 139 C654 112 717 94 764 88 C786 84 806 86 827 91 C899 105 943 131 1005 145 C1068 157 1120 151 1200 169 L1200 220 L0 220Z" fill="#D6A442" opacity=".42"/>
+  <path d="M0 219 C100 214 170 196 244 189 C318 181 393 187 467 177 C540 165 600 143 663 121 C718 103 757 95 786 93 C852 102 906 127 965 147 C1019 163 1066 159 1113 169 C1154 176 1183 182 1200 185 L1200 220Z" fill="#276B60" opacity=".79"/>
+  <path d="M0 207 C88 203 163 188 228 183 C307 174 375 168 438 174 C503 180 545 159 598 138 C665 109 727 92 786 89 C824 90 868 106 922 130 C975 153 1030 157 1092 161 C1136 166 1174 175 1200 179" fill="none" stroke="#276B60" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M129 193 C232 181 336 167 434 174" fill="none" stroke="#BF674A" stroke-width="2.5" stroke-linecap="round"/>
+  <g transform="translate(786 0)" fill="none" stroke="#BF674A" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 1 V26 M-4 13 H4" stroke-width="2"/>
+    <path d="M-7 26 H7 L12 93 H-12Z" stroke-width="2.3"/>
+    <path d="M-7 28 L11 91 M7 28 L-11 91 M-10 75 H10 M-9 57 H9 M-8 40 H8" stroke-width="1.7"/>
+    <circle cx="-14" cy="49" r="4" fill="#F8F8F3" stroke-width="2"/>
+    <circle cx="13" cy="67" r="3.5" fill="#F8F8F3" stroke-width="2"/>
+    <path d="M-17 93 H17" stroke-width="2.3"/>
+  </g>
+</svg>

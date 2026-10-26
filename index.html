@@ -1,8 +1,3 @@
-<script>
-	window.APP_VERSION = "260317-1";
-
-</script>
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -31,18 +26,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=ui-redesign-66">
+    <link rel="stylesheet" href="style.css?v=cleanup-1">
     <!-- 候選人名鑑（獨立模組樣式） -->
-    <link rel="stylesheet" href="candidate-directory.css?v=ui-redesign-50">
+    <link rel="stylesheet" href="candidate-directory.css?v=cleanup-1">
+    <link rel="stylesheet" href="editorial-theme.css?v=semantic-icons-1">
 </head>
 <body>
 
 <header>
     <h1>
-        <span class="site-title" onclick="renderMainMenu()"><span class="site-mark" aria-hidden="true"></span>金門政治山</span>
+        <button class="site-title" type="button" onclick="renderMainMenu()" aria-label="金門政治山，回首頁">
+            <span class="site-mark" aria-hidden="true"></span>
+            <span class="site-name">金門<span>政治山</span></span>
+            <span class="site-english" aria-hidden="true">KINMEN ELECTION ARCHIVE</span>
+        </button>
     </h1>
 </header>
 
+<div id="page-scroll" class="page-scroll">
 <div class="container">
     <div id="breadcrumb" class="breadcrumb" style="display:none;"></div>
     
@@ -67,13 +68,14 @@
 </div>
 
 <footer>
-    <span id="footer-source">
+    <span class="footer-source">
         資料來源︱中選會選舉及公投資料庫．政大選研中心資料庫
     </span><br>
-    <span id="footer-source">
+    <span class="footer-source">
         v1.2.1︱<a href="mailto:kmvote@outlook.com">kmvote@outlook.com</a>
     </span>
 </footer>
+</div>
 
 <div id="candidate-modal" class="modal-overlay" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
@@ -83,9 +85,9 @@
     </div>
 </div>
 
-<script src="script.js?v=ui-redesign-63"></script>
+<script src="script.js?v=semantic-icons-1"></script>
 <!-- 候選人名鑑（獨立模組） -->
-<script src="candidate-directory.js"></script>
+<script src="candidate-directory.js?v=cleanup-1"></script>
 
 </body>
 </html>
