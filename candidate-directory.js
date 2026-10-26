@@ -186,6 +186,16 @@ if (isReferendumType(s)) return true;
     return idToProfile;
   }
 
+  function buildIdToNamesMap(candidateData) {
+    const idToNames = new Map();
+    for (const [name, profile] of Object.entries(candidateData || {})) {
+      if (!profile?.id) continue;
+      if (!idToNames.has(profile.id)) idToNames.set(profile.id, new Set());
+      idToNames.get(profile.id).add(safeDisplayName(name));
+    }
+    return idToNames;
+  }
+
   function resolveCandidateId(rawName, candidateData) {
     if (!rawName) return null;
     const direct = candidateData[rawName];
@@ -277,6 +287,7 @@ if (isReferendumType(s)) return true;
   function buildCandidateIndex() {
     const candidateData = getCandidateData();
     const idToProfile = buildIdToProfileMap(candidateData);
+    const idToNames = buildIdToNamesMap(candidateData);
 
     const map = new Map(); // key -> candidate object
     const partyCount = Object.create(null);
@@ -310,6 +321,7 @@ if (isReferendumType(s)) return true;
             key,
             id: id || null,
             displayName: safeDisplayName(rawName),
+            searchNames: new Set(id ? (idToNames.get(id) || []) : []),
             gender: normalizeGender(profile?.sex || profile?.gender || ''),
             photo: profile?.photo || '',
             birthYear: profile?.birthYear || '',
@@ -322,6 +334,7 @@ if (isReferendumType(s)) return true;
         }
 
         const item = map.get(key);
+        item.searchNames.add(safeDisplayName(rawName));
         const party = partyNormalized;
         const isWinner = !!c.isWinner;
         const isIncumbent = !!c.isIncumbent;
@@ -368,32 +381,6 @@ if (isReferendumType(s)) return true;
   }
 
   // ---------- UI ----------
-  function ensureHeaderButton() {
-    const header = document.querySelector('header');
-    if (!header) return;
-
-    if (document.getElementById('cd-header-btn')) return;
-
-    // header 可能是 text-align:center，改用 absolute 佈局（CSS 控制）
-    const btn = document.createElement('button');
-    btn.id = 'cd-header-btn';
-    btn.className = 'cd-header-btn';
-    btn.type = 'button';
-    btn.title = '候選人檢索';
-    btn.setAttribute('aria-label', '候選人檢索');
-
-    // 放大鏡（一般搜尋 icon）
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/>
-        <path d="M16.2 16.2L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    `;
-    btn.addEventListener('click', () => renderCandidateDirectory(true));
-
-    header.appendChild(btn);
-  }
-
   function renderShell() {
     const dom = getDom();
     if (!dom.content) return;
@@ -611,7 +598,7 @@ if (isReferendumType(s)) return true;
     return list.filter(c => {
       if (q) {
         const name = c.displayName || '';
-        if (!name.includes(q)) return false;
+        if (!name.includes(q) && !Array.from(c.searchNames || []).some(alias => alias.includes(q))) return false;
       }
       if (gender && normalizeGender(c.gender) !== gender) return false;
 
@@ -721,7 +708,7 @@ if (isReferendumType(s)) return true;
           </div>
         </div>
 
-        <div class="history-title">參選經歷（${histCount}次）</div>
+        <div class="history-title">參選經歷（${histCount}次）${window.candidateHistoryLink(c.id)}</div>
         <ul class="history-list">
           ${historyHtml}
         </ul>
@@ -739,7 +726,7 @@ if (isReferendumType(s)) return true;
     countEl.textContent = `共 ${filtered.length} 人`;
 
     if (filtered.length === 0) {
-      resultsEl.innerHTML = `<div class="cd-empty">找不到符合條件的候選人。試試看清除條件，或換個關鍵字😉</div>`;
+      resultsEl.innerHTML = `<div class="cd-empty">找不到符合條件的候選人，請重新設定條件或關鍵字。</div>`;
       return;
     }
 
@@ -895,7 +882,6 @@ if (isReferendumType(s)) return true;
     const targetScrollY = pushState ? 0 : (history.state?.scrollY ?? 0);
 
     hideBreadcrumb();
-    ensureHeaderButton();
 
     const as = getAppState();
     if (as) {
@@ -963,7 +949,6 @@ if (isReferendumType(s)) return true;
     if (window.__kmdb_candidateDirectory_routerHooked) return;
     window.__kmdb_candidateDirectory_routerHooked = true;
 
-    ensureHeaderButton();
 
     // wrap checkUrlAndRender（優先），讓 init / popstate 都能支援 ?view=candidateDirectory
     const wrap = () => {

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>一張選票的起伏｜金門歷年投票率</title>
+  <meta name="description" content="播放金門1991年至2024年總統、區域立委、國大代表與縣長選舉投票率，探索各鄉鎮的參與變化。">
+  <link rel="stylesheet" href="turnout.css?v=1">
+  <script src="turnout.js?v=1" defer></script>
+</head>
+<body>
+  <header class="story-nav"><a class="brand" href="../index.html?view=main">金門<span>政治山</span></a><a class="back-link" href="../index.html?view=main">← 回選舉資料庫</a></header>
+  <main>
+    <section class="story-intro" aria-labelledby="story-title">
+      <div><p class="eyebrow">KINMEN / THE PARTICIPATION CHRONICLE</p><h1 id="story-title">一張選票的<span>起伏。</span></h1><p class="intro-copy">從總統到縣長，沿著時間，看見金門走進投票所的比例。</p></div>
+      <div class="intro-range"><span>1991 — 2024</span><small>四類選舉・同一座島嶼</small></div>
+    </section>
+
+    <section class="story-chart-panel" aria-label="歷年投票率互動圖表" aria-busy="true" id="story-panel">
+      <div class="chart-heading"><div><p class="eyebrow">全縣投票率</p><h2>時間留下的參與軌跡</h2></div><div class="year-stamp"><span id="current-year">1991</span><small>年</small></div></div>
+      <div class="legend" id="legend" aria-label="顯示的選舉類別"></div>
+      <div class="plot-wrap" id="plot-wrap"><p class="load-message" role="status">正在整理歷年選票…</p></div>
+      <div class="timeline">
+        <button class="play-button" id="play" type="button" disabled aria-label="播放歷年變化">▶ <span>播放變化</span></button>
+        <div class="timeline-track"><label class="sr-only" for="year-range">選擇選舉年份</label><input id="year-range" type="range" min="0" max="1" value="0" step="1" disabled><div class="range-labels"><span>1991</span><span>拖動年份，或點選圖上的圓點</span><span>2024</span></div></div>
+        <label class="speed-label">速度 <select id="speed"><option value="2200">慢</option><option value="1400" selected>標準</option><option value="800">快</option></select></label>
+      </div>
+      <p class="chart-caption">每個圓點是一場選舉，線段連結歷屆結果；沒有選舉的年份不另計投票率。點選類別可切換顯示。</p>
+      <div class="stat-grid" id="stat-grid"></div>
+    </section>
+
+    <section class="detail-panel" aria-labelledby="detail-title">
+      <div class="detail-heading"><div><p class="eyebrow">停在這一年</p><h2 id="detail-title">1991 年的選票</h2></div><div class="event-tabs" id="event-tabs" role="group" aria-label="當年選舉"></div></div>
+      <div id="event-detail"><p class="load-message">正在載入選舉明細…</p></div>
+    </section>
+    <section class="reading-notes" aria-labelledby="notes-title"><h2 id="notes-title">如何閱讀這張圖</h2><div><p><strong>每一票都算。</strong>投票率＝（有效票＋無效票）÷選舉人數。全縣及鄉鎮皆先加總人數再計算，不平均各村里百分比。</p><p><strong>保留不同選舉的脈絡。</strong>2019 年立委補選、2005 年任務型國大選舉均個別標示。國大代表選舉資料止於 2005 年。</p><p><strong>依資料範圍呈現。</strong>1972–1989 年立委檔案為金門、連江合計，因此本圖區域立委自 1992 年起。部分早期選舉僅有全縣總計，未提供鄉鎮比較。</p></div></section>
+  </main>
+  <footer>金門政治山｜資料來源：站內選舉 CSV（中選會、政大選研中心）<a href="../index.html?view=main">探索完整選舉紀錄 ↗</a></footer>
+</body>
+</html>

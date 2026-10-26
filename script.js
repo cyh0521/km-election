@@ -515,6 +515,16 @@ function homeCategoryIcon(iconKey) {
     return `<svg class="category-icon" viewBox="0 0 64 64" fill="none" stroke="var(--primary)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${homeCategoryIcons[iconKey] || homeCategoryIcons.referendum}</svg>`;
 }
 
+// Simplified official boundaries; menu illustrations, not historical election maps.
+function administrativeMenuIcon(town, village = '') {
+    const icons = window.ADMINISTRATIVE_ICONS;
+    const filename = village
+        ? icons?.villages[`${town}/${village}`]
+        : icons?.towns[town];
+    if (!filename) return homeCategoryIcon(village ? 'village' : 'mayor');
+    return `<img class="administrative-icon" src="images/administrative-icons/${filename}?v=3" width="32" height="32" alt="" decoding="async">`;
+}
+
     const partyColors = {
         "中國國民黨": "#3887B0",
         "民主進步黨": "#008800", 
@@ -553,7 +563,12 @@ function homeCategoryIcon(iconKey) {
     }
 
     // *** 新增：全域候選人詳細資料暫存 ***
-    let globalCandidateData = {}; 
+    let globalCandidateData = {};
+
+    window.candidateHistoryLink = function(id) {
+        if (!id) return '';
+        return `<a class="history-show-all" href="?view=candidateHistory&amp;candidateId=${encodeURIComponent(id)}" target="_blank" rel="noopener">顯示全部</a>`;
+    };
     
     function hexToRgb(hex) {
         const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -687,7 +702,8 @@ function homeCategoryIcon(iconKey) {
             type: params.get('type'),
             election: params.get('election'),
             town: params.get('town'),
-            village: params.get('village')
+            village: params.get('village'),
+            candidateId: params.get('candidateId')
         };
     }
 
@@ -838,7 +854,7 @@ function normalizeText(str) {
         
         let historyHtml = ''; 
         if (historyList.length > 0) {
-            historyHtml += `<div class="history-title">參選經歷（${historyList.length}次）</div><ul class="history-list">`;
+            historyHtml += `<div class="history-title">參選經歷（${historyList.length}次）${candidateHistoryLink(targetId)}</div><ul class="history-list">`;
             historyList.forEach(h => {
                 const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, '');    const resultClass = h.isWinner ? 'result-won' : 'result-lost';
                 const resultText = h.isWinner ? '當選' : '未當選';
@@ -1495,6 +1511,34 @@ function extractCountySummary(text) {
         );
     }
 
+    window.renderCandidateHistory = function(candidateId, pushState = false) {
+        const profiles = Object.entries(globalCandidateData).filter(([, info]) => info.id === candidateId);
+        const name = profiles.length ? getDisplayName(profiles[0][0]) : '';
+        const elections = profiles.length ? availableElections.filter(e =>
+            e.summaryData?.allCandidates?.some(c => globalCandidateData[c.name]?.id === candidateId)
+        ).sort((a, b) => Number(b.year) - Number(a.year) || a.uiName.localeCompare(b.uiName, 'zh-TW')) : [];
+        updateUrl({view: 'candidateHistory', candidateId}, '',
+            `?view=candidateHistory&candidateId=${encodeURIComponent(candidateId)}`, pushState);
+        document.title = `${name || '候選人'}參選經歷 - 金門政治山`;
+        updatePageMeta(`${name || '候選人'}參選經歷`, '集中查看候選人歷次參選的完整選舉結果與詳細票數。');
+        appState.currentLevel = 'candidateHistory';
+        appState.chartInstances.forEach(chart => chart.destroy());
+        appState.chartInstances = [];
+        closeModal();
+        for (const breadcrumb of [dom.breadcrumb, dom.breadcrumbBottom]) {
+            breadcrumb.style.display = '';
+            breadcrumb.innerHTML = `<span onclick="renderMainMenu(true)">首頁</span> / <span class="active">參選經歷</span>`;
+        }
+        dom.content.innerHTML = `<div class="main-section election-list-heading">
+            <div class="menu-section-title" id="candidate-history-heading"></div>
+        </div>${elections.length
+            ? `<div class="election-list-grid">${elections.map(e => generateSummaryCardHTML(e)).join('')}</div>`
+            : '<div class="loading-state">找不到此候選人的參選紀錄。</div>'}`;
+        document.getElementById('candidate-history-heading').textContent =
+            `${name || '候選人'}參選經歷（${elections.length}次）`;
+        if (pushState) scrollPageTo(0);
+    };
+
     window.renderMainMenu = function(pushState = true) { 
         
         const url = `?view=main`;
@@ -1530,7 +1574,7 @@ function extractCountySummary(text) {
 	                </div>
 	                <img class="home-welcome-art" src="images/illustrations/taiwu-editorial.svg?v=2" alt="太武山稜線與轉播塔的幾何插畫" width="1200" height="220" decoding="async">
 	            </section>
-	            <div class="home-recent-tabs home-browse-title" role="presentation">
+	            <div class="home-recent-tabs home-browse-title">
 	                <div class="home-recent-tab is-static is-active">選舉及公投類別</div>
 	            </div>
             <div class="main-menu-grid is-home is-tile-menu">`;
@@ -1553,7 +1597,7 @@ function extractCountySummary(text) {
         html += `<button class="menu-button category-${cat.iconKey}" type="button" onclick="${clickAction}">
             <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon(cat.iconKey)}</span>
             <span class="menu-text">${cat.type}</span>
-            <span class="menu-arrow" aria-hidden="true">→</span>
+            <span class="menu-arrow" aria-hidden="true">›</span>
         </button>`;
     });
 
@@ -1741,13 +1785,13 @@ function extractCountySummary(text) {
                 <button class="menu-button" type="button" onclick="renderElectionList('全國性公投', true)">
                     <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('referendum')}</span>
                     <span class="menu-text">全國性公投</span>
-                    <span class="menu-arrow" aria-hidden="true">→</span>
+                    <span class="menu-arrow" aria-hidden="true">›</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('地方性公投', true)">
                     <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('referendum')}</span>
                     <span class="menu-text">地方性公投</span>
-                    <span class="menu-arrow" aria-hidden="true">→</span>
+                    <span class="menu-arrow" aria-hidden="true">›</span>
                 </button>
             </div>
         </div>`;
@@ -1784,13 +1828,13 @@ function extractCountySummary(text) {
                 <button class="menu-button" type="button" onclick="renderElectionList('區域立委', true)">
                     <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('legislator')}</span>
                     <span class="menu-text">區域立委</span>
-                    <span class="menu-arrow" aria-hidden="true">→</span>
+                    <span class="menu-arrow" aria-hidden="true">›</span>
                 </button>
 
                 <button class="menu-button" type="button" onclick="renderElectionList('不分區立委', true)">
                     <span class="menu-line-icon" aria-hidden="true">${homeCategoryIcon('legislator')}</span>
                     <span class="menu-text">不分區立委</span>
-                    <span class="menu-arrow" aria-hidden="true">→</span>
+                    <span class="menu-arrow" aria-hidden="true">›</span>
                 </button>
             </div>
         </div>`;
@@ -1831,7 +1875,7 @@ function extractCountySummary(text) {
 
         towns.forEach(t => {
             html += `<div class="menu-button" role="button" tabindex="0" data-town="${t}" onclick="renderElectionListByTown('${type}', '${t}', true)">
-                <span class="menu-icon" aria-hidden="true">${homeCategoryIcon('mayor')}</span>
+                <span class="menu-icon" aria-hidden="true">${administrativeMenuIcon(t)}</span>
                 <span class="menu-text">${t}</span>
                 <span class="menu-chevron" aria-hidden="true">›</span>
             </div>`;
@@ -1874,7 +1918,7 @@ function extractCountySummary(text) {
 
         towns.forEach(t => {
             html += `<div class="menu-button" role="button" tabindex="0" data-town="${t}" onclick="renderVillageChiefVillageSubMenu('${t}', true)">
-                <span class="menu-icon" aria-hidden="true">${homeCategoryIcon('village')}</span>
+                <span class="menu-icon" aria-hidden="true">${administrativeMenuIcon(t)}</span>
                 <span class="menu-text">${t}</span>
                 <span class="menu-chevron" aria-hidden="true">›</span>
             </div>`;
@@ -1943,7 +1987,7 @@ function extractCountySummary(text) {
             villages.forEach(v => {
                 html += `<div class="menu-button" role="button" tabindex="0"
                             onclick="renderElectionListByVillage('${type}', '${townName}', '${v}', true)">
-                            <span class="menu-icon" aria-hidden="true">${homeCategoryIcon('village')}</span>
+                            <span class="menu-icon" aria-hidden="true">${administrativeMenuIcon(townName, v)}</span>
                             <span class="menu-text">${v}</span>
                             <span class="menu-chevron" aria-hidden="true">›</span>
                          </div>`;
@@ -2696,7 +2740,10 @@ dom.breadcrumb.innerHTML = html;
             const headerClass = isPartyList && sortKey === 'party' ? 'col-party hidden-party' : finalClassName;
 
             const sortAction = isSummary    ? `sortTableInCard('${id}', '${sortKey}')`    : `sortTable('${sortKey}')`;
-           return `<th style="${style}" class="${headerClass}" onclick="event.stopPropagation(); ${sortAction}">${headerTextHtml} ${iconHtml}</th>`;
+           const headerContent = sortKey === 'votes'
+               ? `${iconHtml}${headerTextHtml}`
+               : `${headerTextHtml} ${iconHtml}`;
+           return `<th style="${style}" class="${headerClass}" onclick="event.stopPropagation(); ${sortAction}">${headerContent}</th>`;
         }
         
         const tableBodyHTML = generateTableBodyHTML(candidates, validVotes, triggerAnimation, currentElectionYear, isPartyList, enableCandidateModal);
@@ -2737,8 +2784,8 @@ dom.breadcrumb.innerHTML = html;
                         <tr>
                             ${renderTableHeader('#', 'number', 'width:40px; text-align:center;', 'col-number')}                ${renderTableHeader('候選人', 'name', '', '')}
                             ${renderTableHeader('推薦政黨', 'party', '', 'col-party')}
-                            ${renderTableHeader('得票', 'votes', 'text-align:right')}
-                            ${renderTableHeader('%', 'votes', 'text-align:right; width:50px')}
+                            ${renderTableHeader('得票', 'votes', 'text-align:right', 'col-numeric')}
+                            ${renderTableHeader('%', 'votes', 'text-align:right; width:50px', 'col-numeric')}
                         </tr>
                     </thead>
                     <tbody>
@@ -2768,6 +2815,11 @@ dom.breadcrumb.innerHTML = html;
 
     if (params.view === 'main') {
         renderMainMenu(pushState);
+        return;
+    }
+
+    if (params.view === 'candidateHistory') {
+        renderCandidateHistory(params.candidateId || '', pushState);
         return;
     }
 
