@@ -2156,12 +2156,12 @@ html footer {
     .home-welcome {
         min-height: 180px;
         padding: 0;
-        margin: 12px 0 0;
+        margin: 10px 0 0;
         align-items: initial;
     }
 
     .home-welcome-copy {
-        padding-top: 23px;
+        padding-top: 17px;
     }
 
     .home-welcome-kicker {
