@@ -2249,7 +2249,7 @@ html footer {
     }
 
     .main-menu-grid.is-home.is-tile-menu .menu-text {
-        font-size: clamp(12px, 3.3vw, 14px) !important;
+        font-size: clamp(14px, 3.7vw, 16px) !important;
     }
 
     .main-menu-grid.is-home .menu-arrow {
@@ -2489,6 +2489,11 @@ html .main-menu-grid.is-tile-menu:not(.is-home) .menu-text {
     height: 32px;
     max-width: none;
     object-fit: contain;
+}
+
+html .main-menu-grid:not(.is-home) .menu-button:hover .menu-icon {
+    background: transparent;
+    border: 0;
 }
 
 .main-menu-grid:not(.is-home) .menu-arrow,
