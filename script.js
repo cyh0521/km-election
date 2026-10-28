@@ -2727,8 +2727,8 @@ dom.breadcrumb.innerHTML = html;
 	const actionText = isClickable
 	    ? `<span class="card-action"
   	          onclick="event.stopPropagation(); ${onClickAction}">
-                  <span class="card-action-icon" aria-hidden="true"></span>
                   <span>詳細票數</span>
+                  <svg class="card-action-chevron" viewBox="0 0 6 10" aria-hidden="true" focusable="false"><path d="M1 1 5 5 1 9" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   	     </span>`
  	   : '';
         const summaryClass = isSummary ? 'is-summary' : '';
