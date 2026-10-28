@@ -549,6 +549,7 @@ h1 span {
     line-height: 1.4;
     white-space: nowrap;
     margin-left: 10px;
+    margin-top: 2px;
     flex-shrink: 0;
     align-self: flex-start;
     padding-right: 2px;
