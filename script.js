@@ -2742,8 +2742,7 @@ dom.breadcrumb.innerHTML = html;
              cardStatsHTML = `
                 <div class="card-stats" style="margin-left: 0;">
                     <span style="white-space: nowrap;">
-                        有效票: ${validVotes.toLocaleString()} 票            <span style="color:var(--text-sub); margin: 0 5px;">|</span>
-                        投票率: <span class="rate">${turnoutRate}%</span>
+                        有效票: ${validVotes.toLocaleString()} 票<span style="color:var(--text-sub);">︱</span>投票率: <span class="rate">${turnoutRate}%</span>
                     </span>
                 </div>
             `;
