@@ -1,6 +1,13 @@
 // ================= 數據與設定區 =================
 const APP_VERSION = "260317-1";
 
+window.candidatePortraitPlaceholder = function(sex) {
+    const kind = /女|female/i.test(sex || '') ? 'female' : /男|male/i.test(sex || '') ? 'male' : 'neutral';
+    return `<span class="portrait-placeholder portrait-placeholder--${kind}" role="img" aria-label="無照片">
+        <img src="images/portraits/${kind === 'female' ? 'female' : 'male'}-placeholder.png" alt="" aria-hidden="true" width="82" height="82" decoding="async">
+    </span>`;
+};
+
 function getPageScrollY() {
     const page = document.getElementById('page-scroll');
     return page ? page.scrollTop : window.scrollY;
@@ -11,6 +18,23 @@ function scrollPageTo(y) {
     if (page) page.scrollTop = y;
     else window.scrollTo(0, y);
 }
+
+// Soften content changes without delaying navigation or animating individual result rows.
+(function setupPageTransition() {
+    const content = document.getElementById('content');
+    if (!content) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentAnimation = null;
+    new MutationObserver(records => {
+        if (!records.some(record => record.type === 'childList')) return;
+        if (reducedMotion.matches || content.querySelector(':scope > .loading-state')) return;
+        currentAnimation?.cancel();
+        currentAnimation = content.animate(
+            [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+            { duration: 180, easing: 'ease-out' }
+        );
+    }).observe(content, { childList: true });
+})();
 
 // Mobile header follows scroll direction without reacting to tiny movements.
 (function setupMobileHeader() {
@@ -927,7 +951,10 @@ function normalizeText(str) {
         }
         
     // 5. 組合 HTML 
-        const imgDisplay = photoSrc ? `<img src="${photoSrc}" class="profile-photo" alt="${name}">` : `<div class="profile-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:#ccc;">👤</div>`;
+        const portraitFallback = candidatePortraitPlaceholder(info.sex);
+        const imgDisplay = photoSrc
+            ? `<span class="portrait-photo-wrap"><img src="${photoSrc}" class="profile-photo" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">${portraitFallback}</span>`
+            : portraitFallback;
         
         modalBody.innerHTML = `
             <div class="profile-header">

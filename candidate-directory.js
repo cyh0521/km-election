@@ -646,14 +646,10 @@ if (isReferendumType(s)) return true;
   function renderCandidateCard(c) {
     const photoSrc = c.photo ? `candidates/${c.photo}` : '';
     const photo = photoSrc
-      ? `<img class="profile-photo" src="${escapeHtml(photoSrc)}" alt="${escapeHtml(c.displayName)}" onerror="this.style.display='none'; this.parentElement.querySelector('.cd-photo-fallback').style.display='flex';">`
+      ? `<img class="profile-photo" src="${escapeHtml(photoSrc)}" alt="${escapeHtml(c.displayName)}" onerror="this.style.display='none'; this.parentElement.querySelector('.cd-photo-fallback').style.display='block';">`
       : '';
 
-    const fallback = `
-      <div class="profile-photo cd-photo-fallback" style="display:${photoSrc ? 'none' : 'flex'};align-items:center;justify-content:center;">
-        <div style="font-size:30px;opacity:0.7;">👤</div>
-      </div>
-    `;
+    const fallback = `<span class="cd-photo-fallback" style="display:${photoSrc ? 'none' : 'block'}">${window.candidatePortraitPlaceholder(c.gender)}</span>`;
 
     const genderN = normalizeGender(c.gender);
     const genderDisplay = genderN ? (genderN === '男' ? '男性' : '女性') : '—';
