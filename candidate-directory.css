@@ -249,6 +249,11 @@ select.cd-input {
 
 .cd-opt input {
     cursor: pointer;
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    align-self: flex-start;
+    margin: 3px 0 0;
 }
 
 .cd-opt .cd-opt-name {

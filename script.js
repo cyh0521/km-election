@@ -30,7 +30,7 @@ function scrollPageTo(y) {
         if (reducedMotion.matches || content.querySelector(':scope > .loading-state')) return;
         currentAnimation?.cancel();
         currentAnimation = content.animate(
-            [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+            [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }],
             { duration: 180, easing: 'ease-out' }
         );
     }).observe(content, { childList: true });
@@ -513,7 +513,7 @@ function getDisplayLevels(electionType, data) {
     if (rule.maxLevel === ADMIN_LEVEL.VILLAGE && available.hasVillage) {
         if (!isFixedSingleLevel && !levels.includes(ADMIN_LEVEL.TOWN) && available.hasTown) levels.push(ADMIN_LEVEL.TOWN);
         if (!levels.includes(ADMIN_LEVEL.VILLAGE)) levels.push(ADMIN_LEVEL.VILLAGE);
-    } else if (rule.maxLevel === ADMIN_LEVEL.TOWN && available.hasTown) {
+    } else if (!isFixedSingleLevel && (rule.maxLevel === ADMIN_LEVEL.TOWN || rule.maxLevel === ADMIN_LEVEL.VILLAGE) && available.hasTown) {
         if (!levels.includes(ADMIN_LEVEL.TOWN)) levels.push(ADMIN_LEVEL.TOWN);
     }
 
