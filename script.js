@@ -2639,7 +2639,9 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
             let index = 0;
             for (const [id, station] of vData.stations) {
                 const safeId = id.replace(/[&<>]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char]);
-                html += generateCardHTML('station-' + index++, `第 ${safeId} 投開票所`,
+                const location = station.location.replace(/[&<>]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char]);
+                const subtitle = location ? `<span style="display:block;margin-top:4px;font-size:0.75em;font-weight:500;color:var(--text-sub);overflow-wrap:anywhere">${location}</span>` : '';
+                html += generateCardHTML('station-' + index++, `第 ${safeId} 投開票所${subtitle}`,
                     getSortedCandidates(station.candidates), station, false, null, true,
                     false, null, true, currentYear);
             }
