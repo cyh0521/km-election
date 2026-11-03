@@ -1341,8 +1341,10 @@ table.large-table td:nth-child(2) {
     color: var(--brand-red);
 }
 
-.result-lost {
-    color: var(--text-sub);
+#candidate-modal .history-result.result-pending { color: #2563eb; }
+
+#candidate-modal .history-result.result-lost {
+    color: #6b7280;
     font-weight: 400;
 }
 

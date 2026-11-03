@@ -148,6 +148,7 @@ function updatePageMeta(title, description) {
         {file: "elections/D/D1996.csv",year: "1996",type: "國大代表",uiName: "1996年 國大代表選舉",summaryData: null},
         {file: "elections/D/D1991.csv",year: "1991",type: "國大代表",uiName: "1991年 國大代表選舉",summaryData: null},
 
+        {file: "elections/E/E2026.csv",year: "2026",type: "縣長",uiName: "2026年 縣長選舉",summaryData: null},
         {file: "elections/E/E2022.csv",year: "2022",type: "縣長",uiName: "2022年 縣長選舉",summaryData: null},
         {file: "elections/E/E2018.csv",year: "2018",type: "縣長",uiName: "2018年 縣長選舉",summaryData: null},
         {file: "elections/E/E2014.csv",year: "2014",type: "縣長",uiName: "2014年 縣長選舉",summaryData: null},
@@ -157,6 +158,9 @@ function updatePageMeta(title, description) {
         {file: "elections/E/E1997.csv",year: "1997",type: "縣長",uiName: "1997年 縣長選舉",summaryData: null},
         {file: "elections/E/E1993.csv",year: "1993",type: "縣長",uiName: "1993年 縣長選舉",summaryData: null},
 
+        {file: "elections/F/F2026-D3.csv",year: "2026",type: "縣議員",uiName: "2026年 縣議員選舉第3選區",summaryData: null},
+        {file: "elections/F/F2026-D2.csv",year: "2026",type: "縣議員",uiName: "2026年 縣議員選舉第2選區",summaryData: null},
+        {file: "elections/F/F2026-D1.csv",year: "2026",type: "縣議員",uiName: "2026年 縣議員選舉第1選區",summaryData: null},
         {file: "elections/F/F2022-D3.csv",year: "2022",type: "縣議員",uiName: "2022年 縣議員選舉第3選區",summaryData: null},
         {file: "elections/F/F2022-D2.csv",year: "2022",type: "縣議員",uiName: "2022年 縣議員選舉第2選區",summaryData: null},
         {file: "elections/F/F2022-D1.csv",year: "2022",type: "縣議員",uiName: "2022年 縣議員選舉第1選區",summaryData: null},
@@ -182,6 +186,12 @@ function updatePageMeta(title, description) {
         {file: "elections/F/F1990-D2.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金寧鄉",summaryData: null},
         {file: "elections/F/F1990-D1.csv",year: "1990",type: "縣議員",uiName: "1990年 諮詢代表選舉-金城鎮",summaryData: null},
 
+        {file: "elections/G/G2026F.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 烏坵鄉長選舉",summaryData: null},
+        {file: "elections/G/G2026E.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 烈嶼鄉長選舉",summaryData: null},
+        {file: "elections/G/G2026D.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金沙鎮長選舉",summaryData: null},
+        {file: "elections/G/G2026C.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金湖鎮長選舉",summaryData: null},
+        {file: "elections/G/G2026B.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金寧鄉長選舉",summaryData: null},
+        {file: "elections/G/G2026A.csv",year: "2026",type: "鄉鎮長",uiName: "2026年 金城鎮長選舉",summaryData: null},
         {file: "elections/G/G2023F.csv",year: "2023",type: "鄉鎮長",uiName: "2023年 烏坵鄉長補選",summaryData: null},
         {file: "elections/G/G2022F.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烏坵鄉長選舉",summaryData: null},
         {file: "elections/G/G2022E.csv",year: "2022",type: "鄉鎮長",uiName: "2022年 烈嶼鄉長選舉",summaryData: null},
@@ -253,10 +263,55 @@ function updatePageMeta(title, description) {
         {file: "elections/H/H2022C.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金湖鎮民代表選舉",summaryData: null},
         {file: "elections/H/H2022B.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金寧鄉民代表選舉",summaryData: null},
         {file: "elections/H/H2022A.csv",year: "2022",type: "鄉鎮民代表",uiName: "2022年 金城鎮民代表選舉",summaryData: null},
+        {file: "elections/H/H2026F.csv",year: "2026",type: "鄉鎮民代表",uiName: "2026年 烏坵鄉民代表選舉",summaryData: null},
+        {file: "elections/H/H2026E.csv",year: "2026",type: "鄉鎮民代表",uiName: "2026年 烈嶼鄉民代表選舉",summaryData: null},
+        {file: "elections/H/H2026D.csv",year: "2026",type: "鄉鎮民代表",uiName: "2026年 金沙鎮民代表選舉",summaryData: null},
+        {file: "elections/H/H2026C.csv",year: "2026",type: "鄉鎮民代表",uiName: "2026年 金湖鎮民代表選舉",summaryData: null},
+        {file: "elections/H/H2026B.csv",year: "2026",type: "鄉鎮民代表",uiName: "2026年 金寧鄉民代表選舉",summaryData: null},
+        {file: "elections/H/H2026A.csv",year: "2026",type: "鄉鎮民代表",uiName: "2026年 金城鎮民代表選舉",summaryData: null},
+
+        {file: "elections/I/I2026A-1.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮東門里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-2.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮南門里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-3.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮西門里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-4.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮北門里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-5.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮賢庵里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-6.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮金水里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-7.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮古城里長選舉",summaryData: null},
+        {file: "elections/I/I2026A-8.csv",year: "2026",type: "村里長",uiName: "2026年 金城鎮珠沙里長選舉",summaryData: null},
+        {file: "elections/I/I2026B-1.csv",year: "2026",type: "村里長",uiName: "2026年 金寧鄉古寧村長選舉",summaryData: null},
+        {file: "elections/I/I2026B-2.csv",year: "2026",type: "村里長",uiName: "2026年 金寧鄉安美村長選舉",summaryData: null},
+        {file: "elections/I/I2026B-3.csv",year: "2026",type: "村里長",uiName: "2026年 金寧鄉湖埔村長選舉",summaryData: null},
+        {file: "elections/I/I2026B-4.csv",year: "2026",type: "村里長",uiName: "2026年 金寧鄉榜林村長選舉",summaryData: null},
+        {file: "elections/I/I2026B-5.csv",year: "2026",type: "村里長",uiName: "2026年 金寧鄉盤山村長選舉",summaryData: null},
+        {file: "elections/I/I2026B-6.csv",year: "2026",type: "村里長",uiName: "2026年 金寧鄉后盤村長選舉",summaryData: null},
+        {file: "elections/I/I2026C-1.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮新市里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-2.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮山外里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-3.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮溪湖里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-4.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮蓮庵里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-5.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮料羅里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-6.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮新湖里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-7.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮正義里長選舉",summaryData: null},
+        {file: "elections/I/I2026C-8.csv",year: "2026",type: "村里長",uiName: "2026年 金湖鎮瓊林里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-1.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮汶沙里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-2.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮何斗里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-3.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮浦山里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-4.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮西園里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-5.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮官嶼里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-6.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮三山里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-7.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮大洋里長選舉",summaryData: null},
+        {file: "elections/I/I2026D-8.csv",year: "2026",type: "村里長",uiName: "2026年 金沙鎮光前里長選舉",summaryData: null},
+        {file: "elections/I/I2026E-1.csv",year: "2026",type: "村里長",uiName: "2026年 烈嶼鄉林湖村長選舉",summaryData: null},
+        {file: "elections/I/I2026E-2.csv",year: "2026",type: "村里長",uiName: "2026年 烈嶼鄉黃埔村長選舉",summaryData: null},
+        {file: "elections/I/I2026E-3.csv",year: "2026",type: "村里長",uiName: "2026年 烈嶼鄉西口村長選舉",summaryData: null},
+        {file: "elections/I/I2026E-4.csv",year: "2026",type: "村里長",uiName: "2026年 烈嶼鄉上林村長選舉",summaryData: null},
+        {file: "elections/I/I2026E-5.csv",year: "2026",type: "村里長",uiName: "2026年 烈嶼鄉上岐村長選舉",summaryData: null},
+        {file: "elections/I/I2026F-1.csv",year: "2026",type: "村里長",uiName: "2026年 烏坵鄉大坵村長選舉",summaryData: null},
+        {file: "elections/I/I2026F-2.csv",year: "2026",type: "村里長",uiName: "2026年 烏坵鄉小坵村長選舉",summaryData: null},
 
         {file: "elections/I/I2024D-7.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮大洋里長補選",summaryData: null},
         {file: "elections/I/I2024D-8.csv",year: "2024",type: "村里長",uiName: "2024年 金沙鎮光前里長補選",summaryData: null},
         {file: "elections/I/I2023F-1.csv",year: "2023",type: "村里長",uiName: "2023年 烏坵鄉大坵村長補選",summaryData: null},
+
         {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
@@ -294,6 +349,45 @@ function updatePageMeta(title, description) {
         {file: "elections/I/I2022E-5.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉上岐村長選舉",summaryData: null},
         {file: "elections/I/I2022F-1.csv",year: "2022",type: "村里長",uiName: "2022年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2022F-2.csv",year: "2022",type: "村里長",uiName: "2022年 烏坵鄉小坵村長選舉",summaryData: null},
+
+        {file: "elections/I/I2022A-1.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮東門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-2.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮南門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-3.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮西門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-4.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮北門里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-5.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮賢庵里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-6.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮金水里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-7.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮古城里長選舉",summaryData: null},
+        {file: "elections/I/I2022A-8.csv",year: "2022",type: "村里長",uiName: "2022年 金城鎮珠沙里長選舉",summaryData: null},
+        {file: "elections/I/I2022B-1.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉古寧村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-2.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉安美村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-3.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉湖埔村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-4.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉榜林村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-5.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉盤山村長選舉",summaryData: null},
+        {file: "elections/I/I2022B-6.csv",year: "2022",type: "村里長",uiName: "2022年 金寧鄉后盤村長選舉",summaryData: null},
+        {file: "elections/I/I2022C-1.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮新市里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-2.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮山外里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-3.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮溪湖里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-4.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮蓮庵里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-5.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮料羅里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-6.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮新湖里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-7.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮正義里長選舉",summaryData: null},
+        {file: "elections/I/I2022C-8.csv",year: "2022",type: "村里長",uiName: "2022年 金湖鎮瓊林里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-1.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮汶沙里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-2.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮何斗里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-3.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮浦山里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-4.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮西園里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-5.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮官嶼里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-6.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮三山里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-7.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮大洋里長選舉",summaryData: null},
+        {file: "elections/I/I2022D-8.csv",year: "2022",type: "村里長",uiName: "2022年 金沙鎮光前里長選舉",summaryData: null},
+        {file: "elections/I/I2022E-1.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉林湖村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-2.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉黃埔村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-3.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉西口村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-4.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉上林村長選舉",summaryData: null},
+        {file: "elections/I/I2022E-5.csv",year: "2022",type: "村里長",uiName: "2022年 烈嶼鄉上岐村長選舉",summaryData: null},
+        {file: "elections/I/I2022F-1.csv",year: "2022",type: "村里長",uiName: "2022年 烏坵鄉大坵村長選舉",summaryData: null},
+        {file: "elections/I/I2022F-2.csv",year: "2022",type: "村里長",uiName: "2022年 烏坵鄉小坵村長選舉",summaryData: null},
+
         {file: "elections/I/I2018A-1.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2018A-2.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2018A-3.csv",year: "2018",type: "村里長",uiName: "2018年 金城鎮西門里長選舉",summaryData: null},
@@ -331,6 +425,7 @@ function updatePageMeta(title, description) {
         {file: "elections/I/I2018E-5.csv",year: "2018",type: "村里長",uiName: "2018年 烈嶼鄉上岐村長選舉",summaryData: null},
         {file: "elections/I/I2018F-1.csv",year: "2018",type: "村里長",uiName: "2018年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2018F-2.csv",year: "2018",type: "村里長",uiName: "2018年 烏坵鄉小坵村長選舉",summaryData: null},
+
         {file: "elections/I/I2014A-1.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2014A-2.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2014A-3.csv",year: "2014",type: "村里長",uiName: "2014年 金城鎮西門里長選舉",summaryData: null},
@@ -368,8 +463,10 @@ function updatePageMeta(title, description) {
         {file: "elections/I/I2014E-5.csv",year: "2014",type: "村里長",uiName: "2014年 烈嶼鄉上岐村長選舉",summaryData: null},
         {file: "elections/I/I2014F-1.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2014F-2.csv",year: "2014",type: "村里長",uiName: "2014年 烏坵鄉小坵村長選舉",summaryData: null},
+
         {file: "elections/I/I2012D-8.csv",year: "2012",type: "村里長",uiName: "2012年 金沙鎮光前里長補選",summaryData: null},
         {file: "elections/I/I2012A-3.csv",year: "2012",type: "村里長",uiName: "2012年 金城鎮西門里長補選",summaryData: null},
+
         {file: "elections/I/I2010A-1.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮東門里長選舉",summaryData: null},
         {file: "elections/I/I2010A-2.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮南門里長選舉",summaryData: null},
         {file: "elections/I/I2010A-3.csv",year: "2010",type: "村里長",uiName: "2010年 金城鎮西門里長選舉",summaryData: null},
@@ -407,6 +504,7 @@ function updatePageMeta(title, description) {
         {file: "elections/I/I2010E-5.csv",year: "2010",type: "村里長",uiName: "2010年 烈嶼鄉上岐村長選舉",summaryData: null},
         {file: "elections/I/I2010F-1.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉大坵村長選舉",summaryData: null},
         {file: "elections/I/I2010F-2.csv",year: "2010",type: "村里長",uiName: "2010年 烏坵鄉小坵村長選舉",summaryData: null},
+
         {file: "elections/I/I2006E-1.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉林湖村長選舉",summaryData: null},
         {file: "elections/I/I2006E-2.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉黃埔村長選舉",summaryData: null},
         {file: "elections/I/I2006E-3.csv",year: "2006",type: "村里長",uiName: "2006年 烈嶼鄉西口村長選舉",summaryData: null},
@@ -917,7 +1015,7 @@ function normalizeText(str) {
 	                    electionName: e.uiName,
 	                    party: match.party,
 	                    isWinner: match.isWinner,
-	                    isIncumbent: match.isIncumbent
+	                    isPending: match.isPending, isIncumbent: match.isIncumbent
 	                });
 	            }
 	        }
@@ -930,8 +1028,8 @@ function normalizeText(str) {
         if (historyList.length > 0) {
             historyHtml += `<div class="history-title">參選經歷（${historyList.length}次）${candidateHistoryLink(targetId)}</div><ul class="history-list">`;
             historyList.forEach(h => {
-                const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, '');    const resultClass = h.isWinner ? 'result-won' : 'result-lost';
-                const resultText = h.isWinner ? '當選' : '未當選';
+                const electionNameWithoutYear = h.electionName.replace(/^\d+年\s*/, '');    const resultClass = h.isPending ? 'result-pending' : h.isWinner ? 'result-won' : 'result-lost';
+                const resultText = h.isPending ? '未開票' : h.isWinner ? '當選' : '未當選';
                 const partyName = getLongPartyName(h.party);
                 historyHtml += `
                     <li class="history-item">
@@ -998,8 +1096,9 @@ function normalizeText(str) {
     const electionDateFromCSV = rows[0][1] ? rows[0][1].trim() : '';
 
     // 解析候選人欄位範圍（從第 3 欄開始連續）
+    const hasStations = rows[2][2]?.trim() === '投開票所編號';
     const headerRowIndices = [];
-    let currentIdx = 2;
+    let currentIdx = rows[2][2]?.trim() === '投開票所編號' ? 4 : 2;
     while (rows[0][currentIdx] && rows[1][currentIdx]) {
         headerRowIndices.push(currentIdx);
         currentIdx++;
@@ -1025,10 +1124,11 @@ function normalizeText(str) {
 
         const isWomenQuota = name.includes('*!');
         const isIncumbent = name.includes('#');
+        const isPending = name.includes('?');
         const isWinner = name.includes('*') || isWomenQuota;
 
         // 清理名字，移除所有標記
-        name = name.replace(/\[.*?\]/g, '').replace('*!', '').replace('*', '').replace('#', '').trim();
+        name = name.replace(/\[.*?\]/g, '').replace('*!', '').replace('*', '').replace('#', '').replaceAll('?', '').trim();
         party = party === '無' ? '無黨籍' : party;
 
         if (name && number) {
@@ -1047,7 +1147,7 @@ function normalizeText(str) {
                 colIndex,
                 isWinner,
                 isWomenQuota,
-                isIncumbent,
+                isPending, isIncumbent,
                 bracketText
             });
         }
@@ -1071,6 +1171,7 @@ function normalizeText(str) {
         if ((row[0] || '').includes('鄉鎮')) continue;
 
         const townRaw = (row[0] || '').trim();
+        const stationId = hasStations ? row[2].trim() : '';
         const village = (row[1] || '').trim();
 
         const validVotes = parseNum(row[VOTES_COL]);
@@ -1119,6 +1220,23 @@ function normalizeText(str) {
         }
 
         // 候選人票數累加（全縣）
+        if (stationId && isTownRow && village) {
+            const villageData = towns[town].villages[village];
+            const stations = villageData.stations ??= new Map();
+            const station = stations.get(stationId) ?? {
+                location: '', validVotes: 0, invalidVotes: 0, eligibleVoters: 0, candidates: {}
+            };
+            station.location ||= row[3].trim();
+            station.validVotes += validVotes;
+            station.invalidVotes += invalidVotes;
+            station.eligibleVoters += eligibleVoters;
+            candInfo.forEach(c => {
+                const candidate = station.candidates[c.name] ??= { ...c, votes: 0 };
+                candidate.votes += parseNum(row[c.colIndex]);
+            });
+            stations.set(stationId, station);
+        }
+
         candInfo.forEach(c => {
             const votes = parseNum(row[c.colIndex]);
 
@@ -1129,7 +1247,7 @@ function normalizeText(str) {
                     votes: 0,
                     isWinner: c.isWinner,
                     isWomenQuota: c.isWomenQuota,
-                    isIncumbent: c.isIncumbent,
+                    isPending: c.isPending, isIncumbent: c.isIncumbent,
                     bracketText: c.bracketText
                 };
             }
@@ -1144,7 +1262,7 @@ function normalizeText(str) {
                         votes: 0,
                         isWinner: c.isWinner,
                         isWomenQuota: c.isWomenQuota,
-                        isIncumbent: c.isIncumbent,
+                        isPending: c.isPending, isIncumbent: c.isIncumbent,
                         bracketText: c.bracketText
                     };
                 }
@@ -1158,7 +1276,7 @@ function normalizeText(str) {
                             votes: 0,
                             isWinner: c.isWinner,
                             isWomenQuota: c.isWomenQuota,
-                            isIncumbent: c.isIncumbent,
+                            isPending: c.isPending, isIncumbent: c.isIncumbent,
                             bracketText: c.bracketText
                         };
                     }
@@ -1257,7 +1375,7 @@ function extractCountySummary(text) {
         const electionDateFromCSV = rows[0] && rows[0][1] ? rows[0][1].trim() : '';
 
         const headerRowIndices = []; 
-        let currentIdx = 2;
+        let currentIdx = rows[2][2]?.trim() === '投開票所編號' ? 4 : 2;
         while(rows[0][currentIdx] && rows[1][currentIdx]) {
             headerRowIndices.push(currentIdx);
             currentIdx++;
@@ -1283,9 +1401,10 @@ function extractCountySummary(text) {
 
             const isWomenQuota = name.includes('*!');
             const isIncumbent = name.includes('#');
+            const isPending = name.includes('?');
             const isWinner = name.includes('*') || isWomenQuota;
 
-            name = name.replace(/\[.*?\]/g, '').replace('*!', '').replace('*', '').replace('#', '').trim();
+            name = name.replace(/\[.*?\]/g, '').replace('*!', '').replace('*', '').replace('#', '').replaceAll('?', '').trim();
             party = party === '無' ? '無黨籍' : party;
 
             if (name && number) {
@@ -1295,7 +1414,7 @@ function extractCountySummary(text) {
                     party = `無黨籍-${independentCounter}`;
                     independentCounter++;
                 }
-                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isIncumbent, bracketText });}
+                candInfo.push({ number: String(number), name, party, colIndex, isWinner, isWomenQuota, isPending, isIncumbent, bracketText });}
         });
         
         const candidates = {}; 
@@ -1305,7 +1424,7 @@ function extractCountySummary(text) {
         
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i];
-           if (row.length < (ELIGIBLE_COL + 1) || !row[0] || row[0].includes("鄉鎮")) continue;
+           if (row.length < (ELIGIBLE_COL + 1) || (row[0] || '').includes("鄉鎮")) continue;
 
             const parseNum = (val) => parseInt(String(val).replace(/[^0-9]/g, '')) || 0;
 
@@ -1315,7 +1434,7 @@ function extractCountySummary(text) {
             globalEligibleVoters += eligibleVoters;
            candInfo.forEach(c => {
                 const votes = parseNum(row[c.colIndex]);
-                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isIncumbent: c.isIncumbent, bracketText: c.bracketText };    candidates[c.name].votes += votes;
+                if (!candidates[c.name]) candidates[c.name] = { number: c.number, party: c.party, votes: 0, isWinner: c.isWinner, isWomenQuota: c.isWomenQuota, isPending: c.isPending, isIncumbent: c.isIncumbent, bracketText: c.bracketText };    candidates[c.name].votes += votes;
             });
         }
         
@@ -2514,6 +2633,18 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
                 ${generateCardHTML('village-main', `${villageName}開票結果`, candidates, villageMetadata, false, false, true, false, null, true, currentYear)}
             </div>
         </div>`;
+
+        if (vData.stations?.size) {
+            html += '<div class="sub-area-grid">';
+            let index = 0;
+            for (const [id, station] of vData.stations) {
+                const safeId = id.replace(/[&<>]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char]);
+                html += generateCardHTML('station-' + index++, `第 ${safeId} 投開票所`,
+                    getSortedCandidates(station.candidates), station, false, null, true,
+                    false, null, true, currentYear);
+            }
+            html += '</div>';
+        }
 
         dom.content.innerHTML = html;
         updateSortIcons();

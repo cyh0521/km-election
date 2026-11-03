@@ -344,7 +344,7 @@ if (isReferendumType(s)) return true;
           electionType: etype,
           electionName: uiName,
           party,
-          isWinner,
+          isPending: !!c.isPending, isWinner,
           isIncumbent
         });
 
@@ -672,7 +672,7 @@ if (isReferendumType(s)) return true;
 
     const historyHtml = (c.histories || []).map(h => {
       const party = h.party ? `<span class="history-party">${escapeHtml(getLongPartyNameSafe(h.party))}</span>` : '';
-      const result = h.isWinner
+      const result = h.isPending ? `<span class="history-result text-pending" style="color:var(--brand-blue, #2563eb)">未開票</span>` : h.isWinner
         ? `<span class="history-result cd-win">當選</span>`
         : `<span class="history-result cd-lose">未當選</span>`;
       const ename = escapeHtml(cleanElectionName(h.electionName, h.year));
