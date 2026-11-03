@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b101b">
+  <meta name="description" content="金門政治山互動預覽：立體地圖、真實選舉資料與歷屆回放。">
+  <title>金門政治山 · 每一票，都有座標</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="vendor/gsap.min.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 19 19 5M5 5h14v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="4"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m4 10 8-7 8 7v10H4ZM9 20v-7h6v7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 1v6m0 10v6M1 12h6m10 0h6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m13 5-7 7 7 7M6 12h15"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M3 15h18"/></symbol>
+  </defs></svg>
+
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="金門政治山互動版首頁">
+        <span class="brand-mark"><i></i><i></i></span>
+        <span><strong>金門政治山<span class="beta">LAB</span></strong><small>KINMEN VOTE / EXPLORER</small></span>
+      </a>
+      <nav aria-label="主要導覽">
+        <a href="#explore" class="nav-active"><span class="status-dot"></span>選舉探索</a>
+        <a href="#replay" id="replay-link">歷屆回放</a>
+        <button id="about-button" class="nav-button">資料說明</button>
+      </nav>
+      <a class="classic-link" href="../index.html" target="_blank" rel="noopener">經典版 <svg class="icon"><use href="#i-arrow"/></svg></a>
+    </header>
+
+    <main id="explore">
+      <section class="hero">
+        <div>
+          <div class="eyebrow"><span class="status-dot"></span> A SMALL ISLAND. A WORLD OF CHOICES.</div>
+          <h1><span>點一下，</span>看看這裡怎麼選<span class="headline-dot">。</span></h1>
+          <p class="hero-caption"><span id="election-subtitle">正在讀取金門的選舉故事…</span><span class="hero-divider">/</span><span>從一座島，看見每一票</span></p>
+        </div>
+        <div class="election-controls">
+          <label class="field-label">選舉種類<select id="type-select" aria-label="選舉種類"></select></label>
+          <label class="field-label year-field">年份<select id="year-select" aria-label="年份"></select></label>
+          <label class="field-label race-field" id="race-field" hidden>選區／場次<select id="race-select" aria-label="選區或場次"></select></label>
+        </div>
+      </section>
+
+      <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+      <section class="explorer" aria-label="互動選舉地圖與結果">
+        <div class="map-panel" id="map-panel">
+          <div class="map-topbar">
+            <div class="breadcrumbs" id="breadcrumbs"><button id="county-button" class="scope-home">金門縣 <span>↗</span></button><span id="scope-path"></span></div>
+            <div class="view-switch" role="group" aria-label="地圖視角"><button data-view="3d" aria-pressed="true">3D</button><button data-view="2d" aria-pressed="false">2D</button></div>
+          </div>
+          <div class="map-stage" id="map-stage">
+            <div class="map-grid" aria-hidden="true"></div>
+            <div class="map-watermark" id="map-watermark" aria-hidden="true">2024</div>
+            <span class="map-coordinate" aria-hidden="true">24°26′ N &nbsp; 118°19′ E</span>
+            <svg id="election-map" viewBox="0 0 1000 700" role="group" aria-label="金門縣行政區互動地圖">
+              <defs>
+                <linearGradient id="land-gradient" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#a7a5ff"/><stop offset="1" stop-color="#677cf2"/></linearGradient>
+                <linearGradient id="select-gradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e4ff94"/><stop offset="1" stop-color="#b7ef4d"/></linearGradient>
+                <filter id="map-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="10" flood-color="#00091f" flood-opacity=".65"/></filter>
+              </defs>
+              <g id="map-camera"><g id="map-base"></g><g id="map-land"></g><g id="map-labels"></g></g>
+            </svg>
+            <div class="map-tooltip" id="map-tooltip" hidden></div>
+            <div class="map-hint" id="map-hint"><span class="spark">✳</span> 點選一個鄉鎮，往村里探索 <svg class="icon"><use href="#i-arrow"/></svg></div>
+            <div class="zoom-controls"><button id="zoom-in" aria-label="放大地圖"><svg class="icon"><use href="#i-plus"/></svg></button><button id="zoom-out" aria-label="縮小地圖"><svg class="icon"><use href="#i-minus"/></svg></button><button id="reset-map" aria-label="重設地圖視角"><svg class="icon"><use href="#i-reset"/></svg></button></div>
+            <div class="map-inset-label">烏坵鄉 <span>獨立比例附圖</span></div>
+          </div>
+          <div class="map-bottom">
+            <div class="map-mode" role="group" aria-label="地圖著色模式"><button data-mode="area" aria-pressed="true">行政區域</button><button data-mode="votes" aria-pressed="false">得票分布</button><button data-mode="turnout" aria-pressed="false">投票率</button></div>
+            <div class="map-legend" id="map-legend">凸起代表選取區域</div>
+          </div>
+          <div class="region-picker" id="region-picker" aria-label="地區快速選取"></div>
+        </div>
+
+        <aside class="result-panel" id="result-panel" aria-label="選舉結果">
+          <div class="result-heading"><div><p class="eyebrow" id="result-kicker">ELECTION RESULTS</p><h2 id="result-title">全縣結果</h2></div><span class="year-badge" id="year-badge">2024</span></div>
+          <p class="result-description" id="result-description"></p>
+          <div id="pending-notice" class="pending-notice" hidden></div>
+          <div class="result-metrics"><div class="metric-main"><span>有效票數</span><strong id="valid-count">—</strong></div><div><span>投票率</span><strong id="turnout-count">—</strong></div><div><span>前二名差距</span><strong id="margin-count">—</strong></div></div>
+          <div class="ranking-heading"><span id="ranking-title">候選人得票</span><span>點選查看地區分布</span></div>
+          <div class="candidate-list" id="candidate-list" aria-live="polite"></div>
+          <button class="detail-button" id="detail-button"><span>查看完整票數</span><svg class="icon"><use href="#i-arrow"/></svg></button>
+        </aside>
+      </section>
+
+      <section class="replay-panel" id="replay" aria-label="歷屆選舉回放">
+        <div class="replay-intro"><button id="play-button" class="play-button" aria-label="播放歷屆選舉" aria-pressed="false"><svg class="icon"><use href="#i-play"/></svg></button><div><h2>歷屆回放<span class="replay-label">TIME MACHINE</span></h2><p id="replay-status">沿著時間，看見金門的選擇。</p></div></div>
+        <div class="timeline-wrap"><div class="timeline-years" id="timeline-years"></div><input id="timeline-range" type="range" min="0" max="1" value="0" step="1" aria-label="拖曳切換選舉年份"><div class="timeline-progress" aria-hidden="true"><span id="timeline-progress"></span></div></div>
+        <label class="speed-label">速度<select id="speed-select" aria-label="回放速度"><option value="3600">1×</option><option value="1800">2×</option><option value="6000">0.5×</option></select></label>
+      </section>
+      <footer class="site-footer"><span>一座島的選擇，持續記錄中。<span class="footer-count" id="archive-count"></span></span><button id="source-button">圖資與資料來源 <svg class="icon"><use href="#i-info"/></svg></button></footer>
+    </main>
+  </div>
+
+  <dialog id="detail-dialog"><div class="dialog-header"><div><p class="eyebrow">THE NUMBERS BEHIND THE MAP</p><h2 id="dialog-title">完整票數</h2></div><button class="icon-button" data-close aria-label="關閉視窗"><svg class="icon"><use href="#i-close"/></svg></button></div><div id="dialog-body"></div></dialog>
+  <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
+</body>
+</html>

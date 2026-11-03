@@ -342,9 +342,9 @@ if (isReferendumType(s)) return true;
         item.histories.push({
           year,
           electionType: etype,
-          electionName: uiName,
+          electionName: uiName.replace(/!/g, ''),
           party,
-          isPending: !!c.isPending, isWinner,
+          isPending: uiName.includes('!'), isWinner,
           isIncumbent
         });
 
