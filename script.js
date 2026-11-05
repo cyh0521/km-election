@@ -2601,6 +2601,10 @@ window.renderCounty = function(shouldScroll = true, pushState = true) {
 
         if (!shouldScroll) {
             updateTableContent('village-main', candidates, villageMetadata.validVotes, true, currentYear, isPartyList);
+            let index = 0;
+            for (const station of vData.stations?.values() || []) {
+                updateTableContent(`station-${index++}`, getSortedCandidates(station.candidates), station.validVotes, true, currentYear, isPartyList);
+            }
             updateSortIcons();
             return;
         }
@@ -2811,13 +2815,14 @@ else if (level === 'village') {
     // ✅ 鄉鎮長 / 鄉鎮民代表：麵包屑以「依鄉鎮」的導覽路徑為主
     else if (electionType === '鄉鎮長' || electionType === '鄉鎮民代表') {
         // 期望：首頁 / 鄉鎮長 / 金城鎮 / 2022年金城鎮長選舉 / 東門里
+        const town = appState.currentTown || appState.currentTownshipName;
         html += `<span onclick="renderTownshipSubMenu('${electionType}', true)">${electionType}</span> / `;
 
-        if (appState.currentTownshipName) {
-            html += `<span onclick="renderElectionListByTown('${electionType}', '${appState.currentTownshipName}', true)">${appState.currentTownshipName}</span> / `;
+        if (town) {
+            html += `<span onclick="renderElectionListByTown('${electionType}', '${town}', true)">${town}</span> / `;
         }
 
-        html += `<span onclick="renderCounty(true, true)">${displayElectionName(appState.electionName)}</span> / `;
+        html += `<span onclick="renderTown('${town}', true, true)">${displayElectionName(appState.electionName)}</span> / `;
         html += `<span class="active">${appState.currentVillage}</span>`;
     }
     else {
