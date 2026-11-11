@@ -2156,7 +2156,7 @@ function extractCountySummary(text) {
         availableElections
             .filter(e => e.type === type && (e.uiName || '').includes(townName))
             .forEach(e => {
-                const ui = (e.uiName || '').replace(/^\s*\d{4}\s*年\s*/,'').trim();
+                const ui = displayElectionName(e.uiName || '').replace(/^\s*\d{4}\s*年\s*/,'').trim();
                 const afterTown = ui.includes(townName) ? ui.split(townName).slice(1).join(townName) : ui;
                 const afterTownClean = (afterTown || '').replace(/\s+/g,'').trim();
 
